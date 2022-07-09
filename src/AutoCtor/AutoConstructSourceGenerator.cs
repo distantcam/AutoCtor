@@ -140,25 +140,3 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return name;
     }
 }
-
-//public class AutoConstructSyntaxReceiver : ISyntaxContextReceiver
-//{
-//    public List<INamedTypeSymbol> ClassesToAutoConstruct { get; } = new();
-
-//    public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
-//    {
-//        if (context.Node is ClassDeclarationSyntax { AttributeLists.Count: > 0 } classDeclarationSyntax)
-//        {
-//            var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
-//            var attributeData = classSymbol?.GetAttributes().SingleOrDefault(x =>
-//                (x.AttributeClass.Name == "AutoConstruct" || x.AttributeClass.Name == "AutoConstructAttribute") &&
-//                (x.AttributeClass.ContainingNamespace.IsGlobalNamespace || x.AttributeClass.ContainingNamespace.ToDisplayString() == "AutoCtor")
-//            );
-
-//            if (classSymbol is not null && attributeData is not null)
-//            {
-//                ClassesToAutoConstruct.Add((INamedTypeSymbol)classSymbol);
-//            }
-//        }
-//    }
-//}
