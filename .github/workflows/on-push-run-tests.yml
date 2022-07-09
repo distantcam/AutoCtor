@@ -2,9 +2,13 @@ name: on-push-run-tests
 on:
   push:
 jobs:
-  docs:
+  test:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: src
     steps:
       - uses: actions/checkout@v2
       - name: Run Tests
         run: dotnet test -c Release
+        shell: bash

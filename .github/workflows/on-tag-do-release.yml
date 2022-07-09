@@ -6,18 +6,21 @@ on:
 jobs:
   release:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: src
     steps:
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        shell: bash
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        shell: bash
       - name: Restore
         run: dotnet restore
       - name: Build
-        run: dotnet build -c Release -p:Version=${ steps.get_version.outputs.VERSION } --no-restore
+        run: dotnet build -c Release -p:Version=${{ steps.vars.outputs.tag }} --no-restore
       - name: Test
         run: dotnet test -c Release --no-restore --no-build
       - name: Upload Artifact
@@ -25,5 +28,5 @@ jobs:
         with:
           name: nupkg
           path: nugets\*.nupkg
-      - name: PushNuget
+      - name: Push Nuget
         run: dotnet nuget push nugets\*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
