@@ -227,6 +227,10 @@ indent_size = 2
 [*.{props,targets,config,nuspec}]
 indent_size = 2
 
+# Yml files
+[*.{yml,yaml}]
+indent_size = 2
+
 # Shell scripts
 [*.sh]
 end_of_line = lf

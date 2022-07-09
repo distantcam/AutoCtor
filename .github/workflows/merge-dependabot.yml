@@ -1,0 +1,20 @@
+name: merge-dependabot
+on:
+  push:
+    branches:
+      - dependabot*
+      - main
+  pull_request:
+    branches:
+      - dependabot*
+      - main
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Automerge Dependecies
+        uses: "pascalgn/automerge-action@v0.14.1"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: "dependencies"
