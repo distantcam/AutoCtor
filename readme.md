@@ -21,7 +21,6 @@ https://nuget.org/packages/AutoCtor/
 ### Your code
 
 <!-- snippet: YourCode -->
-<a id='snippet-yourcode'></a>
 ```cs
 [AutoConstruct]
 public partial class ExampleClass
@@ -29,13 +28,11 @@ public partial class ExampleClass
     private readonly ICustomService _customService;
 }
 ```
-<sup><a href='/src/AutoCtor.Example/ExampleClass.cs#L8-L16' title='Snippet source file'>snippet source</a> | <a href='#snippet-yourcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### What gets generated
 
 <!-- snippet: GeneratedCode -->
-<a id='snippet-generatedcode'></a>
 ```cs
 partial class ExampleClass
 {
@@ -45,5 +42,4 @@ partial class ExampleClass
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/ExampleClass.cs#L18-L28' title='Snippet source file'>snippet source</a> | <a href='#snippet-generatedcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
