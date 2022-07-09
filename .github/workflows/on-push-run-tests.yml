@@ -1,4 +1,4 @@
-name: on-push-do-docs
+name: on-push-run-tests
 on:
   push:
 jobs:
