@@ -27,7 +27,7 @@ public class AutoConstructSourceGenerator : ISourceGenerator
                 .OfType<IFieldSymbol>()
                 .Where(f => f.IsReadOnly);
 
-            var parameters = fields.Select(f => $"{f.Type.ToDisplayString()} g_{f.Name}");
+            var parameters = fields.Select(f => $"{f.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} g_{f.Name}");
 
             var assignments = fields.Select(f => $"            {f.Name} = g_{f.Name};");
 
