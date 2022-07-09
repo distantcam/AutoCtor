@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace AutoCtor;
 
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public class AutoConstructAttributeGenerator : ISourceGenerator
 {
     public void Initialize(GeneratorInitializationContext context)
