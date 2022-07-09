@@ -10,18 +10,15 @@ public class SourceGenerationTests
     [InlineData("[AutoConstructAttribute]")]
     [InlineData("[AutoCtor.AutoConstruct]")]
     [InlineData("[AutoCtor.AutoConstructAttribute]")]
-    public Task GeneratesWithAllAttributeOptions(string attribute)
+    public Task AttributeTest(string attribute)
     {
-        var syntaxTree = CSharpSyntaxTree.ParseText(@$"
-{attribute}public class GeneratesWithAllAttributeOptions {{}}
-");
+        var code = @$"
+{attribute}public partial class TestClass {{}}
+";
+        var compilation = Compile(code);
 
-        var compilation = CSharpCompilation.Create("AutoCtorTest", new[] { syntaxTree });
         var generator = new AutoConstructSourceGenerator();
-
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
-
-        driver = driver.RunGenerators(compilation);
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
         return Verify(driver).UseParameters(attribute);
     }
@@ -34,22 +31,72 @@ public class SourceGenerationTests
     [InlineData("IEnumerable<string>")]
     [InlineData("List<int>")]
     [InlineData("int[]")]
-    public Task GeneratesWithDifferentTypes(string type)
+    [InlineData("int?")]
+    [InlineData("Nullable<int>")]
+    public Task TypesTest(string type)
     {
-        var syntaxTree = CSharpSyntaxTree.ParseText(@$"
+        var code = @$"
 using System;
 using System.Collections.Generic;
 
-[AutoConstruct]public class GeneratesWithDifferentTypes {{ private readonly {type} _item; }}
-");
+[AutoConstruct]public partial class TestClass {{ private readonly {type} _item; }}
+";
+        var compilation = Compile(code);
 
-        var compilation = CSharpCompilation.Create("AutoCtorTest", new[] { syntaxTree });
         var generator = new AutoConstructSourceGenerator();
-
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
-
-        driver = driver.RunGenerators(compilation);
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
         return Verify(driver).UseParameters(type);
+    }
+
+    [Fact]
+    public Task FriendlyParameterNamesTest()
+    {
+        var code = @"
+[AutoConstruct]public partial class TestClass
+{
+    private readonly int _underscorePrefix;
+    private readonly int camelCase;
+    private readonly int PascalCase;
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
+    [Fact]
+    public Task NamespaceTest()
+    {
+        var code = @"
+namespace TestNamespace
+{
+    [AutoConstruct]public partial class TestClass
+    {
+        private readonly int _item;
+    }
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
+    private static CSharpCompilation Compile(params string[] code)
+    {
+        var references = AppDomain.CurrentDomain.GetAssemblies()
+            .Where(assembly => !assembly.IsDynamic)
+            .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
+            .Cast<MetadataReference>();
+
+        return CSharpCompilation.Create(
+            "AutoCtorTest",
+            code.Select(c => CSharpSyntaxTree.ParseText(c)),
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 }
