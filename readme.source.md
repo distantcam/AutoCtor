@@ -1,6 +1,7 @@
 # AutoCtor
 
-[![NuGet Status](https://img.shields.io/nuget/v/AutoCtor.svg?label=AutoCtor)](https://www.nuget.org/packages/AutoCtor/)
+[![Build Status](https://img.shields.io/github/workflow/status/distantcam/autoctor/on-push-run-tests.svg)](https://github.com/distantcam/AutoCtor/actions/workflows/on-push-run-tests.yml)
+[![NuGet Status](https://img.shields.io/nuget/v/AutoCtor.svg)](https://www.nuget.org/packages/AutoCtor/)
 
 AutoCtor is a Roslyn Source Generator that will automatically create a constructor for your class for use with constructor Dependency Injection.
 
