@@ -3,6 +3,7 @@
     <LangVersion>10</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>NU5128</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
