@@ -46,8 +46,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             return null;
 
         var hasCorrectAttribute = type.GetAttributes()
-            .Any(a => (a.AttributeClass.Name == "AutoConstruct" || a.AttributeClass.Name == "AutoConstructAttribute") &&
-                (a.AttributeClass.ContainingNamespace.IsGlobalNamespace || a.AttributeClass.ContainingNamespace.Name == "AutoCtor"));
+            .Any(a => (a.AttributeClass.Name == "AutoConstruct" || a.AttributeClass.Name == "AutoConstructAttribute"));
 
         return hasCorrectAttribute ? type : null;
     }
@@ -101,6 +100,24 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             source.IncreaseIndent();
         }
 
+        var typeStack = new Stack<string>();
+
+        var containingType = type.ContainingType;
+        while (containingType is not null)
+        {
+            typeStack.Push(containingType.Name);
+            containingType = containingType.ContainingType;
+        }
+
+        var nestedCount = typeStack.Count;
+
+        while (typeStack.Count > 0)
+        {
+            source.AppendLine($"partial class {typeStack.Pop()}");
+            source.AppendLine($"{{");
+            source.IncreaseIndent();
+        }
+
         source.AppendLine($"partial class {type.Name}");
         source.AppendLine($"{{");
         source.IncreaseIndent();
@@ -119,6 +136,12 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
         source.DecreaseIndent();
         source.AppendLine($"}}");
+
+        for (var i = 0; i < nestedCount; i++)
+        {
+            source.DecreaseIndent();
+            source.AppendLine($"}}");
+        }
 
         if (ns is not null)
         {

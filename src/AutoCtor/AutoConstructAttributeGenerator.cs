@@ -22,13 +22,10 @@ public class AutoConstructAttributeGenerator : ISourceGenerator
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AutoCtor
+public sealed class AutoConstructAttribute : Attribute
 {
-    public sealed class AutoConstructAttribute : Attribute
+    public AutoConstructAttribute()
     {
-        public AutoConstructAttribute()
-        {
-        }
     }
 }";
 

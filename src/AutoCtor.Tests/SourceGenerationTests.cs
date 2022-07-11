@@ -86,6 +86,50 @@ namespace TestNamespace
         return Verify(driver);
     }
 
+    [Fact]
+    public Task NestedClassTest()
+    {
+        var code = @"
+public partial class OuterClass
+{
+    [AutoConstruct]public partial class TestClass
+    {
+        private readonly int _item;
+    }
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
+    [Fact]
+    public Task NamespaceDoubleNestedClassTest()
+    {
+        var code = @"
+namespace TestNamespace
+{
+    public partial class OuterClass1
+    {
+        public partial class OuterClass2
+        {
+            [AutoConstruct]public partial class TestClass
+            {
+                private readonly int _item;
+            }
+        }
+    }
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
     private static CSharpCompilation Compile(params string[] code)
     {
         var references = AppDomain.CurrentDomain.GetAssemblies()
