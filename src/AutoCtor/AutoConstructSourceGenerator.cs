@@ -62,11 +62,27 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
             var source = GenerateSource(type);
 
-            var typeNamespace = type.ContainingNamespace.IsGlobalNamespace
-                ? null
-                : $"{type.ContainingNamespace}.";
+            var nameParts = new List<string>();
 
-            context.AddSource($"{typeNamespace}{type.Name}.g.cs", SourceText.From(source, Encoding.UTF8));
+            var containingType = type.ContainingType;
+            while (containingType is not null)
+            {
+                nameParts.Add(containingType.ToDisplayString().Replace('<', '[').Replace('>', ']'));
+                containingType = containingType.ContainingType;
+            }
+
+            if (!type.ContainingNamespace.IsGlobalNamespace)
+            {
+                nameParts.Add(type.ContainingNamespace.Name);
+            }
+
+            nameParts.Reverse();
+
+            nameParts.Add(type.ToDisplayString().Replace('<', '[').Replace('>', ']'));
+            nameParts.Add("g");
+            nameParts.Add("cs");
+
+            context.AddSource(string.Join(".", nameParts), SourceText.From(source, Encoding.UTF8));
         }
     }
 
@@ -105,7 +121,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         var containingType = type.ContainingType;
         while (containingType is not null)
         {
-            typeStack.Push(containingType.Name);
+            typeStack.Push(containingType.ToDisplayString());
             containingType = containingType.ContainingType;
         }
 
@@ -118,7 +134,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             source.IncreaseIndent();
         }
 
-        source.AppendLine($"partial class {type.Name}");
+        source.AppendLine($"partial class {type.ToDisplayString()}");
         source.AppendLine($"{{");
         source.IncreaseIndent();
 
