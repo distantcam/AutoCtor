@@ -62,27 +62,19 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
             var source = GenerateSource(type);
 
-            var nameParts = new List<string>();
+            var hintSymbolDisplayFormat = new SymbolDisplayFormat(
+                globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+                genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+                miscellaneousOptions:
+                    SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers |
+                    SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
 
-            var containingType = type.ContainingType;
-            while (containingType is not null)
-            {
-                nameParts.Add(containingType.ToDisplayString().Replace('<', '[').Replace('>', ']'));
-                containingType = containingType.ContainingType;
-            }
+            var hintName = type.ToDisplayString(hintSymbolDisplayFormat)
+                .Replace('<', '[')
+                .Replace('>', ']');
 
-            if (!type.ContainingNamespace.IsGlobalNamespace)
-            {
-                nameParts.Add(type.ContainingNamespace.Name);
-            }
-
-            nameParts.Reverse();
-
-            nameParts.Add(type.ToDisplayString().Replace('<', '[').Replace('>', ']'));
-            nameParts.Add("g");
-            nameParts.Add("cs");
-
-            context.AddSource(string.Join(".", nameParts), SourceText.From(source, Encoding.UTF8));
+            context.AddSource($"{hintName}.g.cs", SourceText.From(source, Encoding.UTF8));
         }
     }
 
@@ -121,7 +113,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         var containingType = type.ContainingType;
         while (containingType is not null)
         {
-            typeStack.Push(containingType.ToDisplayString());
+            typeStack.Push(containingType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
             containingType = containingType.ContainingType;
         }
 
@@ -134,7 +126,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             source.IncreaseIndent();
         }
 
-        source.AppendLine($"partial class {type.ToDisplayString()}");
+        source.AppendLine($"partial class {type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}");
         source.AppendLine($"{{");
         source.IncreaseIndent();
 
