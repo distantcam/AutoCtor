@@ -144,6 +144,48 @@ namespace TestNamespace
         return Verify(driver);
     }
 
+    [Fact]
+    public Task RecordTest()
+    {
+        var code = @"
+[AutoConstruct]public partial record TestRecord
+{
+    private readonly T _item;
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
+    [Fact]
+    public Task MixedNestedClassAndRecordTest()
+    {
+        var code = @"
+public partial class OuterClass1
+{
+    public partial record OuterRecord1
+    {
+        public partial class OuterClass2
+        {
+            [AutoConstruct]public partial record TestRecord
+            {
+                private readonly int _item;
+            }
+        }
+    }
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
+
     private static CSharpCompilation Compile(params string[] code)
     {
         var references = AppDomain.CurrentDomain.GetAssemblies()
