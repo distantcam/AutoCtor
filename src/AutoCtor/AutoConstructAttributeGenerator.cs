@@ -22,7 +22,7 @@ public class AutoConstructAttributeGenerator : ISourceGenerator
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-public sealed class AutoConstructAttribute : Attribute
+internal sealed class AutoConstructAttribute : Attribute
 {
     public AutoConstructAttribute()
     {
