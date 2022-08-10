@@ -85,6 +85,38 @@ namespace TestNamespace
     }
 
     [Fact]
+    public Task GenericClassTest()
+    {
+        var code = @"
+[AutoConstruct]public partial class TestClass<T>
+{
+    private readonly T _item;
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
+    [Fact]
+    public Task RecordTest()
+    {
+        var code = @"
+[AutoConstruct]public partial record TestRecord
+{
+    private readonly T _item;
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
+    [Fact]
     public Task NestedClassTest()
     {
         var code = @"
@@ -129,38 +161,6 @@ namespace TestNamespace
     }
 
     [Fact]
-    public Task GenericClassTest()
-    {
-        var code = @"
-[AutoConstruct]public partial class TestClass<T>
-{
-    private readonly T _item;
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
-    }
-
-    [Fact]
-    public Task RecordTest()
-    {
-        var code = @"
-[AutoConstruct]public partial record TestRecord
-{
-    private readonly T _item;
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
-    }
-
-    [Fact]
     public Task MixedNestedClassAndRecordTest()
     {
         var code = @"
@@ -184,7 +184,6 @@ public partial class OuterClass1
 
         return Verify(driver);
     }
-
 
     private static CSharpCompilation Compile(params string[] code)
     {

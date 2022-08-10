@@ -22,6 +22,7 @@ public class AutoConstructAttributeGenerator : ISourceGenerator
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 internal sealed class AutoConstructAttribute : Attribute
 {
     public AutoConstructAttribute()
