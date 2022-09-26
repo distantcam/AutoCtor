@@ -23,8 +23,9 @@ public class AutoConstructAttributeGenerator : ISourceGenerator
 //------------------------------------------------------------------------------
 
 [System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-internal sealed class AutoConstructAttribute : Attribute
+internal sealed class AutoConstructAttribute : System.Attribute
 {
+    [System.Runtime.CompilerServices.CompilerGenerated]
     public AutoConstructAttribute()
     {
     }
