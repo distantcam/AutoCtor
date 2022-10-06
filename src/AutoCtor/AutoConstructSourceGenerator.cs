@@ -93,7 +93,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
         var fields = type.GetMembers()
             .OfType<IFieldSymbol>()
-            .Where(f => f.IsReadOnly);
+            .Where(f => f.IsReadOnly && !f.IsStatic);
 
         var parameters = fields.Select(f => $"{f.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {CreateFriendlyName(f.Name)}");
 

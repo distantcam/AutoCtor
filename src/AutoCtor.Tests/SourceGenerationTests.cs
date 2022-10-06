@@ -185,6 +185,25 @@ public partial class OuterClass1
         return Verify(driver);
     }
 
+    [Fact]
+    public Task ExcludeStaticFieldsTest()
+    {
+        var code = @"
+[AutoConstruct]public partial class StaticClass
+{
+
+    private readonly static int S = 4;
+    private readonly int _s;
+    private const int C = 5;
+}";
+        var compilation = Compile(code);
+
+        var generator = new AutoConstructSourceGenerator();
+        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        return Verify(driver);
+    }
+
     private static CSharpCompilation Compile(params string[] code)
     {
         var references = AppDomain.CurrentDomain.GetAssemblies()
