@@ -10,8 +10,7 @@
 
 partial class StaticClass
 {
-	public StaticClass(int s)
+	public StaticClass()
 	{
-		this._s = s;
 	}
 }

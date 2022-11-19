@@ -85,6 +85,11 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         }
     }
 
+    private static bool HasFieldInitialiser(IFieldSymbol symbol)
+    {
+        return symbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>().Any(x => x.Initializer != null);
+    }
+
     private static string GenerateSource(ITypeSymbol type)
     {
         var ns = type.ContainingNamespace.IsGlobalNamespace
@@ -93,7 +98,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
         var fields = type.GetMembers()
             .OfType<IFieldSymbol>()
-            .Where(f => f.IsReadOnly && !f.IsStatic);
+            .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f));
 
         var parameters = fields.Select(f => $"{f.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {CreateFriendlyName(f.Name)}");
 

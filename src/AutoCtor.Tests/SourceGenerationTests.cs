@@ -186,7 +186,7 @@ public partial class OuterClass1
     }
 
     [Fact]
-    public Task ExcludeStaticFieldsTest()
+    public Task ExcludeStaticAndInitialisedFieldsTest()
     {
         var code = @"
 [AutoConstruct]public partial class StaticClass
@@ -195,6 +195,8 @@ public partial class OuterClass1
     private readonly static int S = 4;
     private readonly int _s;
     private const int C = 5;
+
+    private readonly IList<int> _list = new List<int>();
 }";
         var compilation = Compile(code);
 
