@@ -118,8 +118,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         if (ns is not null)
         {
             source.AppendLine($"namespace {ns}");
-            source.AppendLine($"{{");
-            source.IncreaseIndent();
+            source.StartBlock();
         }
 
         var typeStack = new Stack<string>();
@@ -138,39 +137,31 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         while (typeStack.Count > 0)
         {
             source.AppendLine($"partial {typeStack.Pop()}");
-            source.AppendLine($"{{");
-            source.IncreaseIndent();
+            source.StartBlock();
         }
 
         source.AppendLine($"partial {typeKeyword} {type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}");
-        source.AppendLine($"{{");
-        source.IncreaseIndent();
+        source.StartBlock();
 
         source.AppendLine($"public {type.Name}({string.Join(", ", parameters)})");
-        source.AppendLine($"{{");
-        source.IncreaseIndent();
+        source.StartBlock();
 
         foreach (var item in fields)
         {
             source.AppendLine($"this.{item.Name} = {CreateFriendlyName(item.Name)};");
         }
 
-        source.DecreaseIndent();
-        source.AppendLine($"}}");
-
-        source.DecreaseIndent();
-        source.AppendLine($"}}");
+        source.EndBlock();
+        source.EndBlock();
 
         for (var i = 0; i < nestedCount; i++)
         {
-            source.DecreaseIndent();
-            source.AppendLine($"}}");
+            source.EndBlock();
         }
 
         if (ns is not null)
         {
-            source.DecreaseIndent();
-            source.AppendLine($"}}");
+            source.EndBlock();
         }
 
         return source.ToString();

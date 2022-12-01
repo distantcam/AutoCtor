@@ -11,7 +11,7 @@ public class SourceGenerationTests
     public Task AttributeTest(string attribute)
     {
         var code = @$"
-{attribute}public partial class TestClass {{}}
+{attribute}public partial class AttributeTestClass {{}}
 ";
         var compilation = Compile(code);
 
@@ -37,7 +37,7 @@ public class SourceGenerationTests
 using System;
 using System.Collections.Generic;
 
-[AutoConstruct]public partial class TestClass {{ private readonly {type} _item; }}
+[AutoConstruct]public partial class TypesTestClass {{ private readonly {type} _item; }}
 ";
         var compilation = Compile(code);
 
@@ -47,163 +47,18 @@ using System.Collections.Generic;
         return Verify(driver).UseParameters(type);
     }
 
-    [Fact]
-    public Task FriendlyParameterNamesTest()
+    [Theory]
+    [MemberData(nameof(GetExamples))]
+    public Task ExamplesTest(string code, string name)
     {
-        var code = @"
-[AutoConstruct]public partial class TestClass
-{
-    private readonly int _underscorePrefix;
-    private readonly int camelCase;
-    private readonly int PascalCase;
-}";
         var compilation = Compile(code);
 
         var generator = new AutoConstructSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
-        return Verify(driver);
-    }
-
-    [Fact]
-    public Task NamespaceTest()
-    {
-        var code = @"
-namespace TestNamespace
-{
-    [AutoConstruct]public partial class TestClass
-    {
-        private readonly int _item;
-    }
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
-    }
-
-    [Fact]
-    public Task GenericClassTest()
-    {
-        var code = @"
-[AutoConstruct]public partial class TestClass<T>
-{
-    private readonly T _item;
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
-    }
-
-    [Fact]
-    public Task RecordTest()
-    {
-        var code = @"
-[AutoConstruct]public partial record TestRecord
-{
-    private readonly T _item;
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
-    }
-
-    [Fact]
-    public Task NestedClassTest()
-    {
-        var code = @"
-public partial class OuterClass
-{
-    [AutoConstruct]public partial class TestClass
-    {
-        private readonly int _item;
-    }
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
-    }
-
-    [Fact]
-    public Task NamespaceDoubleNestedClassTest()
-    {
-        var code = @"
-namespace TestNamespace
-{
-    public partial class OuterClass1
-    {
-        public partial class OuterClass2
-        {
-            [AutoConstruct]public partial class TestClass
-            {
-                private readonly int _item;
-            }
-        }
-    }
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
-    }
-
-    [Fact]
-    public Task MixedNestedClassAndRecordTest()
-    {
-        var code = @"
-public partial class OuterClass1
-{
-    public partial record OuterRecord1
-    {
-        public partial class OuterClass2
-        {
-            [AutoConstruct]public partial record TestRecord
-            {
-                private readonly int _item;
-            }
-        }
-    }
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
-    }
-
-    [Fact]
-    public Task ExcludeStaticAndInitialisedFieldsTest()
-    {
-        var code = @"
-[AutoConstruct]public partial class StaticClass
-{
-
-    private readonly static int S = 4;
-    private readonly int _s;
-    private const int C = 5;
-
-    private readonly IList<int> _list = new List<int>();
-}";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver);
+        return Verify(driver)
+            .UseDirectory("Examples")
+            .UseTypeName(name);
     }
 
     private static CSharpCompilation Compile(params string[] code)
@@ -218,5 +73,22 @@ public partial class OuterClass1
             code.Select(c => CSharpSyntaxTree.ParseText(c)),
             references,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+    }
+
+    public static IEnumerable<object[]> GetExamples()
+    {
+        var baseDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
+
+        if (baseDir == null)
+        {
+            yield break;
+        }
+
+        var examples = Directory.GetFiles(Path.Combine(baseDir.FullName, "Examples"), "*.cs");
+        foreach (var example in examples)
+        {
+            var code = File.ReadAllText(example);
+            yield return new object[] { code, Path.GetFileNameWithoutExtension(example) };
+        }
     }
 }
