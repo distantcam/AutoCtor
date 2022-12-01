@@ -138,3 +138,6 @@
 #*.props     merge=binary
 #*.filters   merge=binary
 #*.vcxitems  merge=binary
+
+# https://github.com/VerifyTests/Verify#verified
+*.verified.cs text eol=lf
