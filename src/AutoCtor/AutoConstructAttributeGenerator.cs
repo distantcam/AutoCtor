@@ -25,7 +25,7 @@ public class AutoConstructAttributeGenerator : ISourceGenerator
 #if AUTOCTOR_EMBED_ATTRIBUTES
 namespace AutoCtor
 {
-    [System.CompilerGenerated]
+    [System.Runtime.CompilerServices.CompilerGenerated]
     [System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
     [System.Diagnostics.Conditional(""AUTOCTOR_USAGES"")]
     internal sealed class AutoConstructAttribute : System.Attribute
