@@ -1,7 +1,7 @@
 ﻿using AutoCtor;
 
 [AutoConstruct]
-public abstract partial class AbstractClassTest
+public partial struct StructTest
 {
     private readonly int _item;
 }

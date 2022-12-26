@@ -1,4 +1,6 @@
-﻿public partial class OuterClass
+﻿using AutoCtor;
+
+public partial class OuterClass
 {
     [AutoConstruct]
     public partial class NestedClassTest

@@ -2,9 +2,6 @@
 
 public interface ICustomService { }
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-public class AutoConstruct : Attribute { }
-
 #region YourCode
 
 [AutoConstruct]

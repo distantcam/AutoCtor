@@ -1,4 +1,6 @@
-﻿[AutoConstruct]
+﻿using AutoCtor;
+
+[AutoConstruct]
 public partial class ExcludeStaticAndInitialisedFieldsTest
 {
     private readonly static int S = 4;

@@ -1,4 +1,6 @@
-﻿public partial class OuterClass1
+﻿using AutoCtor;
+
+public partial class OuterClass1
 {
     public partial record OuterRecord1
     {

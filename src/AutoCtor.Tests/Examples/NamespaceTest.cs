@@ -1,4 +1,6 @@
-﻿namespace TestNamespace;
+﻿using AutoCtor;
+
+namespace TestNamespace;
 
 [AutoConstruct]
 public partial class NamespaceTest

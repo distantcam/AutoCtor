@@ -22,14 +22,21 @@ public class AutoConstructAttributeGenerator : ISourceGenerator
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-internal sealed class AutoConstructAttribute : System.Attribute
+#if AUTOCTOR_EMBED_ATTRIBUTES
+namespace AutoCtor
 {
-    [System.Runtime.CompilerServices.CompilerGenerated]
-    public AutoConstructAttribute()
+    [System.CompilerGenerated]
+    [System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
+    [System.Diagnostics.Conditional(""AUTOCTOR_USAGES"")]
+    internal sealed class AutoConstructAttribute : System.Attribute
     {
+        [System.Runtime.CompilerServices.CompilerGenerated]
+        public AutoConstructAttribute()
+        {
+        }
     }
-}";
+}
+#endif";
 
         context.AddSource("AutoConstructAttribute.g.cs", SourceText.From(source, Encoding.UTF8));
     }

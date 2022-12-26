@@ -1,4 +1,6 @@
-﻿[AutoConstruct]
+﻿using AutoCtor;
+
+[AutoConstruct]
 public partial class FriendlyParameterNamesTest
 {
     private readonly int _underscorePrefix;

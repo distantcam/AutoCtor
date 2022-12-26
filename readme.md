@@ -43,3 +43,51 @@ partial class ExampleClass
 }
 ```
 <!-- endSnippet -->
+
+## Embedding the attributes in your project
+
+By default, the `[AutoConstruct]` attributes referenced in your project are contained in an external dll. It is also possible to embed the attributes directly in your project. To do this, you must do two things:
+
+1. Define the MSBuild constant `AUTOCTOR_EMBED_ATTRIBUTES`. This ensures the attributes are embedded in your project.
+2. Add `compile` to the list of excluded assets in your `<PackageReference>` element. This ensures the attributes in your project are referenced, insted of the _AutoCtor.Attributes.dll_ library.
+
+Your project file should look like this:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <!--  Define the MSBuild constant    -->
+    <DefineConstants>AUTOCTOR_EMBED_ATTRIBUTES</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Add the package -->
+  <PackageReference Include="AutoCtor"
+                    PrivateAssets="all"
+                    ExcludeAssets="compile;runtime" />
+<!--                               ☝ Add compile to the list of excluded assets. -->
+
+</Project>
+```
+
+## Preserving usage of the `[AutoConstruct]` attribute
+
+The `[AutoConstruct]` attributes are decorated with the `[Conditional]` attribute, so their usage will not appear in the build output of your project. If you use reflection at runtime you will not find the `[AutoConstruct]` attributes.
+
+If you wish to preserve these attributes in the build output, you can define the `AUTOCTOR_USAGES` MSBuild variable.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <!--  Define the MSBuild constant    -->
+    <DefineConstants>AUTOCTOR_USAGES</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Add the package -->
+  <PackageReference Include="AutoCtor" PrivateAssets="all" />
+
+</Project>
+```

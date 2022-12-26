@@ -1,4 +1,6 @@
-﻿namespace TestNamespace;
+﻿using AutoCtor;
+
+namespace TestNamespace;
 
 public partial class OuterClass1
 {

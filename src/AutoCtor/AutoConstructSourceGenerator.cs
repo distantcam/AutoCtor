@@ -43,6 +43,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         {
             ClassDeclarationSyntax classDeclarationSyntax => classDeclarationSyntax,
             RecordDeclarationSyntax recordDeclarationSyntax => recordDeclarationSyntax,
+            StructDeclarationSyntax structDeclarationSyntax => structDeclarationSyntax,
             _ => null
         };
 
