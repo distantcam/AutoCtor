@@ -1,8 +1,9 @@
 ﻿using System.Text;
+using Microsoft.CodeAnalysis.Text;
 
 namespace AutoCtor;
 
-public class CodeBuilder
+internal class CodeBuilder
 {
     private readonly StringBuilder _stringBuilder = new();
     private int _indent = 0;
@@ -20,5 +21,11 @@ public class CodeBuilder
     public void IncreaseIndent() => _indent++;
     public void DecreaseIndent() => _indent--;
     public void AppendLine(string line) => _stringBuilder.AppendLine(new string('\t', _indent) + line);
+    public void AppendLines(IEnumerable<string> lines)
+    {
+        foreach (var line in lines)
+            AppendLine(line.TrimEnd('\r'));
+    }
     public override string ToString() => _stringBuilder.ToString();
+    public SourceText ToSourceText(Encoding? encoding = null) => SourceText.From(_stringBuilder.ToString(), encoding);
 }

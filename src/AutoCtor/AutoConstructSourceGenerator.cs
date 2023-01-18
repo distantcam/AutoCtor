@@ -15,7 +15,9 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             .Where(t => t != null)
             .Collect();
 
+#pragma warning disable CS8622
         context.RegisterSourceOutput(types, GenerateSource);
+#pragma warning restore CS8622
     }
 
     private static bool IsCorrectAttribute(SyntaxNode syntaxNode, CancellationToken cancellationToken)
@@ -30,16 +32,18 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             _ => null
         };
 
-        return name == "AutoConstruct" || name == "AutoConstructAttribute";
+        return IsCorrectAttributeName(name);
     }
 
-    private static ITypeSymbol GetTypeFromAttribute(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+    private static bool IsCorrectAttributeName(string? name) => name == "AutoConstruct" || name == "AutoConstructAttribute";
+
+    private static ITypeSymbol? GetTypeFromAttribute(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
         var attributeSyntax = (AttributeSyntax)context.Node;
 
         // "attribute.Parent" is "AttributeListSyntax"
         // "attribute.Parent.Parent" is a C# fragment the attributes are applied to
-        TypeDeclarationSyntax typeNode = attributeSyntax.Parent?.Parent switch
+        TypeDeclarationSyntax? typeNode = attributeSyntax.Parent?.Parent switch
         {
             ClassDeclarationSyntax classDeclarationSyntax => classDeclarationSyntax,
             RecordDeclarationSyntax recordDeclarationSyntax => recordDeclarationSyntax,
@@ -53,11 +57,9 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         if (context.SemanticModel.GetDeclaredSymbol(typeNode) is not ITypeSymbol type)
             return null;
 
-        var hasCorrectAttribute = type.GetAttributes()
-            .Any(a => (a.AttributeClass.Name == "AutoConstruct" || a.AttributeClass.Name == "AutoConstructAttribute"));
-
-        return hasCorrectAttribute ? type : null;
+        return type;
     }
+
 
     private static void GenerateSource(SourceProductionContext context, ImmutableArray<ITypeSymbol> types)
     {
@@ -82,7 +84,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
                 .Replace('<', '[')
                 .Replace('>', ']');
 
-            context.AddSource($"{hintName}.g.cs", SourceText.From(source, Encoding.UTF8));
+            context.AddSource($"{hintName}.g.cs", source);
         }
     }
 
@@ -91,7 +93,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return symbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>().Any(x => x.Initializer != null);
     }
 
-    private static string GenerateSource(ITypeSymbol type)
+    private static SourceText GenerateSource(ITypeSymbol type)
     {
         var ns = type.ContainingNamespace.IsGlobalNamespace
                 ? null
@@ -165,7 +167,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             source.EndBlock();
         }
 
-        return source.ToString();
+        return source.ToSourceText(Encoding.UTF8);
     }
 
     private static string CreateFriendlyName(string name)
