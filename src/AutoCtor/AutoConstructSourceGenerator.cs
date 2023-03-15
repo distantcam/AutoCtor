@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -60,7 +59,6 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return type;
     }
 
-
     private static void GenerateSource(SourceProductionContext context, ImmutableArray<ITypeSymbol> types)
     {
         if (types.IsDefaultOrEmpty)
@@ -103,7 +101,23 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             .OfType<IFieldSymbol>()
             .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f));
 
-        var parameters = fields.Select(f => $"{f.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {CreateFriendlyName(f.Name)}");
+        var parameters = fields
+            .Select(f => $"{f.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {CreateFriendlyName(f.Name)}");
+
+        var baseCtorParameters = Enumerable.Empty<string>();
+        var baseCtorArgs = Enumerable.Empty<string>();
+
+        if (type.BaseType != null)
+        {
+            var constructor = type.BaseType.Constructors.OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any());
+            if (constructor != null)
+            {
+                baseCtorParameters = constructor.Parameters
+                    .Select(p => $"{p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {CreateFriendlyName(p.Name)}");
+                baseCtorArgs = constructor.Parameters.Select(p => CreateFriendlyName(p.Name));
+                parameters = baseCtorParameters.Concat(parameters);
+            }
+        }
 
         var typeKeyword = type.IsRecord ? "record" : "class";
 
@@ -146,7 +160,10 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         source.AppendLine($"partial {typeKeyword} {type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}");
         source.StartBlock();
 
-        source.AppendLine($"public {type.Name}({string.Join(", ", parameters)})");
+        if (baseCtorParameters.Any())
+            source.AppendLine($"public {type.Name}({parameters.AsParams()}) : base({baseCtorArgs.AsParams()})");
+        else
+            source.AppendLine($"public {type.Name}({parameters.AsParams()})");
         source.StartBlock();
 
         foreach (var item in fields)
@@ -167,7 +184,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             source.EndBlock();
         }
 
-        return source.ToSourceText(Encoding.UTF8);
+        return source;
     }
 
     private static string CreateFriendlyName(string name)

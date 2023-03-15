@@ -28,4 +28,5 @@ internal class CodeBuilder
     }
     public override string ToString() => _stringBuilder.ToString();
     public SourceText ToSourceText(Encoding? encoding = null) => SourceText.From(_stringBuilder.ToString(), encoding);
+    public static implicit operator SourceText(CodeBuilder codeBuilder) => SourceText.From(codeBuilder._stringBuilder.ToString(), Encoding.UTF8);
 }

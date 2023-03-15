@@ -19,6 +19,20 @@ snippet: YourCode
 
 snippet: GeneratedCode
 
+### More examples
+
+You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
+
+snippet: ExampleWithInitializer
+
+snippet: ExampleWithInitializerGeneratedCode
+
+If there is a single base constructor with parameters, AutoCtor will include that base constructor in the constructor it creates.
+
+snippet: ExampleWithBase
+
+snippet: ExampleWithBaseGeneratedCode
+
 ## Embedding the attributes in your project
 
 By default, the `[AutoConstruct]` attributes referenced in your project are contained in an external dll. It is also possible to embed the attributes directly in your project. To do this, you must do two things:
@@ -32,7 +46,6 @@ Your project file should look like this:
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
     <!--  Define the MSBuild constant    -->
     <DefineConstants>AUTOCTOR_EMBED_ATTRIBUTES</DefineConstants>
   </PropertyGroup>
@@ -56,7 +69,6 @@ If you wish to preserve these attributes in the build output, you can define the
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
     <!--  Define the MSBuild constant    -->
     <DefineConstants>AUTOCTOR_USAGES</DefineConstants>
   </PropertyGroup>

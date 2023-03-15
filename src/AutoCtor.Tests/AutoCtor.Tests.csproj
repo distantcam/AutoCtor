@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Examples\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Examples\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MarkdownSnippets.MsBuild" Version="24.5.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

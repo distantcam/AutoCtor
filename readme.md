@@ -44,6 +44,68 @@ partial class ExampleClass
 ```
 <!-- endSnippet -->
 
+### More examples
+
+You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
+
+<!-- snippet: ExampleWithInitializer -->
+```cs
+[AutoConstruct]
+public partial class ClassWithInitializer
+{
+    private readonly ICustomService _customService;
+    private readonly IList<string> _list = new List<string>();
+}
+```
+<!-- endSnippet -->
+
+<!-- snippet: ExampleWithInitializerGeneratedCode -->
+```cs
+partial class ClassWithInitializer
+{
+    public ClassWithInitializer(ICustomService customService)
+    {
+        _customService = customService;
+        // no code to set _list
+    }
+}
+```
+<!-- endSnippet -->
+
+If there is a single base constructor with parameters, AutoCtor will include that base constructor in the constructor it creates.
+
+<!-- snippet: ExampleWithBase -->
+```cs
+public abstract class BaseClass
+{
+    protected IAnotherService _anotherService;
+
+    public BaseClass(IAnotherService anotherService)
+    {
+        _anotherService = anotherService;
+    }
+}
+
+[AutoConstruct]
+public partial class ClassWithBase : BaseClass
+{
+    private readonly ICustomService _customService;
+}
+```
+<!-- endSnippet -->
+
+<!-- snippet: ExampleWithBaseGeneratedCode -->
+```cs
+partial class ClassWithBase
+{
+    public ClassWithBase(IAnotherService anotherService, ICustomService customService) : base(anotherService)
+    {
+        _customService = customService;
+    }
+}
+```
+<!-- endSnippet -->
+
 ## Embedding the attributes in your project
 
 By default, the `[AutoConstruct]` attributes referenced in your project are contained in an external dll. It is also possible to embed the attributes directly in your project. To do this, you must do two things:
@@ -57,7 +119,6 @@ Your project file should look like this:
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
     <!--  Define the MSBuild constant    -->
     <DefineConstants>AUTOCTOR_EMBED_ATTRIBUTES</DefineConstants>
   </PropertyGroup>
@@ -81,7 +142,6 @@ If you wish to preserve these attributes in the build output, you can define the
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
     <!--  Define the MSBuild constant    -->
     <DefineConstants>AUTOCTOR_USAGES</DefineConstants>
   </PropertyGroup>

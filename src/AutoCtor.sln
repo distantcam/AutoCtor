@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CC56491-C17C-44A5-8686-C41491E2E624}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		..\readme.source.md = ..\readme.source.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor", "AutoCtor\AutoCtor.csproj", "{71DE1A8A-4E21-494A-860A-A6E6144AA3FE}"
@@ -14,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Example", "AutoCto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Tests", "AutoCtor.Tests\AutoCtor.Tests.csproj", "{C8D666C8-D2F5-4A6E-928D-EAFE8F688AAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCtor.Attributes", "AutoCtor.Attributes\AutoCtor.Attributes.csproj", "{638834EA-E4D5-429E-A11E-4BFA91FD59E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Attributes", "AutoCtor.Attributes\AutoCtor.Attributes.csproj", "{638834EA-E4D5-429E-A11E-4BFA91FD59E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
