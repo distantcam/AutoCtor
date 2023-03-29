@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Tests", "AutoCtor.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Attributes", "AutoCtor.Attributes\AutoCtor.Attributes.csproj", "{638834EA-E4D5-429E-A11E-4BFA91FD59E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCtor.Debug", "AutoCtor.Debug\AutoCtor.Debug.csproj", "{3B702044-D3C4-4540-80F8-1A37B65D0AD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{638834EA-E4D5-429E-A11E-4BFA91FD59E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{638834EA-E4D5-429E-A11E-4BFA91FD59E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{638834EA-E4D5-429E-A11E-4BFA91FD59E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B702044-D3C4-4540-80F8-1A37B65D0AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B702044-D3C4-4540-80F8-1A37B65D0AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B702044-D3C4-4540-80F8-1A37B65D0AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B702044-D3C4-4540-80F8-1A37B65D0AD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

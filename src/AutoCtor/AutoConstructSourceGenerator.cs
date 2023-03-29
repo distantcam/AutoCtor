@@ -64,11 +64,23 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         if (types.IsDefaultOrEmpty)
             return;
 
-        foreach (var type in types)
+        var ctorMaps = new Dictionary<ITypeSymbol, IEnumerable<string>>(SymbolEqualityComparer.Default);
+
+        var baseTypes = types.Where(t => t.BaseType == null || !types.Contains(t.BaseType));
+        var extendedTypes = types.Except(baseTypes);
+
+        foreach (var type in baseTypes.Concat(extendedTypes))
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            var source = GenerateSource(type);
+            IEnumerable<string>? baseParameters = default;
+
+            if (type.BaseType != null)
+                ctorMaps.TryGetValue(type.BaseType, out baseParameters);
+
+            (var source, var parameters) = GenerateSource(type, baseParameters);
+
+            ctorMaps.Add(type, parameters);
 
             var hintSymbolDisplayFormat = new SymbolDisplayFormat(
                 globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
@@ -91,7 +103,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return symbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>().Any(x => x.Initializer != null);
     }
 
-    private static SourceText GenerateSource(ITypeSymbol type)
+    private static (SourceText, IEnumerable<string>) GenerateSource(ITypeSymbol type, IEnumerable<string>? baseParameters = default)
     {
         var ns = type.ContainingNamespace.IsGlobalNamespace
                 ? null
@@ -115,6 +127,12 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
                 baseCtorParameters = constructor.Parameters
                     .Select(p => $"{p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {CreateFriendlyName(p.Name)}");
                 baseCtorArgs = constructor.Parameters.Select(p => CreateFriendlyName(p.Name));
+                parameters = baseCtorParameters.Concat(parameters);
+            }
+            else if (baseParameters != null)
+            {
+                baseCtorParameters = baseParameters.ToArray();
+                baseCtorArgs = baseParameters.Select(p => p.Split(' ')[1]).ToArray();
                 parameters = baseCtorParameters.Concat(parameters);
             }
         }
@@ -184,7 +202,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             source.EndBlock();
         }
 
-        return source;
+        return (source, parameters);
     }
 
     private static string CreateFriendlyName(string name)

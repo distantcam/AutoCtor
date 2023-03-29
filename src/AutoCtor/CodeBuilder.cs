@@ -26,7 +26,5 @@ internal class CodeBuilder
         foreach (var line in lines)
             AppendLine(line.TrimEnd('\r'));
     }
-    public override string ToString() => _stringBuilder.ToString();
-    public SourceText ToSourceText(Encoding? encoding = null) => SourceText.From(_stringBuilder.ToString(), encoding);
     public static implicit operator SourceText(CodeBuilder codeBuilder) => SourceText.From(codeBuilder._stringBuilder.ToString(), Encoding.UTF8);
 }
