@@ -36,11 +36,4 @@
     <ProjectReference Include="..\AutoCtor\AutoCtor.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Examples\InitializationTest.ExamplesTest#OuterClass.NestedClassTest.g.verified.cs">
-      <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
-      <DependentUpon>InitializationTest.cs</DependentUpon>
-    </None>
-  </ItemGroup>
-
 </Project>
