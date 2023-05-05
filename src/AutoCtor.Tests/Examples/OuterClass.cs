@@ -1,10 +1,14 @@
 ﻿using AutoCtor;
 
-public partial class OuterClass
+[AutoConstruct]
+public partial class InitializationTest
 {
-    [AutoConstruct]
-    public partial class NestedClassTest
+    private readonly string InputName;
+
+    partial void Inititilize()
     {
-        private readonly int _item;
+        NameHash = Encoding.UTF8.GetBytes(InputName);
     }
+
+    public byte[] NameHash { get; }
 }

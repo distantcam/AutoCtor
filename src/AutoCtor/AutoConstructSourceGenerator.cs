@@ -189,7 +189,12 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             source.AppendLine($"this.{item.Name} = {CreateFriendlyName(item.Name)};");
         }
 
+        source.AppendLine("Initialize();");
+
         source.EndBlock();
+
+        source.AppendLine("partial void Initialize();");
+
         source.EndBlock();
 
         for (var i = 0; i < nestedCount; i++)
