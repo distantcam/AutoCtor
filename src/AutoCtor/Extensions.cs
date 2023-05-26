@@ -39,6 +39,4 @@ internal static class Extensions
             _ => default,
         };
     }
-
-    public static string AsParams(this IEnumerable<string> source, string separator = ", ") => string.Join(separator, source);
 }

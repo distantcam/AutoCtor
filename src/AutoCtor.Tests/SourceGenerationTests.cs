@@ -1,10 +1,19 @@
 ﻿using AutoCtor;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Xunit.Abstractions;
 
 [UsesVerify]
 public class SourceGenerationTests
 {
+    private readonly VerifySettings _settings;
+
+    public SourceGenerationTests()
+    {
+        _settings = new();
+        _settings.ScrubLinesContaining("Version:", "SHA:");
+    }
+
     [Theory]
     [InlineData("[AutoConstruct]")]
     [InlineData("[AutoConstructAttribute]")]
@@ -18,7 +27,8 @@ public class SourceGenerationTests
         var generator = new AutoConstructSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
-        return Verify(driver).UseParameters(attribute);
+        return Verify(driver, _settings)
+            .UseParameters(attribute);
     }
 
     [Theory]
@@ -44,21 +54,25 @@ using System.Collections.Generic;
         var generator = new AutoConstructSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
-        return Verify(driver).UseParameters(type);
+        return Verify(driver, _settings)
+            .UseParameters(type);
     }
 
     [Theory]
     [MemberData(nameof(GetExamples))]
-    public Task ExamplesTest(string code, string name)
+    public Task ExamplesTest(CodeFileTheoryData theoryData)
     {
-        var compilation = Compile(code);
+        var baseDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
+        var exampleInterfaces = File.ReadAllText(Path.Combine(baseDir.FullName, "Examples", "IExampleInterfaces.cs"));
+
+        var compilation = Compile(theoryData.Code, exampleInterfaces);
 
         var generator = new AutoConstructSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
-        return Verify(driver)
+        return Verify(driver, _settings)
             .UseDirectory("Examples")
-            .UseTypeName(name);
+            .UseTypeName(theoryData.Name);
     }
 
     private static CSharpCompilation Compile(params string[] code)
@@ -87,8 +101,36 @@ using System.Collections.Generic;
         var examples = Directory.GetFiles(Path.Combine(baseDir.FullName, "Examples"), "*.cs");
         foreach (var example in examples)
         {
+            if (example.Contains(".g.") || example.Contains("IExampleInterfaces"))
+                continue;
+
             var code = File.ReadAllText(example);
-            yield return new object[] { code, Path.GetFileNameWithoutExtension(example) };
+            yield return new object[] {
+                new CodeFileTheoryData {
+                    Code = code,
+                    Name = Path.GetFileNameWithoutExtension(example)
+                }
+            };
         }
+    }
+
+    public class CodeFileTheoryData : IXunitSerializable
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+
+        public void Deserialize(IXunitSerializationInfo info)
+        {
+            Name = info.GetValue<string>("Name");
+            Code = info.GetValue<string>("Code");
+        }
+
+        public void Serialize(IXunitSerializationInfo info)
+        {
+            info.AddValue("Name", Name);
+            info.AddValue("Code", Code);
+        }
+
+        public override string ToString() => Name + ".cs";
     }
 }

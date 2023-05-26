@@ -34,7 +34,8 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return IsCorrectAttributeName(name);
     }
 
-    private static bool IsCorrectAttributeName(string? name) => name == "AutoConstruct" || name == "AutoConstructAttribute";
+    private static bool IsCorrectAttributeName(string? name) =>
+        name == "AutoConstruct" || name == "AutoConstructAttribute";
 
     private static ITypeSymbol? GetTypeFromAttribute(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
@@ -64,30 +65,60 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         if (types.IsDefaultOrEmpty)
             return;
 
-        var ctorMaps = new Dictionary<ITypeSymbol, IEnumerable<string>>(SymbolEqualityComparer.Default);
+        var ctorMaps = new Dictionary<ITypeSymbol, IEnumerable<Parameter>>(SymbolEqualityComparer.Default);
 
         var baseTypes = types.Where(t => t.BaseType == null || !types.Contains(t.BaseType));
         var extendedTypes = types.Except(baseTypes);
 
-        foreach (var type in baseTypes.Concat(extendedTypes))
+        foreach (var type in baseTypes.Concat(extendedTypes).OfType<INamedTypeSymbol>())
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            IEnumerable<string>? baseParameters = default;
+            IEnumerable<Parameter>? baseParameters = default;
 
             if (type.BaseType != null)
-                ctorMaps.TryGetValue(type.BaseType, out baseParameters);
+            {
+                if (type.BaseType.IsGenericType)
+                {
+                    if (ctorMaps.TryGetValue(type.BaseType.ConstructUnboundGenericType(), out var temp))
+                    {
+                        baseParameters = temp.ToArray();
+                        var typedArgs = type.BaseType.TypeArguments;
+                        var typedParameters = type.BaseType.TypeParameters;
+                        foreach (var bp in baseParameters)
+                        {
+                            for (var i = 0; i < typedParameters.Length; i++)
+                            {
+                                if (SymbolEqualityComparer.Default.Equals(typedParameters[i], bp.Type))
+                                {
+                                    bp.Type = typedArgs[i];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    ctorMaps.TryGetValue(type.BaseType, out baseParameters);
+                }
+            }
 
             (var source, var parameters) = GenerateSource(type, baseParameters);
 
-            ctorMaps.Add(type, parameters);
+            if (type.IsGenericType)
+                ctorMaps.Add(type.ConstructUnboundGenericType(), parameters);
+            else
+                ctorMaps.Add(type, parameters);
 
             var hintSymbolDisplayFormat = new SymbolDisplayFormat(
-                globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
-                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-                genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+                globalNamespaceStyle:
+                    SymbolDisplayGlobalNamespaceStyle.Omitted,
+                typeQualificationStyle:
+                    SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+                genericsOptions:
+                    SymbolDisplayGenericsOptions.IncludeTypeParameters,
                 miscellaneousOptions:
-                    SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers |
                     SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
 
             var hintName = type.ToDisplayString(hintSymbolDisplayFormat)
@@ -103,7 +134,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return symbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>().Any(x => x.Initializer != null);
     }
 
-    private static (SourceText, IEnumerable<string>) GenerateSource(ITypeSymbol type, IEnumerable<string>? baseParameters = default)
+    private static (SourceText, IEnumerable<Parameter>) GenerateSource(ITypeSymbol type, IEnumerable<Parameter>? baseParameters = default)
     {
         var ns = type.ContainingNamespace.IsGlobalNamespace
                 ? null
@@ -113,10 +144,9 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             .OfType<IFieldSymbol>()
             .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f));
 
-        var parameters = fields
-            .Select(f => $"{f.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {CreateFriendlyName(f.Name)}");
+        var parameters = fields.Select(CreateParameter);
 
-        var baseCtorParameters = Enumerable.Empty<string>();
+        var baseCtorParameters = Enumerable.Empty<Parameter>();
         var baseCtorArgs = Enumerable.Empty<string>();
 
         if (type.BaseType != null)
@@ -124,15 +154,14 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             var constructor = type.BaseType.Constructors.OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any());
             if (constructor != null)
             {
-                baseCtorParameters = constructor.Parameters
-                    .Select(p => $"{p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {CreateFriendlyName(p.Name)}");
+                baseCtorParameters = constructor.Parameters.Select(CreateParameter);
                 baseCtorArgs = constructor.Parameters.Select(p => CreateFriendlyName(p.Name));
                 parameters = baseCtorParameters.Concat(parameters);
             }
             else if (baseParameters != null)
             {
                 baseCtorParameters = baseParameters.ToArray();
-                baseCtorArgs = baseParameters.Select(p => p.Split(' ')[1]).ToArray();
+                baseCtorArgs = baseParameters.Select(p => p.Name).ToArray();
                 parameters = baseCtorParameters.Concat(parameters);
             }
         }
@@ -143,6 +172,8 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         source.AppendLine($"//------------------------------------------------------------------------------");
         source.AppendLine($"// <auto-generated>");
         source.AppendLine($"//     This code was generated by https://github.com/distantcam/AutoCtor");
+        source.AppendLine($"//     Version: {ThisAssembly.Git.SemVer.Major}.{ThisAssembly.Git.SemVer.Minor}.{ThisAssembly.Git.SemVer.Patch}");
+        source.AppendLine($"//     SHA: {ThisAssembly.Git.Commit}");
         source.AppendLine($"//");
         source.AppendLine($"//     Changes to this file may cause incorrect behavior and will be lost if");
         source.AppendLine($"//     the code is regenerated.");
@@ -179,9 +210,11 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         source.StartBlock();
 
         if (baseCtorParameters.Any())
-            source.AppendLine($"public {type.Name}({parameters.AsParams()}) : base({baseCtorArgs.AsParams()})");
+        {
+            source.AppendLine($"public {type.Name}({ParamString(parameters)}) : base({string.Join(", ", baseCtorArgs)})");
+        }
         else
-            source.AppendLine($"public {type.Name}({parameters.AsParams()})");
+            source.AppendLine($"public {type.Name}({ParamString(parameters)})");
         source.StartBlock();
 
         foreach (var item in fields)
@@ -214,5 +247,22 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         }
 
         return name;
+    }
+
+    private static Parameter CreateParameter(IFieldSymbol f) =>
+        new Parameter { Type = f.Type, Name = CreateFriendlyName(f.Name) };
+    private static Parameter CreateParameter(IParameterSymbol p) =>
+        new Parameter { Type = p.Type, Name = CreateFriendlyName(p.Name) };
+
+    private static string ParamString(IEnumerable<Parameter> p) =>
+        string.Join(", ", p);
+
+    private class Parameter
+    {
+        public ITypeSymbol Type;
+        public string Name;
+
+        public override string ToString() =>
+            $"{Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {Name}";
     }
 }
