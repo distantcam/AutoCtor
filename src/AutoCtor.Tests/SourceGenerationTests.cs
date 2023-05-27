@@ -6,12 +6,12 @@ using Xunit.Abstractions;
 [UsesVerify]
 public class SourceGenerationTests
 {
-    private readonly VerifySettings _settings;
+    private readonly VerifySettings _codeVerifySettings;
 
     public SourceGenerationTests()
     {
-        _settings = new();
-        _settings.ScrubLinesContaining("Version:", "SHA:");
+        _codeVerifySettings = new();
+        _codeVerifySettings.ScrubLinesContaining("Version:", "SHA:");
     }
 
     [Theory]
@@ -27,7 +27,8 @@ public class SourceGenerationTests
         var generator = new AutoConstructSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
-        return Verify(driver, _settings)
+        return Verify(driver, _codeVerifySettings)
+            .UseDirectory("Verified")
             .UseParameters(attribute);
     }
 
@@ -54,13 +55,14 @@ using System.Collections.Generic;
         var generator = new AutoConstructSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
-        return Verify(driver, _settings)
+        return Verify(driver, _codeVerifySettings)
+            .UseDirectory("Verified")
             .UseParameters(type);
     }
 
     [Theory]
     [MemberData(nameof(GetExamples))]
-    public Task ExamplesTest(CodeFileTheoryData theoryData)
+    public Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
         var baseDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
         var exampleInterfaces = File.ReadAllText(Path.Combine(baseDir.FullName, "Examples", "IExampleInterfaces.cs"));
@@ -70,8 +72,8 @@ using System.Collections.Generic;
         var generator = new AutoConstructSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
-        return Verify(driver, _settings)
-            .UseDirectory("Examples")
+        return Verify(driver, _codeVerifySettings)
+            .UseDirectory(Path.Combine("Examples", "Verified"))
             .UseTypeName(theoryData.Name);
     }
 

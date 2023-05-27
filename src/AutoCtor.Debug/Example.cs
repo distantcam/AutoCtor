@@ -1,18 +1,41 @@
 ﻿using AutoCtor;
 
+public interface IA { }
+public interface IB { }
+public interface IC { }
+public interface ID { }
+public interface IE { }
+
 [AutoConstruct]
-public partial class GenericBase<T>
+public partial class A : B
 {
-    protected readonly T _t;
+    private readonly IA a;
 }
 
 [AutoConstruct]
-public partial class ConcreteClass : GenericBase<IExampleA>
+public partial class B : C
 {
+    private readonly IB b;
 }
 
 [AutoConstruct]
-public partial class ConcreteClassWithOtherClass : ConcreteClass
+public partial class C : D
 {
-    protected readonly IExampleB _exampleB;
+    private readonly IC c;
+}
+
+[AutoConstruct]
+public partial class D : E
+{
+    private readonly ID d;
+}
+
+[AutoConstruct]
+public partial class E : F
+{
+    private readonly IE e;
+}
+
+public class F
+{
 }

@@ -1,19 +1,35 @@
 ﻿using AutoCtor;
 
 [AutoConstruct]
-public abstract partial class InheritanceBaseA
+public partial class A : B
 {
-    protected readonly IExampleA _exampleA;
+    private readonly IA a;
 }
 
 [AutoConstruct]
-public abstract partial class InheritanceBaseB : InheritanceBaseA
+public partial class B : C
 {
-    protected readonly IExampleB _exampleB;
+    private readonly IB b;
 }
 
 [AutoConstruct]
-public abstract partial class InheritanceBaseC : InheritanceBaseB
+public partial class C : D
 {
-    protected readonly IExampleC _exampleC;
+    private readonly IC c;
+}
+
+[AutoConstruct]
+public partial class D : E
+{
+    private readonly ID d;
+}
+
+[AutoConstruct]
+public partial class E : F
+{
+    private readonly IE e;
+}
+
+public class F
+{
 }
