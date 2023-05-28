@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-partial class StructTest
+partial struct StructTest
 {
 	public StructTest(int item)
 	{

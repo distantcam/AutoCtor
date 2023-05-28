@@ -14,13 +14,13 @@ public partial class BaseTest : SimpleBase
 }
 
 [AutoConstruct]
-public abstract class ComplexBase
+public abstract partial class ComplexBase
 {
     private readonly string _baseValue;
 }
 
 [AutoConstruct]
-public abstract class ComplexTest : ComplexBase
+public abstract partial class ComplexTest : ComplexBase
 {
     private readonly string _value;
 }

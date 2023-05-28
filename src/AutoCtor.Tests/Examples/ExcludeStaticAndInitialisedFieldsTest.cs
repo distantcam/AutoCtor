@@ -1,4 +1,5 @@
-﻿using AutoCtor;
+﻿using System.Collections.Generic;
+using AutoCtor;
 
 [AutoConstruct]
 public partial class ExcludeStaticAndInitialisedFieldsTest

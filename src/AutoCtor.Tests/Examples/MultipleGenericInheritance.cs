@@ -1,7 +1,5 @@
 ﻿using AutoCtor;
 
-namespace AutoCtor.Tests.Examples;
-
 [AutoConstruct]
 public partial class Generic<TA, TB>
 {

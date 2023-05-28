@@ -1,4 +1,5 @@
 ﻿using AutoCtor;
+using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit.Abstractions;
@@ -47,7 +48,7 @@ public class SourceGenerationTests
         var code = @$"
 using System;
 using System.Collections.Generic;
-
+using AutoCtor;
 [AutoConstruct]public partial class TypesTestClass {{ private readonly {type} _item; }}
 ";
         var compilation = Compile(code);
@@ -68,13 +69,34 @@ using System.Collections.Generic;
         var exampleInterfaces = File.ReadAllText(Path.Combine(baseDir.FullName, "Examples", "IExampleInterfaces.cs"));
 
         var compilation = Compile(theoryData.Code, exampleInterfaces);
-
         var generator = new AutoConstructSourceGenerator();
         var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
 
         return Verify(driver, _codeVerifySettings)
             .UseDirectory(Path.Combine("Examples", "Verified"))
             .UseTypeName(theoryData.Name);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetExamples))]
+    public void CodeCompilesProperly(CodeFileTheoryData theoryData)
+    {
+        var ignoredWarnings = new string[] {
+            "CS0414" // Ignore unused fields
+        };
+
+        var baseDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
+        var exampleInterfaces = File.ReadAllText(Path.Combine(baseDir.FullName, "Examples", "IExampleInterfaces.cs"));
+
+        var compilation = Compile(theoryData.Code, exampleInterfaces);
+        var generator = new AutoConstructSourceGenerator();
+        CSharpGeneratorDriver.Create(generator)
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+
+        diagnostics.Should().BeEmpty();
+        outputCompilation.GetDiagnostics()
+            .Where(d => !ignoredWarnings.Contains(d.Id))
+            .Should().BeEmpty();
     }
 
     private static CSharpCompilation Compile(params string[] code)
@@ -88,7 +110,9 @@ using System.Collections.Generic;
             "AutoCtorTest",
             code.Select(c => CSharpSyntaxTree.ParseText(c)),
             references,
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            new CSharpCompilationOptions(
+                OutputKind.DynamicallyLinkedLibrary
+            ));
     }
 
     public static IEnumerable<object[]> GetExamples()

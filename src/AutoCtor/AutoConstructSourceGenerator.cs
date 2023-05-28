@@ -14,9 +14,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             .Where(t => t != null)
             .Collect();
 
-#pragma warning disable CS8622
         context.RegisterSourceOutput(types, GenerateSource);
-#pragma warning restore CS8622
     }
 
     private static bool IsCorrectAttribute(SyntaxNode syntaxNode, CancellationToken cancellationToken)
@@ -60,7 +58,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return type;
     }
 
-    private static void GenerateSource(SourceProductionContext context, ImmutableArray<ITypeSymbol> types)
+    private static void GenerateSource(SourceProductionContext context, ImmutableArray<ITypeSymbol?> types)
     {
         if (types.IsDefaultOrEmpty)
             return;
@@ -174,7 +172,8 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             }
         }
 
-        var typeKeyword = type.IsRecord ? "record" : "class";
+        var typeKeyword = type.IsRecord ? "record"
+            : type.IsValueType ? "struct" : "class";
 
         var source = new CodeBuilder();
         source.AppendLine($"//------------------------------------------------------------------------------");
@@ -200,7 +199,8 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         var containingType = type.ContainingType;
         while (containingType is not null)
         {
-            var contTypeKeyword = containingType.IsRecord ? "record" : "class";
+            var contTypeKeyword = containingType.IsRecord ? "record"
+                : containingType.IsValueType ? "struct" : "class";
             var typeName = containingType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
             typeStack.Push(contTypeKeyword + " " + typeName);
             containingType = containingType.ContainingType;
@@ -257,10 +257,8 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return name;
     }
 
-    private static Parameter CreateParameter(IFieldSymbol f) =>
-        new Parameter(f.Type, CreateFriendlyName(f.Name));
-    private static Parameter CreateParameter(IParameterSymbol p) =>
-        new Parameter(p.Type, CreateFriendlyName(p.Name));
+    private static Parameter CreateParameter(IFieldSymbol f) => new(f.Type, CreateFriendlyName(f.Name));
+    private static Parameter CreateParameter(IParameterSymbol p) => new(p.Type, CreateFriendlyName(p.Name));
 
     private static string ParamString(IEnumerable<Parameter> p) =>
         string.Join(", ", p);
