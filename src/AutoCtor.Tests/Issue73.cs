@@ -5,48 +5,9 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace AutoCtor.Tests;
 
 [UsesVerify]
-public class Issue73
+public class Issue73 : CompilationTestBase
 {
-    private readonly VerifySettings _codeVerifySettings;
-
-    public Issue73()
-    {
-        _codeVerifySettings = new();
-        _codeVerifySettings.ScrubLinesContaining("Version:", "SHA:");
-    }
-
-    [Fact]
-    public Task VerifyGeneratedCode()
-    {
-        var compilation = Compile();
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
-
-        return Verify(driver, _codeVerifySettings)
-            .UseDirectory("Verified");
-    }
-
-    [Fact]
-    public void CodeCompilesWithoutErrors()
-    {
-        var ignoredWarnings = new string[] {
-            "CS0414" // Ignore unused fields
-        };
-
-        var compilation = Compile();
-
-        var generator = new AutoConstructSourceGenerator();
-        CSharpGeneratorDriver.Create(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
-
-        diagnostics.Should().BeEmpty();
-        outputCompilation.GetDiagnostics()
-            .Where(d => !ignoredWarnings.Contains(d.Id))
-            .Should().BeEmpty();
-    }
-
-    private CSharpCompilation Compile()
+    protected override CSharpCompilation Compile()
     {
         var projectACode = @"
 using AutoCtor;
@@ -64,8 +25,7 @@ public abstract class BaseClass<T, U, V>
 }
 [AutoConstruct]
 public sealed partial class TheClass : BaseClass<object, int, string>{}
-"
-        ;
+";
 
         var references = AppDomain.CurrentDomain.GetAssemblies()
             .Where(assembly => !assembly.IsDynamic)
