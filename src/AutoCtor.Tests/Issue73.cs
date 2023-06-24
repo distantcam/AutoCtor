@@ -10,7 +10,6 @@ public class Issue73 : CompilationTestBase
     protected override CSharpCompilation Compile()
     {
         var projectACode = @"
-using AutoCtor;
 namespace A;
 public interface Interface<T, U>{}
 ";
