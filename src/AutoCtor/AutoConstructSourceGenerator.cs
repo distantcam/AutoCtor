@@ -127,7 +127,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         source.AppendHeader();
         source.AppendLine();
 
-        using (var _ = source.StartPartialType(type))
+        using (source.StartPartialType(type))
         {
             if (baseCtorParameters.Any())
             {
