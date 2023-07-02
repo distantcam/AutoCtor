@@ -8,64 +8,15 @@ namespace AutoCtor;
 [Generator(LanguageNames.CSharp)]
 public class AutoConstructSourceGenerator : IIncrementalGenerator
 {
-    private static readonly SymbolDisplayFormat HintSymbolDisplayFormat = new SymbolDisplayFormat(
-        globalNamespaceStyle:
-            SymbolDisplayGlobalNamespaceStyle.Omitted,
-        typeQualificationStyle:
-            SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-        genericsOptions:
-            SymbolDisplayGenericsOptions.IncludeTypeParameters,
-        miscellaneousOptions:
-            SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
-
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var types = context.SyntaxProvider.CreateSyntaxProvider(IsCorrectAttribute, GetTypeFromAttribute)
+        var types = context.SyntaxProvider.CreateSyntaxProvider(
+            static (s, ct) => GeneratorUtilities.IsCorrectAttribute("AutoConstruct", s, ct),
+            GeneratorUtilities.GetTypeFromAttribute)
             .Where(t => t != null)
             .Collect();
 
         context.RegisterSourceOutput(types, GenerateSource);
-    }
-
-    private static bool IsCorrectAttribute(SyntaxNode syntaxNode, CancellationToken cancellationToken)
-    {
-        if (syntaxNode is not AttributeSyntax attribute)
-            return false;
-
-        var name = attribute.Name switch
-        {
-            SimpleNameSyntax ins => ins.Identifier.Text,
-            QualifiedNameSyntax qns => qns.Right.Identifier.Text,
-            _ => null
-        };
-
-        return IsCorrectAttributeName(name);
-    }
-
-    private static bool IsCorrectAttributeName(string? name) =>
-        name == "AutoConstruct" || name == nameof(AutoConstructAttribute);
-
-    private static ITypeSymbol? GetTypeFromAttribute(GeneratorSyntaxContext context, CancellationToken cancellationToken)
-    {
-        var attributeSyntax = (AttributeSyntax)context.Node;
-
-        // "attribute.Parent" is "AttributeListSyntax"
-        // "attribute.Parent.Parent" is a C# fragment the attributes are applied to
-        TypeDeclarationSyntax? typeNode = attributeSyntax.Parent?.Parent switch
-        {
-            ClassDeclarationSyntax classDeclarationSyntax => classDeclarationSyntax,
-            RecordDeclarationSyntax recordDeclarationSyntax => recordDeclarationSyntax,
-            StructDeclarationSyntax structDeclarationSyntax => structDeclarationSyntax,
-            _ => null
-        };
-
-        if (typeNode == null)
-            return null;
-
-        if (context.SemanticModel.GetDeclaredSymbol(typeNode) is not ITypeSymbol type)
-            return null;
-
-        return type;
     }
 
     private static void GenerateSource(SourceProductionContext context, ImmutableArray<ITypeSymbol?> types)
@@ -127,7 +78,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             else
                 ctorMaps.Add(type, parameters);
 
-            var hintName = type.ToDisplayString(HintSymbolDisplayFormat)
+            var hintName = type.ToDisplayString(GeneratorUtilities.HintSymbolDisplayFormat)
                 .Replace('<', '[')
                 .Replace('>', ']');
 
@@ -172,65 +123,24 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             }
         }
 
-        var typeKeyword = type.IsRecord ? "record"
-            : type.IsValueType ? "struct" : "class";
-
         var source = new CodeBuilder();
         source.AppendHeader();
         source.AppendLine();
 
-        if (ns is not null)
+        using (var _ = source.StartPartialType(type))
         {
-            source.AppendLine($"namespace {ns}");
+            if (baseCtorParameters.Any())
+            {
+                source.AppendLine($"public {type.Name}({parameters.AsCommaSeparated()}) : base({string.Join(", ", baseCtorArgs)})");
+            }
+            else
+                source.AppendLine($"public {type.Name}({parameters.AsCommaSeparated()})");
+
             source.StartBlock();
-        }
-
-        var typeStack = new Stack<string>();
-
-        var containingType = type.ContainingType;
-        while (containingType is not null)
-        {
-            var contTypeKeyword = containingType.IsRecord ? "record"
-                : containingType.IsValueType ? "struct" : "class";
-            var typeName = containingType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            typeStack.Push(contTypeKeyword + " " + typeName);
-            containingType = containingType.ContainingType;
-        }
-
-        var nestedCount = typeStack.Count;
-
-        while (typeStack.Count > 0)
-        {
-            source.AppendLine($"partial {typeStack.Pop()}");
-            source.StartBlock();
-        }
-
-        source.AppendLine($"partial {typeKeyword} {type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)}");
-        source.StartBlock();
-
-        if (baseCtorParameters.Any())
-        {
-            source.AppendLine($"public {type.Name}({ParamString(parameters)}) : base({string.Join(", ", baseCtorArgs)})");
-        }
-        else
-            source.AppendLine($"public {type.Name}({ParamString(parameters)})");
-        source.StartBlock();
-
-        foreach (var item in fields)
-        {
-            source.AppendLine($"this.{item.Name} = {CreateFriendlyName(item.Name)};");
-        }
-
-        source.EndBlock();
-        source.EndBlock();
-
-        for (var i = 0; i < nestedCount; i++)
-        {
-            source.EndBlock();
-        }
-
-        if (ns is not null)
-        {
+            foreach (var item in fields)
+            {
+                source.AppendLine($"this.{item.Name} = {CreateFriendlyName(item.Name)};");
+            }
             source.EndBlock();
         }
 
@@ -250,9 +160,6 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
     private static Parameter CreateParameter(IFieldSymbol f) => new(f.Type, CreateFriendlyName(f.Name));
     private static Parameter CreateParameter(IParameterSymbol p) => new(p.Type, CreateFriendlyName(p.Name));
-
-    private static string ParamString(IEnumerable<Parameter> p) =>
-        string.Join(", ", p);
 
     private class Parameter
     {

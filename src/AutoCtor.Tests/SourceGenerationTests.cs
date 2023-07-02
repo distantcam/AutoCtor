@@ -1,8 +1,9 @@
-﻿using AutoCtor;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit.Abstractions;
+
+namespace AutoCtor.Tests;
 
 [UsesVerify]
 public class SourceGenerationTests
