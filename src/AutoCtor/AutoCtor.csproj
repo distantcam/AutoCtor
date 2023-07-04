@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectProperty Include="PackageProjectUrl" />
     <ProjectProperty Include="Version" />
   </ItemGroup>
 
