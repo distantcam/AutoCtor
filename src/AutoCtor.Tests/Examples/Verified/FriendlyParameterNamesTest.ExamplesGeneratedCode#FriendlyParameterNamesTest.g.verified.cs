@@ -10,6 +10,8 @@
 
 partial class FriendlyParameterNamesTest
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public FriendlyParameterNamesTest(int underscorePrefix, int camelCase, int PascalCase)
 	{
 		this._underscorePrefix = underscorePrefix;

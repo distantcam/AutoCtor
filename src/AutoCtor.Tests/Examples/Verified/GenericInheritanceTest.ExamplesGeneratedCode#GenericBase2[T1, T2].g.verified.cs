@@ -10,6 +10,8 @@
 
 partial class GenericBase2<T1, T2>
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public GenericBase2(T1 t1, T2 t2)
 	{
 		this._t1 = t1;

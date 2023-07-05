@@ -123,12 +123,14 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             }
         }
 
-        var source = new CodeBuilder();
-        source.AppendHeader();
-        source.AppendLine();
+        var source = new CodeBuilder()
+            .AppendHeader()
+            .AppendLine();
 
         using (source.StartPartialType(type))
         {
+            source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
+
             if (baseCtorParameters.Any())
             {
                 source.AppendLine($"public {type.Name}({parameters.AsCommaSeparated()}) : base({string.Join(", ", baseCtorArgs)})");

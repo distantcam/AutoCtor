@@ -10,6 +10,8 @@
 
 partial class C
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public C(global::IE e, global::ID d, global::IC c) : base(e, d)
 	{
 		this.c = c;

@@ -12,6 +12,8 @@ namespace B
 {
 	partial class TheClass
 	{
+		[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 		public TheClass(global::A.Interface<object, int> i) : base(i)
 		{
 		}

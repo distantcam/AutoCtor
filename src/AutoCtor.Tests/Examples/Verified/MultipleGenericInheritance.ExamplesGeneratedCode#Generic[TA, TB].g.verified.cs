@@ -10,6 +10,8 @@
 
 partial class Generic<TA, TB>
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public Generic(TA a, TB b)
 	{
 		this.a = a;

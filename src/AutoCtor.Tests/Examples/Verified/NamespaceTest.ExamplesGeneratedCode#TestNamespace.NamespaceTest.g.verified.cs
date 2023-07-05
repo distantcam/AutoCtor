@@ -12,6 +12,8 @@ namespace TestNamespace
 {
 	partial class NamespaceTest
 	{
+		[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 		public NamespaceTest(int item)
 		{
 			this._item = item;

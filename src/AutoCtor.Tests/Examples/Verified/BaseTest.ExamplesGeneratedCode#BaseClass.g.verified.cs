@@ -10,6 +10,8 @@
 
 partial class BaseClass
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public BaseClass(int number, string text) : base(number)
 	{
 		this._text = text;

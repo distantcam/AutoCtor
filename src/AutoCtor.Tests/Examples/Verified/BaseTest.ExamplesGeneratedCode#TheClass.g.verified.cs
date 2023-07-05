@@ -10,6 +10,8 @@
 
 partial class TheClass
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public TheClass(int number, string text, bool flag) : base(number, text)
 	{
 		this._flag = flag;

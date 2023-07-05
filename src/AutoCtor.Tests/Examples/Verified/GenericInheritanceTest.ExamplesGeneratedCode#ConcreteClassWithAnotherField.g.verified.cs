@@ -10,6 +10,8 @@
 
 partial class ConcreteClassWithAnotherField
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public ConcreteClassWithAnotherField(global::IExampleA t, global::IExampleB exampleB) : base(t)
 	{
 		this.exampleB = exampleB;

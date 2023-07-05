@@ -10,6 +10,8 @@
 
 partial class TypesTestClass
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public TypesTestClass(global::System.Collections.Generic.List<int> item)
 	{
 		this._item = item;

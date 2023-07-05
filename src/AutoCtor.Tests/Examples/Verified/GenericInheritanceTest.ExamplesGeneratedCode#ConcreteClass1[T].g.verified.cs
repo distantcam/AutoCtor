@@ -10,6 +10,8 @@
 
 partial class ConcreteClass1<T>
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public ConcreteClass1(global::IExampleA t1, T t2) : base(t1, t2)
 	{
 	}

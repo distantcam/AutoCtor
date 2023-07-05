@@ -10,6 +10,8 @@
 
 partial class ComplexTest
 {
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public ComplexTest(string baseValue, string value) : base(baseValue)
 	{
 		this._value = value;
