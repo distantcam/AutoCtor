@@ -110,7 +110,7 @@ using AutoCtor;
         return CSharpCompilation.Create(
             "AutoCtorTest",
             code.Select(c => CSharpSyntaxTree.ParseText(c)),
-            references,
+            references.Concat(new[] { MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll")) }),
             new CSharpCompilationOptions(
                 OutputKind.DynamicallyLinkedLibrary
             ));
