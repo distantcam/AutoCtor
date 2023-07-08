@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using AutoSource;
 
 namespace AutoCtor;
 
@@ -11,8 +12,8 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var types = context.SyntaxProvider.CreateSyntaxProvider(
-            static (s, ct) => GeneratorUtilities.IsCorrectAttribute("AutoConstruct", s, ct),
-            GeneratorUtilities.GetTypeFromAttribute)
+            static (s, ct) => SourceTools.IsCorrectAttribute("AutoConstruct", s, ct),
+            SourceTools.GetTypeFromAttribute)
             .Where(t => t != null)
             .Collect();
 

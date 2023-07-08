@@ -1,8 +1,10 @@
 name: on-push-run-tests
 on:
   push:
-    tags-ignore:
-      - '[0-9]+\.[0-9]+\.[0-9]+'
+    branches:
+      '*'
+    tags:
+      - '![0-9]+\.[0-9]+\.[0-9]+'
   pull_request:
 jobs:
   test:
