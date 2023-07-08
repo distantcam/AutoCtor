@@ -29,7 +29,8 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
         var references = AppDomain.CurrentDomain.GetAssemblies()
             .Where(assembly => !assembly.IsDynamic)
             .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
-            .Cast<MetadataReference>();
+            .Cast<MetadataReference>()
+            .Concat(new[] { MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll")) });
 
         var projectA = CSharpCompilation.Create(
             assemblyName: "ProjectA",

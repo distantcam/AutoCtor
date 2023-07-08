@@ -105,12 +105,13 @@ using AutoCtor;
         var references = AppDomain.CurrentDomain.GetAssemblies()
             .Where(assembly => !assembly.IsDynamic)
             .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
-            .Cast<MetadataReference>();
+            .Cast<MetadataReference>()
+            .Concat(new[] { MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll")) });
 
         return CSharpCompilation.Create(
             "AutoCtorTest",
             code.Select(c => CSharpSyntaxTree.ParseText(c)),
-            references.Concat(new[] { MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll")) }),
+            references,
             new CSharpCompilationOptions(
                 OutputKind.DynamicallyLinkedLibrary
             ));
