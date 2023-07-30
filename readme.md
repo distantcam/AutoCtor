@@ -151,3 +151,7 @@ If you wish to preserve these attributes in the build output, you can define the
 
 </Project>
 ```
+
+## Stats
+
+![Alt](https://repobeats.axiom.co/api/embed/8d02b2c004a5f958b4365abad3d4d1882dca200f.svg "Repobeats analytics image")
