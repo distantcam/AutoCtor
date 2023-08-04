@@ -13,7 +13,6 @@ partial class OuterClass
 	partial class NestedClassTest
 	{
 		[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 		public NestedClassTest(int item)
 		{
 			this._item = item;

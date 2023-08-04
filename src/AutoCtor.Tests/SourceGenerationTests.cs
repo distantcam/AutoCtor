@@ -13,7 +13,7 @@ public class SourceGenerationTests
     public SourceGenerationTests()
     {
         _codeVerifySettings = new();
-        _codeVerifySettings.ScrubLinesContaining("Version:", "SHA:");
+        _codeVerifySettings.ScrubLinesContaining("Version:", "SHA:", "GeneratedCodeAttribute");
     }
 
     [Theory]

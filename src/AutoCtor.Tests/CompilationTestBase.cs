@@ -11,7 +11,7 @@ public abstract class CompilationTestBase
     public CompilationTestBase()
     {
         _codeVerifySettings = new();
-        _codeVerifySettings.ScrubLinesContaining("Version:", "SHA:");
+        _codeVerifySettings.ScrubLinesContaining("Version:", "SHA:", "GeneratedCodeAttribute");
     }
 
     [Fact]

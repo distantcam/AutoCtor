@@ -11,7 +11,6 @@
 partial class ConcreteClass2
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public ConcreteClass2(global::IExampleA t1, global::IExampleB t2) : base(t1, t2)
 	{
 	}

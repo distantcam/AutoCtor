@@ -11,7 +11,6 @@
 partial class ComplexBase
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public ComplexBase(string baseValue)
 	{
 		this._baseValue = baseValue;

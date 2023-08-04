@@ -11,7 +11,6 @@
 partial class AClass
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public AClass(global::IExampleA example)
 	{
 		this._example = example;

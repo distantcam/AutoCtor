@@ -11,7 +11,6 @@
 partial class ConcreteClassWithGenericArg<T2>
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public ConcreteClassWithGenericArg(T2 t) : base(t)
 	{
 	}

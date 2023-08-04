@@ -11,7 +11,6 @@
 partial class CClass
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public CClass(global::IExampleA example, global::IExampleB example0, global::IExampleC example1) : base(example, example0)
 	{
 		this._example = example1;

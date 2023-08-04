@@ -11,7 +11,6 @@
 partial class GenericClassTest<T>
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 	public GenericClassTest(T item)
 	{
 		this._item = item;

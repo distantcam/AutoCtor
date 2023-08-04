@@ -17,7 +17,6 @@ partial class OuterClass1
 			partial record MixedNestedClassAndRecordTest
 			{
 				[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-				[global::System.CodeDom.Compiler.GeneratedCodeAttribute("AutoCtor", "0.0.0")]
 				public MixedNestedClassAndRecordTest(int item)
 				{
 					this._item = item;
