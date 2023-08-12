@@ -8,29 +8,24 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <Version>0.0.0</Version>
+    <GitSha>abc</GitSha>
 
     <GeneratePackageOnBuild Condition="$(Configuration) == 'Release'">true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectProperty Include="PackageProjectUrl" />
-    <ProjectProperty Include="Version" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AutoSource" Version="1.2.1" PrivateAssets="all" IncludeAssets="all" />
+    <PackageReference Include="AutoSource" Version="1.3.0" PrivateAssets="all" IncludeAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="ThisAssembly.Git" Version="1.3.1" PrivateAssets="all" />
-    <PackageReference Include="ThisAssembly.Project" Version="1.3.1" PrivateAssets="all" />
+    <PackageReference Include="PolySharp" Version="1.13.2" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)\$(AssemblyName).Attributes.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)\$(AssemblyName).Attributes.dll" Pack="true" PackagePath="lib/netstandard2.0" Visible="true" />
-    <None Include="$(SolutionDir)..\readme.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(SolutionDir)readme.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

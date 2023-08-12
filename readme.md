@@ -7,8 +7,10 @@ To change this file edit the source file and then run MarkdownSnippets.
 
 # AutoCtor
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/distantcam/autoctor/on-push-run-tests.yml?branch=main)](https://github.com/distantcam/AutoCtor/actions/workflows/on-push-run-tests.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/distantcam/autoctor/build.yml)](https://github.com/distantcam/AutoCtor/actions/workflows/build.yml)
 [![NuGet Status](https://img.shields.io/nuget/v/AutoCtor.svg)](https://www.nuget.org/packages/AutoCtor/)
+[![Nuget Downloads](https://img.shields.io/nuget/dt/autoctor.svg)](https://www.nuget.org/packages/AutoCtor/)
+
 
 AutoCtor is a Roslyn Source Generator that will automatically create a constructor for your class for use with constructor Dependency Injection.
 

@@ -3,9 +3,9 @@ using Microsoft.CodeAnalysis;
 
 namespace AutoCtor;
 
-public record Parameter(ITypeSymbol Type, string Name);
+internal record Parameter(ITypeSymbol Type, string Name);
 
-public class ParameterList : IEnumerable<Parameter>
+internal class ParameterList : IEnumerable<Parameter>
 {
     private readonly Dictionary<IFieldSymbol, Parameter> _fields = new(SymbolEqualityComparer.Default);
     private readonly List<Parameter> _parameters = new();
