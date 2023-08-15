@@ -102,7 +102,6 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f));
 
         var parameters = new ParameterList(fields);
-
         if (type.BaseType != null)
         {
             var constructor = type.BaseType.Constructors.OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any());
@@ -115,8 +114,14 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
                 parameters.AddBaseParameters(baseParameters);
             }
         }
-
         parameters.MakeUniqueNames();
+
+        var methodName = string.Empty;
+        var autoCtorAttribute = type.GetAttributes().First(a => a.AttributeClass?.Name == nameof(AutoConstructAttribute));
+        if (!autoCtorAttribute.ConstructorArguments.IsDefaultOrEmpty)
+        {
+            methodName = autoCtorAttribute.ConstructorArguments[0].Value?.ToString();
+        }
 
         var source = new CodeBuilder()
             .AppendHeader()
@@ -139,6 +144,10 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             foreach (var f in fields)
             {
                 source.AppendLine($"this.{f.Name} = {parameters.FieldParameterName(f)};");
+            }
+            if (!string.IsNullOrEmpty(methodName))
+            {
+                source.AppendLine($"{methodName}();");
             }
             source.EndBlock();
         }

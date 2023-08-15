@@ -23,6 +23,10 @@ public class AutoConstructAttributeGenerator : IIncrementalGenerator
             source.AppendLine("public AutoConstructAttribute()");
             source.StartBlock();
             source.EndBlock();
+            source.AppendLine();
+            source.AppendLine("public AutoConstructAttribute(string postConstructorMethod)");
+            source.StartBlock();
+            source.EndBlock();
             source.EndBlock();
             source.EndBlock();
             source.AppendLine("#endif");

@@ -4,8 +4,11 @@
 [System.Diagnostics.Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoConstructAttribute : Attribute
 {
-    [System.Runtime.CompilerServices.CompilerGenerated]
     public AutoConstructAttribute()
+    {
+    }
+
+    public AutoConstructAttribute(string postConstructorMethod)
     {
     }
 }

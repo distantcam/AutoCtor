@@ -21,7 +21,7 @@ public class SourceGenerationTests
     [InlineData("[AutoConstructAttribute]")]
     public Task AttributeTest(string attribute)
     {
-        var code = @$"
+        var code = @$"using AutoCtor;
 {attribute}public partial class AttributeTestClass {{}}
 ";
         var compilation = Compile(code);

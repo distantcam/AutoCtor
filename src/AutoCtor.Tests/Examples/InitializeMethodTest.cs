@@ -1,11 +1,9 @@
 ﻿using AutoCtor;
 
-public interface IService { }
-
 [AutoConstruct(nameof(Initialize))]
-public partial class MyClass
+public partial class ClassWithInitializer
 {
-    private readonly IService _service;
+    private readonly IA a;
 
     private void Initialize()
     {
