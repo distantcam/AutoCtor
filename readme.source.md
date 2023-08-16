@@ -21,7 +21,17 @@ snippet: YourCode
 
 snippet: GeneratedCode
 
-### More examples
+## More Features
+
+### Post constructor Initialisation
+
+If you include the name of a method to call after the fields are set, it will be called in the constructor. This method must return `void` and take no parameters.
+
+snippet: ExampleWithInitializeMethod
+
+snippet: ExampleWithInitializeMethodGeneratedCode
+
+## More examples
 
 You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
 

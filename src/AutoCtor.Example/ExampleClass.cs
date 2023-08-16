@@ -80,3 +80,31 @@ partial class ClassWithBase
 }
 
 #endregion
+
+#region ExampleWithInitializeMethod
+
+[AutoConstruct(nameof(Initialize))]
+public partial class ClassWithInitialeMethod
+{
+    private readonly ICustomService _customService;
+
+    private void Initialize()
+    {
+        // Called after the fields are set in the constructor.
+    }
+}
+
+#endregion
+
+#region ExampleWithInitializeMethodGeneratedCode
+
+partial class ClassWithInitialeMethod
+{
+    public ClassWithInitialeMethod(ICustomService customService)
+    {
+        _customService = customService;
+        Initialize();
+    }
+}
+
+#endregion

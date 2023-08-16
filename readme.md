@@ -46,7 +46,41 @@ partial class ExampleClass
 ```
 <!-- endSnippet -->
 
-### More examples
+## More Features
+
+### Post constructor Initialisation
+
+If you include the name of a method to call after the fields are set, it will be called in the constructor. This method must return `void` and take no parameters.
+
+<!-- snippet: ExampleWithInitializeMethod -->
+```cs
+[AutoConstruct(nameof(Initialize))]
+public partial class ClassWithInitialeMethod
+{
+    private readonly ICustomService _customService;
+
+    private void Initialize()
+    {
+        // Called after the fields are set in the constructor.
+    }
+}
+```
+<!-- endSnippet -->
+
+<!-- snippet: ExampleWithInitializeMethodGeneratedCode -->
+```cs
+partial class ClassWithInitialeMethod
+{
+    public ClassWithInitialeMethod(ICustomService customService)
+    {
+        _customService = customService;
+        Initialize();
+    }
+}
+```
+<!-- endSnippet -->
+
+## More examples
 
 You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
 
