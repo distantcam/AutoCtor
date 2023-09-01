@@ -22,25 +22,25 @@ https://nuget.org/packages/AutoCtor/
 
 ### Your code
 
-<!-- snippet: YourCode -->
+<!-- snippet: Basic -->
 ```cs
 [AutoConstruct]
 public partial class ExampleClass
 {
-    private readonly ICustomService _customService;
+    private readonly IService _service;
 }
 ```
 <!-- endSnippet -->
 
 ### What gets generated
 
-<!-- snippet: GeneratedCode -->
+<!-- snippet: BasicGeneratedCode -->
 ```cs
 partial class ExampleClass
 {
-    public ExampleClass(ICustomService customService)
+    public ExampleClass(IService service)
     {
-        _customService = customService;
+        _service = service;
     }
 }
 ```
@@ -50,31 +50,89 @@ partial class ExampleClass
 
 ### Post constructor Initialisation
 
-If you include the name of a method to call after the fields are set, it will be called in the constructor. This method must return `void` and take no parameters.
+If you include the name of a method to call after the fields are set, it will be called in the constructor. This method must return `void`.
 
-<!-- snippet: ExampleWithInitializeMethod -->
+<!-- snippet: NamedPostConstruct -->
 ```cs
 [AutoConstruct(nameof(Initialize))]
-public partial class ClassWithInitialeMethod
+public partial class NamedPostConstruct
 {
-    private readonly ICustomService _customService;
+    private readonly IService _service;
 
     private void Initialize()
     {
-        // Called after the fields are set in the constructor.
     }
 }
 ```
 <!-- endSnippet -->
 
-<!-- snippet: ExampleWithInitializeMethodGeneratedCode -->
+<!-- snippet: NamedPostConstructGeneratedCode -->
 ```cs
-partial class ClassWithInitialeMethod
+partial class NamedPostConstruct
 {
-    public ClassWithInitialeMethod(ICustomService customService)
+    public NamedPostConstruct(IService service)
     {
-        _customService = customService;
+        _service = service;
         Initialize();
+    }
+}
+```
+<!-- endSnippet -->
+
+Alternatively, you can mark the method to call at the end of the method with the `[AutoPostConstruct]` attribute.
+
+<!-- snippet: PostConstruct -->
+```cs
+[AutoConstruct]
+public partial class PostConstructMethod
+{
+    private readonly IService _service;
+
+    [AutoPostConstruct]
+    private void Initialize()
+    {
+    }
+}
+```
+<!-- endSnippet -->
+
+<!-- snippet: PostConstructGeneratedCode -->
+```cs
+partial class PostConstructMethod
+{
+    public PostConstructMethod(IService service)
+    {
+        _service = service;
+        Initialize();
+    }
+}
+```
+<!-- endSnippet -->
+
+Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
+
+<!-- snippet: PostConstructWithParameters -->
+```cs
+public partial class PostConstructMethodWithParameters
+{
+    private readonly IService _service;
+
+    [AutoPostConstruct]
+    private void Initialize(IInitialiseService initialiseService)
+    {
+    }
+}
+```
+<!-- endSnippet -->
+
+<!-- snippet: PostConstructWithParametersGeneratedCode -->
+```cs
+partial class PostConstructMethodWithParameters
+{
+    public PostConstructMethodWithParameters(IService service, IInitialiseService initialiseService)
+    {
+        _service = service;
+        Initialize(initialiseService);
     }
 }
 ```
@@ -84,24 +142,24 @@ partial class ClassWithInitialeMethod
 
 You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
 
-<!-- snippet: ExampleWithInitializer -->
+<!-- snippet: PresetField -->
 ```cs
 [AutoConstruct]
-public partial class ClassWithInitializer
+public partial class ClassWithPresetField
 {
-    private readonly ICustomService _customService;
+    private readonly IService _service;
     private readonly IList<string> _list = new List<string>();
 }
 ```
 <!-- endSnippet -->
 
-<!-- snippet: ExampleWithInitializerGeneratedCode -->
+<!-- snippet: PresetFieldGeneratedCode -->
 ```cs
-partial class ClassWithInitializer
+partial class ClassWithPresetField
 {
-    public ClassWithInitializer(ICustomService customService)
+    public ClassWithPresetField(IService service)
     {
-        _customService = customService;
+        _service = service;
         // no code to set _list
     }
 }
@@ -110,7 +168,7 @@ partial class ClassWithInitializer
 
 If there is a single base constructor with parameters, AutoCtor will include that base constructor in the constructor it creates.
 
-<!-- snippet: ExampleWithBase -->
+<!-- snippet: Inherit -->
 ```cs
 public abstract class BaseClass
 {
@@ -125,18 +183,18 @@ public abstract class BaseClass
 [AutoConstruct]
 public partial class ClassWithBase : BaseClass
 {
-    private readonly ICustomService _customService;
+    private readonly IService _service;
 }
 ```
 <!-- endSnippet -->
 
-<!-- snippet: ExampleWithBaseGeneratedCode -->
+<!-- snippet: InheritGeneratedCode -->
 ```cs
 partial class ClassWithBase
 {
-    public ClassWithBase(IAnotherService anotherService, ICustomService customService) : base(anotherService)
+    public ClassWithBase(IAnotherService anotherService, IService service) : base(anotherService)
     {
-        _customService = customService;
+        _service = service;
     }
 }
 ```

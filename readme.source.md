@@ -15,35 +15,47 @@ https://nuget.org/packages/AutoCtor/
 
 ### Your code
 
-snippet: YourCode
+snippet: Basic
 
 ### What gets generated
 
-snippet: GeneratedCode
+snippet: BasicGeneratedCode
 
 ## More Features
 
 ### Post constructor Initialisation
 
-If you include the name of a method to call after the fields are set, it will be called in the constructor. This method must return `void` and take no parameters.
+If you include the name of a method to call after the fields are set, it will be called in the constructor. This method must return `void`.
 
-snippet: ExampleWithInitializeMethod
+snippet: NamedPostConstruct
 
-snippet: ExampleWithInitializeMethodGeneratedCode
+snippet: NamedPostConstructGeneratedCode
+
+Alternatively, you can mark the method to call at the end of the method with the `[AutoPostConstruct]` attribute.
+
+snippet: PostConstruct
+
+snippet: PostConstructGeneratedCode
+
+Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
+
+snippet: PostConstructWithParameters
+
+snippet: PostConstructWithParametersGeneratedCode
 
 ## More examples
 
 You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
 
-snippet: ExampleWithInitializer
+snippet: PresetField
 
-snippet: ExampleWithInitializerGeneratedCode
+snippet: PresetFieldGeneratedCode
 
 If there is a single base constructor with parameters, AutoCtor will include that base constructor in the constructor it creates.
 
-snippet: ExampleWithBase
+snippet: Inherit
 
-snippet: ExampleWithBaseGeneratedCode
+snippet: InheritGeneratedCode
 
 ## Embedding the attributes in your project
 
