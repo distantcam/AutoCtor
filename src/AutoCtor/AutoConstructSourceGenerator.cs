@@ -25,6 +25,14 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
+    private static readonly DiagnosticDescriptor NamedMethodMissingWarning = new DiagnosticDescriptor(
+        id: "ACTR003",
+        title: "Named post constructor method missing",
+        messageFormat: "The method `{0}` does not exist and won't be included in the generated code",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var types = context.SyntaxProvider.CreateSyntaxProvider(
@@ -132,12 +140,13 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f));
 
         var autoCtorAttribute = type.GetAttributes().First(a => a.AttributeClass?.Name == nameof(AutoConstructAttribute));
+        var loc = autoCtorAttribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken)?.GetLocation();
         if (!autoCtorAttribute.ConstructorArguments.IsDefaultOrEmpty)
         {
             postCtorMethodName = autoCtorAttribute.ConstructorArguments[0].Value?.ToString();
         }
 
-        var postCtorMethod = GetPostCtorMethod(context, type, postCtorMethodName);
+        var postCtorMethod = GetPostCtorMethod(context, type, postCtorMethodName, loc);
 
         var parameters = new ParameterList(fields);
         if (type.BaseType != null)
@@ -193,7 +202,8 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
     private static IMethodSymbol? GetPostCtorMethod(
         SourceProductionContext context,
         ITypeSymbol type,
-        string? postCtorMethodName)
+        string? postCtorMethodName,
+        Location? attributeLocation)
     {
         var markedPostCtorMethods = type.GetMembers().OfType<IMethodSymbol>()
             .Where(m => m.GetAttributes().Any(a => a.AttributeClass?.Name == nameof(AutoPostConstructAttribute)));
@@ -228,6 +238,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             return namedPostCtorMethods.First();
         }
 
+        context.ReportDiagnostic(Diagnostic.Create(NamedMethodMissingWarning, attributeLocation, postCtorMethodName));
         return null;
     }
 

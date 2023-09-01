@@ -1,0 +1,16 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: ACTR003,
+      Title: Named post constructor method missing,
+      Severity: Warning,
+      WarningLevel: 1,
+      Location: : (2,1)-(2,25),
+      Description: ,
+      HelpLink: ,
+      MessageFormat: The method `{0}` does not exist and won't be included in the generated code,
+      Message: The method `BadName` does not exist and won't be included in the generated code,
+      Category: AutoCtor
+    }
+  ]
+}

@@ -6,4 +6,5 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 ACTR001 | AutoCtor | Warning  | ACTR001_AutoConstructSourceGenerator
-ACTR002 | AutoCtor | Warning  | AutoConstructSourceGenerator
+ACTR002 | AutoCtor | Warning  | ACTR002_AutoConstructSourceGenerator
+ACTR003 | AutoCtor | Warning  | ACTR003_AutoConstructSourceGenerator
