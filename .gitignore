@@ -409,3 +409,6 @@ FodyWeavers.xsd
 
 # https://github.com/VerifyTests/Verify#received
 *.received.*
+
+# https://github.com/dotnet/roslyn/issues/50451
+Generated/

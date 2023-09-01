@@ -1,0 +1,28 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: ACTR001,
+      Title: Ambiguous post-constructor method,
+      Severity: Warning,
+      WarningLevel: 1,
+      Location: : (7,17)-(7,27),
+      Description: ,
+      HelpLink: ,
+      MessageFormat: There are multiple methods with the name `{0}`. Select the one to call from the constructor using [AutoPostConstruct].,
+      Message: There are multiple methods with the name `Initialize`. Select the one to call from the constructor using [AutoPostConstruct].,
+      Category: AutoCtor
+    },
+    {
+      Id: ACTR001,
+      Title: Ambiguous post-constructor method,
+      Severity: Warning,
+      WarningLevel: 1,
+      Location: : (11,17)-(11,27),
+      Description: ,
+      HelpLink: ,
+      MessageFormat: There are multiple methods with the name `{0}`. Select the one to call from the constructor using [AutoPostConstruct].,
+      Message: There are multiple methods with the name `Initialize`. Select the one to call from the constructor using [AutoPostConstruct].,
+      Category: AutoCtor
+    }
+  ]
+}

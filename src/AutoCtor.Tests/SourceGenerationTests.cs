@@ -92,9 +92,8 @@ using AutoCtor;
         var compilation = Compile(theoryData.Code, exampleInterfaces);
         var generator = new AutoConstructSourceGenerator();
         CSharpGeneratorDriver.Create(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
 
-        diagnostics.Should().BeEmpty();
         outputCompilation.GetDiagnostics()
             .Where(d => !ignoredWarnings.Contains(d.Id))
             .Should().BeEmpty();
