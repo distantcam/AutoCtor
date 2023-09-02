@@ -2,7 +2,7 @@
   Diagnostics: [
     {
       Id: ACTR002,
-      Title: Ambiguous marked post-constructor method,
+      Title: Ambiguous marked post constructor method,
       Severity: Warning,
       WarningLevel: 1,
       Location: : (8,17)-(8,27),
@@ -14,7 +14,7 @@
     },
     {
       Id: ACTR002,
-      Title: Ambiguous marked post-constructor method,
+      Title: Ambiguous marked post constructor method,
       Severity: Warning,
       WarningLevel: 1,
       Location: : (13,17)-(13,27),

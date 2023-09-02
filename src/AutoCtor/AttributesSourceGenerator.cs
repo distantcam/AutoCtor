@@ -4,7 +4,7 @@ using AutoSource;
 namespace AutoCtor;
 
 [Generator(LanguageNames.CSharp)]
-public class AutoConstructAttributeGenerator : IIncrementalGenerator
+public class AttributesSourceGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {

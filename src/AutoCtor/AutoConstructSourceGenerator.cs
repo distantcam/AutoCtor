@@ -9,26 +9,42 @@ namespace AutoCtor;
 [Generator(LanguageNames.CSharp)]
 public class AutoConstructSourceGenerator : IIncrementalGenerator
 {
-    private static readonly DiagnosticDescriptor AmbiguousPostCtorMethodWarning = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor AmbiguousPostConstructMethodWarning = new DiagnosticDescriptor(
         id: "ACTR001",
-        title: "Ambiguous post-constructor method",
-        messageFormat: "There are multiple methods with the name `{0}`. Select the one to call from the constructor using [AutoPostConstruct].",
+        title: "Ambiguous post constructor method",
+        messageFormat: "There are multiple methods with the name '{0}' and AutoConstruct will not choose which one to use. Select the correct method to use and mark it with the [AutoPostConstruct] attribute.",
         category: "AutoCtor",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor AmbiguousMarkedPostCtorMethodWarning = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor AmbiguousMarkedPostConstructMethodWarning = new DiagnosticDescriptor(
         id: "ACTR002",
-        title: "Ambiguous marked post-constructor method",
+        title: "Ambiguous marked post constructor method",
         messageFormat: "Only one method in a type should be marked with an [AutoPostConstruct] attribute",
         category: "AutoCtor",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor NamedMethodMissingWarning = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor NamedPostConstructMissingWarning = new DiagnosticDescriptor(
         id: "ACTR003",
         title: "Named post constructor method missing",
-        messageFormat: "The method `{0}` does not exist and won't be included in the generated code",
+        messageFormat: "The method '{0}' does not exist and won't be included in the generated code",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor PostConstructMethodNotVoidWarning = new DiagnosticDescriptor(
+        id: "ACTR004",
+        title: "Post construct method must return void",
+        messageFormat: "The method '{0}' must return void to be used as the post construct method",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor PostConstructMethodHasOptionalArgsWarning = new DiagnosticDescriptor(
+        id: "ACTR005",
+        title: "Post construct method must not have any optional arguments",
+        messageFormat: "The method '{0}' must not have optional arguments to be used as the post construct method",
         category: "AutoCtor",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
@@ -211,13 +227,13 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         {
             foreach (var loc in markedPostCtorMethods.SelectMany(static m => m.Locations))
             {
-                context.ReportDiagnostic(Diagnostic.Create(AmbiguousMarkedPostCtorMethodWarning, loc));
+                context.ReportDiagnostic(Diagnostic.Create(AmbiguousMarkedPostConstructMethodWarning, loc));
             }
             return null;
         }
         if (markedPostCtorMethods.Any())
         {
-            return markedPostCtorMethods.First();
+            return VerifyPostCtorMethod(context, markedPostCtorMethods.First());
         }
 
         if (postCtorMethodName is null)
@@ -229,17 +245,36 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         {
             foreach (var loc in namedPostCtorMethods.SelectMany(static m => m.Locations))
             {
-                context.ReportDiagnostic(Diagnostic.Create(AmbiguousPostCtorMethodWarning, loc, postCtorMethodName));
+                context.ReportDiagnostic(Diagnostic.Create(AmbiguousPostConstructMethodWarning, loc, postCtorMethodName));
             }
             return null;
         }
         if (namedPostCtorMethods.Any())
         {
-            return namedPostCtorMethods.First();
+            return VerifyPostCtorMethod(context, namedPostCtorMethods.First());
         }
 
-        context.ReportDiagnostic(Diagnostic.Create(NamedMethodMissingWarning, attributeLocation, postCtorMethodName));
+        context.ReportDiagnostic(Diagnostic.Create(NamedPostConstructMissingWarning, attributeLocation, postCtorMethodName));
         return null;
+    }
+
+    private static IMethodSymbol? VerifyPostCtorMethod(SourceProductionContext context, IMethodSymbol method)
+    {
+        if (!method.ReturnsVoid)
+        {
+            foreach (var loc in method.Locations)
+                context.ReportDiagnostic(Diagnostic.Create(PostConstructMethodNotVoidWarning, loc, method.Name));
+            return null;
+        }
+
+        if (method.Parameters.Any(static p => p.IsOptional))
+        {
+            foreach (var loc in method.Locations)
+                context.ReportDiagnostic(Diagnostic.Create(PostConstructMethodHasOptionalArgsWarning, loc, method.Name));
+            return null;
+        }
+
+        return method;
     }
 
     private static bool HasFieldInitialiser(IFieldSymbol symbol)
