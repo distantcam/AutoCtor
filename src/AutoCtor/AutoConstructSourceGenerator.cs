@@ -49,6 +49,14 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor PostConstructMethodCannotBeGenericWarning = new DiagnosticDescriptor(
+        id: "ACTR006",
+        title: "Post construct method must not be generic",
+        messageFormat: "The method '{0}' must not be generic to be used as the post construct method",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var types = context.SyntaxProvider.CreateSyntaxProvider(
@@ -260,6 +268,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
     private static IMethodSymbol? VerifyPostCtorMethod(SourceProductionContext context, IMethodSymbol method)
     {
+        // ACTR004
         if (!method.ReturnsVoid)
         {
             foreach (var loc in method.Locations)
@@ -267,10 +276,19 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             return null;
         }
 
+        // ACTR005
         if (method.Parameters.Any(static p => p.IsOptional))
         {
             foreach (var loc in method.Locations)
                 context.ReportDiagnostic(Diagnostic.Create(PostConstructMethodHasOptionalArgsWarning, loc, method.Name));
+            return null;
+        }
+
+        // ACTR006
+        if (method.IsGenericMethod)
+        {
+            foreach (var loc in method.Locations)
+                context.ReportDiagnostic(Diagnostic.Create(PostConstructMethodCannotBeGenericWarning, loc, method.Name));
             return null;
         }
 
