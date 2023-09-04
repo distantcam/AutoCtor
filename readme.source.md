@@ -25,13 +25,7 @@ snippet: BasicGeneratedCode
 
 ### Post constructor Initialisation
 
-If you include the name of a method to call after the fields are set, it will be called in the constructor. This method must return `void`.
-
-snippet: NamedPostConstruct
-
-snippet: NamedPostConstructGeneratedCode
-
-Alternatively, you can mark the method to call at the end of the method with the `[AutoPostConstruct]` attribute.
+You can mark a method to be called at the end of the constructor with the attribute `[AutoPostConstruct]`. This method must return void.
 
 snippet: PostConstruct
 

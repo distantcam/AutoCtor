@@ -1,7 +1,7 @@
 ﻿{
   Diagnostics: [
     {
-      Id: ACTR006,
+      Id: ACTR004,
       Title: Post construct method must not be generic,
       Severity: Warning,
       WarningLevel: 1,

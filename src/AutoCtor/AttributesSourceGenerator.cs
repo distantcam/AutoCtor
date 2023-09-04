@@ -17,15 +17,9 @@ public class AttributesSourceGenerator : IIncrementalGenerator
             source.StartBlock();
 
             source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
-            source.AppendLine("[global::System.AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]");
+            source.AppendLine("[global::System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]");
             source.AppendLine("internal sealed class AutoConstructAttribute : global::System.Attribute");
-            source.StartBlock();
-            source.AppendLine("public AutoConstructAttribute()");
             source.StartBlock().EndBlock();
-            source.AppendLine();
-            source.AppendLine("public AutoConstructAttribute(string postConstructorMethod)");
-            source.StartBlock().EndBlock();
-            source.EndBlock();
 
             source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
             source.AppendLine("[global::System.AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]");

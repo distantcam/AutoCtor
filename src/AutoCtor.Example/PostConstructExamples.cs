@@ -1,33 +1,7 @@
 ﻿namespace AutoCtor.PostConstructExamples;
 
+public interface IService { }
 public interface IInitialiseService { }
-
-#region NamedPostConstruct
-
-[AutoConstruct(nameof(Initialize))]
-public partial class NamedPostConstruct
-{
-    private readonly IService _service;
-
-    private void Initialize()
-    {
-    }
-}
-
-#endregion
-
-#region NamedPostConstructGeneratedCode
-
-partial class NamedPostConstruct
-{
-    public NamedPostConstruct(IService service)
-    {
-        _service = service;
-        Initialize();
-    }
-}
-
-#endregion
 
 #region PostConstruct
 

@@ -50,36 +50,7 @@ partial class ExampleClass
 
 ### Post constructor Initialisation
 
-If you include the name of a method to call after the fields are set, it will be called in the constructor. This method must return `void`.
-
-<!-- snippet: NamedPostConstruct -->
-```cs
-[AutoConstruct(nameof(Initialize))]
-public partial class NamedPostConstruct
-{
-    private readonly IService _service;
-
-    private void Initialize()
-    {
-    }
-}
-```
-<!-- endSnippet -->
-
-<!-- snippet: NamedPostConstructGeneratedCode -->
-```cs
-partial class NamedPostConstruct
-{
-    public NamedPostConstruct(IService service)
-    {
-        _service = service;
-        Initialize();
-    }
-}
-```
-<!-- endSnippet -->
-
-Alternatively, you can mark the method to call at the end of the method with the `[AutoPostConstruct]` attribute.
+You can mark a method to be called at the end of the constructor with the attribute `[AutoPostConstruct]`. This method must return void.
 
 <!-- snippet: PostConstruct -->
 ```cs

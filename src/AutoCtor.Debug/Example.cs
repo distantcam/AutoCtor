@@ -1,7 +1,5 @@
 ﻿using AutoCtor;
 
-[assembly: AutoConstruct("Initialize")]
-
 public interface IService { }
 
 [AutoConstruct]

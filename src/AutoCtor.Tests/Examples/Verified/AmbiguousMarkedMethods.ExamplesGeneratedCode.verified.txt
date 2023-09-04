@@ -1,7 +1,7 @@
 ﻿{
   Diagnostics: [
     {
-      Id: ACTR002,
+      Id: ACTR001,
       Title: Ambiguous marked post constructor method,
       Severity: Warning,
       WarningLevel: 1,
@@ -13,7 +13,7 @@
       Category: AutoCtor
     },
     {
-      Id: ACTR002,
+      Id: ACTR001,
       Title: Ambiguous marked post constructor method,
       Severity: Warning,
       WarningLevel: 1,

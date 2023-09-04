@@ -1,7 +1,7 @@
 ﻿{
   Diagnostics: [
     {
-      Id: ACTR005,
+      Id: ACTR003,
       Title: Post construct method must not have any optional arguments,
       Severity: Warning,
       WarningLevel: 1,

@@ -1,7 +1,7 @@
 ﻿{
   Diagnostics: [
     {
-      Id: ACTR004,
+      Id: ACTR002,
       Title: Post construct method must return void,
       Severity: Warning,
       WarningLevel: 1,

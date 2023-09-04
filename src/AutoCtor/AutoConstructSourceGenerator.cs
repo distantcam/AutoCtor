@@ -9,32 +9,16 @@ namespace AutoCtor;
 [Generator(LanguageNames.CSharp)]
 public class AutoConstructSourceGenerator : IIncrementalGenerator
 {
-    public static readonly DiagnosticDescriptor AmbiguousPostConstructMethodWarning = new DiagnosticDescriptor(
-        id: "ACTR001",
-        title: "Ambiguous post constructor method",
-        messageFormat: "There are multiple methods with the name '{0}'. Select the method to call in the constructor and mark it with the [AutoPostConstruct] attribute.",
-        category: "AutoCtor",
-        DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
-
     public static readonly DiagnosticDescriptor AmbiguousMarkedPostConstructMethodWarning = new DiagnosticDescriptor(
-        id: "ACTR002",
+        id: "ACTR001",
         title: "Ambiguous marked post constructor method",
         messageFormat: "Only one method in a type should be marked with an [AutoPostConstruct] attribute",
         category: "AutoCtor",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
-    public static readonly DiagnosticDescriptor NamedPostConstructMissingWarning = new DiagnosticDescriptor(
-        id: "ACTR003",
-        title: "Named post constructor method missing",
-        messageFormat: "The method '{0}' does not exist and won't be included in the generated code",
-        category: "AutoCtor",
-        DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
-
     public static readonly DiagnosticDescriptor PostConstructMethodNotVoidWarning = new DiagnosticDescriptor(
-        id: "ACTR004",
+        id: "ACTR002",
         title: "Post construct method must return void",
         messageFormat: "The method '{0}' must return void to be used as the post construct method",
         category: "AutoCtor",
@@ -42,7 +26,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor PostConstructMethodHasOptionalArgsWarning = new DiagnosticDescriptor(
-        id: "ACTR005",
+        id: "ACTR003",
         title: "Post construct method must not have any optional arguments",
         messageFormat: "The method '{0}' must not have optional arguments to be used as the post construct method",
         category: "AutoCtor",
@@ -50,7 +34,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor PostConstructMethodCannotBeGenericWarning = new DiagnosticDescriptor(
-        id: "ACTR006",
+        id: "ACTR004",
         title: "Post construct method must not be generic",
         messageFormat: "The method '{0}' must not be generic to be used as the post construct method",
         category: "AutoCtor",
@@ -65,22 +49,11 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             .Where(x => x != null)
             .Collect();
 
-        var postCtorMethodName = context.CompilationProvider.Select(static (c, ct) =>
-        {
-            var autoCtorAttribute = c.Assembly.GetAttributes().FirstOrDefault(a => a.AttributeClass?.Name == "AutoConstructAttribute");
-            if (autoCtorAttribute == null || autoCtorAttribute.ConstructorArguments.IsDefaultOrEmpty)
-                return null;
-
-            return autoCtorAttribute.ConstructorArguments[0].Value?.ToString();
-        });
-
-        context.RegisterSourceOutput(types.Combine(postCtorMethodName), GenerateSource);
+        context.RegisterSourceOutput(types, GenerateSource);
     }
 
-    private static void GenerateSource(SourceProductionContext context, (ImmutableArray<ITypeSymbol?>, string?) model)
+    private static void GenerateSource(SourceProductionContext context, ImmutableArray<ITypeSymbol?> types)
     {
-        (var types, var postCtorMethodName) = model;
-
         if (types.IsDefaultOrEmpty) return;
 
         var ctorMaps = new Dictionary<ITypeSymbol, ParameterList>(SymbolEqualityComparer.Default);
@@ -135,7 +108,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
                 }
             }
 
-            (var source, var parameters) = GenerateSource(context, type, postCtorMethodName, baseParameters);
+            (var source, var parameters) = GenerateSource(context, type, baseParameters);
 
             if (type.IsGenericType)
                 ctorMaps.Add(type.ConstructUnboundGenericType(), parameters);
@@ -153,7 +126,6 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
     private static (SourceText, ParameterList) GenerateSource(
         SourceProductionContext context,
         ITypeSymbol type,
-        string? postCtorMethodName,
         IEnumerable<Parameter>? baseParameters = default)
     {
         var ns = type.ContainingNamespace.IsGlobalNamespace
@@ -165,12 +137,8 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
         var autoCtorAttribute = type.GetAttributes().First(a => a.AttributeClass?.Name == nameof(AutoConstructAttribute));
         var loc = autoCtorAttribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken)?.GetLocation();
-        if (!autoCtorAttribute.ConstructorArguments.IsDefaultOrEmpty)
-        {
-            postCtorMethodName = autoCtorAttribute.ConstructorArguments[0].Value?.ToString();
-        }
 
-        var postCtorMethod = GetPostCtorMethod(context, type, postCtorMethodName, loc);
+        var postCtorMethod = GetPostCtorMethod(context, type, loc);
 
         var parameters = new ParameterList(fields);
         if (type.BaseType != null)
@@ -226,48 +194,24 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
     private static IMethodSymbol? GetPostCtorMethod(
         SourceProductionContext context,
         ITypeSymbol type,
-        string? postCtorMethodName,
         Location? attributeLocation)
     {
         var markedPostCtorMethods = type.GetMembers().OfType<IMethodSymbol>()
             .Where(m => m.GetAttributes().Any(a => a.AttributeClass?.Name == nameof(AutoPostConstructAttribute)));
+
+        // ACTR002
         if (markedPostCtorMethods.MoreThan(1))
         {
             foreach (var loc in markedPostCtorMethods.SelectMany(static m => m.Locations))
-            {
                 context.ReportDiagnostic(Diagnostic.Create(AmbiguousMarkedPostConstructMethodWarning, loc));
-            }
             return null;
         }
-        if (markedPostCtorMethods.Any())
-        {
-            return VerifyPostCtorMethod(context, markedPostCtorMethods.First());
-        }
 
-        if (postCtorMethodName is null)
-        {
+        if (!markedPostCtorMethods.Any())
             return null;
-        }
-        var namedPostCtorMethods = type.GetMembers(postCtorMethodName).OfType<IMethodSymbol>();
-        if (namedPostCtorMethods.MoreThan(1))
-        {
-            foreach (var loc in namedPostCtorMethods.SelectMany(static m => m.Locations))
-            {
-                context.ReportDiagnostic(Diagnostic.Create(AmbiguousPostConstructMethodWarning, loc, postCtorMethodName));
-            }
-            return null;
-        }
-        if (namedPostCtorMethods.Any())
-        {
-            return VerifyPostCtorMethod(context, namedPostCtorMethods.First());
-        }
 
-        context.ReportDiagnostic(Diagnostic.Create(NamedPostConstructMissingWarning, attributeLocation, postCtorMethodName));
-        return null;
-    }
+        var method = markedPostCtorMethods.First();
 
-    private static IMethodSymbol? VerifyPostCtorMethod(SourceProductionContext context, IMethodSymbol method)
-    {
         // ACTR004
         if (!method.ReturnsVoid)
         {
