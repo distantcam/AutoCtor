@@ -10,5 +10,5 @@ public partial class MyClass
     private readonly IService _service;
 
     [AutoPostConstruct]
-    private Task Initialize() => Task.CompletedTask;
+    private void Initialize() { }
 }

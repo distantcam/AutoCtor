@@ -1616,10 +1616,7 @@
         }
       },
       "autoctor": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp.Workspaces": "[4.0.1, )"
-        }
+        "type": "Project"
       },
       "autoctor.attributes": {
         "type": "Project"
