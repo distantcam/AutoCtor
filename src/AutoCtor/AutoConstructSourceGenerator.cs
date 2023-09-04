@@ -12,7 +12,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
     public static readonly DiagnosticDescriptor AmbiguousPostConstructMethodWarning = new DiagnosticDescriptor(
         id: "ACTR001",
         title: "Ambiguous post constructor method",
-        messageFormat: "There are multiple methods with the name '{0}' and AutoConstruct will not choose which one to use. Select the correct method to use and mark it with the [AutoPostConstruct] attribute.",
+        messageFormat: "There are multiple methods with the name '{0}'. Select the method to call in the constructor and mark it with the [AutoPostConstruct] attribute.",
         category: "AutoCtor",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
