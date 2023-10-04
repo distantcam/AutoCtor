@@ -6,8 +6,6 @@
       Severity: Warning,
       WarningLevel: 1,
       Location: : (8,17)-(8,27),
-      Description: ,
-      HelpLink: ,
       MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Category: AutoCtor
@@ -18,8 +16,6 @@
       Severity: Warning,
       WarningLevel: 1,
       Location: : (13,17)-(13,27),
-      Description: ,
-      HelpLink: ,
       MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Category: AutoCtor
