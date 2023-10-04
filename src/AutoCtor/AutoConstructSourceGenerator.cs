@@ -51,28 +51,18 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         var types = context.SyntaxProvider.ForAttributeWithMetadataName(
             "AutoCtor.AutoConstructAttribute",
             IsTypeDeclaration,
-            static (c, ct) => (ITypeSymbol)c.TargetSymbol)
+            static (c, ct) => new TypeModel((INamedTypeSymbol)c.TargetSymbol, ct))
         .Collect();
 
         context.RegisterSourceOutput(types, GenerateSource);
     }
 
-    private static void GenerateSource(SourceProductionContext context, ImmutableArray<ITypeSymbol> types)
+    private static void GenerateSource(SourceProductionContext context, ImmutableArray<TypeModel> types)
     {
         if (types.IsDefaultOrEmpty) return;
 
-        var ctorMaps = new Dictionary<ITypeSymbol, ParameterList>(SymbolEqualityComparer.Default);
-        var orderedTypes = types.OfType<INamedTypeSymbol>().OrderBy(static t =>
-        {
-            var count = 0;
-            var b = t.BaseType;
-            while (b != null)
-            {
-                count++;
-                b = b.BaseType;
-            }
-            return count;
-        });
+        var ctorMaps = new Dictionary<string, ParameterList>();
+        var orderedTypes = types.OrderBy(static t => t.Data.Depth);
 
         foreach (var type in orderedTypes)
         {
@@ -80,24 +70,22 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
             IEnumerable<Parameter>? baseParameters = default;
 
-            if (type.BaseType != null)
+            if (type.Data.HasBaseType)
             {
-                if (type.BaseType.IsGenericType)
+                if (type.BaseTypeArguments != null && type.BaseTypeParameters != null)
                 {
-                    if (ctorMaps.TryGetValue(type.BaseType.ConstructUnboundGenericType(), out var temp))
+                    if (ctorMaps.TryGetValue(type.Data.BaseTypeKey, out var temp))
                     {
                         var baseParameterList = new List<Parameter>();
-                        var typedArgs = type.BaseType.TypeArguments;
-                        var typedParameters = type.BaseType.TypeParameters;
                         foreach (var bp in temp)
                         {
                             var bpName = bp.Name;
                             var bpType = bp.Type;
-                            for (var i = 0; i < typedParameters.Length; i++)
+                            for (var i = 0; i < type.BaseTypeParameters.Count; i++)
                             {
-                                if (SymbolEqualityComparer.Default.Equals(typedParameters[i], bp.Type))
+                                if (SymbolEqualityComparer.Default.Equals(type.BaseTypeParameters[i], bp.Type))
                                 {
-                                    bpType = typedArgs[i];
+                                    bpType = type.BaseTypeArguments[i];
                                     break;
                                 }
                             }
@@ -108,50 +96,32 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
                 }
                 else
                 {
-                    ctorMaps.TryGetValue(type.BaseType, out var temp);
+                    ctorMaps.TryGetValue(type.Data.BaseTypeKey, out var temp);
                     baseParameters = temp?.ToList();
                 }
             }
 
             (var source, var parameters) = GenerateSource(context, type, baseParameters);
 
-            if (type.IsGenericType)
-                ctorMaps.Add(type.ConstructUnboundGenericType(), parameters);
-            else
-                ctorMaps.Add(type, parameters);
+            ctorMaps.Add(type.Data.TypeKey, parameters);
 
-            var hintName = type.ToDisplayString(GeneratorUtilities.HintSymbolDisplayFormat)
-                .Replace('<', '[')
-                .Replace('>', ']');
-
-            context.AddSource($"{hintName}.g.cs", source);
+            context.AddSource($"{type.Data.HintName}.g.cs", source);
         }
     }
 
     private static (SourceText, ParameterList) GenerateSource(
         SourceProductionContext context,
-        ITypeSymbol type,
+        TypeModel type,
         IEnumerable<Parameter>? baseParameters = default)
     {
-        var ns = type.ContainingNamespace.IsGlobalNamespace
-                ? null
-                : type.ContainingNamespace.ToString();
+        var postCtorMethod = GetPostCtorMethod(context, type);
 
-        var fields = type.GetMembers().OfType<IFieldSymbol>()
-            .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f));
-
-        var autoCtorAttribute = type.GetAttributes().First(a => a.AttributeClass?.Name == nameof(AutoConstructAttribute));
-        var loc = autoCtorAttribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken)?.GetLocation();
-
-        var postCtorMethod = GetPostCtorMethod(context, type, loc);
-
-        var parameters = new ParameterList(fields);
-        if (type.BaseType != null)
+        var parameters = new ParameterList(type.Fields);
+        if (type.Data.HasBaseType)
         {
-            var constructor = type.BaseType.Constructors.OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any());
-            if (constructor != null)
+            if (type.BaseCtorParameters != null)
             {
-                parameters.AddParameters(constructor.Parameters);
+                parameters.AddParameters(type.BaseCtorParameters);
             }
             else if (baseParameters != null)
             {
@@ -168,21 +138,21 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             .AppendHeader()
             .AppendLine();
 
-        using (source.StartPartialType(type))
+        using (source.StartPartialType(type.Data.Namespace, type.TypeDeclarations))
         {
             source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
 
             if (parameters.HasBaseParameters)
             {
-                source.AppendLine($"public {type.Name}({parameters.ToParameterString()}) : base({parameters.ToBaseParameterString()})");
+                source.AppendLine($"public {type.Data.Name}({parameters.ToParameterString()}) : base({parameters.ToBaseParameterString()})");
             }
             else
             {
-                source.AppendLine($"public {type.Name}({parameters.ToParameterString()})");
+                source.AppendLine($"public {type.Data.Name}({parameters.ToParameterString()})");
             }
 
             source.StartBlock();
-            foreach (var f in fields)
+            foreach (var f in type.Fields)
             {
                 source.AppendLine($"this.{f.Name} = {parameters.FieldParameterName(f)};");
             }
@@ -196,26 +166,20 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return (source, parameters);
     }
 
-    private static IMethodSymbol? GetPostCtorMethod(
-        SourceProductionContext context,
-        ITypeSymbol type,
-        Location? attributeLocation)
+    private static IMethodSymbol? GetPostCtorMethod(SourceProductionContext context, TypeModel type)
     {
-        var markedPostCtorMethods = type.GetMembers().OfType<IMethodSymbol>()
-            .Where(m => m.GetAttributes().Any(a => a.AttributeClass?.Name == nameof(AutoPostConstructAttribute)));
-
         // ACTR002
-        if (markedPostCtorMethods.MoreThan(1))
+        if (type.MarkedPostCtorMethods.MoreThan(1))
         {
-            foreach (var loc in markedPostCtorMethods.SelectMany(static m => m.Locations))
+            foreach (var loc in type.MarkedPostCtorMethods.SelectMany(static m => m.Locations))
                 context.ReportDiagnostic(Diagnostic.Create(AmbiguousMarkedPostConstructMethodWarning, loc));
             return null;
         }
 
-        if (!markedPostCtorMethods.Any())
+        if (!type.MarkedPostCtorMethods.Any())
             return null;
 
-        var method = markedPostCtorMethods.First();
+        var method = type.MarkedPostCtorMethods.First();
 
         // ACTR004
         if (!method.ReturnsVoid)
