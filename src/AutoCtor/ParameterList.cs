@@ -3,22 +3,23 @@ using Microsoft.CodeAnalysis;
 
 namespace AutoCtor;
 
-internal record Parameter(ITypeSymbol Type, string Name);
+internal record struct Parameter(ITypeSymbol Type, string Name);
 
 internal class ParameterList : IEnumerable<Parameter>
 {
-    private readonly Dictionary<IFieldSymbol, Parameter> _fields = new(SymbolEqualityComparer.Default);
+    private readonly Dictionary<IFieldSymbol, Parameter> _fields;
     private readonly List<Parameter> _parameters = new();
     private readonly Dictionary<Parameter, string> _uniqueNames = new();
+    private IEnumerable<Parameter> _postCtorParameters = Enumerable.Empty<Parameter>();
 
-    public bool HasBaseParameters => _parameters.Count > 0;
+    public bool HasBaseParameters => _parameters?.Any() == true;
 
     public ParameterList(IEnumerable<IFieldSymbol> fields)
     {
-        foreach (var f in fields)
-        {
-            _fields.Add(f, new Parameter(f.Type, CreateFriendlyName(f.Name)));
-        }
+        _fields = fields.ToDictionary<IFieldSymbol, IFieldSymbol, Parameter>(
+            f => f,
+            f => new Parameter(f.Type, CreateFriendlyName(f.Name)),
+            SymbolEqualityComparer.Default);
     }
 
     public void AddParameters(IEnumerable<IParameterSymbol> parameters)
@@ -37,12 +38,22 @@ internal class ParameterList : IEnumerable<Parameter>
         }
     }
 
+    public void AddPostCtorParameters(IEnumerable<IParameterSymbol> parameters)
+    {
+        _postCtorParameters = parameters
+            .Select(p => new Parameter(p.Type, CreateFriendlyName(p.Name)))
+            .ToArray();
+    }
+
     public void MakeUniqueNames()
     {
         _uniqueNames.Clear();
         var nameHash = new HashSet<string>();
         foreach (var p in this)
         {
+            if (_uniqueNames.ContainsKey(p))
+                continue;
+
             var i = 0;
             var name = p.Name;
             while (nameHash.Contains(name))
@@ -56,8 +67,8 @@ internal class ParameterList : IEnumerable<Parameter>
 
     public string ToParameterString()
     {
-        return this
-            .Select(p => $"{p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {_uniqueNames[p]}")
+        return _uniqueNames
+            .Select(u => $"{u.Key.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {u.Value}")
             .AsCommaSeparated();
     }
 
@@ -66,10 +77,18 @@ internal class ParameterList : IEnumerable<Parameter>
         return _parameters.Select(p => _uniqueNames[p]).AsCommaSeparated();
     }
 
+    public string ToPostCtorParameterString()
+    {
+        return _postCtorParameters.Select(p => _uniqueNames[p]).AsCommaSeparated();
+    }
+
     public string FieldParameterName(IFieldSymbol f) => _uniqueNames[_fields[f]];
     public IEnumerable<Parameter> BaseParameters() => _parameters;
 
-    public IEnumerator<Parameter> GetEnumerator() => _parameters.Concat(_fields.Values).GetEnumerator();
+    public IEnumerator<Parameter> GetEnumerator() => _parameters
+        .Concat(_fields.Values)
+        .Concat(_postCtorParameters)
+        .GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     private static string CreateFriendlyName(string name)

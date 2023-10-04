@@ -1,11 +1,15 @@
-﻿namespace AutoCtor;
+﻿using System.Diagnostics;
+
+namespace AutoCtor;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
-[System.Diagnostics.Conditional("AUTOCTOR_USAGES")]
+[Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoConstructAttribute : Attribute
 {
-    [System.Runtime.CompilerServices.CompilerGenerated]
-    public AutoConstructAttribute()
-    {
-    }
+}
+
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+[Conditional("AUTOCTOR_USAGES")]
+public sealed class AutoPostConstructAttribute : Attribute
+{
 }

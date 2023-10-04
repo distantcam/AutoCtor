@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CC56491-C17C-44A5-8686-C41491E2E624}"
 	ProjectSection(SolutionItems) = preProject
-		Directory.Build.props = Directory.Build.props
+		src\Directory.Build.props = src\Directory.Build.props
 		readme.source.md = readme.source.md
 	EndProjectSection
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Tests", "src\AutoC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Attributes", "src\AutoCtor.Attributes\AutoCtor.Attributes.csproj", "{638834EA-E4D5-429E-A11E-4BFA91FD59E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCtor.Debug", "src\AutoCtor.Debug\AutoCtor.Debug.csproj", "{3B702044-D3C4-4540-80F8-1A37B65D0AD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Debug", "src\AutoCtor.Debug\AutoCtor.Debug.csproj", "{3B702044-D3C4-4540-80F8-1A37B65D0AD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

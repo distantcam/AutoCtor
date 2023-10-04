@@ -21,7 +21,7 @@ public class SourceGenerationTests
     [InlineData("[AutoConstructAttribute]")]
     public Task AttributeTest(string attribute)
     {
-        var code = @$"
+        var code = @$"using AutoCtor;
 {attribute}public partial class AttributeTestClass {{}}
 ";
         var compilation = Compile(code);
@@ -92,9 +92,8 @@ using AutoCtor;
         var compilation = Compile(theoryData.Code, exampleInterfaces);
         var generator = new AutoConstructSourceGenerator();
         CSharpGeneratorDriver.Create(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
 
-        diagnostics.Should().BeEmpty();
         outputCompilation.GetDiagnostics()
             .Where(d => !ignoredWarnings.Contains(d.Id))
             .Should().BeEmpty();

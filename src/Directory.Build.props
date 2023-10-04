@@ -22,4 +22,16 @@
     <Using Include="System.Collections.Generic" />
     <Using Include="System.Linq" />
   </ItemGroup>
+
+  <!-- https://github.com/dotnet/roslyn/issues/50451 -->
+  <PropertyGroup>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
+  <Target Name="SkipSourceGeneratedFiles" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Compile Remove="Generated/**/*" />
+    </ItemGroup>
+  </Target>
+
 </Project>

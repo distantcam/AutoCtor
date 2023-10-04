@@ -6,11 +6,11 @@ internal static class Extensions
     {
         if (source is IList<T> list)
         {
-            switch (list.Count)
+            return list.Count switch
             {
-                case 1: return list[0];
-                default: return default;
-            }
+                1 => list[0],
+                _ => default,
+            };
         }
         using (var e = source.GetEnumerator())
         {
@@ -38,5 +38,22 @@ internal static class Extensions
             1 => result,
             _ => default,
         };
+    }
+
+    public static bool MoreThan<T>(this IEnumerable<T> source, int limit)
+    {
+        if (source is ICollection<T> collection)
+            return collection.Count > limit;
+        var count = 0;
+        using (var e = source.GetEnumerator())
+        {
+            while (e.MoveNext())
+            {
+                count++;
+                if (count > limit)
+                    return true;
+            }
+        }
+        return false;
     }
 }

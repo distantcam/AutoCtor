@@ -1,0 +1,16 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: ACTR003,
+      Title: Post construct method must not have any optional arguments,
+      Severity: Warning,
+      WarningLevel: 1,
+      Location: : (8,17)-(8,27),
+      Description: ,
+      HelpLink: ,
+      MessageFormat: The method '{0}' must not have optional arguments to be used as the post construct method,
+      Message: The method 'Initialize' must not have optional arguments to be used as the post construct method,
+      Category: AutoCtor
+    }
+  ]
+}

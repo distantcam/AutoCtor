@@ -1,0 +1,28 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: ACTR001,
+      Title: Ambiguous marked post constructor method,
+      Severity: Warning,
+      WarningLevel: 1,
+      Location: : (8,17)-(8,27),
+      Description: ,
+      HelpLink: ,
+      MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
+      Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
+      Category: AutoCtor
+    },
+    {
+      Id: ACTR001,
+      Title: Ambiguous marked post constructor method,
+      Severity: Warning,
+      WarningLevel: 1,
+      Location: : (13,17)-(13,27),
+      Description: ,
+      HelpLink: ,
+      MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
+      Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
+      Category: AutoCtor
+    }
+  ]
+}

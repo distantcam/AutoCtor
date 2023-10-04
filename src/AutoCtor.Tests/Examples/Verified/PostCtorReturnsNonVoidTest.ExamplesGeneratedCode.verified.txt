@@ -1,0 +1,16 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: ACTR002,
+      Title: Post construct method must return void,
+      Severity: Warning,
+      WarningLevel: 1,
+      Location: : (9,17)-(9,26),
+      Description: ,
+      HelpLink: ,
+      MessageFormat: The method '{0}' must return void to be used as the post construct method,
+      Message: The method 'InitAsync' must return void to be used as the post construct method,
+      Category: AutoCtor
+    }
+  ]
+}

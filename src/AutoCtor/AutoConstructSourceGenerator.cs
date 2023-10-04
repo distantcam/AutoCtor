@@ -9,12 +9,44 @@ namespace AutoCtor;
 [Generator(LanguageNames.CSharp)]
 public class AutoConstructSourceGenerator : IIncrementalGenerator
 {
+    public static readonly DiagnosticDescriptor AmbiguousMarkedPostConstructMethodWarning = new DiagnosticDescriptor(
+        id: "ACTR001",
+        title: "Ambiguous marked post constructor method",
+        messageFormat: "Only one method in a type should be marked with an [AutoPostConstruct] attribute",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor PostConstructMethodNotVoidWarning = new DiagnosticDescriptor(
+        id: "ACTR002",
+        title: "Post construct method must return void",
+        messageFormat: "The method '{0}' must return void to be used as the post construct method",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor PostConstructMethodHasOptionalArgsWarning = new DiagnosticDescriptor(
+        id: "ACTR003",
+        title: "Post construct method must not have any optional arguments",
+        messageFormat: "The method '{0}' must not have optional arguments to be used as the post construct method",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor PostConstructMethodCannotBeGenericWarning = new DiagnosticDescriptor(
+        id: "ACTR004",
+        title: "Post construct method must not be generic",
+        messageFormat: "The method '{0}' must not be generic to be used as the post construct method",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var types = context.SyntaxProvider.CreateSyntaxProvider(
             static (s, ct) => SourceTools.IsCorrectAttribute("AutoConstruct", s, ct),
             SourceTools.GetTypeFromAttribute)
-            .Where(t => t != null)
+            .Where(x => x != null)
             .Collect();
 
         context.RegisterSourceOutput(types, GenerateSource);
@@ -25,7 +57,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         if (types.IsDefaultOrEmpty) return;
 
         var ctorMaps = new Dictionary<ITypeSymbol, ParameterList>(SymbolEqualityComparer.Default);
-        var orderedTypes = types.OfType<INamedTypeSymbol>().OrderBy(t =>
+        var orderedTypes = types.OfType<INamedTypeSymbol>().OrderBy(static t =>
         {
             var count = 0;
             var b = t.BaseType;
@@ -76,7 +108,7 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
                 }
             }
 
-            (var source, var parameters) = GenerateSource(type, baseParameters);
+            (var source, var parameters) = GenerateSource(context, type, baseParameters);
 
             if (type.IsGenericType)
                 ctorMaps.Add(type.ConstructUnboundGenericType(), parameters);
@@ -91,18 +123,24 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         }
     }
 
-    private static (SourceText, ParameterList) GenerateSource(ITypeSymbol type, IEnumerable<Parameter>? baseParameters = default)
+    private static (SourceText, ParameterList) GenerateSource(
+        SourceProductionContext context,
+        ITypeSymbol type,
+        IEnumerable<Parameter>? baseParameters = default)
     {
         var ns = type.ContainingNamespace.IsGlobalNamespace
                 ? null
                 : type.ContainingNamespace.ToString();
 
-        var fields = type.GetMembers()
-            .OfType<IFieldSymbol>()
+        var fields = type.GetMembers().OfType<IFieldSymbol>()
             .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f));
 
-        var parameters = new ParameterList(fields);
+        var autoCtorAttribute = type.GetAttributes().First(a => a.AttributeClass?.Name == nameof(AutoConstructAttribute));
+        var loc = autoCtorAttribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken)?.GetLocation();
 
+        var postCtorMethod = GetPostCtorMethod(context, type, loc);
+
+        var parameters = new ParameterList(fields);
         if (type.BaseType != null)
         {
             var constructor = type.BaseType.Constructors.OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any());
@@ -115,7 +153,10 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
                 parameters.AddBaseParameters(baseParameters);
             }
         }
-
+        if (postCtorMethod != null)
+        {
+            parameters.AddPostCtorParameters(postCtorMethod.Parameters);
+        }
         parameters.MakeUniqueNames();
 
         var source = new CodeBuilder()
@@ -140,10 +181,62 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
             {
                 source.AppendLine($"this.{f.Name} = {parameters.FieldParameterName(f)};");
             }
+            if (postCtorMethod != null)
+            {
+                source.AppendLine($"{postCtorMethod.Name}({parameters.ToPostCtorParameterString()});");
+            }
             source.EndBlock();
         }
 
         return (source, parameters);
+    }
+
+    private static IMethodSymbol? GetPostCtorMethod(
+        SourceProductionContext context,
+        ITypeSymbol type,
+        Location? attributeLocation)
+    {
+        var markedPostCtorMethods = type.GetMembers().OfType<IMethodSymbol>()
+            .Where(m => m.GetAttributes().Any(a => a.AttributeClass?.Name == nameof(AutoPostConstructAttribute)));
+
+        // ACTR002
+        if (markedPostCtorMethods.MoreThan(1))
+        {
+            foreach (var loc in markedPostCtorMethods.SelectMany(static m => m.Locations))
+                context.ReportDiagnostic(Diagnostic.Create(AmbiguousMarkedPostConstructMethodWarning, loc));
+            return null;
+        }
+
+        if (!markedPostCtorMethods.Any())
+            return null;
+
+        var method = markedPostCtorMethods.First();
+
+        // ACTR004
+        if (!method.ReturnsVoid)
+        {
+            foreach (var loc in method.Locations)
+                context.ReportDiagnostic(Diagnostic.Create(PostConstructMethodNotVoidWarning, loc, method.Name));
+            return null;
+        }
+
+        // ACTR005
+        if (method.Parameters.Any(static p => p.IsOptional))
+        {
+            foreach (var loc in method.Locations)
+                context.ReportDiagnostic(Diagnostic.Create(PostConstructMethodHasOptionalArgsWarning, loc, method.Name));
+            return null;
+        }
+
+        // ACTR006
+        if (method.IsGenericMethod)
+        {
+            foreach (var loc in method.Locations)
+                context.ReportDiagnostic(Diagnostic.Create(PostConstructMethodCannotBeGenericWarning, loc, method.Name));
+            return null;
+        }
+
+        return method;
     }
 
     private static bool HasFieldInitialiser(IFieldSymbol symbol)
