@@ -46,23 +46,32 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         || node is RecordDeclarationSyntax
         || node is StructDeclarationSyntax;
 
+    private static bool IsMethodDeclaration(SyntaxNode node, CancellationToken cancellationToken)
+        => node is MethodDeclarationSyntax;
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var types = context.SyntaxProvider.ForAttributeWithMetadataName(
             "AutoCtor.AutoConstructAttribute",
             IsTypeDeclaration,
-            static (c, ct) => new TypeModel((INamedTypeSymbol)c.TargetSymbol, ct))
+            static (c, ct) => new TypeModel((INamedTypeSymbol)c.TargetSymbol))
         .Collect();
 
-        context.RegisterSourceOutput(types, GenerateSource);
+        var postCtorMethods = context.SyntaxProvider.ForAttributeWithMetadataName(
+            "AutoCtor.AutoPostConstructAttribute",
+            IsMethodDeclaration,
+            static (c, ct) => (IMethodSymbol)c.TargetSymbol)
+        .Collect();
+
+        context.RegisterSourceOutput(types.Combine(postCtorMethods), GenerateSource);
     }
 
-    private static void GenerateSource(SourceProductionContext context, ImmutableArray<TypeModel> types)
+    private static void GenerateSource(SourceProductionContext context, (ImmutableArray<TypeModel> Types, ImmutableArray<IMethodSymbol> PostCtorMethods) model)
     {
-        if (types.IsDefaultOrEmpty) return;
+        if (model.Types.IsDefaultOrEmpty) return;
 
         var ctorMaps = new Dictionary<string, ParameterList>();
-        var orderedTypes = types.OrderBy(static t => t.Data.Depth);
+        var orderedTypes = model.Types.OrderBy(static t => t.Data.Depth);
 
         foreach (var type in orderedTypes)
         {
@@ -101,7 +110,11 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
                 }
             }
 
-            (var source, var parameters) = GenerateSource(context, type, baseParameters);
+            var postCtorMethods = model.PostCtorMethods
+                .Where(m => TypeModel.CreateKey(m.ContainingType) == type.Data.TypeKey)
+                .ToList();
+
+            (var source, var parameters) = GenerateSource(context, type, postCtorMethods, baseParameters);
 
             ctorMaps.Add(type.Data.TypeKey, parameters);
 
@@ -112,9 +125,10 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
     private static (SourceText, ParameterList) GenerateSource(
         SourceProductionContext context,
         TypeModel type,
-        IEnumerable<Parameter>? baseParameters = default)
+        IEnumerable<IMethodSymbol> markedPostCtorMethods,
+        IEnumerable<Parameter>? baseParameters)
     {
-        var postCtorMethod = GetPostCtorMethod(context, type);
+        var postCtorMethod = GetPostCtorMethod(context, markedPostCtorMethods);
 
         var parameters = new ParameterList(type.Fields);
         if (type.Data.HasBaseType)
@@ -166,20 +180,20 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
         return (source, parameters);
     }
 
-    private static IMethodSymbol? GetPostCtorMethod(SourceProductionContext context, TypeModel type)
+    private static IMethodSymbol? GetPostCtorMethod(SourceProductionContext context, IEnumerable<IMethodSymbol> markedPostCtorMethods)
     {
         // ACTR002
-        if (type.MarkedPostCtorMethods.MoreThan(1))
+        if (markedPostCtorMethods.MoreThan(1))
         {
-            foreach (var loc in type.MarkedPostCtorMethods.SelectMany(static m => m.Locations))
+            foreach (var loc in markedPostCtorMethods.SelectMany(static m => m.Locations))
                 context.ReportDiagnostic(Diagnostic.Create(AmbiguousMarkedPostConstructMethodWarning, loc));
             return null;
         }
 
-        if (!type.MarkedPostCtorMethods.Any())
+        if (!markedPostCtorMethods.Any())
             return null;
 
-        var method = type.MarkedPostCtorMethods.First();
+        var method = markedPostCtorMethods.First();
 
         // ACTR004
         if (!method.ReturnsVoid)

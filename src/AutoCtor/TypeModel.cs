@@ -19,21 +19,16 @@ public record TypeData(
 
 public class TypeModel : IEquatable<TypeModel>
 {
-    private readonly INamedTypeSymbol _type;
-
     public TypeData Data { get; }
 
     public IReadOnlyList<string> TypeDeclarations { get; }
     public IReadOnlyList<IFieldSymbol> Fields { get; }
-    public IReadOnlyList<IMethodSymbol> MarkedPostCtorMethods { get; }
     public IReadOnlyList<IParameterSymbol>? BaseCtorParameters { get; }
     public IReadOnlyList<ITypeSymbol>? BaseTypeArguments { get; }
     public IReadOnlyList<ITypeParameterSymbol>? BaseTypeParameters { get; }
 
-    public TypeModel(INamedTypeSymbol type, CancellationToken cancellationToken)
+    public TypeModel(INamedTypeSymbol type)
     {
-        _type = type;
-
         Data = new TypeData(
             CalculateInheritanceDepth(type),
 
@@ -50,9 +45,6 @@ public class TypeModel : IEquatable<TypeModel>
 
         Fields = type.GetMembers().OfType<IFieldSymbol>()
             .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f))
-            .ToList();
-        MarkedPostCtorMethods = type.GetMembers().OfType<IMethodSymbol>()
-            .Where(m => m.GetAttributes().Any(a => a.AttributeClass?.Name == nameof(AutoPostConstructAttribute)))
             .ToList();
 
         if (type.BaseType != null && type.BaseType.IsGenericType)
@@ -77,7 +69,7 @@ public class TypeModel : IEquatable<TypeModel>
         }
         return depth;
     }
-    private static string CreateKey(INamedTypeSymbol? type)
+    public static string CreateKey(INamedTypeSymbol? type)
     {
         if (type is null)
             return string.Empty;
@@ -123,7 +115,7 @@ public class TypeModel : IEquatable<TypeModel>
         return Data.Equals(other.Data)
         && Equal(TypeDeclarations, other.TypeDeclarations)
         && Equal(Fields, other.Fields)
-        && Equal(MarkedPostCtorMethods, other.MarkedPostCtorMethods)
+        //&& Equal(MarkedPostCtorMethods, other.MarkedPostCtorMethods)
         && Equal(BaseCtorParameters, other.BaseCtorParameters)
         && Equal(BaseTypeArguments, other.BaseTypeArguments)
         && Equal(BaseTypeParameters, other.BaseTypeParameters)
@@ -136,7 +128,7 @@ public class TypeModel : IEquatable<TypeModel>
             var hashCode = Data.GetHashCode();
             hashCode = (hashCode * 397) ^ ComputeHashCode(TypeDeclarations);
             hashCode = (hashCode * 397) ^ ComputeHashCode(Fields);
-            hashCode = (hashCode * 397) ^ ComputeHashCode(MarkedPostCtorMethods);
+            //hashCode = (hashCode * 397) ^ ComputeHashCode(MarkedPostCtorMethods);
             if (BaseCtorParameters != null)
                 hashCode = (hashCode * 397) ^ ComputeHashCode(BaseCtorParameters);
             if (BaseTypeArguments != null)
