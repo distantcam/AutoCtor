@@ -221,10 +221,4 @@ public class AutoConstructSourceGenerator : IIncrementalGenerator
 
         return method;
     }
-
-    private static bool HasFieldInitialiser(IFieldSymbol symbol)
-    {
-        return symbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>().Any(x => x.Initializer != null);
-    }
 }
-
