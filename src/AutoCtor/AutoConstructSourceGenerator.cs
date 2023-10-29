@@ -1,5 +1,5 @@
-﻿using System.Collections.Immutable;
-using AutoSource;
+﻿using AutoCtor.Models;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;

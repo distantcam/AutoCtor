@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace AutoCtor;
+namespace AutoCtor.Models;
 
 public record TypeData(
     int Depth,

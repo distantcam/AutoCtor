@@ -1,6 +1,4 @@
-﻿using AutoSource;
-
-namespace AutoCtor;
+﻿namespace AutoCtor;
 
 internal static class Extensions
 {
@@ -56,30 +54,5 @@ internal static class Extensions
             }
         }
         return false;
-    }
-
-    public static IDisposable StartPartialType(this CodeBuilder code, string? ns, IReadOnlyList<string> typeDeclarations)
-    {
-        if (!string.IsNullOrEmpty(ns))
-        {
-            code.AppendLine($"namespace {ns}");
-            code.StartBlock();
-        }
-
-        for (var i = 0; i < typeDeclarations.Count; i++)
-        {
-            code.AppendLine(typeDeclarations[i]);
-            code.StartBlock();
-        }
-
-        return new CloseBlock(code, typeDeclarations.Count + (ns != null ? 1 : 0));
-    }
-
-    private readonly struct CloseBlock : IDisposable
-    {
-        private readonly CodeBuilder _codeBuilder;
-        private readonly int _count;
-        public CloseBlock(CodeBuilder codeBuilder, int count) { _codeBuilder = codeBuilder; _count = count; }
-        public void Dispose() { for (var i = 0; i < _count; i++) _codeBuilder.EndBlock(); }
     }
 }

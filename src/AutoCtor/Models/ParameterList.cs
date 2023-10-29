@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using Microsoft.CodeAnalysis;
 
-namespace AutoCtor;
+namespace AutoCtor.Models;
 
 internal record struct Parameter(ITypeSymbol Type, string Name);
 
