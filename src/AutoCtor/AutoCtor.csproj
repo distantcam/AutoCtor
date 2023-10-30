@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <AssemblyMetadata Include="GitSha" Value="$(GitSha)" />
+    <AssemblyMetadata Include="PackageProjectUrl" Value="$(PackageProjectUrl)" />
   </ItemGroup>
 
   <ItemGroup>

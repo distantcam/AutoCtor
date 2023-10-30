@@ -16,10 +16,13 @@ internal class CodeBuilder
     {
         var assembly = Assembly.GetAssembly(typeof(CodeBuilder));
         _assemblyName = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-        _version = assembly.GetCustomAttribute<AssemblyVersionAttribute>().Version;
-        var metadata = assembly.GetCustomAttributes<AssemblyMetadataAttribute>().ToDictionary(m => m.Key, m => m.Value);
-        _packageProjectUrl = metadata["RepositoryUrl"];
-        _gitSha = metadata["GitSha"];
+        _version = assembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "0.0.0.0";
+        var metadata = assembly.GetCustomAttributes<AssemblyMetadataAttribute>()?.ToDictionary(m => m.Key, m => m.Value);
+        if (metadata != null)
+        {
+            _packageProjectUrl = metadata["PackageProjectUrl"];
+            _gitSha = metadata["GitSha"];
+        }
     }
 
     private readonly StringBuilder _stringBuilder = new();
