@@ -5,7 +5,6 @@
     <Nullable>disable</Nullable>
     <IsPackable>false</IsPackable>
     <NoWarn>CS0169;CS0414</NoWarn>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup>
