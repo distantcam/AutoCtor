@@ -20,4 +20,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ParameterList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeModel.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
 </Project>

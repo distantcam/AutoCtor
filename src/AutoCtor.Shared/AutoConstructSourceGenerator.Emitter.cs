@@ -141,7 +141,7 @@ public partial class AutoConstructSourceGenerator
 #endif
             IEnumerable<IMethodSymbol> markedPostCtorMethods)
         {
-            // ACTR002
+            // ACTR001
             if (markedPostCtorMethods.MoreThan(1))
             {
                 foreach (var loc in markedPostCtorMethods.SelectMany(static m => m.Locations))
@@ -154,7 +154,7 @@ public partial class AutoConstructSourceGenerator
 
             var method = markedPostCtorMethods.First();
 
-            // ACTR004
+            // ACTR002
             if (!method.ReturnsVoid)
             {
                 foreach (var loc in method.Locations)
@@ -162,7 +162,7 @@ public partial class AutoConstructSourceGenerator
                 return null;
             }
 
-            // ACTR005
+            // ACTR003
             if (method.Parameters.Any(static p => p.IsOptional))
             {
                 foreach (var loc in method.Locations)
@@ -170,7 +170,7 @@ public partial class AutoConstructSourceGenerator
                 return null;
             }
 
-            // ACTR006
+            // ACTR004
             if (method.IsGenericMethod)
             {
                 foreach (var loc in method.Locations)

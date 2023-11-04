@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Roslyn4.0", "src\A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Roslyn4.4", "src\AutoCtor.Roslyn4.4\AutoCtor.Roslyn4.4.csproj", "{56918D57-9044-452E-8830-2739B3BBE9E3}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AutoCtor.Shared", "src\AutoCtor.Shared\AutoCtor.Shared.shproj", "{0381B830-8FD4-4392-A38A-3B2EE86A2094}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,5 +71,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C1E6B0F-E4E8-410D-A9C6-D9128CAC4EC8}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{0381b830-8fd4-4392-a38a-3b2ee86a2094}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
