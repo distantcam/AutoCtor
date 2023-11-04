@@ -11,14 +11,20 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageId>AutoCtor</PackageId>
     <Authors>Cameron MacFarland</Authors>
     <Description>
       Source Generator to automatically create a constructor with all the readonly fields
       set.
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageOutputPath>$(SolutionDir)nugets</PackageOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="$(SolutionDir)\src\AutoCtor.Roslyn3.11\bin\Release\netstandard2.0\AutoCtor.dll">
@@ -37,7 +43,6 @@
       <PackagePath>analyzers/dotnet/roslyn4.4/cs</PackagePath>
     </None>
 
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="lib/netstandard2.0" Visible="false" />
     <None Include="$(SolutionDir)readme.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
