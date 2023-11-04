@@ -9,8 +9,8 @@ internal class CodeBuilder
 {
     private static readonly string _assemblyName;
     private static readonly string _version;
-    private static readonly string _packageProjectUrl;
-    private static readonly string _gitSha;
+    private static readonly string? _packageProjectUrl;
+    private static readonly string? _gitSha;
 
     static CodeBuilder()
     {
@@ -20,8 +20,8 @@ internal class CodeBuilder
         var metadata = assembly.GetCustomAttributes<AssemblyMetadataAttribute>()?.ToDictionary(m => m.Key, m => m.Value);
         if (metadata != null)
         {
-            _packageProjectUrl = metadata["PackageProjectUrl"];
-            _gitSha = metadata["GitSha"];
+            metadata.TryGetValue("PackageProjectUrl", out _packageProjectUrl);
+            metadata.TryGetValue("GitSha", out _gitSha);
         }
     }
 

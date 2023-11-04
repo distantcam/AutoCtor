@@ -1,6 +1,4 @@
-﻿namespace AutoCtor;
-
-internal static class Extensions
+﻿internal static class Extensions
 {
     public static T? OnlyOrDefault<T>(this IEnumerable<T> source)
     {

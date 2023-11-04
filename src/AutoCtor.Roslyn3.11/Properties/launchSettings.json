@@ -1,0 +1,8 @@
+{
+    "profiles": {
+        "AutoCtor Roslyn 3.11 Debug": {
+            "commandName": "DebugRoslynComponent",
+            "targetProject": "..\\AutoCtor.Debug\\AutoCtor.Debug.csproj"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>0381b830-8fd4-4392-a38a-3b2ee86a2094</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>AutoCtor.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.AttributesEmitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Diagnostics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Emitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Parser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CodeBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneratorUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\IsExternalInit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ParameterList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TypeModel.cs" />
+  </ItemGroup>
+</Project>

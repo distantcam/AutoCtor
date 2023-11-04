@@ -1,15 +1,16 @@
 ﻿using AutoCtor;
 
-namespace TestNamespace;
-
-public partial class OuterClass1
+namespace TestNamespace
 {
-    public partial class OuterClass2
+    public partial class OuterClass1
     {
-        [AutoConstruct]
-        public partial class NamespaceDoubleNestedClassTest
+        public partial class OuterClass2
         {
-            private readonly int _item;
+            [AutoConstruct]
+            public partial class NamespaceDoubleNestedClassTest
+            {
+                private readonly int _item;
+            }
         }
     }
 }

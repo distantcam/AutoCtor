@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AutoCtor.Attributes\AutoCtor.Attributes.csproj" />
-    <ProjectReference Include="..\AutoCtor\AutoCtor.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
   </ItemGroup>
 
 </Project>

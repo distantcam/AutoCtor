@@ -7,8 +7,8 @@ on:
       - main
       - feature/*
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
-      - '[0-9]+.[0-9]+.[0-9]+-**'
+      - "[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+-**"
   pull_request:
     branches:
       - main
@@ -37,8 +37,38 @@ jobs:
       - name: 🛠️ Build code
         run: dotnet build --configuration Release --no-restore
 
-      - name: 🧪 Testing code
-        run: dotnet test --configuration Release --no-build --logger GitHubActions -- RunConfiguration.CollectSourceInformation=true
+      - name: 🧪 Testing 3.11 code
+        run: >
+          dotnet test
+          --configuration Release
+          -p:RoslynVersion=3.11
+          -p:RoslynLibVersion=3.11.0
+          --no-build
+          --logger GitHubActions
+          --
+          RunConfiguration.CollectSourceInformation=true
+
+      - name: 🧪 Testing 4.0 code
+        run: >
+          dotnet test
+          --configuration Release
+          -p:RoslynVersion=4.0
+          -p:RoslynLibVersion=4.0.1
+          --no-build
+          --logger GitHubActions
+          --
+          RunConfiguration.CollectSourceInformation=true
+
+      - name: 🧪 Testing 4.4 code
+        run: >
+          dotnet test
+          --configuration Release
+          -p:RoslynVersion=4.4
+          -p:RoslynLibVersion=4.4.0
+          --no-build
+          --logger GitHubActions
+          --
+          RunConfiguration.CollectSourceInformation=true
 
   publish:
     name: 📦 Publish nuget library

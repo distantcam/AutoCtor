@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoCtor.Models;
 
-public record TypeData(
+internal record TypeData(
     int Depth,
 
     string BaseTypeKey,
@@ -17,7 +17,7 @@ public record TypeData(
     string HintName
 );
 
-public class TypeModel : IEquatable<TypeModel>
+internal class TypeModel : IEquatable<TypeModel>
 {
     public TypeData Data { get; }
 
@@ -115,7 +115,6 @@ public class TypeModel : IEquatable<TypeModel>
         return Data.Equals(other.Data)
         && Equal(TypeDeclarations, other.TypeDeclarations)
         && Equal(Fields, other.Fields)
-        //&& Equal(MarkedPostCtorMethods, other.MarkedPostCtorMethods)
         && Equal(BaseCtorParameters, other.BaseCtorParameters)
         && Equal(BaseTypeArguments, other.BaseTypeArguments)
         && Equal(BaseTypeParameters, other.BaseTypeParameters)
@@ -128,7 +127,6 @@ public class TypeModel : IEquatable<TypeModel>
             var hashCode = Data.GetHashCode();
             hashCode = (hashCode * 397) ^ ComputeHashCode(TypeDeclarations);
             hashCode = (hashCode * 397) ^ ComputeHashCode(Fields);
-            //hashCode = (hashCode * 397) ^ ComputeHashCode(MarkedPostCtorMethods);
             if (BaseCtorParameters != null)
                 hashCode = (hashCode * 397) ^ ComputeHashCode(BaseCtorParameters);
             if (BaseTypeArguments != null)

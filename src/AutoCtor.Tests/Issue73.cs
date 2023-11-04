@@ -10,13 +10,16 @@ public class Issue73 : CompilationTestBase
     protected override CSharpCompilation Compile()
     {
         var projectACode = @"
-namespace A;
+namespace A
+{
 public interface Interface<T, U>{}
+}
 ";
         var projectBCode = @"
 using AutoCtor;
 using A;
-namespace B;
+namespace B
+{
 public abstract class BaseClass<T, U, V>
 {
     private readonly Interface<T, U> _interface;
@@ -24,6 +27,7 @@ public abstract class BaseClass<T, U, V>
 }
 [AutoConstruct]
 public sealed partial class TheClass : BaseClass<object, int, string>{}
+}
 ";
 
         var references = AppDomain.CurrentDomain.GetAssemblies()

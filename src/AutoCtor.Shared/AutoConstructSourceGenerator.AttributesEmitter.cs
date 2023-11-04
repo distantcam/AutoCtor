@@ -1,13 +1,14 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 
 namespace AutoCtor;
 
-[Generator(LanguageNames.CSharp)]
-public class AttributesSourceGenerator : IIncrementalGenerator
+public partial class AutoConstructSourceGenerator
 {
-    public void Initialize(IncrementalGeneratorInitializationContext context)
+    private static class AttributeEmitter
     {
-        context.RegisterPostInitializationOutput(static c =>
+        public static string HintName = "AutoConstructAttribute.g.cs";
+
+        public static SourceText GenerateSource()
         {
             var source = new CodeBuilder();
             source.AppendHeader().AppendLine();
@@ -28,7 +29,7 @@ public class AttributesSourceGenerator : IIncrementalGenerator
             source.EndBlock();
             source.AppendLine("#endif");
 
-            c.AddSource("AutoConstructAttribute.g.cs", source);
-        });
+            return source;
+        }
     }
 }

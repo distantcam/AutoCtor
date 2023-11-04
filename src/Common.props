@@ -1,0 +1,23 @@
+<Project>
+
+  <PropertyGroup>
+    <AssemblyName>AutoCtor</AssemblyName>
+    <RootNamespace>AutoCtor</RootNamespace>
+
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IsRoslynComponent>true</IsRoslynComponent>
+
+    <Version>0.0.0</Version>
+    <GitSha>abc</GitSha>
+    <PackageProjectUrl>https://github.com/distantcam/AutoCtor</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="GitSha" Value="$(GitSha)" />
+    <AssemblyMetadata Include="PackageProjectUrl" Value="$(PackageProjectUrl)" />
+  </ItemGroup>
+
+  <Import Project="AutoCtor.Shared\AutoCtor.Shared.projitems" Label="Shared" />
+
+</Project>

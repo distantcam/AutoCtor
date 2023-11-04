@@ -7,14 +7,14 @@
     <NoWarn>NU5128</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup>
+  <!--<PropertyGroup>
     <Version>0.0.0</Version>
     <Authors>Cameron MacFarland</Authors>
     <Description>Source Generator to automatically create a constructor with all the readonly fields set.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageOutputPath>$(SolutionDir)nugets</PackageOutputPath>
     <PackageProjectUrl>https://github.com/distantcam/AutoCtor</PackageProjectUrl>
-  </PropertyGroup>
+  </PropertyGroup>-->
 
   <ItemGroup>
     <Using Include="System" />
