@@ -13,12 +13,10 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
     name: 🛠️ Build and test
     runs-on: ubuntu-latest
-
     steps:
       - name: 👨‍💻 Check-out code
         uses: actions/checkout@v3
@@ -33,14 +31,6 @@ jobs:
       - name: 🔍 Enable problem matchers
         run: echo "::add-matcher::.github/matchers/dotnet.json"
 
-      - name: 🦸‍♂️ Cache Restore
-        uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget
-
       - name: 🎒 Load packages
         run: dotnet restore
 
@@ -49,7 +39,6 @@ jobs:
 
       - name: 🧪 Testing code
         run: dotnet test --configuration Release --no-build --logger GitHubActions -- RunConfiguration.CollectSourceInformation=true
-
 
   publish:
     name: 📦 Publish nuget library
@@ -69,14 +58,6 @@ jobs:
 
       - name: 🔍 Enable problem matchers
         run: echo "::add-matcher::.github/matchers/dotnet.json"
-
-      - name: 🦸‍♂️ Cache Restore
-        uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget
 
       - name: 🎒 Load packages
         run: dotnet restore
