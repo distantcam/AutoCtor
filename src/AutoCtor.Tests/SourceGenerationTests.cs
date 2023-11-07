@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Immutable;
+using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Xunit.Abstractions;
@@ -27,7 +28,7 @@ public class SourceGenerationTests
         var compilation = Compile(code);
 
         var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+        var driver = CreateDriver(compilation, generator).RunGenerators(compilation);
 
         return Verify(driver, _codeVerifySettings)
             .UseDirectory("Verified")
@@ -55,7 +56,7 @@ using AutoCtor;
         var compilation = Compile(code);
 
         var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+        var driver = CreateDriver(compilation, generator).RunGenerators(compilation);
 
         return Verify(driver, _codeVerifySettings)
             .UseDirectory("Verified")
@@ -71,7 +72,7 @@ using AutoCtor;
 
         var compilation = Compile(theoryData.Code, exampleInterfaces);
         var generator = new AutoConstructSourceGenerator();
-        var driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+        var driver = CreateDriver(compilation, generator).RunGenerators(compilation);
 
         return Verify(driver, _codeVerifySettings)
             .UseDirectory(Path.Combine("Examples", "Verified"))
@@ -91,13 +92,16 @@ using AutoCtor;
 
         var compilation = Compile(theoryData.Code, exampleInterfaces);
         var generator = new AutoConstructSourceGenerator();
-        CSharpGeneratorDriver.Create(generator)
+        CreateDriver(compilation, generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
 
         outputCompilation.GetDiagnostics()
             .Where(d => !ignoredWarnings.Contains(d.Id))
             .Should().BeEmpty();
     }
+
+    private static GeneratorDriver CreateDriver(Compilation c, params ISourceGenerator[] generators)
+        => CSharpGeneratorDriver.Create(generators, parseOptions: c.SyntaxTrees.FirstOrDefault().Options as CSharpParseOptions);
 
     private static CSharpCompilation Compile(params string[] code)
     {
@@ -107,9 +111,15 @@ using AutoCtor;
             .Cast<MetadataReference>()
             .Concat(new[] { MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll")) });
 
+#if ROSLYN_3_11
+        var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
+#else
+        var options = CSharpParseOptions.Default;
+#endif
+
         return CSharpCompilation.Create(
             "AutoCtorTest",
-            code.Select(c => CSharpSyntaxTree.ParseText(c)),
+            code.Select(c => CSharpSyntaxTree.ParseText(c, options)),
             references,
             new CSharpCompilationOptions(
                 OutputKind.DynamicallyLinkedLibrary

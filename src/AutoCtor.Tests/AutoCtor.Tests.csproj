@@ -18,6 +18,18 @@
     <!--<RoslynLibVersion>4.4.0</RoslynLibVersion>-->
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RoslynVersion)' == '3.11' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_3_11</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RoslynVersion)' == '4.0' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_4_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RoslynVersion)' == '4.4' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_4_4</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Examples\*.cs" />
     <None Include="Examples\*.cs" />

@@ -91,11 +91,15 @@ internal class TypeModel : IEquatable<TypeModel>
         var currentType = type;
         while (currentType is not null)
         {
-            var typeKeyword = currentType.IsRecord
-                ? "record"
-                : currentType.IsValueType
-                    ? "struct"
-                    : "class";
+            var typeKeyword = currentType switch
+            {
+                { IsRecord: true, IsValueType: true } => "record struct",
+                { IsRecord: true, IsValueType: false } => "record",
+                { IsRecord: false, IsValueType: true } => "struct",
+                { IsRecord: false, IsValueType: false } => "class",
+                _ => string.Empty
+            };
+
             var typeName = currentType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
             typeDeclarations.Add($"partial {typeKeyword} {typeName}");
             currentType = currentType.ContainingType;
