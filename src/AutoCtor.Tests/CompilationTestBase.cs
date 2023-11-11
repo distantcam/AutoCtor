@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace AutoCtor.Tests;

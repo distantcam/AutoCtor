@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneratorUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IsExternalInit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\EquatableList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ParameterList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeModel.cs" />
   </ItemGroup>

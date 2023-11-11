@@ -20,7 +20,7 @@ public partial class AutoConstructSourceGenerator
             if (model.Types.IsDefaultOrEmpty) return;
 
             var ctorMaps = new Dictionary<string, ParameterList>();
-            var orderedTypes = model.Types.OrderBy(static t => t.Data.Depth);
+            var orderedTypes = model.Types.OrderBy(static t => t.Depth);
 
             foreach (var type in orderedTypes)
             {
@@ -28,22 +28,22 @@ public partial class AutoConstructSourceGenerator
 
                 IEnumerable<Parameter>? baseParameters = default;
 
-                if (type.Data.HasBaseType)
+                if (type.HasBaseType)
                 {
-                    if (type.BaseTypeArguments != null && type.BaseTypeParameters != null)
+                    if (type.BaseTypeArguments.HasValue && type.BaseTypeParameters.HasValue)
                     {
-                        if (ctorMaps.TryGetValue(type.Data.BaseTypeKey, out var temp))
+                        if (ctorMaps.TryGetValue(type.BaseTypeKey, out var temp))
                         {
                             var baseParameterList = new List<Parameter>();
                             foreach (var bp in temp)
                             {
                                 var bpName = bp.Name;
                                 var bpType = bp.Type;
-                                for (var i = 0; i < type.BaseTypeParameters.Count; i++)
+                                for (var i = 0; i < type.BaseTypeParameters.Value.Count; i++)
                                 {
-                                    if (SymbolEqualityComparer.Default.Equals(type.BaseTypeParameters[i], bp.Type))
+                                    if (SymbolEqualityComparer.Default.Equals(type.BaseTypeParameters.Value[i], bp.Type))
                                     {
-                                        bpType = type.BaseTypeArguments[i];
+                                        bpType = type.BaseTypeArguments.Value[i];
                                         break;
                                     }
                                 }
@@ -54,20 +54,20 @@ public partial class AutoConstructSourceGenerator
                     }
                     else
                     {
-                        ctorMaps.TryGetValue(type.Data.BaseTypeKey, out var temp);
+                        ctorMaps.TryGetValue(type.BaseTypeKey, out var temp);
                         baseParameters = temp?.ToList();
                     }
                 }
 
                 var postCtorMethods = model.PostCtorMethods
-                    .Where(m => TypeModel.CreateKey(m.ContainingType) == type.Data.TypeKey)
+                    .Where(m => TypeModel.CreateKey(m.ContainingType) == type.TypeKey)
                     .ToList();
 
                 (var source, var parameters) = GenerateSource(context, type, postCtorMethods, baseParameters);
 
-                ctorMaps.Add(type.Data.TypeKey, parameters);
+                ctorMaps.Add(type.TypeKey, parameters);
 
-                context.AddSource($"{type.Data.HintName}.g.cs", source);
+                context.AddSource($"{type.HintName}.g.cs", source);
             }
         }
 
@@ -84,7 +84,7 @@ public partial class AutoConstructSourceGenerator
             var postCtorMethod = GetPostCtorMethod(context, markedPostCtorMethods);
 
             var parameters = new ParameterList(type.Fields);
-            if (type.Data.HasBaseType)
+            if (type.HasBaseType)
             {
                 if (type.BaseCtorParameters != null)
                 {
@@ -105,17 +105,17 @@ public partial class AutoConstructSourceGenerator
                 .AppendHeader()
                 .AppendLine();
 
-            using (source.StartPartialType(type.Data.Namespace, type.TypeDeclarations))
+            using (source.StartPartialType(type.Namespace, type.TypeDeclarations))
             {
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
 
                 if (parameters.HasBaseParameters)
                 {
-                    source.AppendLine($"public {type.Data.Name}({parameters.ToParameterString()}) : base({parameters.ToBaseParameterString()})");
+                    source.AppendLine($"public {type.Name}({parameters.ToParameterString()}) : base({parameters.ToBaseParameterString()})");
                 }
                 else
                 {
-                    source.AppendLine($"public {type.Data.Name}({parameters.ToParameterString()})");
+                    source.AppendLine($"public {type.Name}({parameters.ToParameterString()})");
                 }
 
                 source.StartBlock();

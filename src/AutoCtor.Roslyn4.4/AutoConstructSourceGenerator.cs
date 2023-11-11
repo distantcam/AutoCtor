@@ -11,7 +11,7 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         var types = context.SyntaxProvider.ForAttributeWithMetadataName(
             Parser.AutoConstructAttributeFullName,
             Parser.IsTypeDeclaration,
-            static (c, ct) => new TypeModel((INamedTypeSymbol)c.TargetSymbol))
+            static (c, ct) => TypeModel.Create((INamedTypeSymbol)c.TargetSymbol))
         .Collect();
 
         var postCtorMethods = context.SyntaxProvider.ForAttributeWithMetadataName(

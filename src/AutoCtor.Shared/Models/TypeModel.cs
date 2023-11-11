@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoCtor.Models;
 
-internal record TypeData(
+internal record struct TypeModel(
     int Depth,
 
     string BaseTypeKey,
@@ -14,48 +14,44 @@ internal record TypeData(
 
     bool HasBaseType,
 
-    string HintName
-);
+    string HintName,
 
-internal class TypeModel : IEquatable<TypeModel>
+    EquatableList<string> TypeDeclarations,
+    EquatableList<IFieldSymbol> Fields,
+    EquatableList<IParameterSymbol>? BaseCtorParameters,
+    EquatableList<ITypeSymbol>? BaseTypeArguments,
+    EquatableList<ITypeParameterSymbol>? BaseTypeParameters
+)
 {
-    public TypeData Data { get; }
-
-    public IReadOnlyList<string> TypeDeclarations { get; }
-    public IReadOnlyList<IFieldSymbol> Fields { get; }
-    public IReadOnlyList<IParameterSymbol>? BaseCtorParameters { get; }
-    public IReadOnlyList<ITypeSymbol>? BaseTypeArguments { get; }
-    public IReadOnlyList<ITypeParameterSymbol>? BaseTypeParameters { get; }
-
-    public TypeModel(INamedTypeSymbol type)
+    public static TypeModel Create(INamedTypeSymbol type)
     {
-        Data = new TypeData(
-            CalculateInheritanceDepth(type),
+        var baseCtorParameters = type.BaseType?.Constructors
+                .OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any())?.Parameters;
+        var genericBaseType = type.BaseType != null && type.BaseType.IsGenericType;
 
-            CreateKey(type.BaseType),
-            CreateKey(type),
+        return new(
+            Depth: CalculateInheritanceDepth(type),
 
-            type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToString(),
-            type.Name,
+            BaseTypeKey: CreateKey(type.BaseType),
+            TypeKey: CreateKey(type),
 
-            type.BaseType is not null,
+            Namespace: type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToString(),
+            Name: type.Name,
 
-            CreateHintName(type)
+            HasBaseType: type.BaseType is not null,
+
+            HintName: CreateHintName(type),
+
+            TypeDeclarations: CreateTypeDeclarations(type),
+
+            Fields: new EquatableList<IFieldSymbol>(type.GetMembers().OfType<IFieldSymbol>()
+                .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f))),
+
+            BaseCtorParameters: baseCtorParameters != null ? new EquatableList<IParameterSymbol>(baseCtorParameters) : null,
+
+            BaseTypeArguments: genericBaseType ? new EquatableList<ITypeSymbol>(type.BaseType!.TypeArguments) : null,
+            BaseTypeParameters: genericBaseType ? new EquatableList<ITypeParameterSymbol>(type.BaseType!.TypeParameters) : null
         );
-
-        Fields = type.GetMembers().OfType<IFieldSymbol>()
-            .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f))
-            .ToList();
-
-        if (type.BaseType != null && type.BaseType.IsGenericType)
-        {
-            BaseTypeArguments = type.BaseType.TypeArguments;
-            BaseTypeParameters = type.BaseType.TypeParameters;
-        }
-        BaseCtorParameters = type.BaseType?.Constructors
-            .OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any())?.Parameters;
-
-        TypeDeclarations = CreateTypeDeclarations(type);
     }
 
     private static int CalculateInheritanceDepth(ITypeSymbol type)
@@ -85,7 +81,7 @@ internal class TypeModel : IEquatable<TypeModel>
             .Replace('<', '[')
             .Replace('>', ']');
     }
-    private static IReadOnlyList<string> CreateTypeDeclarations(ITypeSymbol type)
+    private static EquatableList<string> CreateTypeDeclarations(ITypeSymbol type)
     {
         var typeDeclarations = new List<string>();
         var currentType = type;
@@ -105,67 +101,11 @@ internal class TypeModel : IEquatable<TypeModel>
             currentType = currentType.ContainingType;
         }
         typeDeclarations.Reverse();
-        return typeDeclarations;
+        return new EquatableList<string>(typeDeclarations);
     }
 
     private static bool HasFieldInitialiser(IFieldSymbol symbol)
     {
         return symbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>().Any(x => x.Initializer != null);
-    }
-
-    public override bool Equals(object obj) => obj is TypeModel model && Equals(model);
-    public bool Equals(TypeModel other)
-    {
-        return Data.Equals(other.Data)
-        && Equal(TypeDeclarations, other.TypeDeclarations)
-        && Equal(Fields, other.Fields)
-        && Equal(BaseCtorParameters, other.BaseCtorParameters)
-        && Equal(BaseTypeArguments, other.BaseTypeArguments)
-        && Equal(BaseTypeParameters, other.BaseTypeParameters)
-        ;
-    }
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            var hashCode = Data.GetHashCode();
-            hashCode = (hashCode * 397) ^ ComputeHashCode(TypeDeclarations);
-            hashCode = (hashCode * 397) ^ ComputeHashCode(Fields);
-            if (BaseCtorParameters != null)
-                hashCode = (hashCode * 397) ^ ComputeHashCode(BaseCtorParameters);
-            if (BaseTypeArguments != null)
-                hashCode = (hashCode * 397) ^ ComputeHashCode(BaseTypeArguments);
-            if (BaseTypeParameters != null)
-                hashCode = (hashCode * 397) ^ ComputeHashCode(BaseTypeParameters);
-            return hashCode;
-        }
-    }
-
-    private static bool Equal<T>(IReadOnlyList<T>? list1, IReadOnlyList<T>? list2)
-    {
-        if (list1 is null)
-            return list2 is null;
-        if (list2 is null)
-            return list1 is null;
-
-        if (list1.Count != list2.Count)
-            return false;
-
-        for (var i = 0; i < list1.Count; i++)
-        {
-            if (!EqualityComparer<T>.Default.Equals(list1[i], list2[i]))
-                return false;
-        }
-
-        return true;
-    }
-    private static int ComputeHashCode<T>(IReadOnlyList<T> collection)
-    {
-        var hashCode = typeof(T).GetHashCode();
-        for (var i = 0; i < collection.Count; i++)
-        {
-            hashCode = (hashCode * 397) ^ EqualityComparer<T>.Default.GetHashCode(collection[i]);
-        }
-        return hashCode;
     }
 }

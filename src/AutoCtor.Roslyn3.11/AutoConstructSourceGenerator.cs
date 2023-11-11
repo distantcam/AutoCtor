@@ -27,7 +27,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
             {
                 var type = Parser.GetMarkedNamedTypeSymbol(context, _cancellationToken);
                 if (type != null)
-                    (TypeModels ??= new()).Add(new(type));
+                    (TypeModels ??= new()).Add(TypeModel.Create(type));
             }
             else if (context.Node is MethodDeclarationSyntax { AttributeLists.Count: > 0 })
             {

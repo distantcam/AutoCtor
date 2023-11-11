@@ -100,8 +100,13 @@ using AutoCtor;
             .Should().BeEmpty();
     }
 
+#if ROSLYN_3_11
     private static GeneratorDriver CreateDriver(Compilation c, params ISourceGenerator[] generators)
         => CSharpGeneratorDriver.Create(generators, parseOptions: c.SyntaxTrees.FirstOrDefault().Options as CSharpParseOptions);
+#elif ROSLYN_4_0 || ROSLYN_4_4
+    private static GeneratorDriver CreateDriver(Compilation c, params IIncrementalGenerator[] generators)
+        => CSharpGeneratorDriver.Create(generators);
+#endif
 
     private static CSharpCompilation Compile(params string[] code)
     {
@@ -113,7 +118,7 @@ using AutoCtor;
 
 #if ROSLYN_3_11
         var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
-#else
+#elif ROSLYN_4_0 || ROSLYN_4_4
         var options = CSharpParseOptions.Default;
 #endif
 

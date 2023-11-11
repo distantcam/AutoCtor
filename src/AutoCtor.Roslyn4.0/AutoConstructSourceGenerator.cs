@@ -12,7 +12,7 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
             Parser.IsTypeDeclaration,
             Parser.GetMarkedNamedTypeSymbol)
             .Where(static s => s is not null)
-            .Select(static (s, ct) => new TypeModel(s!))
+            .Select(static (s, ct) => TypeModel.Create(s!))
             .Collect();
 
         var postCtorMethods = context.SyntaxProvider.CreateSyntaxProvider(
