@@ -20,8 +20,6 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
             static (c, ct) => (IMethodSymbol)c.TargetSymbol)
         .Collect();
 
-        var contextForGenerator = types.Combine(postCtorMethods);
-
         context.RegisterSourceOutput(types.Combine(postCtorMethods), Emitter.GenerateSource);
 
         context.RegisterPostInitializationOutput(static c =>

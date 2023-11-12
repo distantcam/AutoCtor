@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Text;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
 namespace AutoCtor;
@@ -53,13 +52,13 @@ internal class CodeBuilder
         }
     }
 
-    public CodeBuilder StartBlock()
+    public CodeBuilder OpenBlock()
     {
         AppendLine("{");
         IncreaseIndent();
         return this;
     }
-    public CodeBuilder EndBlock()
+    public CodeBuilder CloseBlock()
     {
         DecreaseIndent();
         AppendLine("}");
@@ -85,54 +84,39 @@ internal class CodeBuilder
     .AppendLine($"// </auto-generated>")
     .AppendLine($"//------------------------------------------------------------------------------");
 
-    public IDisposable StartPartialType(ITypeSymbol type)
-    {
-        var ns = type.ContainingNamespace.IsGlobalNamespace
-            ? null
-            : type.ContainingNamespace.ToString();
-
-        var typeDeclarations = new List<string>();
-        var currentType = type;
-        while (currentType is not null)
-        {
-            var typeKeyword = currentType.IsRecord
-                ? "record"
-                : currentType.IsValueType
-                    ? "struct"
-                    : "class";
-            var typeName = currentType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            typeDeclarations.Add($"partial {typeKeyword} {typeName}");
-            currentType = currentType.ContainingType;
-        }
-        typeDeclarations.Reverse();
-        return StartPartialType(ns, typeDeclarations);
-    }
-
     public IDisposable StartPartialType(string? ns, IReadOnlyList<string> typeDeclarations)
     {
         if (!string.IsNullOrEmpty(ns))
         {
             AppendLine($"namespace {ns}");
-            StartBlock();
+            OpenBlock();
         }
 
         for (var i = 0; i < typeDeclarations.Count; i++)
         {
             AppendLine(typeDeclarations[i]);
-            StartBlock();
+            OpenBlock();
         }
 
-        return new CloseBlock(this, typeDeclarations.Count + (ns != null ? 1 : 0));
+        return new CloseBlockDisposable(this, typeDeclarations.Count + (ns != null ? 1 : 0));
+    }
+
+    public IDisposable StartBlock(string? line = null)
+    {
+        if (!string.IsNullOrEmpty(line))
+            AppendLine(line!);
+        OpenBlock();
+        return new CloseBlockDisposable(this, 1);
     }
 
     public static implicit operator SourceText(CodeBuilder codeBuilder)
         => SourceText.From(codeBuilder._stringBuilder.ToString(), Encoding.UTF8);
 
-    private readonly struct CloseBlock : IDisposable
+    private readonly struct CloseBlockDisposable : IDisposable
     {
         private readonly CodeBuilder _codeBuilder;
         private readonly int _count;
-        public CloseBlock(CodeBuilder codeBuilder, int count) { _codeBuilder = codeBuilder; _count = count; }
-        public void Dispose() { for (var i = 0; i < _count; i++) _codeBuilder.EndBlock(); }
+        public CloseBlockDisposable(CodeBuilder codeBuilder, int count) { _codeBuilder = codeBuilder; _count = count; }
+        public void Dispose() { for (var i = 0; i < _count; i++) _codeBuilder.CloseBlock(); }
     }
 }

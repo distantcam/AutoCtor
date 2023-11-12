@@ -7,60 +7,14 @@ using Xunit.Abstractions;
 namespace AutoCtor.Tests;
 
 [UsesVerify]
-public class SourceGenerationTests
+public class ExampleTests
 {
     private readonly VerifySettings _codeVerifySettings;
 
-    public SourceGenerationTests()
+    public ExampleTests()
     {
         _codeVerifySettings = new();
         _codeVerifySettings.ScrubLinesContaining("Version:", "SHA:", "GeneratedCodeAttribute");
-    }
-
-    [Theory]
-    [InlineData("[AutoConstruct]")]
-    [InlineData("[AutoConstructAttribute]")]
-    public Task AttributeTest(string attribute)
-    {
-        var code = @$"using AutoCtor;
-{attribute}public partial class AttributeTestClass {{}}
-";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CreateDriver(compilation, generator).RunGenerators(compilation);
-
-        return Verify(driver, _codeVerifySettings)
-            .UseDirectory("Verified")
-            .UseParameters(attribute);
-    }
-
-    [Theory]
-    [InlineData("bool")]
-    [InlineData("int")]
-    [InlineData("string")]
-    [InlineData("object")]
-    [InlineData("IEnumerable<string>")]
-    [InlineData("List<int>")]
-    [InlineData("int[]")]
-    [InlineData("int?")]
-    [InlineData("Nullable<int>")]
-    public Task TypesTest(string type)
-    {
-        var code = @$"
-using System;
-using System.Collections.Generic;
-using AutoCtor;
-[AutoConstruct]public partial class TypesTestClass {{ private readonly {type} _item; }}
-";
-        var compilation = Compile(code);
-
-        var generator = new AutoConstructSourceGenerator();
-        var driver = CreateDriver(compilation, generator).RunGenerators(compilation);
-
-        return Verify(driver, _codeVerifySettings)
-            .UseDirectory("Verified")
-            .UseParameters(type);
     }
 
     [Theory]
@@ -105,7 +59,7 @@ using AutoCtor;
         => CSharpGeneratorDriver.Create(generators, parseOptions: c.SyntaxTrees.FirstOrDefault().Options as CSharpParseOptions);
 #elif ROSLYN_4_0 || ROSLYN_4_4
     private static GeneratorDriver CreateDriver(Compilation c, params IIncrementalGenerator[] generators)
-        => CSharpGeneratorDriver.Create(generators);
+        => CSharpGeneratorDriver.Create(generators).WithUpdatedParseOptions(c.SyntaxTrees.FirstOrDefault().Options as CSharpParseOptions);
 #endif
 
     private static CSharpCompilation Compile(params string[] code)

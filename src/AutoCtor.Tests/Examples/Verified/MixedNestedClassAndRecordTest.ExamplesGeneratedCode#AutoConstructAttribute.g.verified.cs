@@ -12,12 +12,12 @@
 namespace AutoCtor
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class | global::System.AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoConstructAttribute : global::System.Attribute
 	{
 	}
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoPostConstructAttribute : global::System.Attribute
 	{
 	}

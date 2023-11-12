@@ -96,8 +96,9 @@ internal record struct TypeModel(
                 _ => string.Empty
             };
 
+            var staticKeyword = currentType.IsStatic ? "static " : "";
             var typeName = currentType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            typeDeclarations.Add($"partial {typeKeyword} {typeName}");
+            typeDeclarations.Add($"{staticKeyword}partial {typeKeyword} {typeName}");
             currentType = currentType.ContainingType;
         }
         typeDeclarations.Reverse();

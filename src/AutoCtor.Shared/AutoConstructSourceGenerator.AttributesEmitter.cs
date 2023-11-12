@@ -13,20 +13,18 @@ public partial class AutoConstructSourceGenerator
             var source = new CodeBuilder();
             source.AppendHeader().AppendLine();
             source.AppendLine("#if AUTOCTOR_EMBED_ATTRIBUTES");
-            source.AppendLine("namespace AutoCtor");
-            source.StartBlock();
+            using (source.StartBlock("namespace AutoCtor"))
+            {
+                source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
+                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Class | global::System.AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]");
+                source.AppendLine("internal sealed class AutoConstructAttribute : global::System.Attribute");
+                source.OpenBlock().CloseBlock();
 
-            source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
-            source.AppendLine("[global::System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]");
-            source.AppendLine("internal sealed class AutoConstructAttribute : global::System.Attribute");
-            source.StartBlock().EndBlock();
-
-            source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
-            source.AppendLine("[global::System.AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]");
-            source.AppendLine("internal sealed class AutoPostConstructAttribute : global::System.Attribute");
-            source.StartBlock().EndBlock();
-
-            source.EndBlock();
+                source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
+                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]");
+                source.AppendLine("internal sealed class AutoPostConstructAttribute : global::System.Attribute");
+                source.OpenBlock().CloseBlock();
+            }
             source.AppendLine("#endif");
 
             return source;

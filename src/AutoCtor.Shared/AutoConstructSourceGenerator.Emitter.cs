@@ -118,16 +118,17 @@ public partial class AutoConstructSourceGenerator
                     source.AppendLine($"public {type.Name}({parameters.ToParameterString()})");
                 }
 
-                source.StartBlock();
-                foreach (var f in type.Fields)
+                using (source.StartBlock())
                 {
-                    source.AppendLine($"this.{f.Name} = {parameters.FieldParameterName(f)};");
+                    foreach (var f in type.Fields)
+                    {
+                        source.AppendLine($"this.{f.Name} = {parameters.FieldParameterName(f)};");
+                    }
+                    if (postCtorMethod != null)
+                    {
+                        source.AppendLine($"{postCtorMethod.Name}({parameters.ToPostCtorParameterString()});");
+                    }
                 }
-                if (postCtorMethod != null)
-                {
-                    source.AppendLine($"{postCtorMethod.Name}({parameters.ToPostCtorParameterString()});");
-                }
-                source.EndBlock();
             }
 
             return (source, parameters);

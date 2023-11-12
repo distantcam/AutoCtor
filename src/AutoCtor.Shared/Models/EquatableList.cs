@@ -6,10 +6,12 @@ namespace AutoCtor.Models;
 internal struct EquatableList<T> : IEquatable<EquatableList<T>>, IReadOnlyList<T>, IEnumerable<T>
 {
     private readonly ImmutableArray<T> _data;
+    private readonly int _hash;
 
     public EquatableList(IEnumerable<T> data)
     {
         _data = data.ToImmutableArray();
+        _hash = _data.Aggregate(0, (a, n) => a * 0x29_55_55_A5 + EqualityComparer<T>.Default.GetHashCode(n));
     }
 
     public bool Equals(EquatableList<T> other)
@@ -25,8 +27,7 @@ internal struct EquatableList<T> : IEquatable<EquatableList<T>>, IReadOnlyList<T
         return Equals(el);
     }
 
-    public override int GetHashCode() =>
-        _data.Aggregate(0, (a, n) => a * 0x29_55_55_A5 + EqualityComparer<T>.Default.GetHashCode(n));
+    public override int GetHashCode() => _hash;
 
     public readonly int Count => _data.Length;
     public readonly T this[int index] => _data[index];
