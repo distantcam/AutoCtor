@@ -96,8 +96,8 @@ internal class ParameterList : IEnumerable<Parameter>
         if (name.Length > 1 && name[0] == '_')
         {
             // Chop off the underscore at the start
-            return name.Substring(1);
+            return name.Substring(1).EscapeKeywordIdentifier();
         }
-        return name;
+        return name.EscapeKeywordIdentifier();
     }
 }

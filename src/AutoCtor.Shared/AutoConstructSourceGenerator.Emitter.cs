@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using AutoCtor.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using static GeneratorUtilities;
 
 namespace AutoCtor;
 
@@ -122,7 +123,7 @@ public partial class AutoConstructSourceGenerator
                 {
                     foreach (var f in type.Fields)
                     {
-                        source.AppendLine($"this.{f.Name} = {parameters.FieldParameterName(f)};");
+                        source.AppendLine($"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)};");
                     }
                     if (postCtorMethod != null)
                     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 internal static class GeneratorUtilities
 {
@@ -25,4 +26,7 @@ internal static class GeneratorUtilities
 
     public static string AsCommaSeparated<T>(this IEnumerable<T> items) =>
         string.Join(", ", items);
+
+    public static string EscapeKeywordIdentifier(this string identifier) =>
+        SyntaxFacts.IsKeywordKind(SyntaxFacts.GetKeywordKind(identifier)) ? "@" + identifier : identifier;
 }
