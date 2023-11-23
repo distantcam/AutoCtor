@@ -40,9 +40,9 @@ internal record struct TypeModel(
 
             HasBaseType: type.BaseType is not null,
 
-            HintName: GeneratorUtilities.CreateHintName(type),
+            HintName: GeneratorUtilities.GetHintName(type),
 
-            TypeDeclarations: GeneratorUtilities.CreateTypeDeclarations(type),
+            TypeDeclarations: GeneratorUtilities.GetTypeDeclarations(type),
 
             Fields: new EquatableList<IFieldSymbol>(type.GetMembers().OfType<IFieldSymbol>()
                 .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f))),

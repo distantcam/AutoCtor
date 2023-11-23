@@ -33,7 +33,7 @@ internal static class GeneratorUtilities
     public static string? GetNamespace(ITypeSymbol type) =>
         type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToString();
 
-    public static EquatableList<string> CreateTypeDeclarations(ITypeSymbol type)
+    public static EquatableList<string> GetTypeDeclarations(ITypeSymbol type)
     {
         var typeDeclarations = new List<string>();
         var currentType = type;
@@ -57,7 +57,7 @@ internal static class GeneratorUtilities
         return new EquatableList<string>(typeDeclarations);
     }
 
-    public static string CreateHintName(ITypeSymbol type)
+    public static string GetHintName(ITypeSymbol type)
     {
         return type.ToDisplayString(HintSymbolDisplayFormat)
             .Replace('<', '[')
