@@ -2,7 +2,11 @@
 using System.Text;
 using Microsoft.CodeAnalysis.Text;
 
-namespace AutoCtor;
+internal interface IPartialTypeModel
+{
+    string? Namespace { get; }
+    IReadOnlyList<string> TypeDeclarations { get; }
+}
 
 internal class CodeBuilder
 {
@@ -84,21 +88,21 @@ internal class CodeBuilder
     .AppendLine($"// </auto-generated>")
     .AppendLine($"//------------------------------------------------------------------------------");
 
-    public IDisposable StartPartialType(string? ns, IReadOnlyList<string> typeDeclarations)
+    public IDisposable StartPartialType(IPartialTypeModel typeModel)
     {
-        if (!string.IsNullOrEmpty(ns))
+        if (!string.IsNullOrEmpty(typeModel.Namespace))
         {
-            AppendLine($"namespace {ns}");
+            AppendLine($"namespace {typeModel.Namespace}");
             OpenBlock();
         }
 
-        for (var i = 0; i < typeDeclarations.Count; i++)
+        for (var i = 0; i < typeModel.TypeDeclarations.Count; i++)
         {
-            AppendLine(typeDeclarations[i]);
+            AppendLine(typeModel.TypeDeclarations[i]);
             OpenBlock();
         }
 
-        return new CloseBlockDisposable(this, typeDeclarations.Count + (ns != null ? 1 : 0));
+        return new CloseBlockDisposable(this, typeModel.TypeDeclarations.Count + (typeModel.Namespace != null ? 1 : 0));
     }
 
     public IDisposable StartBlock(string? line = null)

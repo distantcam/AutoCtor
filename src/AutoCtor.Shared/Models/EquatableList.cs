@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Immutable;
 
-namespace AutoCtor.Models;
-
 internal struct EquatableList<T> : IEquatable<EquatableList<T>>, IReadOnlyList<T>, IEnumerable<T>
 {
     private readonly ImmutableArray<T> _data;

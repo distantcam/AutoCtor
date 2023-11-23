@@ -29,4 +29,38 @@ internal static class GeneratorUtilities
 
     public static string EscapeKeywordIdentifier(this string identifier) =>
         SyntaxFacts.IsKeywordKind(SyntaxFacts.GetKeywordKind(identifier)) ? "@" + identifier : identifier;
+
+    public static string? GetNamespace(ITypeSymbol type) =>
+        type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToString();
+
+    public static EquatableList<string> CreateTypeDeclarations(ITypeSymbol type)
+    {
+        var typeDeclarations = new List<string>();
+        var currentType = type;
+        while (currentType is not null)
+        {
+            var typeKeyword = currentType switch
+            {
+                { IsRecord: true, IsValueType: true } => "record struct",
+                { IsRecord: true, IsValueType: false } => "record",
+                { IsRecord: false, IsValueType: true } => "struct",
+                { IsRecord: false, IsValueType: false } => "class",
+                _ => string.Empty
+            };
+
+            var staticKeyword = currentType.IsStatic ? "static " : "";
+            var typeName = currentType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+            typeDeclarations.Add($"{staticKeyword}partial {typeKeyword} {typeName}");
+            currentType = currentType.ContainingType;
+        }
+        typeDeclarations.Reverse();
+        return new EquatableList<string>(typeDeclarations);
+    }
+
+    public static string CreateHintName(ITypeSymbol type)
+    {
+        return type.ToDisplayString(HintSymbolDisplayFormat)
+            .Replace('<', '[')
+            .Replace('>', ']');
+    }
 }

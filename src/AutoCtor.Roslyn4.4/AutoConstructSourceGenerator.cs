@@ -1,5 +1,4 @@
-﻿using AutoCtor.Models;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 
 namespace AutoCtor;
 

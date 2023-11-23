@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using AutoCtor.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 

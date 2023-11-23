@@ -1,8 +1,6 @@
 using System.Collections.Immutable;
-using AutoCtor.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using static GeneratorUtilities;
 
 namespace AutoCtor;
 
@@ -106,7 +104,7 @@ public partial class AutoConstructSourceGenerator
                 .AppendHeader()
                 .AppendLine();
 
-            using (source.StartPartialType(type.Namespace, type.TypeDeclarations))
+            using (source.StartPartialType(type))
             {
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
 

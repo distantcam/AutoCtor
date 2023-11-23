@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		src\Common.props = src\Common.props
 		src\Directory.Build.props = src\Directory.Build.props
+		src\global.json = src\global.json
 		readme.source.md = readme.source.md
 	EndProjectSection
 EndProject
