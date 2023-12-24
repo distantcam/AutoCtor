@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Testing;
 using Xunit.Abstractions;
 
 namespace AutoCtor.Tests;
@@ -19,32 +20,28 @@ public class ExampleTests
 
     [Theory]
     [MemberData(nameof(GetExamples))]
-    public Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
+    public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
-        var baseDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
-        var exampleInterfaces = File.ReadAllText(Path.Combine(baseDir.FullName, "Examples", "IExampleInterfaces.cs"));
+        var exampleInterfaces = File.ReadAllText(Path.Combine(BaseDir.FullName, "Examples", "IExampleInterfaces.cs"));
 
-        var compilation = Compile(theoryData.Code, exampleInterfaces);
+        var compilation = await Compile(theoryData.Code, exampleInterfaces);
         var generator = new AutoConstructSourceGenerator();
         var driver = CreateDriver(compilation, generator).RunGenerators(compilation);
 
-        return Verify(driver, _codeVerifySettings)
+        await Verify(driver, _codeVerifySettings)
             .UseDirectory(Path.Combine("Examples", "Verified"))
             .UseTypeName(theoryData.Name);
     }
 
     [Theory]
     [MemberData(nameof(GetExamples))]
-    public void CodeCompilesProperly(CodeFileTheoryData theoryData)
+    public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
-        var ignoredWarnings = new string[] {
-            "CS0414" // Ignore unused fields
-        };
+        string[] ignoredWarnings = ["CS0414"]; // Ignore unused fields
 
-        var baseDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
-        var exampleInterfaces = File.ReadAllText(Path.Combine(baseDir.FullName, "Examples", "IExampleInterfaces.cs"));
+        var exampleInterfaces = File.ReadAllText(Path.Combine(BaseDir.FullName, "Examples", "IExampleInterfaces.cs"));
 
-        var compilation = Compile(theoryData.Code, exampleInterfaces);
+        var compilation = await Compile(theoryData.Code, exampleInterfaces);
         var generator = new AutoConstructSourceGenerator();
         CreateDriver(compilation, generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
@@ -62,13 +59,17 @@ public class ExampleTests
         => CSharpGeneratorDriver.Create(generators).WithUpdatedParseOptions(c.SyntaxTrees.FirstOrDefault().Options as CSharpParseOptions);
 #endif
 
-    private static CSharpCompilation Compile(params string[] code)
+    private static async Task<CSharpCompilation> Compile(params string[] code)
     {
-        var references = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(assembly => !assembly.IsDynamic)
-            .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
-            .Cast<MetadataReference>()
-            .Concat(new[] { MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll")) });
+        var references = await new ReferenceAssemblies(
+            "net8.0",
+            new PackageIdentity(
+                "Microsoft.NETCore.App.Ref",
+                "8.0.0"),
+            Path.Combine("ref", "net8.0"))
+            .ResolveAsync(null, CancellationToken.None);
+
+        var attributeReference = MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll"));
 
 #if ROSLYN_3_11
         var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
@@ -79,31 +80,28 @@ public class ExampleTests
         return CSharpCompilation.Create(
             "AutoCtorTest",
             code.Select(c => CSharpSyntaxTree.ParseText(c, options)),
-            references,
+            [attributeReference, .. references],
             new CSharpCompilationOptions(
                 OutputKind.DynamicallyLinkedLibrary
             ));
     }
 
+    private static DirectoryInfo BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
+
     public static IEnumerable<object[]> GetExamples()
     {
-        var baseDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
-
-        if (baseDir == null)
-        {
+        if (BaseDir == null)
             yield break;
-        }
 
-        var examples = Directory.GetFiles(Path.Combine(baseDir.FullName, "Examples"), "*.cs");
+        var examples = Directory.GetFiles(Path.Combine(BaseDir.FullName, "Examples"), "*.cs");
         foreach (var example in examples)
         {
             if (example.Contains(".g.") || example.Contains("IExampleInterfaces"))
                 continue;
 
-            var code = File.ReadAllText(example);
             yield return new object[] {
                 new CodeFileTheoryData {
-                    Code = code,
+                    Code = File.ReadAllText(example),
                     Name = Path.GetFileNameWithoutExtension(example)
                 }
             };
