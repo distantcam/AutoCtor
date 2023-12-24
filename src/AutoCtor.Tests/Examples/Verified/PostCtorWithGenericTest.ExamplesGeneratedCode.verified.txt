@@ -7,7 +7,7 @@
       WarningLevel: 1,
       Location: : (8,17)-(8,27),
       MessageFormat: The method '{0}' must not be generic to be used as the post construct method,
-      Message: The method 'Initialize' must not be generic to be used as the post construct method,
+      Message: The method 'PostCtorWithGenericTest.Initialize<T>(T)' must not be generic to be used as the post construct method,
       Category: AutoCtor
     }
   ]

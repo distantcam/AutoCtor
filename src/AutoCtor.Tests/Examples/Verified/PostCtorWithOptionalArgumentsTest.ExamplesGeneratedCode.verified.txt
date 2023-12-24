@@ -7,7 +7,7 @@
       WarningLevel: 1,
       Location: : (8,17)-(8,27),
       MessageFormat: The method '{0}' must not have optional arguments to be used as the post construct method,
-      Message: The method 'Initialize' must not have optional arguments to be used as the post construct method,
+      Message: The method 'PostCtorWithOptionalArgumentsTest.Initialize(IB)' must not have optional arguments to be used as the post construct method,
       Category: AutoCtor
     }
   ]

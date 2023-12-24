@@ -158,7 +158,7 @@ public partial class AutoConstructSourceGenerator
             if (!method.ReturnsVoid)
             {
                 foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodNotVoidWarning, loc, method.Name));
+                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodNotVoidWarning, loc, method.ToDisplayString(SymbolDisplayFormat.CSharpShortErrorMessageFormat)));
                 return null;
             }
 
@@ -166,7 +166,7 @@ public partial class AutoConstructSourceGenerator
             if (method.Parameters.Any(static p => p.IsOptional))
             {
                 foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodHasOptionalArgsWarning, loc, method.Name));
+                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodHasOptionalArgsWarning, loc, method.ToDisplayString(SymbolDisplayFormat.CSharpShortErrorMessageFormat)));
                 return null;
             }
 
@@ -174,7 +174,7 @@ public partial class AutoConstructSourceGenerator
             if (method.IsGenericMethod)
             {
                 foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodCannotBeGenericWarning, loc, method.Name));
+                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodCannotBeGenericWarning, loc, method.ToDisplayString(SymbolDisplayFormat.CSharpShortErrorMessageFormat)));
                 return null;
             }
 
