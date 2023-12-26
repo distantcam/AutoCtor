@@ -44,13 +44,13 @@ internal record struct TypeModel(
 
             TypeDeclarations: GeneratorUtilities.GetTypeDeclarations(type),
 
-            Fields: new EquatableList<IFieldSymbol>(type.GetMembers().OfType<IFieldSymbol>()
+            Fields: new(type.GetMembers().OfType<IFieldSymbol>()
                 .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f))),
 
-            BaseCtorParameters: baseCtorParameters != null ? new EquatableList<IParameterSymbol>(baseCtorParameters) : null,
+            BaseCtorParameters: baseCtorParameters != null ? new(baseCtorParameters) : null,
 
-            BaseTypeArguments: genericBaseType ? new EquatableList<ITypeSymbol>(type.BaseType!.TypeArguments) : null,
-            BaseTypeParameters: genericBaseType ? new EquatableList<ITypeParameterSymbol>(type.BaseType!.TypeParameters) : null
+            BaseTypeArguments: genericBaseType ? new(type.BaseType!.TypeArguments) : null,
+            BaseTypeParameters: genericBaseType ? new(type.BaseType!.TypeParameters) : null
         );
     }
 
