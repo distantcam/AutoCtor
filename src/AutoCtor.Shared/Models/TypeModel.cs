@@ -26,7 +26,8 @@ internal record struct TypeModel(
     public static TypeModel Create(INamedTypeSymbol type)
     {
         var baseCtorParameters = type.BaseType?.Constructors
-                .OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any())?.Parameters;
+                .OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any() &&
+                !c.GetAttributes().Any(a => StringComparer.OrdinalIgnoreCase.Equals(a.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), "global::System.ObsoleteAttribute")))?.Parameters;
         var genericBaseType = type.BaseType != null && type.BaseType.IsGenericType;
 
         return new(
