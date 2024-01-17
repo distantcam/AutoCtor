@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace AutoCtor.Tests;
 
-[UsesVerify]
 public abstract class CompilationTestBase
 {
     private readonly VerifySettings _codeVerifySettings;

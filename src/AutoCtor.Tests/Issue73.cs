@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace AutoCtor.Tests;
 
-[UsesVerify]
 public class Issue73 : CompilationTestBase
 {
     protected override CSharpCompilation Compile()

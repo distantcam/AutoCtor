@@ -7,7 +7,6 @@ using Xunit.Abstractions;
 
 namespace AutoCtor.Tests;
 
-[UsesVerify]
 public class ExampleTests
 {
     private readonly VerifySettings _codeVerifySettings;
