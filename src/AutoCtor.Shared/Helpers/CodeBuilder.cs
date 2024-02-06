@@ -19,7 +19,7 @@ internal class CodeBuilder
     {
         var assembly = Assembly.GetAssembly(typeof(CodeBuilder));
         _assemblyName = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-        _version = assembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "0.0.0.0";
+        _version = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "0.0.0.0";
         var metadata = assembly.GetCustomAttributes<AssemblyMetadataAttribute>()?.ToDictionary(m => m.Key, m => m.Value);
         if (metadata != null)
         {

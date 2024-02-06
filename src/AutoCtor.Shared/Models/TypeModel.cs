@@ -25,9 +25,7 @@ internal record struct TypeModel(
 
     public static TypeModel Create(INamedTypeSymbol type)
     {
-        var baseCtorParameters = type.BaseType?.Constructors
-                .OnlyOrDefault(c => !c.IsStatic && c.Parameters.Any() &&
-                !c.GetAttributes().Any(a => StringComparer.OrdinalIgnoreCase.Equals(a.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), "global::System.ObsoleteAttribute")))?.Parameters;
+        var baseCtorParameters = type.BaseType?.Constructors.OnlyOrDefault(ValidCtor)?.Parameters;
         var genericBaseType = type.BaseType != null && type.BaseType.IsGenericType;
 
         return new(
@@ -53,6 +51,24 @@ internal record struct TypeModel(
             BaseTypeArguments: genericBaseType ? new(type.BaseType!.TypeArguments) : null,
             BaseTypeParameters: genericBaseType ? new(type.BaseType!.TypeParameters) : null
         );
+    }
+
+    private static bool ValidCtor(IMethodSymbol ctor)
+    {
+        if (ctor.IsStatic)
+            return false;
+
+        if (!ctor.Parameters.Any())
+            return false;
+
+        if (ctor.GetAttributes().Any(a => StringComparer.OrdinalIgnoreCase.Equals(a.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), "global::System.ObsoleteAttribute")))
+            return false;
+
+        // Don't use the record clone ctor
+        if (ctor.ContainingType.IsRecord && ctor.DeclaredAccessibility == Accessibility.Protected && ctor.Parameters.Length == 1 && SymbolEqualityComparer.Default.Equals(ctor.Parameters[0].Type, ctor.ContainingType))
+            return false;
+
+        return true;
     }
 
     private static int CalculateInheritanceDepth(ITypeSymbol type)
