@@ -1,8 +1,8 @@
 {
-    "profiles": {
-        "AutoCtor Roslyn 4.4 Debug": {
-            "commandName": "DebugRoslynComponent",
-            "targetProject": "..\\AutoCtor.Debug\\AutoCtor.Debug.csproj"
-        }
+  "profiles": {
+    "AutoCtor Roslyn 4.4 Debug": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\AutoCtor.Debug\\AutoCtor.Debug.csproj"
     }
+  }
 }
