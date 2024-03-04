@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -33,6 +33,11 @@
   <ItemGroup>
     <Compile Remove="Examples\*.cs" />
     <None Include="Examples\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="GuardExamples\*.cs" />
+    <None Include="GuardExamples\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
