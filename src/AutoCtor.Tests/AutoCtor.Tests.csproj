@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <RoslynVersion>3.11</RoslynVersion>
-    <RoslynLibVersion>3.11.0</RoslynLibVersion>
+    <RoslynLibVersion>4.9.2</RoslynLibVersion>
 
     <!--<RoslynVersion>4.0</RoslynVersion>-->
     <!--<RoslynLibVersion>4.0.1</RoslynLibVersion>-->
