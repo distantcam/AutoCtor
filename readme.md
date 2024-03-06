@@ -14,6 +14,21 @@ To change this file edit the source file and then run MarkdownSnippets.
 
 AutoCtor is a Roslyn Source Generator that will automatically create a constructor for your class for use with constructor Dependency Injection.
 
+<!-- toc -->
+## Contents
+
+  * [NuGet packages](#nuget-packages)
+  * [Usage](#usage)
+    * [Your code](#your-code)
+    * [What gets generated](#what-gets-generated)
+  * [More Features](#more-features)
+    * [Post constructor Initialisation](#post-constructor-initialisation)
+    * [Argument Guards](#argument-guards)
+  * [More examples](#more-examples)
+  * [Embedding the attributes in your project](#embedding-the-attributes-in-your-project)
+  * [Preserving usage of the `[AutoConstruct]` attribute](#preserving-usage-of-the-autoconstruct-attribute)
+  * [Stats](#stats)<!-- endToc -->
+
 ## NuGet packages
 
 https://nuget.org/packages/AutoCtor/
@@ -119,6 +134,50 @@ partial class PostConstructMethodWithParameters
 }
 ```
 <sup><a href='https://github.com/src/AutoCtor.Example/PostConstructExamples.cs#L48-L59' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructwithparametersgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+### Argument Guards
+
+Null guards for the arguments to the constructor can be added in 2 ways.
+
+In your project you can add a `AutoCtorGuards` property.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AutoCtorGuards>true</AutoCtorGuards>
+  </PropertyGroup>
+
+</Project>
+```
+
+In each `AutoConstruct` attribute you can add a setting to enable/disable guards.
+
+<!-- snippet: Guards -->
+<a id='snippet-guards'></a>
+```cs
+[AutoConstruct(GuardSetting.Enabled)]
+public partial class GuardedClass
+{
+    private readonly Service _service;
+}
+```
+<sup><a href='https://github.com/src/AutoCtor.Example/GuardsExamples.cs#L5-L13' title='Snippet source file'>snippet source</a> | <a href='#snippet-guards' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+<!-- snippet: GuardsGeneratedCode -->
+<a id='snippet-guardsgeneratedcode'></a>
+```cs
+partial class GuardedClass
+{
+    public GuardedClass(Service service)
+    {
+        _service = service ?? throw new ArgumentNullException(nameof(service));
+    }
+}
+```
+<sup><a href='https://github.com/src/AutoCtor.Example/GuardsExamples.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-guardsgeneratedcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## More examples
