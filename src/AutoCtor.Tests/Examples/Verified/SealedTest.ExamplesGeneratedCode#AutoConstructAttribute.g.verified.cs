@@ -15,6 +15,9 @@ namespace AutoCtor
 	[global::System.AttributeUsage(global::System.AttributeTargets.Class | global::System.AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoConstructAttribute : global::System.Attribute
 	{
+		public AutoConstructAttribute(bool guard = false)
+		{
+		}
 	}
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]

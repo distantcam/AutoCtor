@@ -18,7 +18,11 @@ public partial class AutoConstructSourceGenerator
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
                 source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Class | global::System.AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]");
                 source.AppendLine("internal sealed class AutoConstructAttribute : global::System.Attribute");
-                source.OpenBlock().CloseBlock();
+                using (source.StartBlock())
+                {
+                    source.AppendLine("public AutoConstructAttribute(bool guard = false)");
+                    source.OpenBlock().CloseBlock();
+                }
 
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
                 source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]");

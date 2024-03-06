@@ -123,7 +123,9 @@ public partial class AutoConstructSourceGenerator
                 {
                     foreach (var f in type.Fields)
                     {
-                        if (guards && f.Type.IsReferenceType)
+                        if (((type.Guard.HasValue && type.Guard.Value) ||
+                            (!type.Guard.HasValue && guards)) &&
+                            f.Type.IsReferenceType)
                             source.AppendLine(
 $"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)} ?? throw new global::System.ArgumentNullException(\"{parameters.FieldParameterName(f)}\");"
                             );

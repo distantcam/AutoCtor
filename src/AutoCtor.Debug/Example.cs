@@ -2,7 +2,7 @@
 
 public interface IService { }
 
-[AutoConstruct]
+[AutoConstruct(guard: GuardSetting.Enabled)]
 public partial class MyClass
 {
     private readonly IService _service;
