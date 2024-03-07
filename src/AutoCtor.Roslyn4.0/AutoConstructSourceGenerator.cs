@@ -11,8 +11,8 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
             .Select(static (p, ct) =>
             {
                 return p.GlobalOptions.TryGetValue("build_property.AutoCtorGuards", out var value)
-                    && bool.TryParse(value, out var result)
-                    && result;
+                    && (value.Equals("true", StringComparison.OrdinalIgnoreCase)
+                    || value.Equals("enable", StringComparison.OrdinalIgnoreCase));
             });
 
         var types = context.SyntaxProvider.CreateSyntaxProvider(

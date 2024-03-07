@@ -10,7 +10,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
     private sealed class SyntaxContextReceiver(CancellationToken cancellationToken) : ISyntaxContextReceiver
     {
         public List<TypeModel>? TypeModels { get; private set; }
-        public List<IMethodSymbol>? MarkectMethods { get; private set; }
+        public List<IMethodSymbol>? MarkedMethods { get; private set; }
 
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {
@@ -24,7 +24,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
             {
                 var method = Parser.GetMarkedMethodSymbol(context, cancellationToken);
                 if (method != null)
-                    (MarkectMethods ??= []).Add(method);
+                    (MarkedMethods ??= []).Add(method);
             }
         }
     }
@@ -48,12 +48,14 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
         if (executionContext.AnalyzerConfigOptions.GlobalOptions
             .TryGetValue("build_property.AutoCtorGuards", out var projectGuardSetting))
         {
-            enableGuards = projectGuardSetting.Equals("true", StringComparison.OrdinalIgnoreCase);
+            enableGuards =
+                projectGuardSetting.Equals("true", StringComparison.OrdinalIgnoreCase) ||
+                projectGuardSetting.Equals("enable", StringComparison.OrdinalIgnoreCase);
         }
 
         var models = (
             receiver.TypeModels?.ToImmutableArray() ?? ImmutableArray<TypeModel>.Empty,
-            receiver.MarkectMethods?.ToImmutableArray() ?? ImmutableArray<IMethodSymbol>.Empty
+            receiver.MarkedMethods?.ToImmutableArray() ?? ImmutableArray<IMethodSymbol>.Empty
         );
         Emitter.GenerateSource(executionContext, (models, enableGuards));
     }
