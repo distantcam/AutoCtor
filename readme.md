@@ -46,7 +46,7 @@ public partial class ExampleClass
     private readonly IService _service;
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/BasicExamples.cs#L6-L14' title='Snippet source file'>snippet source</a> | <a href='#snippet-basic' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L6-L14' title='Snippet source file'>snippet source</a> | <a href='#snippet-basic' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### What gets generated
@@ -62,7 +62,7 @@ partial class ExampleClass
     }
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/BasicExamples.cs#L16-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-basicgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L16-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-basicgeneratedcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## More Features
@@ -85,7 +85,7 @@ public partial class PostConstructMethod
     }
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/PostConstructExamples.cs#L6-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstruct' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L6-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstruct' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: PostConstructGeneratedCode -->
@@ -100,7 +100,7 @@ partial class PostConstructMethod
     }
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/PostConstructExamples.cs#L21-L32' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L21-L32' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructgeneratedcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
@@ -118,7 +118,7 @@ public partial class PostConstructMethodWithParameters
     }
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/PostConstructExamples.cs#L34-L46' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructwithparameters' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L34-L46' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructwithparameters' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: PostConstructWithParametersGeneratedCode -->
@@ -133,7 +133,7 @@ partial class PostConstructMethodWithParameters
     }
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/PostConstructExamples.cs#L48-L59' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructwithparametersgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L48-L59' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructwithparametersgeneratedcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### Argument Guards
@@ -163,7 +163,7 @@ public partial class GuardedClass
     private readonly Service _service;
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/GuardsExamples.cs#L5-L13' title='Snippet source file'>snippet source</a> | <a href='#snippet-guards' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/GuardsExamples.cs#L5-L13' title='Snippet source file'>snippet source</a> | <a href='#snippet-guards' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: GuardsGeneratedCode -->
@@ -177,7 +177,7 @@ partial class GuardedClass
     }
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/GuardsExamples.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-guardsgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/GuardsExamples.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-guardsgeneratedcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## More examples
@@ -194,7 +194,7 @@ public partial class ClassWithPresetField
     private readonly IList<string> _list = new List<string>();
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/BasicExamples.cs#L28-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-presetfield' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L28-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-presetfield' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: PresetFieldGeneratedCode -->
@@ -209,7 +209,7 @@ partial class ClassWithPresetField
     }
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/BasicExamples.cs#L39-L50' title='Snippet source file'>snippet source</a> | <a href='#snippet-presetfieldgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L39-L50' title='Snippet source file'>snippet source</a> | <a href='#snippet-presetfieldgeneratedcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 If there is a single base constructor with parameters, AutoCtor will include that base constructor in the constructor it creates.
@@ -233,7 +233,7 @@ public partial class ClassWithBase : BaseClass
     private readonly IService _service;
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/BasicExamples.cs#L52-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-inherit' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L52-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-inherit' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: InheritGeneratedCode -->
@@ -247,7 +247,7 @@ partial class ClassWithBase
     }
 }
 ```
-<sup><a href='https://github.com/src/AutoCtor.Example/BasicExamples.cs#L72-L82' title='Snippet source file'>snippet source</a> | <a href='#snippet-inheritgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L72-L82' title='Snippet source file'>snippet source</a> | <a href='#snippet-inheritgeneratedcode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## Embedding the attributes in your project
