@@ -1,6 +1,6 @@
 ﻿using AutoCtor;
 
-public interface IService { }
+public interface IService;
 
 [AutoConstruct]
 public partial class MyClass

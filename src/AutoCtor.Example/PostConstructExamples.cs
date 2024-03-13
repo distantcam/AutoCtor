@@ -1,7 +1,7 @@
 ﻿namespace AutoCtor.PostConstructExamples;
 
-public interface IService { }
-public interface IInitialiseService { }
+public interface IService;
+public interface IInitialiseService;
 
 #region PostConstruct
 
