@@ -7,6 +7,8 @@
 
 AutoCtor is a Roslyn Source Generator that will automatically create a constructor for your class for use with constructor Dependency Injection.
 
+toc
+
 ## NuGet packages
 
 https://nuget.org/packages/AutoCtor/
@@ -36,6 +38,28 @@ Post constructor methods can also take parameters. These parameters will be pass
 snippet: PostConstructWithParameters
 
 snippet: PostConstructWithParametersGeneratedCode
+
+### Argument Guards
+
+Null guards for the arguments to the constructor can be added in 2 ways.
+
+In your project you can add a `AutoCtorGuards` property.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AutoCtorGuards>true</AutoCtorGuards>
+  </PropertyGroup>
+
+</Project>
+```
+
+In each `AutoConstruct` attribute you can add a setting to enable/disable guards.
+
+snippet: Guards
+
+snippet: GuardsGeneratedCode
 
 ## More examples
 
