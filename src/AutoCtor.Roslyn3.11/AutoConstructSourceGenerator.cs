@@ -7,32 +7,24 @@ namespace AutoCtor;
 [Generator(LanguageNames.CSharp)]
 public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 {
-    private sealed class SyntaxContextReceiver : ISyntaxContextReceiver
+    private sealed class SyntaxContextReceiver(CancellationToken cancellationToken) : ISyntaxContextReceiver
     {
-        private readonly CancellationToken _cancellationToken;
-
-        public SyntaxContextReceiver(CancellationToken cancellationToken)
-        {
-            _cancellationToken = cancellationToken;
-        }
-
         public List<TypeModel>? TypeModels { get; private set; }
-        public List<IMethodSymbol>? MarkectMethods { get; private set; }
-
+        public List<IMethodSymbol>? MarkedMethods { get; private set; }
 
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {
             if (context.Node is TypeDeclarationSyntax { AttributeLists.Count: > 0 })
             {
-                var type = Parser.GetMarkedNamedTypeSymbol(context, _cancellationToken);
+                var type = Parser.GetMarkedNamedTypeSymbol(context, cancellationToken);
                 if (type != null)
-                    (TypeModels ??= new()).Add(TypeModel.Create(type));
+                    (TypeModels ??= []).Add(TypeModel.Create(type));
             }
             else if (context.Node is MethodDeclarationSyntax { AttributeLists.Count: > 0 })
             {
-                var method = Parser.GetMarkedMethodSymbol(context, _cancellationToken);
+                var method = Parser.GetMarkedMethodSymbol(context, cancellationToken);
                 if (method != null)
-                    (MarkectMethods ??= new()).Add(method);
+                    (MarkedMethods ??= []).Add(method);
             }
         }
     }
@@ -52,10 +44,19 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
             || receiver.TypeModels == null)
             return;
 
+        var enableGuards = false;
+        if (executionContext.AnalyzerConfigOptions.GlobalOptions
+            .TryGetValue("build_property.AutoCtorGuards", out var projectGuardSetting))
+        {
+            enableGuards =
+                projectGuardSetting.Equals("true", StringComparison.OrdinalIgnoreCase) ||
+                projectGuardSetting.Equals("enable", StringComparison.OrdinalIgnoreCase);
+        }
+
         var models = (
             receiver.TypeModels?.ToImmutableArray() ?? ImmutableArray<TypeModel>.Empty,
-            receiver.MarkectMethods?.ToImmutableArray() ?? ImmutableArray<IMethodSymbol>.Empty
+            receiver.MarkedMethods?.ToImmutableArray() ?? ImmutableArray<IMethodSymbol>.Empty
         );
-        Emitter.GenerateSource(executionContext, models);
+        Emitter.GenerateSource(executionContext, (models, enableGuards));
     }
 }

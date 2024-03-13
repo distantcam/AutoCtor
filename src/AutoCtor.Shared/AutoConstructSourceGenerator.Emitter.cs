@@ -14,12 +14,13 @@ public partial class AutoConstructSourceGenerator
 #elif ROSLYN_4_0 || ROSLYN_4_4
             SourceProductionContext context,
 #endif
-            (ImmutableArray<TypeModel> Types, ImmutableArray<IMethodSymbol> PostCtorMethods) model)
+            ((ImmutableArray<TypeModel> Types,
+            ImmutableArray<IMethodSymbol> PostCtorMethods) Models, bool Guards) input)
         {
-            if (model.Types.IsDefaultOrEmpty) return;
+            if (input.Models.Types.IsDefaultOrEmpty) return;
 
             var ctorMaps = new Dictionary<string, ParameterList>();
-            var orderedTypes = model.Types.OrderBy(static t => t.Depth);
+            var orderedTypes = input.Models.Types.OrderBy(static t => t.Depth);
 
             foreach (var type in orderedTypes)
             {
@@ -58,11 +59,11 @@ public partial class AutoConstructSourceGenerator
                     }
                 }
 
-                var postCtorMethods = model.PostCtorMethods
+                var postCtorMethods = input.Models.PostCtorMethods
                     .Where(m => TypeModel.CreateKey(m.ContainingType) == type.TypeKey)
                     .ToList();
 
-                (var source, var parameters) = GenerateSource(context, type, postCtorMethods, baseParameters);
+                (var source, var parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
 
                 ctorMaps.Add(type.TypeKey, parameters);
 
@@ -78,7 +79,8 @@ public partial class AutoConstructSourceGenerator
 #endif
             TypeModel type,
             IEnumerable<IMethodSymbol> markedPostCtorMethods,
-            IEnumerable<Parameter>? baseParameters)
+            IEnumerable<Parameter>? baseParameters,
+            bool guards)
         {
             var postCtorMethod = GetPostCtorMethod(context, markedPostCtorMethods);
 
@@ -121,7 +123,16 @@ public partial class AutoConstructSourceGenerator
                 {
                     foreach (var f in type.Fields)
                     {
-                        source.AppendLine($"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)};");
+                        if (((type.Guard.HasValue && type.Guard.Value) ||
+                            (!type.Guard.HasValue && guards)) &&
+                            f.Type.IsReferenceType)
+                            source.AppendLine(
+$"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)} ?? throw new global::System.ArgumentNullException(\"{parameters.FieldParameterName(f)}\");"
+                            );
+                        else
+                            source.AppendLine(
+$"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)};"
+                            );
                     }
                     if (postCtorMethod != null)
                     {

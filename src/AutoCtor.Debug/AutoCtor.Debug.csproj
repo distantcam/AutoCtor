@@ -5,10 +5,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <NoWarn>CS0169</NoWarn>
+    <AutoCtorGuards>true</AutoCtorGuards>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AutoCtor.Attributes\AutoCtor.Attributes.csproj" />
+    <ProjectReference Include="..\AutoCtor.Roslyn4.4\AutoCtor.Roslyn4.4.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="AutoCtorGuards" />
   </ItemGroup>
 
 </Project>

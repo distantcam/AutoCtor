@@ -43,7 +43,8 @@
       <PackagePath>analyzers/dotnet/roslyn4.4/cs</PackagePath>
     </None>
 
-    <None Include="$(SolutionDir)readme.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(SolutionDir)\readme.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(SolutionDir)\src\AutoCtor.props" Pack="true" PackagePath="build" Visible="false" />
   </ItemGroup>
 
 </Project>

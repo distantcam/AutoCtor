@@ -7,6 +7,14 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        var properties = context.AnalyzerConfigOptionsProvider
+            .Select(static (p, ct) =>
+            {
+                return p.GlobalOptions.TryGetValue("build_property.AutoCtorGuards", out var value)
+                    && (value.Equals("true", StringComparison.OrdinalIgnoreCase)
+                    || value.Equals("enable", StringComparison.OrdinalIgnoreCase));
+            });
+
         var types = context.SyntaxProvider.CreateSyntaxProvider(
             Parser.IsTypeDeclaration,
             Parser.GetMarkedNamedTypeSymbol)
@@ -21,7 +29,9 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
             .Select(static (s, ct) => s!)
             .Collect();
 
-        context.RegisterSourceOutput(types.Combine(postCtorMethods), Emitter.GenerateSource);
+        context.RegisterSourceOutput(
+            types.Combine(postCtorMethods).Combine(properties),
+            Emitter.GenerateSource);
 
         context.RegisterPostInitializationOutput(static c =>
             c.AddSource(AttributeEmitter.HintName, AttributeEmitter.GenerateSource()));

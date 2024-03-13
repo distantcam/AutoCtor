@@ -1,4 +1,3 @@
 {
-    "$schema": "https://raw.githubusercontent.com/SimonCropp/MarkdownSnippets/master/schema.json",
-    "OmitSnippetLinks": true
+  "$schema": "https://raw.githubusercontent.com/SimonCropp/MarkdownSnippets/master/schema.json"
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.SymbolDisplayFormat;
 
 internal record struct TypeModel(
     int Depth,
@@ -14,6 +15,8 @@ internal record struct TypeModel(
 
     string HintName,
 
+    bool? Guard,
+
     EquatableList<string> TypeDeclarations,
     EquatableList<IFieldSymbol> Fields,
     EquatableList<IParameterSymbol>? BaseCtorParameters,
@@ -23,8 +26,18 @@ internal record struct TypeModel(
 {
     readonly IReadOnlyList<string> IPartialTypeModel.TypeDeclarations => TypeDeclarations;
 
-    public static TypeModel Create(INamedTypeSymbol type)
+    public static TypeModel Create(INamedTypeSymbol type, AttributeData? attribute = null)
     {
+        attribute ??= type.GetAttributes()
+            .First(a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructAttribute");
+
+        var guard = ((int?)attribute?.ConstructorArguments[0].Value) switch
+        {
+            1 => false,
+            2 => true,
+            _ => (bool?)null,
+        };
+
         var baseCtorParameters = type.BaseType?.Constructors.OnlyOrDefault(ValidCtor)?.Parameters;
         var genericBaseType = type.BaseType != null && type.BaseType.IsGenericType;
 
@@ -40,6 +53,8 @@ internal record struct TypeModel(
             HasBaseType: type.BaseType is not null,
 
             HintName: GeneratorUtilities.GetHintName(type),
+
+            Guard: guard,
 
             TypeDeclarations: GeneratorUtilities.GetTypeDeclarations(type),
 
@@ -61,7 +76,8 @@ internal record struct TypeModel(
         if (!ctor.Parameters.Any())
             return false;
 
-        if (ctor.GetAttributes().Any(a => StringComparer.OrdinalIgnoreCase.Equals(a.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), "global::System.ObsoleteAttribute")))
+        if (ctor.GetAttributes()
+            .Any(a => a.AttributeClass?.ToDisplayString(FullyQualifiedFormat) == "global::System.ObsoleteAttribute"))
             return false;
 
         // Don't use the record clone ctor
