@@ -30,7 +30,7 @@ public partial class AutoConstructSourceGenerator
 
                 if (type.HasBaseType)
                 {
-                    if (type.BaseTypeArguments.HasValue && type.BaseTypeParameters.HasValue)
+                    if (type is {BaseTypeArguments: not null, BaseTypeParameters: not null})
                     {
                         if (ctorMaps.TryGetValue(type.BaseTypeKey, out var temp))
                         {
