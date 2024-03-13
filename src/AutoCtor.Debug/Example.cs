@@ -1,6 +1,6 @@
 ﻿using AutoCtor;
 
-public interface IService { }
+public interface IService;
 
 [AutoConstruct(guard: GuardSetting.Enabled)]
 public partial class MyClass

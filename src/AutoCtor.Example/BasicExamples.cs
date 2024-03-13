@@ -1,7 +1,7 @@
 ﻿namespace AutoCtor.BasicExamples;
 
-public interface IService { }
-public interface IAnotherService { }
+public interface IService;
+public interface IAnotherService;
 
 #region Basic
 
