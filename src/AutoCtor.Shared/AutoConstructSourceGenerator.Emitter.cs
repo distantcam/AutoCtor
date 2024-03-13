@@ -63,7 +63,7 @@ public partial class AutoConstructSourceGenerator
                     .Where(m => TypeModel.CreateKey(m.ContainingType) == type.TypeKey)
                     .ToList();
 
-                (var source, var parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
+                var (source, parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
 
                 ctorMaps.Add(type.TypeKey, parameters);
 
