@@ -39,7 +39,7 @@ internal record struct TypeModel(
         };
 
         var baseCtorParameters = type.BaseType?.Constructors.OnlyOrDefault(ValidCtor)?.Parameters;
-        var genericBaseType = type.BaseType != null && type.BaseType.IsGenericType;
+        var genericBaseType = type.BaseType is {IsGenericType: true};
 
         return new(
             Depth: CalculateInheritanceDepth(type),
@@ -59,7 +59,7 @@ internal record struct TypeModel(
             TypeDeclarations: GeneratorUtilities.GetTypeDeclarations(type),
 
             Fields: new(type.GetMembers().OfType<IFieldSymbol>()
-                .Where(f => f.IsReadOnly && !f.IsStatic && f.CanBeReferencedByName && !HasFieldInitialiser(f))),
+                .Where(f => f.IsReadOnly && f is {IsStatic: false, CanBeReferencedByName: true} && !HasFieldInitialiser(f))),
 
             BaseCtorParameters: baseCtorParameters != null ? new(baseCtorParameters) : null,
 
@@ -81,7 +81,7 @@ internal record struct TypeModel(
             return false;
 
         // Don't use the record clone ctor
-        if (ctor.ContainingType.IsRecord && ctor.DeclaredAccessibility == Accessibility.Protected && ctor.Parameters.Length == 1 && SymbolEqualityComparer.Default.Equals(ctor.Parameters[0].Type, ctor.ContainingType))
+        if (ctor.ContainingType.IsRecord && ctor is {DeclaredAccessibility: Accessibility.Protected, Parameters.Length: 1} && SymbolEqualityComparer.Default.Equals(ctor.Parameters[0].Type, ctor.ContainingType))
             return false;
 
         return true;
