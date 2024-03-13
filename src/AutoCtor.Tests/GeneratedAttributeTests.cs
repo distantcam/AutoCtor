@@ -21,9 +21,9 @@ public class GeneratedAttributeTests
             options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
         var generator = new AutoConstructSourceGenerator();
-        var parseOptions = new CSharpParseOptions(preprocessorSymbols: new[] { "AUTOCTOR_EMBED_ATTRIBUTES" });
+        var parseOptions = new CSharpParseOptions(preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
 #if ROSLYN_3_11
-        var driver = CSharpGeneratorDriver.Create(new[] { generator }, parseOptions: parseOptions);
+        var driver = CSharpGeneratorDriver.Create([generator], parseOptions: parseOptions);
 #elif ROSLYN_4_0 || ROSLYN_4_4
         var driver = CSharpGeneratorDriver.Create(generator).WithUpdatedParseOptions(parseOptions);
 #endif

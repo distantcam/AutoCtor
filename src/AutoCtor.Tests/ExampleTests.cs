@@ -50,7 +50,7 @@ public class ExampleTests
     }
 
 #if ROSLYN_3_11
-    private static GeneratorDriver CreateDriver(
+    private static CSharpGeneratorDriver CreateDriver(
         Compilation c,
         IEnumerable<(string, string)> options,
         params ISourceGenerator[] generators)
@@ -58,7 +58,7 @@ public class ExampleTests
             parseOptions: c.SyntaxTrees.FirstOrDefault().Options as CSharpParseOptions,
             optionsProvider: new TestAnalyzerConfigOptionsProvider(options));
 #elif ROSLYN_4_0 || ROSLYN_4_4
-    private static GeneratorDriver CreateDriver(
+    private static CSharpGeneratorDriver CreateDriver(
         Compilation c,
         IEnumerable<(string, string)> options,
         params IIncrementalGenerator[] generators)

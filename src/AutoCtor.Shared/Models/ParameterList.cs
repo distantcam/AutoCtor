@@ -3,22 +3,17 @@ using Microsoft.CodeAnalysis;
 
 internal record struct Parameter(ITypeSymbol Type, string Name);
 
-internal class ParameterList : IEnumerable<Parameter>
+internal class ParameterList(IEnumerable<IFieldSymbol> fields) : IEnumerable<Parameter>
 {
-    private readonly Dictionary<IFieldSymbol, Parameter> _fields;
-    private readonly List<Parameter> _parameters = new();
-    private readonly Dictionary<Parameter, string> _uniqueNames = new();
-    private IEnumerable<Parameter> _postCtorParameters = Enumerable.Empty<Parameter>();
-
-    public bool HasBaseParameters => _parameters?.Any() == true;
-
-    public ParameterList(IEnumerable<IFieldSymbol> fields)
-    {
-        _fields = fields.ToDictionary<IFieldSymbol, IFieldSymbol, Parameter>(
+    private readonly Dictionary<IFieldSymbol, Parameter> _fields = fields.ToDictionary<IFieldSymbol, IFieldSymbol, Parameter>(
             f => f,
             f => new Parameter(f.Type, CreateFriendlyName(f.Name)),
             SymbolEqualityComparer.Default);
-    }
+    private readonly List<Parameter> _parameters = [];
+    private readonly Dictionary<Parameter, string> _uniqueNames = [];
+    private IEnumerable<Parameter> _postCtorParameters = [];
+
+    public bool HasBaseParameters => _parameters?.Any() == true;
 
     public void AddParameters(IEnumerable<IParameterSymbol> parameters)
     {

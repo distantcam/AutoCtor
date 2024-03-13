@@ -1,5 +1,5 @@
 ﻿namespace System.Runtime.CompilerServices;
 
-[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+[ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)]
+[Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 internal static class IsExternalInit;

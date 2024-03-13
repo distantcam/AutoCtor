@@ -33,13 +33,13 @@ internal record struct TypeModel(
 
         var guard = ((int?)attribute?.ConstructorArguments[0].Value) switch
         {
-            1 => false,
-            2 => true,
+            1 => false, // GuardSetting.Disabled
+            2 => true, // GuardSetting.Enabled
             _ => (bool?)null,
         };
 
         var baseCtorParameters = type.BaseType?.Constructors.OnlyOrDefault(ValidCtor)?.Parameters;
-        var genericBaseType = type.BaseType is {IsGenericType: true};
+        var genericBaseType = type.BaseType is { IsGenericType: true };
 
         return new(
             Depth: CalculateInheritanceDepth(type),
@@ -59,7 +59,7 @@ internal record struct TypeModel(
             TypeDeclarations: GeneratorUtilities.GetTypeDeclarations(type),
 
             Fields: new(type.GetMembers().OfType<IFieldSymbol>()
-                .Where(f => f.IsReadOnly && f is {IsStatic: false, CanBeReferencedByName: true} && !HasFieldInitialiser(f))),
+                .Where(f => f.IsReadOnly && f is { IsStatic: false, CanBeReferencedByName: true } && !HasFieldInitialiser(f))),
 
             BaseCtorParameters: baseCtorParameters != null ? new(baseCtorParameters) : null,
 
@@ -81,7 +81,9 @@ internal record struct TypeModel(
             return false;
 
         // Don't use the record clone ctor
-        if (ctor.ContainingType.IsRecord && ctor is {DeclaredAccessibility: Accessibility.Protected, Parameters.Length: 1} && SymbolEqualityComparer.Default.Equals(ctor.Parameters[0].Type, ctor.ContainingType))
+        if (ctor.ContainingType.IsRecord &&
+            ctor is { DeclaredAccessibility: Accessibility.Protected, Parameters.Length: 1 } &&
+            SymbolEqualityComparer.Default.Equals(ctor.Parameters[0].Type, ctor.ContainingType))
             return false;
 
         return true;
@@ -104,13 +106,16 @@ internal record struct TypeModel(
             return string.Empty;
 
         if (type.IsGenericType)
-            return type.ConstructUnboundGenericType().ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            return type.ConstructUnboundGenericType().ToDisplayString(FullyQualifiedFormat);
 
-        return type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        return type.ToDisplayString(FullyQualifiedFormat);
     }
 
     private static bool HasFieldInitialiser(IFieldSymbol symbol)
     {
-        return symbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax()).OfType<VariableDeclaratorSyntax>().Any(x => x.Initializer != null);
+        return symbol.DeclaringSyntaxReferences
+            .Select(x => x.GetSyntax())
+            .OfType<VariableDeclaratorSyntax>()
+            .Any(x => x.Initializer != null);
     }
 }

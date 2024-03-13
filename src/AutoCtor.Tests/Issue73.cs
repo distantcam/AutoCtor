@@ -33,16 +33,16 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
             .Where(assembly => !assembly.IsDynamic)
             .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
             .Cast<MetadataReference>()
-            .Concat(new[] { MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll")) });
+            .Concat([MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll"))]);
 
         var projectA = CSharpCompilation.Create(
             assemblyName: "ProjectA",
-            syntaxTrees: new[] { CSharpSyntaxTree.ParseText(projectACode) },
+            syntaxTrees: [CSharpSyntaxTree.ParseText(projectACode)],
             references: references,
             options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         var projectB = CSharpCompilation.Create(
             assemblyName: "ProjectB",
-            syntaxTrees: new[] { CSharpSyntaxTree.ParseText(projectBCode) },
+            syntaxTrees: [CSharpSyntaxTree.ParseText(projectBCode)],
             references: references.Concat(new[] { projectA.ToMetadataReference() }),
             options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 

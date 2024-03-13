@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 internal static class GeneratorUtilities
 {
-    public static readonly SymbolDisplayFormat HintSymbolDisplayFormat = new SymbolDisplayFormat(
+    public static readonly SymbolDisplayFormat HintSymbolDisplayFormat = new(
         globalNamespaceStyle:
             SymbolDisplayGlobalNamespaceStyle.Omitted,
         typeQualificationStyle:

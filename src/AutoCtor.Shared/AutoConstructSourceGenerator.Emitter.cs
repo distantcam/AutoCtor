@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using static Microsoft.CodeAnalysis.SymbolDisplayFormat;
 
 namespace AutoCtor;
 
@@ -30,7 +31,7 @@ public partial class AutoConstructSourceGenerator
 
                 if (type.HasBaseType)
                 {
-                    if (type is {BaseTypeArguments: not null, BaseTypeParameters: not null})
+                    if (type is { BaseTypeArguments: not null, BaseTypeParameters: not null })
                     {
                         if (ctorMaps.TryGetValue(type.BaseTypeKey, out var temp))
                         {
@@ -169,7 +170,10 @@ $"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)};"
             if (!method.ReturnsVoid)
             {
                 foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodNotVoidWarning, loc, method.ToDisplayString(SymbolDisplayFormat.CSharpShortErrorMessageFormat)));
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        Diagnostics.PostConstructMethodNotVoidWarning,
+                        loc,
+                        method.ToDisplayString(CSharpShortErrorMessageFormat)));
                 return null;
             }
 
@@ -177,7 +181,10 @@ $"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)};"
             if (method.Parameters.Any(static p => p.IsOptional))
             {
                 foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodHasOptionalArgsWarning, loc, method.ToDisplayString(SymbolDisplayFormat.CSharpShortErrorMessageFormat)));
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        Diagnostics.PostConstructMethodHasOptionalArgsWarning,
+                        loc,
+                        method.ToDisplayString(CSharpShortErrorMessageFormat)));
                 return null;
             }
 
@@ -185,7 +192,10 @@ $"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)};"
             if (method.IsGenericMethod)
             {
                 foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.PostConstructMethodCannotBeGenericWarning, loc, method.ToDisplayString(SymbolDisplayFormat.CSharpShortErrorMessageFormat)));
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        Diagnostics.PostConstructMethodCannotBeGenericWarning,
+                        loc,
+                        method.ToDisplayString(CSharpShortErrorMessageFormat)));
                 return null;
             }
 
