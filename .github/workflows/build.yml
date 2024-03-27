@@ -43,7 +43,6 @@ jobs:
           --configuration Release
           -p:RoslynVersion=3.11
           -p:RoslynLibVersion=3.11.0
-          --no-build
           --logger GitHubActions
           --
           RunConfiguration.CollectSourceInformation=true
@@ -54,7 +53,6 @@ jobs:
           --configuration Release
           -p:RoslynVersion=4.0
           -p:RoslynLibVersion=4.0.1
-          --no-build
           --logger GitHubActions
           --
           RunConfiguration.CollectSourceInformation=true
@@ -65,7 +63,6 @@ jobs:
           --configuration Release
           -p:RoslynVersion=4.4
           -p:RoslynLibVersion=4.4.0
-          --no-build
           --logger GitHubActions
           --
           RunConfiguration.CollectSourceInformation=true
