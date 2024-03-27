@@ -18,6 +18,11 @@
     <!--<RoslynLibVersion>4.4.0</RoslynLibVersion>-->
   </PropertyGroup>
 
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>obj\roslyn$(RoslynVersion)\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin\roslyn$(RoslynVersion)\</BaseOutputPath>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(RoslynVersion)' == '3.11' ">
     <DefineConstants>$(DefineConstants);ROSLYN_3_11</DefineConstants>
   </PropertyGroup>

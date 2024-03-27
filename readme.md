@@ -38,7 +38,7 @@ https://nuget.org/packages/AutoCtor/
 ### Your code
 
 <!-- snippet: Basic -->
-<a id='snippet-basic'></a>
+<a id='snippet-Basic'></a>
 ```cs
 [AutoConstruct]
 public partial class ExampleClass
@@ -46,13 +46,13 @@ public partial class ExampleClass
     private readonly IService _service;
 }
 ```
-<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L6-L14' title='Snippet source file'>snippet source</a> | <a href='#snippet-basic' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L6-L14' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### What gets generated
 
 <!-- snippet: BasicGeneratedCode -->
-<a id='snippet-basicgeneratedcode'></a>
+<a id='snippet-BasicGeneratedCode'></a>
 ```cs
 partial class ExampleClass
 {
@@ -62,7 +62,7 @@ partial class ExampleClass
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L16-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-basicgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L16-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-BasicGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## More Features
@@ -72,7 +72,7 @@ partial class ExampleClass
 You can mark a method to be called at the end of the constructor with the attribute `[AutoPostConstruct]`. This method must return void.
 
 <!-- snippet: PostConstruct -->
-<a id='snippet-postconstruct'></a>
+<a id='snippet-PostConstruct'></a>
 ```cs
 [AutoConstruct]
 public partial class PostConstructMethod
@@ -85,11 +85,11 @@ public partial class PostConstructMethod
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L6-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstruct' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L6-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: PostConstructGeneratedCode -->
-<a id='snippet-postconstructgeneratedcode'></a>
+<a id='snippet-PostConstructGeneratedCode'></a>
 ```cs
 partial class PostConstructMethod
 {
@@ -100,13 +100,13 @@ partial class PostConstructMethod
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L21-L32' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L21-L32' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
 
 <!-- snippet: PostConstructWithParameters -->
-<a id='snippet-postconstructwithparameters'></a>
+<a id='snippet-PostConstructWithParameters'></a>
 ```cs
 public partial class PostConstructMethodWithParameters
 {
@@ -118,11 +118,11 @@ public partial class PostConstructMethodWithParameters
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L34-L46' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructwithparameters' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L34-L46' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameters' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: PostConstructWithParametersGeneratedCode -->
-<a id='snippet-postconstructwithparametersgeneratedcode'></a>
+<a id='snippet-PostConstructWithParametersGeneratedCode'></a>
 ```cs
 partial class PostConstructMethodWithParameters
 {
@@ -133,7 +133,7 @@ partial class PostConstructMethodWithParameters
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L48-L59' title='Snippet source file'>snippet source</a> | <a href='#snippet-postconstructwithparametersgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L48-L59' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParametersGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### Argument Guards
@@ -155,7 +155,7 @@ In your project you can add a `AutoCtorGuards` property.
 In each `AutoConstruct` attribute you can add a setting to enable/disable guards.
 
 <!-- snippet: Guards -->
-<a id='snippet-guards'></a>
+<a id='snippet-Guards'></a>
 ```cs
 [AutoConstruct(GuardSetting.Enabled)]
 public partial class GuardedClass
@@ -163,11 +163,11 @@ public partial class GuardedClass
     private readonly Service _service;
 }
 ```
-<sup><a href='/src/AutoCtor.Example/GuardsExamples.cs#L5-L13' title='Snippet source file'>snippet source</a> | <a href='#snippet-guards' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/GuardsExamples.cs#L5-L13' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guards' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: GuardsGeneratedCode -->
-<a id='snippet-guardsgeneratedcode'></a>
+<a id='snippet-GuardsGeneratedCode'></a>
 ```cs
 partial class GuardedClass
 {
@@ -177,7 +177,7 @@ partial class GuardedClass
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/GuardsExamples.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-guardsgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/GuardsExamples.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-GuardsGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## More examples
@@ -185,7 +185,7 @@ partial class GuardedClass
 You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
 
 <!-- snippet: PresetField -->
-<a id='snippet-presetfield'></a>
+<a id='snippet-PresetField'></a>
 ```cs
 [AutoConstruct]
 public partial class ClassWithPresetField
@@ -194,11 +194,11 @@ public partial class ClassWithPresetField
     private readonly IList<string> _list = new List<string>();
 }
 ```
-<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L28-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-presetfield' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L28-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-PresetField' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: PresetFieldGeneratedCode -->
-<a id='snippet-presetfieldgeneratedcode'></a>
+<a id='snippet-PresetFieldGeneratedCode'></a>
 ```cs
 partial class ClassWithPresetField
 {
@@ -209,13 +209,13 @@ partial class ClassWithPresetField
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L39-L50' title='Snippet source file'>snippet source</a> | <a href='#snippet-presetfieldgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L39-L50' title='Snippet source file'>snippet source</a> | <a href='#snippet-PresetFieldGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 If there is a single base constructor with parameters, AutoCtor will include that base constructor in the constructor it creates.
 
 <!-- snippet: Inherit -->
-<a id='snippet-inherit'></a>
+<a id='snippet-Inherit'></a>
 ```cs
 public abstract class BaseClass
 {
@@ -233,11 +233,11 @@ public partial class ClassWithBase : BaseClass
     private readonly IService _service;
 }
 ```
-<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L52-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-inherit' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L52-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherit' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: InheritGeneratedCode -->
-<a id='snippet-inheritgeneratedcode'></a>
+<a id='snippet-InheritGeneratedCode'></a>
 ```cs
 partial class ClassWithBase
 {
@@ -247,7 +247,7 @@ partial class ClassWithBase
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L72-L82' title='Snippet source file'>snippet source</a> | <a href='#snippet-inheritgeneratedcode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L72-L82' title='Snippet source file'>snippet source</a> | <a href='#snippet-InheritGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## Embedding the attributes in your project
