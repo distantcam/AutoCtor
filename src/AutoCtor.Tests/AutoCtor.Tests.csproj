@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BaseIntermediateOutputPath>obj\roslyn$(RoslynVersion)\</BaseIntermediateOutputPath>
-    <BaseOutputPath>bin\roslyn$(RoslynVersion)\</BaseOutputPath>
+    <IntermediateOutputPath>obj\roslyn$(RoslynVersion)\</IntermediateOutputPath>
+    <OutputPath>bin\roslyn$(RoslynVersion)\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '3.11' ">
