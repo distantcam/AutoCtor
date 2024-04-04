@@ -37,12 +37,11 @@
 
   <ItemGroup>
     <Compile Remove="Examples\*.cs" />
-    <None Include="Examples\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="GuardExamples\*.cs" />
+    <Compile Remove="LangExamples\*.cs" />
+    <None Include="Examples\*.cs" />
     <None Include="GuardExamples\*.cs" />
+    <None Include="LangExamples\*.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -63,8 +63,8 @@ public class ExampleTests
         IEnumerable<(string, string)> options,
         params IIncrementalGenerator[] generators)
         => CSharpGeneratorDriver.Create(generators)
-        .WithUpdatedParseOptions(c.SyntaxTrees.FirstOrDefault().Options as CSharpParseOptions)
-        .WithUpdatedAnalyzerConfigOptions(new TestAnalyzerConfigOptionsProvider(options));
+            .WithUpdatedParseOptions(c.SyntaxTrees.FirstOrDefault().Options as CSharpParseOptions)
+            .WithUpdatedAnalyzerConfigOptions(new TestAnalyzerConfigOptionsProvider(options));
 #endif
 
     private static async Task<CSharpCompilation> Compile(IEnumerable<string> codes)
@@ -80,9 +80,11 @@ public class ExampleTests
         var attributeReference = MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll"));
 
 #if ROSLYN_3_11
-        var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
-#elif ROSLYN_4_0 || ROSLYN_4_4
-        var options = CSharpParseOptions.Default;
+        var options = CSharpParseOptions.Default.WithPreprocessorSymbols("ROSLYN_3_11").WithLanguageVersion(LanguageVersion.Preview);
+#elif ROSLYN_4_0
+        var options = CSharpParseOptions.Default.WithPreprocessorSymbols("ROSLYN_4_0");
+#elif ROSLYN_4_4
+        var options = CSharpParseOptions.Default.WithPreprocessorSymbols("ROSLYN_4_4");
 #endif
 
         return CSharpCompilation.Create(
@@ -134,6 +136,29 @@ public class ExampleTests
                     Codes = [File.ReadAllText(guardExample)],
                     Options = [new("build_property.AutoCtorGuards", "true")],
                     VerifiedDirectory = Path.Combine(Path.GetDirectoryName(guardExample), "Verified"),
+                }
+            );
+        }
+
+        var langExamples = Directory.GetFiles(Path.Combine(BaseDir.FullName, "LangExamples"), "*.cs");
+        foreach (var langExample in langExamples)
+        {
+            if (langExample.Contains(".g."))
+                continue;
+
+            data.Add(
+                new CodeFileTheoryData
+                {
+                    Name = Path.GetFileNameWithoutExtension(langExample),
+                    Codes = [exampleCode, File.ReadAllText(langExample)],
+                    Options = [],
+#if ROSLYN_3_11
+                    VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_3_11")
+#elif ROSLYN_4_0
+                    VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_0")
+#elif ROSLYN_4_4
+                    VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_4")
+#endif
                 }
             );
         }
