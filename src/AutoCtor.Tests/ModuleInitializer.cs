@@ -6,5 +6,7 @@ public static class ModuleInitializer
     public static void Init()
     {
         VerifySourceGenerators.Initialize();
+
+        VerifierSettings.ScrubLinesContaining("Version:", "SHA:", "GeneratedCodeAttribute");
     }
 }

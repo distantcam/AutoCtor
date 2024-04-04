@@ -1,36 +1,29 @@
 ﻿using FluentAssertions;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace AutoCtor.Tests;
 
 public class GeneratedAttributeTests
 {
     [Fact]
-    public void CompileGeneratedAttributes()
+    public async Task AttributeGeneratedCode()
     {
-        var references = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(assembly => !assembly.IsDynamic)
-            .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
-            .Cast<MetadataReference>();
+        var compilation = await Helpers.Compile([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
+        var generator = new AttributeSourceGenerator();
+        var driver = Helpers.CreateDriver([], generator)
+            .RunGenerators(compilation);
 
-        var compilation = CSharpCompilation.Create(
-            assemblyName: "AttributeProjectTest",
-            syntaxTrees: null,
-            references: references,
-            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        await Verify(driver).UseDirectory("Verified");
+    }
 
-        var generator = new AutoConstructSourceGenerator();
-        var parseOptions = new CSharpParseOptions(preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
-#if ROSLYN_3_11
-        var driver = CSharpGeneratorDriver.Create([generator], parseOptions: parseOptions);
-#elif ROSLYN_4_0 || ROSLYN_4_4
-        var driver = CSharpGeneratorDriver.Create(generator).WithUpdatedParseOptions(parseOptions);
-#endif
-        driver.RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+    [Fact]
+    public async Task AttributeCompilesProperly()
+    {
+        var compilation = await Helpers.Compile([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
+        var generator = new AttributeSourceGenerator();
+        Helpers.CreateDriver([], generator)
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         diagnostics.Should().BeEmpty();
-        outputCompilation.GetDiagnostics()
-            .Should().BeEmpty();
+        outputCompilation.GetDiagnostics().Should().BeEmpty();
     }
 }

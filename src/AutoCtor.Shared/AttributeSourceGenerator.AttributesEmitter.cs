@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace AutoCtor;
 
-public partial class AutoConstructSourceGenerator
+public partial class AttributeSourceGenerator
 {
     private static class AttributeEmitter
     {

@@ -1,12 +1,37 @@
 ﻿using FluentAssertions;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace AutoCtor.Tests;
 
-public class Issue73 : CompilationTestBase
+public class Issue73
 {
-    protected override CSharpCompilation Compile()
+    [Fact]
+    public async Task VerifyGeneratedCode()
+    {
+        var compilation = await Compile();
+        var generator = new AutoConstructSourceGenerator();
+        var driver = Helpers.CreateDriver([], generator).RunGenerators(compilation);
+
+        await Verify(driver).UseDirectory("Verified");
+    }
+
+    [Fact]
+    public async Task CodeCompilesWithoutErrors()
+    {
+        string[] ignoredWarnings = ["CS0414"]; // Ignore unused fields
+
+        var compilation = await Compile();
+        var generator = new AutoConstructSourceGenerator();
+        Helpers.CreateDriver([], generator)
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+
+        diagnostics.Should().BeEmpty();
+        outputCompilation.GetDiagnostics()
+            .Where(d => !ignoredWarnings.Contains(d.Id))
+            .Should().BeEmpty();
+    }
+
+    private async Task<CSharpCompilation> Compile()
     {
         var projectACode = @"
 namespace A
@@ -29,22 +54,9 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
 }
 ";
 
-        var references = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(assembly => !assembly.IsDynamic)
-            .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
-            .Cast<MetadataReference>()
-            .Concat([MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll"))]);
-
-        var projectA = CSharpCompilation.Create(
-            assemblyName: "ProjectA",
-            syntaxTrees: [CSharpSyntaxTree.ParseText(projectACode)],
-            references: references,
-            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-        var projectB = CSharpCompilation.Create(
-            assemblyName: "ProjectB",
-            syntaxTrees: [CSharpSyntaxTree.ParseText(projectBCode)],
-            references: references.Concat(new[] { projectA.ToMetadataReference() }),
-            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        var projectA = await Helpers.Compile([projectACode], "ProjectA");
+        var projectB = await Helpers.Compile([projectBCode], "ProjectB",
+            extraReferences: [projectA.ToMetadataReference()]);
 
         return projectB;
     }
