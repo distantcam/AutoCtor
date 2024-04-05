@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Xunit.Abstractions;
 
@@ -24,20 +25,19 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
-        string[] ignoredWarnings = ["CS0414"]; // Ignore unused fields
-
         var compilation = await Helpers.Compile(theoryData.Codes);
         var generator = new AutoConstructSourceGenerator();
         Helpers.CreateDriver(theoryData.Options, generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
 
-        //diagnostics.Should().BeEmpty();
         outputCompilation.GetDiagnostics()
-            .Where(d => !ignoredWarnings.Contains(d.Id))
+            .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id))
             .Should().BeEmpty();
     }
 
     private static DirectoryInfo BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
+
+    private static IEnumerable<string> GetExamplesFiles(string path) => Directory.GetFiles(Path.Combine(BaseDir.FullName, path), "*.cs").Where(e => !e.Contains(".g."));
 
     public static TheoryData<CodeFileTheoryData> GetExamples()
     {
@@ -46,91 +46,79 @@ public class ExampleTests
 
         var data = new TheoryData<CodeFileTheoryData>();
 
-        var examples = Directory.GetFiles(Path.Combine(BaseDir.FullName, "Examples"), "*.cs");
-        var exampleCode = File.ReadAllText(Path.Combine(BaseDir.FullName, "Examples", "IExampleInterfaces.cs"));
-        foreach (var example in examples)
-        {
-            if (example.Contains(".g.") || example.Contains("IExampleInterfaces"))
-                continue;
+        var exampleCode = File.ReadAllText(Path.Combine(BaseDir.FullName, "IExampleInterfaces.cs"));
 
-            data.Add(
-                new CodeFileTheoryData
-                {
-                    Name = Path.GetFileNameWithoutExtension(example),
-                    Codes = [exampleCode, File.ReadAllText(example)],
-                    Options = [],
-                    VerifiedDirectory = Path.Combine(Path.GetDirectoryName(example), "Verified")
-                }
-            );
+        foreach (var example in GetExamplesFiles("Examples"))
+        {
+            data.Add(new CodeFileTheoryData(example, exampleCode) with
+            {
+                IgnoredCompileDiagnostics = ["CS0414"] // Ignore unused fields
+            });
         }
 
-        var guardExamples = Directory.GetFiles(Path.Combine(BaseDir.FullName, "GuardExamples"), "*.cs");
-        foreach (var guardExample in guardExamples)
+        foreach (var guardExample in GetExamplesFiles("GuardExamples"))
         {
-            if (guardExample.Contains(".g."))
-                continue;
-
-            data.Add(
-                new CodeFileTheoryData
-                {
-                    Name = Path.GetFileNameWithoutExtension(guardExample),
-                    Codes = [File.ReadAllText(guardExample)],
-                    Options = [new("build_property.AutoCtorGuards", "true")],
-                    VerifiedDirectory = Path.Combine(Path.GetDirectoryName(guardExample), "Verified"),
-                }
-            );
+            data.Add(new CodeFileTheoryData(guardExample) with
+            {
+                Options = [new("build_property.AutoCtorGuards", "true")]
+            });
         }
 
-        var langExamples = Directory.GetFiles(Path.Combine(BaseDir.FullName, "LangExamples"), "*.cs");
-        foreach (var langExample in langExamples)
+        foreach (var langExample in GetExamplesFiles("LangExamples"))
         {
-            if (langExample.Contains(".g."))
-                continue;
-
-            data.Add(
-                new CodeFileTheoryData
-                {
-                    Name = Path.GetFileNameWithoutExtension(langExample),
-                    Codes = [exampleCode, File.ReadAllText(langExample)],
-                    Options = [],
+            data.Add(new CodeFileTheoryData(langExample) with
+            {
 #if ROSLYN_3_11
-                    VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_3_11")
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_3_11")
 #elif ROSLYN_4_0
-                    VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_0")
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_0")
 #elif ROSLYN_4_4
-                    VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_4")
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_4")
 #endif
-                }
-            );
+            });
         }
 
         return data;
     }
 
-    public class CodeFileTheoryData : IXunitSerializable
+    public record CodeFileTheoryData : IXunitSerializable
     {
-        public string Name { get; set; }
-        public string[] Codes { get; set; }
-        public (string, string)[] Options { get; set; }
-        public string VerifiedDirectory { get; set; }
+        public required string Name { get; set; }
+        public required string[] Codes { get; set; }
+        public required string VerifiedDirectory { get; set; }
+
+        public (string, string)[] Options { get; set; } = [];
+        public string[] IgnoredCompileDiagnostics { get; set; } = [];
+
+        [SetsRequiredMembers]
+        public CodeFileTheoryData(string file, params string[] codes)
+        {
+            Name = Path.GetFileNameWithoutExtension(file);
+            Codes = [File.ReadAllText(file), .. codes];
+            VerifiedDirectory = Path.Combine(Path.GetDirectoryName(file), "Verified");
+        }
+
+        public CodeFileTheoryData() { }
 
         public void Deserialize(IXunitSerializationInfo info)
         {
             Name = info.GetValue<string>(nameof(Name));
             Codes = info.GetValue<string[]>(nameof(Codes));
+            VerifiedDirectory = info.GetValue<string>(nameof(VerifiedDirectory));
             Options = info.GetValue<string[]>(nameof(Options))
                 .Select(o => o.Split('|'))
                 .Select(o => (o[0], o[1]))
                 .ToArray();
-            VerifiedDirectory = info.GetValue<string>(nameof(VerifiedDirectory));
+            IgnoredCompileDiagnostics = info.GetValue<string[]>(nameof(IgnoredCompileDiagnostics));
         }
 
         public void Serialize(IXunitSerializationInfo info)
         {
             info.AddValue(nameof(Name), Name);
             info.AddValue(nameof(Codes), Codes);
-            info.AddValue(nameof(Options), Options.Select(o => $"{o.Item1}|{o.Item2}").ToArray());
             info.AddValue(nameof(VerifiedDirectory), VerifiedDirectory);
+            info.AddValue(nameof(Options), Options.Select(o => $"{o.Item1}|{o.Item2}").ToArray());
+            info.AddValue(nameof(IgnoredCompileDiagnostics), IgnoredCompileDiagnostics);
         }
 
         public override string ToString() => Name + ".cs";

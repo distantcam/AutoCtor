@@ -21,3 +21,7 @@ public sealed class AutoConstructAttribute : Attribute
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoPostConstructAttribute : Attribute;
+
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+[Conditional("AUTOCTOR_USAGES")]
+public sealed class AutoConstructIgnoreAttribute : Attribute;

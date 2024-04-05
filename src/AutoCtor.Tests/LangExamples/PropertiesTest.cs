@@ -14,6 +14,9 @@ public partial class PropertiesTest
     public string FixedProperty => "Constant";
     public string RedirectedProperty => InitializerProperty;
 
+    [AutoCtor.AutoConstructIgnore]
+    public string IgnoredProperty { get; }
+
 #if ROSLYN_4_4
     public required string RequiredProperty { get; set; }
 #endif

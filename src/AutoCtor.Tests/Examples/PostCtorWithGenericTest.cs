@@ -1,11 +1,9 @@
-﻿using AutoCtor;
-
-[AutoConstruct]
+﻿[AutoCtor.AutoConstruct]
 public partial class PostCtorWithGenericTest
 {
     private readonly IA a;
 
-    [AutoPostConstruct]
+    [AutoCtor.AutoPostConstruct]
     private void Initialize<T>(T t)
     {
     }

@@ -5,7 +5,7 @@
       Title: Post construct method must return void,
       Severity: Warning,
       WarningLevel: 1,
-      Location: : (9,17)-(9,26),
+      Location: : (6,40)-(6,49),
       MessageFormat: The method '{0}' must return void to be used as the post construct method,
       Message: The method 'PostCtorReturnsNonVoidTest.InitAsync()' must return void to be used as the post construct method,
       Category: AutoCtor

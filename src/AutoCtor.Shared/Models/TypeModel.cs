@@ -157,6 +157,9 @@ internal record struct TypeModel(
             .Any(a => a.Kind() == SyntaxKind.InitAccessorDeclaration) == true))
             return false;
 
+        if (property.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructIgnoreAttribute"))
+            return false;
+
         return true;
     }
 }
