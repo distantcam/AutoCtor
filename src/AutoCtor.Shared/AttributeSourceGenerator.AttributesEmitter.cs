@@ -38,7 +38,7 @@ public partial class AttributeSourceGenerator
                 source.OpenBlock().CloseBlock();
 
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
-                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]");
+                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]");
                 source.AppendLine("internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute");
                 source.OpenBlock().CloseBlock();
             }

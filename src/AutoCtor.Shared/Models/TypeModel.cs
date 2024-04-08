@@ -67,7 +67,7 @@ internal record struct TypeModel(
                     IsStatic: false,
                     CanBeReferencedByName: true,
                     IsImplicitlyDeclared: false
-                } && !HasFieldInitialiser(f))),
+                } && IsValidField(f))),
 
             Properties: new(type.GetMembers().OfType<IPropertySymbol>()
                 .Where(p => p is
@@ -127,12 +127,18 @@ internal record struct TypeModel(
         return type.ToDisplayString(FullyQualifiedFormat);
     }
 
-    private static bool HasFieldInitialiser(IFieldSymbol field)
+    private static bool IsValidField(IFieldSymbol field)
     {
-        return field.DeclaringSyntaxReferences
+        if (field.DeclaringSyntaxReferences
             .Select(x => x.GetSyntax())
             .OfType<VariableDeclaratorSyntax>()
-            .Any(x => x.Initializer != null);
+            .Any(x => x.Initializer != null))
+            return false;
+
+        if (HasIgnoreAttribute(field.GetAttributes()))
+            return false;
+
+        return true;
     }
 
     private static bool IsValidProperty(IPropertySymbol property)
@@ -157,9 +163,12 @@ internal record struct TypeModel(
             .Any(a => a.Kind() == SyntaxKind.InitAccessorDeclaration) == true))
             return false;
 
-        if (property.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructIgnoreAttribute"))
+        if (HasIgnoreAttribute(property.GetAttributes()))
             return false;
 
         return true;
     }
+
+    private static bool HasIgnoreAttribute(IEnumerable<AttributeData> attributes) =>
+        attributes.Any(a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructIgnoreAttribute");
 }

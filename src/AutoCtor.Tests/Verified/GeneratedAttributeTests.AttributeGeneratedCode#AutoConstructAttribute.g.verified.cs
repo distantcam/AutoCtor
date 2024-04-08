@@ -32,7 +32,7 @@ namespace AutoCtor
 	{
 	}
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.AttributeUsage(global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute
 	{
 	}

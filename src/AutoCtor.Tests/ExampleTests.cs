@@ -52,7 +52,7 @@ public class ExampleTests
         {
             data.Add(new CodeFileTheoryData(example, exampleCode) with
             {
-                IgnoredCompileDiagnostics = ["CS0414"] // Ignore unused fields
+                IgnoredCompileDiagnostics = ["CS0414", "CS0169"] // Ignore unused fields
             });
         }
 
