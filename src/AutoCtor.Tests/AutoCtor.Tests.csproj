@@ -9,13 +9,8 @@
 
   <PropertyGroup>
     <RoslynVersion>3.11</RoslynVersion>
-    <RoslynLibVersion>3.11.0</RoslynLibVersion>
-
     <!--<RoslynVersion>4.0</RoslynVersion>-->
-    <!--<RoslynLibVersion>4.0.1</RoslynLibVersion>-->
-
     <!--<RoslynVersion>4.4</RoslynVersion>-->
-    <!--<RoslynLibVersion>4.4.0</RoslynLibVersion>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,24 +20,26 @@
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '3.11' ">
     <DefineConstants>$(DefineConstants);ROSLYN_3_11</DefineConstants>
+    <RoslynLibVersion>3.11.0</RoslynLibVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '4.0' ">
     <DefineConstants>$(DefineConstants);ROSLYN_4_0</DefineConstants>
+    <RoslynLibVersion>4.0.1</RoslynLibVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '4.4' ">
     <DefineConstants>$(DefineConstants);ROSLYN_4_4</DefineConstants>
+    <RoslynLibVersion>4.4.0</RoslynLibVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Examples\*.cs" />
-    <None Include="Examples\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="GuardExamples\*.cs" />
+    <Compile Remove="LangExamples\*.cs" />
+    <None Include="Examples\*.cs" />
     <None Include="GuardExamples\*.cs" />
+    <None Include="LangExamples\*.cs" />
   </ItemGroup>
 
   <ItemGroup>

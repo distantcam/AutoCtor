@@ -5,7 +5,7 @@
       Title: Ambiguous marked post constructor method,
       Severity: Warning,
       WarningLevel: 1,
-      Location: : (8,17)-(8,27),
+      Location: : (6,17)-(6,27),
       MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Category: AutoCtor
@@ -15,7 +15,7 @@
       Title: Ambiguous marked post constructor method,
       Severity: Warning,
       WarningLevel: 1,
-      Location: : (13,17)-(13,27),
+      Location: : (11,17)-(11,27),
       MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Category: AutoCtor

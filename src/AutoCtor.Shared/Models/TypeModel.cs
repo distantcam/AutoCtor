@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.SymbolDisplayFormat;
 
@@ -19,6 +20,7 @@ internal record struct TypeModel(
 
     EquatableList<string> TypeDeclarations,
     EquatableList<IFieldSymbol> Fields,
+    EquatableList<IPropertySymbol> Properties,
     EquatableList<IParameterSymbol>? BaseCtorParameters,
     EquatableList<ITypeSymbol>? BaseTypeArguments,
     EquatableList<ITypeParameterSymbol>? BaseTypeParameters
@@ -59,7 +61,21 @@ internal record struct TypeModel(
             TypeDeclarations: GeneratorUtilities.GetTypeDeclarations(type),
 
             Fields: new(type.GetMembers().OfType<IFieldSymbol>()
-                .Where(f => f.IsReadOnly && f is { IsStatic: false, CanBeReferencedByName: true } && !HasFieldInitialiser(f))),
+                .Where(f => f is
+                {
+                    IsReadOnly: true,
+                    IsStatic: false,
+                    CanBeReferencedByName: true,
+                    IsImplicitlyDeclared: false
+                } && IsValidField(f))),
+
+            Properties: new(type.GetMembers().OfType<IPropertySymbol>()
+                .Where(p => p is
+                {
+                    IsStatic: false,
+                    CanBeReferencedByName: true,
+                    IsImplicitlyDeclared: false,
+                } && IsValidProperty(p))),
 
             BaseCtorParameters: baseCtorParameters != null ? new(baseCtorParameters) : null,
 
@@ -111,11 +127,48 @@ internal record struct TypeModel(
         return type.ToDisplayString(FullyQualifiedFormat);
     }
 
-    private static bool HasFieldInitialiser(IFieldSymbol symbol)
+    private static bool IsValidField(IFieldSymbol field)
     {
-        return symbol.DeclaringSyntaxReferences
+        if (field.DeclaringSyntaxReferences
             .Select(x => x.GetSyntax())
             .OfType<VariableDeclaratorSyntax>()
-            .Any(x => x.Initializer != null);
+            .Any(x => x.Initializer != null))
+            return false;
+
+        if (HasIgnoreAttribute(field.GetAttributes()))
+            return false;
+
+        return true;
     }
+
+    private static bool IsValidProperty(IPropertySymbol property)
+    {
+        if (!property.ContainingType.GetMembers().OfType<IFieldSymbol>()
+            .Any(field => SymbolEqualityComparer.Default.Equals(field.AssociatedSymbol, property)))
+            return false;
+
+        var propertySyntax = property.DeclaringSyntaxReferences
+            .Select(x => x.GetSyntax())
+            .OfType<PropertyDeclarationSyntax>()
+            .First();
+
+        if (propertySyntax.Initializer is not null)
+            return false;
+
+        if (!(property.IsReadOnly ||
+#if ROSLYN_4_4
+            property.IsRequired ||
+#endif
+            propertySyntax.AccessorList?.Accessors
+            .Any(a => a.Kind() == SyntaxKind.InitAccessorDeclaration) == true))
+            return false;
+
+        if (HasIgnoreAttribute(property.GetAttributes()))
+            return false;
+
+        return true;
+    }
+
+    private static bool HasIgnoreAttribute(IEnumerable<AttributeData> attributes) =>
+        attributes.Any(a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructIgnoreAttribute");
 }

@@ -85,7 +85,7 @@ public partial class AutoConstructSourceGenerator
         {
             var postCtorMethod = GetPostCtorMethod(context, markedPostCtorMethods);
 
-            var parameters = new ParameterList(type.Fields);
+            var parameters = new ParameterList(type.Fields, type.Properties);
             if (type.HasBaseType)
             {
                 if (type.BaseCtorParameters != null)
@@ -122,17 +122,22 @@ public partial class AutoConstructSourceGenerator
 
                 using (source.StartBlock())
                 {
-                    foreach (var f in type.Fields)
+                    var items = type.Fields
+                        .Select(f => (f.Type.IsReferenceType, Name: f.Name.EscapeKeywordIdentifier(), Parameter: parameters.ParameterName(f)))
+                        .Concat(type.Properties
+                        .Select(p => (p.Type.IsReferenceType, Name: p.Name.EscapeKeywordIdentifier(), Parameter: parameters.ParameterName(p))));
+
+                    foreach (var item in items)
                     {
                         if (((type.Guard.HasValue && type.Guard.Value) ||
                             (!type.Guard.HasValue && guards)) &&
-                            f.Type.IsReferenceType)
+                            item.IsReferenceType)
                             source.AppendLine(
-$"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)} ?? throw new global::System.ArgumentNullException(\"{parameters.FieldParameterName(f)}\");"
+$"this.{item.Name} = {item.Parameter} ?? throw new global::System.ArgumentNullException(\"{item.Parameter}\");"
                             );
                         else
                             source.AppendLine(
-$"this.{f.Name.EscapeKeywordIdentifier()} = {parameters.FieldParameterName(f)};"
+$"this.{item.Name} = {item.Parameter};"
                             );
                     }
                     if (postCtorMethod != null)

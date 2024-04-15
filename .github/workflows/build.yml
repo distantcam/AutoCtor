@@ -19,12 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 👨‍💻 Check-out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: 👨‍🔧 Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           global-json-file: src/global.json
 
@@ -42,7 +42,6 @@ jobs:
           dotnet test
           --configuration Release
           -p:RoslynVersion=3.11
-          -p:RoslynLibVersion=3.11.0
           --logger GitHubActions
           --
           RunConfiguration.CollectSourceInformation=true
@@ -52,7 +51,6 @@ jobs:
           dotnet test
           --configuration Release
           -p:RoslynVersion=4.0
-          -p:RoslynLibVersion=4.0.1
           --logger GitHubActions
           --
           RunConfiguration.CollectSourceInformation=true
@@ -62,7 +60,6 @@ jobs:
           dotnet test
           --configuration Release
           -p:RoslynVersion=4.4
-          -p:RoslynLibVersion=4.4.0
           --logger GitHubActions
           --
           RunConfiguration.CollectSourceInformation=true
@@ -74,12 +71,12 @@ jobs:
     needs: [build]
     steps:
       - name: 👨‍💻 Check-out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: 👨‍🔧 Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           global-json-file: src/global.json
 

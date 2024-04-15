@@ -1,11 +1,8 @@
-﻿using System.Threading.Tasks;
-using AutoCtor;
-
-[AutoConstruct]
+﻿[AutoCtor.AutoConstruct]
 public partial class PostCtorReturnsNonVoidTest
 {
     private readonly IA a;
 
-    [AutoPostConstruct]
-    private Task InitAsync() => Task.CompletedTask;
+    [AutoCtor.AutoPostConstruct]
+    private System.Threading.Tasks.Task InitAsync() => System.Threading.Tasks.Task.CompletedTask;
 }

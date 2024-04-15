@@ -5,6 +5,17 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace AutoCtor;
 
 [Generator(LanguageNames.CSharp)]
+public sealed partial class AttributeSourceGenerator : ISourceGenerator
+{
+    public void Initialize(GeneratorInitializationContext context)
+    {
+        context.RegisterForPostInitialization(static c =>
+            c.AddSource(AttributeEmitter.HintName, AttributeEmitter.GenerateSource()));
+    }
+    public void Execute(GeneratorExecutionContext context) { }
+}
+
+[Generator(LanguageNames.CSharp)]
 public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 {
     private sealed class SyntaxContextReceiver(CancellationToken cancellationToken) : ISyntaxContextReceiver
@@ -33,9 +44,6 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
     {
         context.RegisterForSyntaxNotifications(static () =>
             new SyntaxContextReceiver(CancellationToken.None));
-
-        context.RegisterForPostInitialization(static c =>
-            c.AddSource(AttributeEmitter.HintName, AttributeEmitter.GenerateSource()));
     }
 
     public void Execute(GeneratorExecutionContext executionContext)

@@ -13,11 +13,13 @@ public enum GuardSetting
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoConstructAttribute : Attribute
 {
-    public AutoConstructAttribute(GuardSetting guard = GuardSetting.Default)
-    {
-    }
+    public AutoConstructAttribute(GuardSetting guard = GuardSetting.Default) { }
 }
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoPostConstructAttribute : Attribute;
+
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+[Conditional("AUTOCTOR_USAGES")]
+public sealed class AutoConstructIgnoreAttribute : Attribute;

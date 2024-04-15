@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace AutoCtor;
 
-public partial class AutoConstructSourceGenerator
+public partial class AttributeSourceGenerator
 {
     private static class AttributeEmitter
     {
@@ -35,6 +35,11 @@ public partial class AutoConstructSourceGenerator
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
                 source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]");
                 source.AppendLine("internal sealed class AutoPostConstructAttribute : global::System.Attribute");
+                source.OpenBlock().CloseBlock();
+
+                source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
+                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]");
+                source.AppendLine("internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute");
                 source.OpenBlock().CloseBlock();
             }
             source.AppendLine("#endif");

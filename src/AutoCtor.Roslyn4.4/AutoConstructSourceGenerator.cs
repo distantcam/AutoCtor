@@ -3,6 +3,16 @@
 namespace AutoCtor;
 
 [Generator(LanguageNames.CSharp)]
+public sealed partial class AttributeSourceGenerator : IIncrementalGenerator
+{
+    public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        context.RegisterPostInitializationOutput(static c =>
+            c.AddSource(AttributeEmitter.HintName, AttributeEmitter.GenerateSource()));
+    }
+}
+
+[Generator(LanguageNames.CSharp)]
 public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -30,8 +40,5 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(
             types.Combine(postCtorMethods).Combine(properties),
             Emitter.GenerateSource);
-
-        context.RegisterPostInitializationOutput(static c =>
-            c.AddSource(AttributeEmitter.HintName, AttributeEmitter.GenerateSource()));
     }
 }
