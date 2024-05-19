@@ -61,6 +61,12 @@ snippet: Guards
 
 snippet: GuardsGeneratedCode
 
+### Property Initialisation
+
+AutoCtor can set properties that are considered as read only properties.
+
+snippet: PropertyExamples
+
 ## More examples
 
 You can also initialize readonly fields, and AutoCtor will not include them in the constructor.

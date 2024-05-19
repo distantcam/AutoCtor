@@ -18,18 +18,17 @@ public partial class PostConstructMethod
 
 #endregion
 
-#region PostConstructGeneratedCode
 
 partial class PostConstructMethod
 {
+    #region PostConstructGeneratedCode
     public PostConstructMethod(IService service)
     {
         _service = service;
         Initialize();
     }
+    #endregion
 }
-
-#endregion
 
 #region PostConstructWithParameters
 
@@ -45,15 +44,14 @@ public partial class PostConstructMethodWithParameters
 
 #endregion
 
-#region PostConstructWithParametersGeneratedCode
 
 partial class PostConstructMethodWithParameters
 {
+    #region PostConstructWithParametersGeneratedCode
     public PostConstructMethodWithParameters(IService service, IInitialiseService initialiseService)
     {
         _service = service;
         Initialize(initialiseService);
     }
+    #endregion
 }
-
-#endregion

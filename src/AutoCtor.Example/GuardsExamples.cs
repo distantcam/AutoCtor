@@ -12,14 +12,13 @@ public partial class GuardedClass
 
 #endregion
 
-#region GuardsGeneratedCode
 
 partial class GuardedClass
 {
+    #region GuardsGeneratedCode
     public GuardedClass(Service service)
     {
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
+    #endregion
 }
-
-#endregion
