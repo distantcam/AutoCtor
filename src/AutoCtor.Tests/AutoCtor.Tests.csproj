@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <RoslynVersion>3.11</RoslynVersion>
+    <!--<RoslynVersion>3.11</RoslynVersion>-->
     <!--<RoslynVersion>4.0</RoslynVersion>-->
-    <!--<RoslynVersion>4.4</RoslynVersion>-->
+    <RoslynVersion>4.4</RoslynVersion>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -3,14 +3,16 @@ using System.Collections.Immutable;
 
 internal readonly struct EquatableList<T> : IEquatable<EquatableList<T>>, IReadOnlyList<T>, IEnumerable<T>
 {
-    private static readonly IEqualityComparer<T> s_equalityComparer = EqualityComparer<T>.Default;
+    private readonly IEqualityComparer<T> _equalityComparer;
     private readonly ImmutableArray<T> _data = ImmutableArray<T>.Empty;
     private readonly int _hash = 0;
 
-    public EquatableList(IEnumerable<T> data)
+    public EquatableList(IEnumerable<T> data, IEqualityComparer<T>? equalityComparer = null)
     {
+        _equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
         _data = data.ToImmutableArray();
-        _hash = _data.Aggregate(0, (a, n) => a * 0x29_55_55_A5 + s_equalityComparer.GetHashCode(n));
+        for (var i = 0; i < _data.Length; i++)
+            _hash = _hash * 0x29_55_55_A5 + _equalityComparer.GetHashCode(_data[i]);
     }
 
     public bool Equals(EquatableList<T> other)
@@ -27,8 +29,10 @@ internal readonly struct EquatableList<T> : IEquatable<EquatableList<T>>, IReadO
         var otherEnumerator = other._data.GetEnumerator();
 
         while (thisEnumerator.MoveNext())
-            if (!otherEnumerator.MoveNext() || !s_equalityComparer.Equals(thisEnumerator.Current, otherEnumerator.Current))
+        {
+            if (!otherEnumerator.MoveNext() || !_equalityComparer.Equals(thisEnumerator.Current, otherEnumerator.Current))
                 return false;
+        }
 
         return !otherEnumerator.MoveNext();
     }

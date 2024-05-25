@@ -16,7 +16,7 @@ public partial class AutoConstructSourceGenerator
             SourceProductionContext context,
 #endif
             ((ImmutableArray<TypeModel> Types,
-            ImmutableArray<IMethodSymbol> PostCtorMethods) Models, bool Guards) input)
+            ImmutableArray<PostCtorModel> PostCtorMethods) Models, bool Guards) input)
         {
             if (input.Models.Types.IsDefaultOrEmpty) return;
 
@@ -61,10 +61,10 @@ public partial class AutoConstructSourceGenerator
                 }
 
                 var postCtorMethods = input.Models.PostCtorMethods
-                    .Where(m => TypeModel.CreateKey(m.ContainingType) == type.TypeKey)
+                    .Where(m => TypeModel.CreateKey(m.Method.ContainingType) == type.TypeKey)
                     .ToList();
 
-                var (source, parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
+                var (source, parameters) = GenerateSource(context, type, postCtorMethods.Select(m => m.Method), baseParameters, input.Guards);
 
                 ctorMaps.Add(type.TypeKey, parameters);
 

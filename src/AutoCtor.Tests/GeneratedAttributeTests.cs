@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.CodeAnalysis;
 
 namespace AutoCtor.Tests;
 
@@ -8,7 +9,7 @@ public class GeneratedAttributeTests
     public async Task AttributeGeneratedCode()
     {
         var compilation = await Helpers.Compile([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var generator = new AttributeSourceGenerator();
+        var generator = new AttributeSourceGenerator().AsSourceGenerator();
         var driver = Helpers.CreateDriver([], generator)
             .RunGenerators(compilation);
 
@@ -19,7 +20,7 @@ public class GeneratedAttributeTests
     public async Task AttributeCompilesProperly()
     {
         var compilation = await Helpers.Compile([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var generator = new AttributeSourceGenerator();
+        var generator = new AttributeSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver([], generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 

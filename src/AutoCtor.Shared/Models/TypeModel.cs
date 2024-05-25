@@ -67,7 +67,7 @@ internal record struct TypeModel(
                     IsStatic: false,
                     CanBeReferencedByName: true,
                     IsImplicitlyDeclared: false
-                } && IsValidField(f))),
+                } && IsValidField(f)), CustomSymbolComparer.Default),
 
             Properties: new(type.GetMembers().OfType<IPropertySymbol>()
                 .Where(p => p is
@@ -75,12 +75,18 @@ internal record struct TypeModel(
                     IsStatic: false,
                     CanBeReferencedByName: true,
                     IsImplicitlyDeclared: false,
-                } && IsValidProperty(p))),
+                } && IsValidProperty(p)), CustomSymbolComparer.Default),
 
-            BaseCtorParameters: baseCtorParameters != null ? new(baseCtorParameters) : null,
+            BaseCtorParameters: baseCtorParameters != null
+                ? new(baseCtorParameters, CustomSymbolComparer.Default)
+                : null,
 
-            BaseTypeArguments: genericBaseType ? new(type.BaseType!.TypeArguments) : null,
-            BaseTypeParameters: genericBaseType ? new(type.BaseType!.TypeParameters) : null
+            BaseTypeArguments: genericBaseType
+                ? new(type.BaseType!.TypeArguments, CustomSymbolComparer.Default)
+                : null,
+            BaseTypeParameters: genericBaseType
+                ? new(type.BaseType!.TypeParameters, CustomSymbolComparer.Default)
+                : null
         );
     }
 
@@ -116,6 +122,7 @@ internal record struct TypeModel(
         }
         return depth;
     }
+
     public static string CreateKey(INamedTypeSymbol? type)
     {
         if (type is null)

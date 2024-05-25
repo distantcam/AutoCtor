@@ -36,7 +36,7 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
             Parser.IsMethodDeclaration,
             Parser.GetMarkedMethodSymbol)
             .Where(static s => s is not null)
-            .Select(static (s, ct) => s!)
+            .Select(static (s, ct) => new PostCtorModel(s!))
             .Collect();
 
         context.RegisterSourceOutput(

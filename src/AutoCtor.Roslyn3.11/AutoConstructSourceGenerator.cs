@@ -21,7 +21,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
     private sealed class SyntaxContextReceiver(CancellationToken cancellationToken) : ISyntaxContextReceiver
     {
         public List<TypeModel>? TypeModels { get; private set; }
-        public List<IMethodSymbol>? MarkedMethods { get; private set; }
+        public List<PostCtorModel>? MarkedMethods { get; private set; }
 
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {
@@ -35,7 +35,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
             {
                 var method = Parser.GetMarkedMethodSymbol(context, cancellationToken);
                 if (method != null)
-                    (MarkedMethods ??= []).Add(method);
+                    (MarkedMethods ??= []).Add(new(method));
             }
         }
     }
@@ -63,7 +63,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 
         var models = (
             receiver.TypeModels?.ToImmutableArray() ?? ImmutableArray<TypeModel>.Empty,
-            receiver.MarkedMethods?.ToImmutableArray() ?? ImmutableArray<IMethodSymbol>.Empty
+            receiver.MarkedMethods?.ToImmutableArray() ?? ImmutableArray<PostCtorModel>.Empty
         );
         Emitter.GenerateSource(executionContext, (models, enableGuards));
     }

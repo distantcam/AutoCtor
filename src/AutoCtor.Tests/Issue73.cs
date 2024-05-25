@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace AutoCtor.Tests;
@@ -9,7 +10,7 @@ public class Issue73
     public async Task VerifyGeneratedCode()
     {
         var compilation = await Compile();
-        var generator = new AutoConstructSourceGenerator();
+        var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         var driver = Helpers.CreateDriver([], generator).RunGenerators(compilation);
 
         await Verify(driver).UseDirectory("Verified");
@@ -21,7 +22,7 @@ public class Issue73
         string[] ignoredWarnings = ["CS0414"]; // Ignore unused fields
 
         var compilation = await Compile();
-        var generator = new AutoConstructSourceGenerator();
+        var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver([], generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
@@ -31,7 +32,7 @@ public class Issue73
             .Should().BeEmpty();
     }
 
-    private async Task<CSharpCompilation> Compile()
+    private static async Task<CSharpCompilation> Compile()
     {
         var projectACode = @"
 namespace A

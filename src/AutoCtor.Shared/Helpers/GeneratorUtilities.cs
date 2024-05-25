@@ -35,7 +35,7 @@ internal static class GeneratorUtilities
 
     public static EquatableList<string> GetTypeDeclarations(ITypeSymbol type)
     {
-        var typeDeclarations = new List<string>();
+        var typeDeclarations = new Stack<string>();
         var currentType = type;
         while (currentType is not null)
         {
@@ -50,10 +50,9 @@ internal static class GeneratorUtilities
 
             var staticKeyword = currentType.IsStatic ? "static " : "";
             var typeName = currentType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-            typeDeclarations.Add($"{staticKeyword}partial {typeKeyword} {typeName}");
+            typeDeclarations.Push($"{staticKeyword}partial {typeKeyword} {typeName}");
             currentType = currentType.ContainingType;
         }
-        typeDeclarations.Reverse();
         return new EquatableList<string>(typeDeclarations);
     }
 

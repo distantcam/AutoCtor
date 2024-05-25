@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Xunit.Abstractions;
 
 namespace AutoCtor.Tests;
@@ -12,7 +14,7 @@ public class ExampleTests
     public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
         var compilation = await Helpers.Compile(theoryData.Codes);
-        var generator = new AutoConstructSourceGenerator();
+        var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         var driver = Helpers.CreateDriver(theoryData.Options, generator)
             .RunGenerators(compilation);
 
@@ -26,7 +28,7 @@ public class ExampleTests
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
         var compilation = await Helpers.Compile(theoryData.Codes);
-        var generator = new AutoConstructSourceGenerator();
+        var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver(theoryData.Options, generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
 
@@ -34,6 +36,26 @@ public class ExampleTests
             .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id))
             .Should().BeEmpty();
     }
+
+    [Theory]
+    [MemberData(nameof(GetExamples))]
+    public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
+    {
+        var compilation = await Helpers.Compile(theoryData.Codes);
+        var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
+
+        var driver = Helpers.CreateDriver(theoryData.Options, generator);
+        driver = driver.RunGenerators(compilation);
+        var firstResult = driver.GetRunResult();
+        compilation = compilation.AddSyntaxTrees(CSharpSyntaxTree.ParseText("// dummy"));
+        driver = driver.RunGenerators(compilation);
+        var secondResult = driver.GetRunResult();
+
+        Helpers.AssertRunsEqual(firstResult, secondResult,
+            AutoConstructSourceGenerator.TrackingNames.AllTrackers);
+    }
+
+    // ----------------------------------------------------------------------------------------
 
     private static DirectoryInfo BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
 

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AttributeSourceGenerator.AttributesEmitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Tracking.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Diagnostics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Emitter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Parser.cs" />
@@ -17,8 +18,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneratorUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IsExternalInit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\CustomSymbolComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\EquatableList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ParameterList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PostCtorModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeModel.cs" />
   </ItemGroup>
   <ItemGroup>

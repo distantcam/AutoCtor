@@ -18,23 +18,26 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var properties = context.AnalyzerConfigOptionsProvider
-            .Select(static (p, ct) =>
-            {
-                return p.GlobalOptions.TryGetValue("build_property.AutoCtorGuards", out var value)
-                    && (value.Equals("true", StringComparison.OrdinalIgnoreCase)
-                    || value.Equals("enable", StringComparison.OrdinalIgnoreCase));
-            });
+        .Select(static (p, ct) =>
+        {
+            return p.GlobalOptions.TryGetValue("build_property.AutoCtorGuards", out var value)
+                && (value.Equals("true", StringComparison.OrdinalIgnoreCase)
+                || value.Equals("enable", StringComparison.OrdinalIgnoreCase));
+        })
+        .WithTrackingName(TrackingNames.BuildProperties);
 
         var types = context.SyntaxProvider.ForAttributeWithMetadataName(
             Parser.AutoConstructAttributeFullName,
             Parser.IsTypeDeclaration,
             static (c, ct) => TypeModel.Create((INamedTypeSymbol)c.TargetSymbol))
+        .WithTrackingName(TrackingNames.TypeModels)
         .Collect();
 
         var postCtorMethods = context.SyntaxProvider.ForAttributeWithMetadataName(
             Parser.AutoPostConstructAttributeFullName,
             Parser.IsMethodDeclaration,
-            static (c, ct) => (IMethodSymbol)c.TargetSymbol)
+            static (c, ct) => new PostCtorModel((IMethodSymbol)c.TargetSymbol))
+        .WithTrackingName(TrackingNames.PostCtorMethods)
         .Collect();
 
         context.RegisterSourceOutput(
