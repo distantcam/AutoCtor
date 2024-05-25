@@ -17,7 +17,7 @@ public partial class PropertiesTest
     [AutoCtor.AutoConstructIgnore]
     public string IgnoredProperty { get; }
 
-#if ROSLYN_4_4
+#if ROSLYN_4
     public required string RequiredProperty { get; set; }
 #endif
 }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);ROSLYN_4_4</DefineConstants>
+    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_4</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

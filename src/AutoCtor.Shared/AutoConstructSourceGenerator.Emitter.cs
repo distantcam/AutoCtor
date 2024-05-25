@@ -10,9 +10,9 @@ public partial class AutoConstructSourceGenerator
     private static class Emitter
     {
         public static void GenerateSource(
-#if ROSLYN_3_11
+#if ROSLYN_3
             GeneratorExecutionContext context,
-#elif ROSLYN_4_0 || ROSLYN_4_4
+#elif ROSLYN_4
             SourceProductionContext context,
 #endif
             ((ImmutableArray<TypeModel> Types,
@@ -73,9 +73,9 @@ public partial class AutoConstructSourceGenerator
         }
 
         private static (SourceText, ParameterList) GenerateSource(
-#if ROSLYN_3_11
+#if ROSLYN_3
             GeneratorExecutionContext context,
-#elif ROSLYN_4_0 || ROSLYN_4_4
+#elif ROSLYN_4
             SourceProductionContext context,
 #endif
             TypeModel type,
@@ -151,9 +151,9 @@ $"this.{item.Name} = {item.Parameter};"
         }
 
         private static IMethodSymbol? GetPostCtorMethod(
-#if ROSLYN_3_11
+#if ROSLYN_3
             GeneratorExecutionContext context,
-#elif ROSLYN_4_0 || ROSLYN_4_4
+#elif ROSLYN_4
             SourceProductionContext context,
 #endif
             IEnumerable<IMethodSymbol> markedPostCtorMethods)

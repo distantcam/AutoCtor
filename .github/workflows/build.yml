@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    name: 🛠️ Build and test
+    name: 🛠️ Build
     runs-on: ubuntu-latest
     steps:
       - name: 👨‍💻 Check-out code
@@ -37,29 +37,32 @@ jobs:
       - name: 🛠️ Build code
         run: dotnet build --configuration Release --no-restore
 
-      - name: 🧪 Testing 3.11 code
-        run: >
-          dotnet test
-          --configuration Release
-          -p:RoslynVersion=3.11
-          --logger GitHubActions
-          --
-          RunConfiguration.CollectSourceInformation=true
+  test:
+    name: 🧪 Run tests
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        roslyn: ["3.11", "4.4", "4.6", "4.8"]
+    steps:
+      - name: 👨‍💻 Check-out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: 🧪 Testing 4.0 code
-        run: >
-          dotnet test
-          --configuration Release
-          -p:RoslynVersion=4.0
-          --logger GitHubActions
-          --
-          RunConfiguration.CollectSourceInformation=true
+      - name: 👨‍🔧 Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: src/global.json
 
-      - name: 🧪 Testing 4.4 code
+      - name: 🔍 Enable problem matchers
+        run: echo "::add-matcher::.github/matchers/dotnet.json"
+
+      - name: 🧪 Testing ${{ matrix.roslyn }} code
         run: >
           dotnet test
           --configuration Release
-          -p:RoslynVersion=4.4
+          -p:RoslynVersion=${{ matrix.roslyn }}
           --logger GitHubActions
           --
           RunConfiguration.CollectSourceInformation=true

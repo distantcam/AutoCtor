@@ -1,26 +1,39 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
 
+#if ROSLYN_4
+using FluentAssertions;
+using FluentAssertions.Execution;
+#endif
+
 namespace AutoCtor.Tests;
 
 internal static class Helpers
 {
+#if ROSLYN_3
     public static GeneratorDriver CreateDriver(
         IEnumerable<(string, string)> options,
         params ISourceGenerator[] generators)
-    => CSharpGeneratorDriver.Create(
-        generators: generators,
+    => CSharpGeneratorDriver.Create(generators,
+        parseOptions: CreateParseOptions([]),
+        optionsProvider: new TestAnalyzerConfigOptionsProvider(options));
+#elif ROSLYN_4
+    public static GeneratorDriver CreateDriver(
+        IEnumerable<(string, string)> options,
+        params ISourceGenerator[] generators)
+    => CSharpGeneratorDriver.Create(generators,
         parseOptions: CreateParseOptions([]),
         optionsProvider: new TestAnalyzerConfigOptionsProvider(options),
         driverOptions: new GeneratorDriverOptions(
             disabledOutputs: IncrementalGeneratorOutputKind.None,
-            trackIncrementalGeneratorSteps: true));
+            trackIncrementalGeneratorSteps: true
+        ));
+#endif
+
 
     public static async Task<CSharpCompilation> Compile(
         IEnumerable<string> codes,
@@ -56,14 +69,17 @@ internal static class Helpers
     {
 #if ROSLYN_3_11
         return CSharpParseOptions.Default
-            .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_3_11", .. preprocessorSymbols]))
+            .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_3", "ROSLYN_3_11", .. preprocessorSymbols]))
             .WithLanguageVersion(LanguageVersion.Preview);
-#elif ROSLYN_4_0
-        return CSharpParseOptions.Default
-            .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_4_0", .. preprocessorSymbols]));
 #elif ROSLYN_4_4
         return CSharpParseOptions.Default
-            .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_4_4", .. preprocessorSymbols]));
+            .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_4", "ROSLYN_4_4", .. preprocessorSymbols]));
+#elif ROSLYN_4_6
+        return CSharpParseOptions.Default
+            .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_4", "ROSLYN_4_6", .. preprocessorSymbols]));
+#elif ROSLYN_4_8
+        return CSharpParseOptions.Default
+            .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_4", "ROSLYN_4_8", .. preprocessorSymbols]));
 #endif
     }
 
@@ -82,6 +98,7 @@ internal static class Helpers
             _options.TryGetValue(key, out value);
     }
 
+#if ROSLYN_4
     public static void AssertRunsEqual(
         GeneratorDriverRunResult runResult1,
         GeneratorDriverRunResult runResult2,
@@ -149,4 +166,5 @@ internal static class Helpers
                 $"{stepName} expected to have reason {IncrementalStepRunReason.Cached} or {IncrementalStepRunReason.Unchanged}"));
         }
     }
+#endif
 }

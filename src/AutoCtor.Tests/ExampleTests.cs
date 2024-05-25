@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Xunit.Abstractions;
 
 namespace AutoCtor.Tests;
@@ -37,6 +36,7 @@ public class ExampleTests
             .Should().BeEmpty();
     }
 
+#if ROSLYN_4
     [Theory]
     [MemberData(nameof(GetExamples))]
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
@@ -47,13 +47,15 @@ public class ExampleTests
         var driver = Helpers.CreateDriver(theoryData.Options, generator);
         driver = driver.RunGenerators(compilation);
         var firstResult = driver.GetRunResult();
-        compilation = compilation.AddSyntaxTrees(CSharpSyntaxTree.ParseText("// dummy"));
+        compilation = compilation.AddSyntaxTrees(
+            Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree.ParseText("// dummy"));
         driver = driver.RunGenerators(compilation);
         var secondResult = driver.GetRunResult();
 
         Helpers.AssertRunsEqual(firstResult, secondResult,
             AutoConstructSourceGenerator.TrackingNames.AllTrackers);
     }
+#endif
 
     // ----------------------------------------------------------------------------------------
 
@@ -92,10 +94,12 @@ public class ExampleTests
             {
 #if ROSLYN_3_11
                 VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_3_11")
-#elif ROSLYN_4_0
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_0")
 #elif ROSLYN_4_4
                 VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_4")
+#elif ROSLYN_4_6
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_6")
+#elif ROSLYN_4_8
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_8")
 #endif
             });
         }
