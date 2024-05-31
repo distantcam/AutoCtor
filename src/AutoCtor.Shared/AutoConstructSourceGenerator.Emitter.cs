@@ -3,6 +3,12 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.SymbolDisplayFormat;
 
+#if ROSLYN_3
+using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
+#elif ROSLYN_4
+using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
+#endif
+
 namespace AutoCtor;
 
 [Generator(LanguageNames.CSharp)]
@@ -11,13 +17,9 @@ public partial class AutoConstructSourceGenerator
     private static class Emitter
     {
         public static void GenerateSource(
-#if ROSLYN_3
-            GeneratorExecutionContext context,
-#elif ROSLYN_4
-            SourceProductionContext context,
-#endif
-            ((ImmutableArray<TypeModel> Types,
-            ImmutableArray<PostCtorModel> PostCtorMethods) Models, bool Guards) input)
+            EmitterContext context,
+            ((ImmutableArray<TypeModel> Types, ImmutableArray<PostCtorModel> PostCtorMethods) Models,
+            bool Guards) input)
         {
             if (input.Models.Types.IsDefaultOrEmpty) return;
 
@@ -74,11 +76,7 @@ public partial class AutoConstructSourceGenerator
         }
 
         private static (SourceText, ParameterList) GenerateSource(
-#if ROSLYN_3
-            GeneratorExecutionContext context,
-#elif ROSLYN_4
-            SourceProductionContext context,
-#endif
+            EmitterContext context,
             TypeModel type,
             IEnumerable<IMethodSymbol> markedPostCtorMethods,
             IEnumerable<Parameter>? baseParameters,
@@ -152,18 +150,16 @@ $"this.{item.Name} = {item.Parameter};"
         }
 
         private static IMethodSymbol? GetPostCtorMethod(
-#if ROSLYN_3
-            GeneratorExecutionContext context,
-#elif ROSLYN_4
-            SourceProductionContext context,
-#endif
+            EmitterContext context,
             IEnumerable<IMethodSymbol> markedPostCtorMethods)
         {
             // ACTR001
             if (markedPostCtorMethods.MoreThan(1))
             {
-                foreach (var loc in markedPostCtorMethods.SelectMany(static m => m.Locations))
-                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.AmbiguousMarkedPostConstructMethodWarning, loc));
+                foreach (var m in markedPostCtorMethods)
+                {
+                    ReportDiagnostic(context, m, Diagnostics.AmbiguousMarkedPostConstructMethodWarning);
+                }
                 return null;
             }
 
@@ -175,37 +171,31 @@ $"this.{item.Name} = {item.Parameter};"
             // ACTR002
             if (!method.ReturnsVoid)
             {
-                foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        Diagnostics.PostConstructMethodNotVoidWarning,
-                        loc,
-                        method.ToDisplayString(CSharpShortErrorMessageFormat)));
+                ReportDiagnostic(context, method, Diagnostics.PostConstructMethodNotVoidWarning);
                 return null;
             }
 
             // ACTR003
             if (method.Parameters.Any(static p => p.IsOptional))
             {
-                foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        Diagnostics.PostConstructMethodHasOptionalArgsWarning,
-                        loc,
-                        method.ToDisplayString(CSharpShortErrorMessageFormat)));
+                ReportDiagnostic(context, method, Diagnostics.PostConstructMethodHasOptionalArgsWarning);
                 return null;
             }
 
             // ACTR004
             if (method.IsGenericMethod)
             {
-                foreach (var loc in method.Locations)
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        Diagnostics.PostConstructMethodCannotBeGenericWarning,
-                        loc,
-                        method.ToDisplayString(CSharpShortErrorMessageFormat)));
+                ReportDiagnostic(context, method, Diagnostics.PostConstructMethodCannotBeGenericWarning);
                 return null;
             }
 
             return method;
+        }
+
+        private static void ReportDiagnostic(EmitterContext context, IMethodSymbol method, DiagnosticDescriptor diagnostic)
+        {
+            foreach (var loc in method.Locations)
+                context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, method.ToDisplayString(CSharpShortErrorMessageFormat)));
         }
     }
 }

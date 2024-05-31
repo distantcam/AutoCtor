@@ -59,9 +59,9 @@ public class ExampleTests
 
     // ----------------------------------------------------------------------------------------
 
-    private static DirectoryInfo BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
+    private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
 
-    private static IEnumerable<string> GetExamplesFiles(string path) => Directory.GetFiles(Path.Combine(BaseDir.FullName, path), "*.cs").Where(e => !e.Contains(".g."));
+    private static IEnumerable<string> GetExamplesFiles(string path) => Directory.GetFiles(Path.Combine(BaseDir?.FullName ?? "", path), "*.cs").Where(e => !e.Contains(".g."));
 
     public static TheoryData<CodeFileTheoryData> GetExamples()
     {
@@ -93,13 +93,13 @@ public class ExampleTests
             data.Add(new CodeFileTheoryData(langExample) with
             {
 #if ROSLYN_3_11
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_3_11")
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", "Verified_3_11")
 #elif ROSLYN_4_4
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_4")
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", "Verified_4_4")
 #elif ROSLYN_4_6
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_6")
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", "Verified_4_6")
 #elif ROSLYN_4_8
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample), "Verified_4_8")
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", "Verified_4_8")
 #endif
             });
         }
@@ -121,7 +121,7 @@ public class ExampleTests
         {
             Name = Path.GetFileNameWithoutExtension(file);
             Codes = [File.ReadAllText(file), .. codes];
-            VerifiedDirectory = Path.Combine(Path.GetDirectoryName(file), "Verified");
+            VerifiedDirectory = Path.Combine(Path.GetDirectoryName(file) ?? "", "Verified");
         }
 
         public CodeFileTheoryData() { }

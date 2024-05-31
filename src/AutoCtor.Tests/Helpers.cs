@@ -38,21 +38,19 @@ internal static class Helpers
     public static async Task<CSharpCompilation> Compile(
         IEnumerable<string> codes,
         string assemblyName = "AutoCtorTest",
-        IEnumerable<string> preprocessorSymbols = default,
-        IEnumerable<MetadataReference> extraReferences = default)
+        IEnumerable<string>? preprocessorSymbols = default,
+        IEnumerable<MetadataReference>? extraReferences = default)
     {
         preprocessorSymbols ??= [];
         extraReferences ??= [];
 
         var references = await new ReferenceAssemblies(
             "net8.0",
-            new PackageIdentity(
-                "Microsoft.NETCore.App.Ref",
-                "8.0.0"),
+            new("Microsoft.NETCore.App.Ref", "8.0.6"),
             Path.Combine("ref", "net8.0"))
             .ResolveAsync(null, CancellationToken.None);
 
-        var attributeReference = MetadataReference.CreateFromFile(Path.Combine(Environment.CurrentDirectory, "AutoCtor.Attributes.dll"));
+        var attributeReference = MetadataReference.CreateFromFile(typeof(AutoConstructAttribute).Assembly.Location);
 
         var options = CreateParseOptions(preprocessorSymbols);
 
@@ -94,7 +92,7 @@ internal static class Helpers
     {
         private readonly Dictionary<string, string> _options
             = options.ToDictionary(e => e.Key, e => e.Value);
-        public override bool TryGetValue(string key, [NotNullWhen(true)] out string value) =>
+        public override bool TryGetValue(string key, [NotNullWhen(true)] out string? value) =>
             _options.TryGetValue(key, out value);
     }
 

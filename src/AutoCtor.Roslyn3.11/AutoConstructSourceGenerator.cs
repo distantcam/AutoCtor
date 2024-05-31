@@ -44,14 +44,14 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
             new SyntaxContextReceiver(CancellationToken.None));
     }
 
-    public void Execute(GeneratorExecutionContext executionContext)
+    public void Execute(GeneratorExecutionContext context)
     {
-        if (executionContext.SyntaxContextReceiver is not SyntaxContextReceiver receiver
+        if (context.SyntaxContextReceiver is not SyntaxContextReceiver receiver
             || receiver.TypeModels == null)
             return;
 
         var enableGuards = false;
-        if (executionContext.AnalyzerConfigOptions.GlobalOptions
+        if (context.AnalyzerConfigOptions.GlobalOptions
             .TryGetValue("build_property.AutoCtorGuards", out var projectGuardSetting))
         {
             enableGuards =
@@ -63,6 +63,6 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
             receiver.TypeModels?.ToImmutableArray() ?? ImmutableArray<TypeModel>.Empty,
             receiver.MarkedMethods?.ToImmutableArray() ?? ImmutableArray<PostCtorModel>.Empty
         );
-        Emitter.GenerateSource(executionContext, (models, enableGuards));
+        Emitter.GenerateSource(context, (models, enableGuards));
     }
 }
