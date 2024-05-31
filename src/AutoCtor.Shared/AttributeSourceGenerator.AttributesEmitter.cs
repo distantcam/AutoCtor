@@ -1,7 +1,9 @@
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
 namespace AutoCtor;
 
+[Generator(LanguageNames.CSharp)]
 public partial class AttributeSourceGenerator
 {
     private static class AttributeEmitter

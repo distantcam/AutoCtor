@@ -5,6 +5,7 @@ using static Microsoft.CodeAnalysis.SymbolDisplayFormat;
 
 namespace AutoCtor;
 
+[Generator(LanguageNames.CSharp)]
 public partial class AutoConstructSourceGenerator
 {
     private static class Emitter

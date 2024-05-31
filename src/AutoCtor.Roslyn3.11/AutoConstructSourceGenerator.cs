@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoCtor;
 
-[Generator(LanguageNames.CSharp)]
 public sealed partial class AttributeSourceGenerator : ISourceGenerator
 {
     public void Initialize(GeneratorInitializationContext context)
@@ -15,7 +14,6 @@ public sealed partial class AttributeSourceGenerator : ISourceGenerator
     public void Execute(GeneratorExecutionContext context) { }
 }
 
-[Generator(LanguageNames.CSharp)]
 public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 {
     private sealed class SyntaxContextReceiver(CancellationToken cancellationToken) : ISyntaxContextReceiver

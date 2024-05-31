@@ -2,7 +2,6 @@
 
 namespace AutoCtor;
 
-[Generator(LanguageNames.CSharp)]
 public sealed partial class AttributeSourceGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -12,7 +11,6 @@ public sealed partial class AttributeSourceGenerator : IIncrementalGenerator
     }
 }
 
-[Generator(LanguageNames.CSharp)]
 public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
