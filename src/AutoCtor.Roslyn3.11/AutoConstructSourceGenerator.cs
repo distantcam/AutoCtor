@@ -33,7 +33,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
             {
                 var method = Parser.GetMarkedMethodSymbol(context, cancellationToken);
                 if (method != null)
-                    (MarkedMethods ??= []).Add(new(method));
+                    (MarkedMethods ??= []).Add(PostCtorModel.Create(method));
             }
         }
     }

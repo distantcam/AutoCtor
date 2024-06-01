@@ -1,9 +1,29 @@
 ﻿using Microsoft.CodeAnalysis;
 
-internal record struct PostCtorModel(IMethodSymbol Method) : IEquatable<PostCtorModel>
+internal record PostCtorModel(
+    string TypeKey,
+    string Name,
+    string ErrorName,
+    bool ReturnsVoid,
+    bool HasOptionalParameters,
+    bool IsGenericMethod,
+
+    EquatableList<ParameterModel> Parameters,
+    EquatableList<Location> Locations
+)
 {
-    public override readonly int GetHashCode() =>
-        Method is null ? 0 : Method.ToDisplayString().GetHashCode();
-    public readonly bool Equals(PostCtorModel other) =>
-        Method is null ? other.Method is null : Method.ToDisplayString().Equals(other.Method.ToDisplayString());
+    public static PostCtorModel Create(IMethodSymbol method)
+    {
+        return new(
+            TypeKey: TypeModel.CreateKey(method.ContainingType),
+            Name: method.Name,
+            ErrorName: method.ToDisplayString(CSharpShortErrorMessageFormat),
+            ReturnsVoid: method.ReturnsVoid,
+            HasOptionalParameters: method.Parameters.Any(static p => p.IsOptional),
+            IsGenericMethod: method.IsGenericMethod,
+
+            Parameters: new(method.Parameters.Select(ParameterModel.Create)),
+            Locations: new(method.Locations)
+        );
+    }
 }

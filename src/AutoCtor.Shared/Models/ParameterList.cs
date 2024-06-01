@@ -1,47 +1,26 @@
 ﻿using System.Collections;
 using Microsoft.CodeAnalysis;
 
-internal record struct Parameter(ITypeSymbol Type, string Name);
-
-internal class ParameterList(IEnumerable<IFieldSymbol> fields, IEnumerable<IPropertySymbol> properties) : IEnumerable<Parameter>
+internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<MemberModel> properties) : IEnumerable<ParameterModel>
 {
-    private readonly Dictionary<IFieldSymbol, Parameter> _fields =
-        fields.ToDictionary<IFieldSymbol, IFieldSymbol, Parameter>(
-            f => f,
-            f => new Parameter(f.Type, CreateFriendlyName(f)),
-            SymbolEqualityComparer.Default);
-    private readonly Dictionary<IPropertySymbol, Parameter> _properties =
-        properties.ToDictionary<IPropertySymbol, IPropertySymbol, Parameter>(
-            p => p,
-            p => new Parameter(p.Type, CreateFriendlyName(p)),
-            SymbolEqualityComparer.Default);
-    private readonly List<Parameter> _parameters = [];
-    private readonly Dictionary<Parameter, string> _uniqueNames = [];
-    private IEnumerable<Parameter> _postCtorParameters = [];
+    private readonly Dictionary<MemberModel, ParameterModel> _memberToParameterMap =
+        fields.Concat(properties)
+        .ToDictionary(m => m, m => new ParameterModel(m.FriendlyName, m.TypeName));
+
+    private readonly List<ParameterModel> _parameters = [];
+    private readonly Dictionary<ParameterModel, string> _uniqueNames = [];
+    private IEnumerable<ParameterModel> _postCtorParameters = [];
 
     public bool HasBaseParameters => _parameters?.Any() == true;
 
-    public void AddParameters(IEnumerable<IParameterSymbol> parameters)
+    public void AddParameters(IEnumerable<ParameterModel> parameters)
     {
-        foreach (var p in parameters)
-        {
-            _parameters.Add(new Parameter(p.Type, CreateFriendlyName(p)));
-        }
+        _parameters.AddRange(parameters);
     }
 
-    public void AddBaseParameters(IEnumerable<Parameter> baseParameters)
+    public void AddPostCtorParameters(IEnumerable<ParameterModel> parameters)
     {
-        foreach (var p in baseParameters)
-        {
-            _parameters.Add(new Parameter(p.Type, p.Name));
-        }
-    }
-
-    public void AddPostCtorParameters(IEnumerable<IParameterSymbol> parameters)
-    {
-        _postCtorParameters = parameters
-            .Select(p => new Parameter(p.Type, CreateFriendlyName(p)))
-            .ToArray();
+        _postCtorParameters = parameters;
     }
 
     public void MakeUniqueNames()
@@ -67,7 +46,7 @@ internal class ParameterList(IEnumerable<IFieldSymbol> fields, IEnumerable<IProp
     public string ToParameterString()
     {
         return _uniqueNames
-            .Select(u => $"{u.Key.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)} {u.Value}")
+            .Select(u => $"{u.Key.TypeName} {u.Value}")
             .AsCommaSeparated();
     }
 
@@ -81,36 +60,13 @@ internal class ParameterList(IEnumerable<IFieldSymbol> fields, IEnumerable<IProp
         return _postCtorParameters.Select(p => _uniqueNames[p]).AsCommaSeparated();
     }
 
-    public string ParameterName(IFieldSymbol f) => _uniqueNames[_fields[f]];
-    public string ParameterName(IPropertySymbol p) => _uniqueNames[_properties[p]];
+    public string ParameterName(MemberModel f) => _uniqueNames[_memberToParameterMap[f]];
 
-    public IEnumerable<Parameter> BaseParameters() => _parameters;
+    public IEnumerable<ParameterModel> BaseParameters() => _parameters;
 
-    public IEnumerator<Parameter> GetEnumerator() => _parameters
-        .Concat(_fields.Values)
-        .Concat(_properties.Values)
+    public IEnumerator<ParameterModel> GetEnumerator() => _parameters
+        .Concat(_memberToParameterMap.Values)
         .Concat(_postCtorParameters)
         .GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    private static string CreateFriendlyName(IFieldSymbol field)
-    {
-        if (field.Name.Length > 1 && field.Name[0] == '_')
-        {
-            // Chop off the underscore at the start
-            return field.Name.Substring(1).EscapeKeywordIdentifier();
-        }
-        return field.Name.EscapeKeywordIdentifier();
-    }
-
-    private static string CreateFriendlyName(IPropertySymbol property)
-    {
-        var name = new string([char.ToLower(property.Name[0]), .. property.Name.Substring(1)]);
-        return name.EscapeKeywordIdentifier();
-    }
-
-    private static string CreateFriendlyName(IParameterSymbol parameter)
-    {
-        return parameter.Name.EscapeKeywordIdentifier();
-    }
 }

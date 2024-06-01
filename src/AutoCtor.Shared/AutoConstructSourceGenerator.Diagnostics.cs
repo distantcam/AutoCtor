@@ -6,6 +6,10 @@ public partial class AutoConstructSourceGenerator
 {
     private static class Diagnostics
     {
+        /// <summary>
+        /// Id: ACTR001<br />
+        /// Title: Ambiguous marked post constructor method
+        /// </summary>
         public static readonly DiagnosticDescriptor AmbiguousMarkedPostConstructMethodWarning = new(
             id: "ACTR001",
             title: "Ambiguous marked post constructor method",
@@ -14,6 +18,10 @@ public partial class AutoConstructSourceGenerator
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true);
 
+        /// <summary>
+        /// Id: ACTR002<br />
+        /// Title: Post construct method must return void
+        /// </summary>
         public static readonly DiagnosticDescriptor PostConstructMethodNotVoidWarning = new(
             id: "ACTR002",
             title: "Post construct method must return void",
@@ -22,6 +30,10 @@ public partial class AutoConstructSourceGenerator
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true);
 
+        /// <summary>
+        /// Id: ACTR003<br />
+        /// Title: Post construct method must not have any optional arguments
+        /// </summary>
         public static readonly DiagnosticDescriptor PostConstructMethodHasOptionalArgsWarning = new(
             id: "ACTR003",
             title: "Post construct method must not have any optional arguments",
@@ -30,6 +42,10 @@ public partial class AutoConstructSourceGenerator
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true);
 
+        /// <summary>
+        /// Id: ACTR004<br />
+        /// Title: Post construct method must not be generic
+        /// </summary>
         public static readonly DiagnosticDescriptor PostConstructMethodCannotBeGenericWarning = new(
             id: "ACTR004",
             title: "Post construct method must not be generic",

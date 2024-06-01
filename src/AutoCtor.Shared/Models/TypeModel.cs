@@ -1,7 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.SymbolDisplayFormat;
 
 internal record struct TypeModel(
     int Depth,
@@ -19,11 +18,11 @@ internal record struct TypeModel(
     bool? Guard,
 
     EquatableList<string> TypeDeclarations,
-    EquatableList<IFieldSymbol> Fields,
-    EquatableList<IPropertySymbol> Properties,
-    EquatableList<IParameterSymbol>? BaseCtorParameters,
-    EquatableList<ITypeSymbol>? BaseTypeArguments,
-    EquatableList<ITypeParameterSymbol>? BaseTypeParameters
+    EquatableList<MemberModel> Fields,
+    EquatableList<MemberModel> Properties,
+    EquatableList<ParameterModel>? BaseCtorParameters,
+    EquatableList<string>? BaseTypeArguments,
+    EquatableList<string>? BaseTypeParameters
 ) : IPartialTypeModel
 {
     readonly IReadOnlyList<string> IPartialTypeModel.TypeDeclarations => TypeDeclarations;
@@ -67,7 +66,8 @@ internal record struct TypeModel(
                     IsStatic: false,
                     CanBeReferencedByName: true,
                     IsImplicitlyDeclared: false
-                } && IsValidField(f)), CustomSymbolComparer.Default),
+                } && IsValidField(f))
+                .Select(MemberModel.Create)),
 
             Properties: new(type.GetMembers().OfType<IPropertySymbol>()
                 .Where(p => p is
@@ -75,17 +75,18 @@ internal record struct TypeModel(
                     IsStatic: false,
                     CanBeReferencedByName: true,
                     IsImplicitlyDeclared: false,
-                } && IsValidProperty(p)), CustomSymbolComparer.Default),
+                } && IsValidProperty(p))
+                .Select(MemberModel.Create)),
 
             BaseCtorParameters: baseCtorParameters != null
-                ? new(baseCtorParameters, CustomSymbolComparer.Default)
+                ? new(baseCtorParameters.Value.Select(ParameterModel.Create))
                 : null,
 
             BaseTypeArguments: genericBaseType
-                ? new(type.BaseType!.TypeArguments, CustomSymbolComparer.Default)
+                ? new(type.BaseType!.TypeArguments.Select(t => t.ToDisplayString(FullyQualifiedFormat)))
                 : null,
             BaseTypeParameters: genericBaseType
-                ? new(type.BaseType!.TypeParameters, CustomSymbolComparer.Default)
+                ? new(type.BaseType!.TypeParameters.Select(t => t.ToDisplayString(FullyQualifiedFormat)))
                 : null
         );
     }

@@ -1,7 +1,6 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using static Microsoft.CodeAnalysis.SymbolDisplayFormat;
 
 #if ROSLYN_3
 using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
@@ -30,7 +29,7 @@ public partial class AutoConstructSourceGenerator
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
-                IEnumerable<Parameter>? baseParameters = default;
+                IEnumerable<ParameterModel>? baseParameters = default;
 
                 if (type.HasBaseType)
                 {
@@ -38,20 +37,20 @@ public partial class AutoConstructSourceGenerator
                     {
                         if (ctorMaps.TryGetValue(type.BaseTypeKey, out var temp))
                         {
-                            var baseParameterList = new List<Parameter>();
+                            var baseParameterList = new List<ParameterModel>();
                             foreach (var bp in temp)
                             {
                                 var bpName = bp.Name;
-                                var bpType = bp.Type;
+                                var bpType = bp.TypeName;
                                 for (var i = 0; i < type.BaseTypeParameters.Value.Count; i++)
                                 {
-                                    if (SymbolEqualityComparer.Default.Equals(type.BaseTypeParameters.Value[i], bp.Type))
+                                    if (string.Equals(type.BaseTypeParameters.Value[i], bp.TypeName))
                                     {
                                         bpType = type.BaseTypeArguments.Value[i];
                                         break;
                                     }
                                 }
-                                baseParameterList.Add(new Parameter(bpType, bpName));
+                                baseParameterList.Add(new ParameterModel(bpName, bpType));
                             }
                             baseParameters = baseParameterList;
                         }
@@ -64,10 +63,10 @@ public partial class AutoConstructSourceGenerator
                 }
 
                 var postCtorMethods = input.Models.PostCtorMethods
-                    .Where(m => TypeModel.CreateKey(m.Method.ContainingType) == type.TypeKey)
+                    .Where(m => m.TypeKey == type.TypeKey)
                     .ToList();
 
-                var (source, parameters) = GenerateSource(context, type, postCtorMethods.Select(m => m.Method), baseParameters, input.Guards);
+                var (source, parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
 
                 ctorMaps.Add(type.TypeKey, parameters);
 
@@ -78,8 +77,8 @@ public partial class AutoConstructSourceGenerator
         private static (SourceText, ParameterList) GenerateSource(
             EmitterContext context,
             TypeModel type,
-            IEnumerable<IMethodSymbol> markedPostCtorMethods,
-            IEnumerable<Parameter>? baseParameters,
+            IEnumerable<PostCtorModel> markedPostCtorMethods,
+            IEnumerable<ParameterModel>? baseParameters,
             bool guards)
         {
             var postCtorMethod = GetPostCtorMethod(context, markedPostCtorMethods);
@@ -93,7 +92,7 @@ public partial class AutoConstructSourceGenerator
                 }
                 else if (baseParameters != null)
                 {
-                    parameters.AddBaseParameters(baseParameters);
+                    parameters.AddParameters(baseParameters);
                 }
             }
             if (postCtorMethod != null)
@@ -122,21 +121,21 @@ public partial class AutoConstructSourceGenerator
                 using (source.StartBlock())
                 {
                     var items = type.Fields
-                        .Select(f => (f.Type.IsReferenceType, Name: f.Name.EscapeKeywordIdentifier(), Parameter: parameters.ParameterName(f)))
+                        .Select(f => (f.IsReferenceType, Name: f.IdentifierName, Parameter: parameters.ParameterName(f)))
                         .Concat(type.Properties
-                        .Select(p => (p.Type.IsReferenceType, Name: p.Name.EscapeKeywordIdentifier(), Parameter: parameters.ParameterName(p))));
+                        .Select(p => (p.IsReferenceType, Name: p.IdentifierName, Parameter: parameters.ParameterName(p))));
 
-                    foreach (var item in items)
+                    foreach (var (IsReferenceType, Name, Parameter) in items)
                     {
                         if (((type.Guard.HasValue && type.Guard.Value) ||
                             (!type.Guard.HasValue && guards)) &&
-                            item.IsReferenceType)
+                            IsReferenceType)
                             source.AppendLine(
-$"this.{item.Name} = {item.Parameter} ?? throw new global::System.ArgumentNullException(\"{item.Parameter}\");"
+$"this.{Name} = {Parameter} ?? throw new global::System.ArgumentNullException(\"{Parameter}\");"
                             );
                         else
                             source.AppendLine(
-$"this.{item.Name} = {item.Parameter};"
+$"this.{Name} = {Parameter};"
                             );
                     }
                     if (postCtorMethod != null)
@@ -149,9 +148,9 @@ $"this.{item.Name} = {item.Parameter};"
             return (source, parameters);
         }
 
-        private static IMethodSymbol? GetPostCtorMethod(
+        private static PostCtorModel? GetPostCtorMethod(
             EmitterContext context,
-            IEnumerable<IMethodSymbol> markedPostCtorMethods)
+            IEnumerable<PostCtorModel> markedPostCtorMethods)
         {
             // ACTR001
             if (markedPostCtorMethods.MoreThan(1))
@@ -176,7 +175,7 @@ $"this.{item.Name} = {item.Parameter};"
             }
 
             // ACTR003
-            if (method.Parameters.Any(static p => p.IsOptional))
+            if (method.HasOptionalParameters)
             {
                 ReportDiagnostic(context, method, Diagnostics.PostConstructMethodHasOptionalArgsWarning);
                 return null;
@@ -192,10 +191,10 @@ $"this.{item.Name} = {item.Parameter};"
             return method;
         }
 
-        private static void ReportDiagnostic(EmitterContext context, IMethodSymbol method, DiagnosticDescriptor diagnostic)
+        private static void ReportDiagnostic(EmitterContext context, PostCtorModel method, DiagnosticDescriptor diagnostic)
         {
             foreach (var loc in method.Locations)
-                context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, method.ToDisplayString(CSharpShortErrorMessageFormat)));
+                context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, method.ErrorName));
         }
     }
 }

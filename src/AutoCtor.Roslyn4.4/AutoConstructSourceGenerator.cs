@@ -34,7 +34,7 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         var postCtorMethods = context.SyntaxProvider.ForAttributeWithMetadataName(
             Parser.AutoPostConstructAttributeFullName,
             Parser.IsMethodDeclaration,
-            static (c, ct) => new PostCtorModel((IMethodSymbol)c.TargetSymbol))
+            static (c, ct) => PostCtorModel.Create((IMethodSymbol)c.TargetSymbol))
         .WithTrackingName(TrackingNames.PostCtorMethods)
         .Collect();
 
