@@ -90,17 +90,20 @@ public class ExampleTests
 
         foreach (var langExample in GetExamplesFiles("LangExamples"))
         {
+#if ROSLYN_3_11
+            var verifiedName = "Verified_3_11";
+#elif ROSLYN_4_4
+            var verifiedName = "Verified_4_4";
+#elif ROSLYN_4_6
+            var verifiedName = "Verified_4_6";
+#elif ROSLYN_4_8
+            var verifiedName = "Verified_4_8";
+#elif ROSLYN_4_10
+            var verifiedName = "Verified_4_10";
+#endif
             data.Add(new CodeFileTheoryData(langExample) with
             {
-#if ROSLYN_3_11
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", "Verified_3_11")
-#elif ROSLYN_4_4
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", "Verified_4_4")
-#elif ROSLYN_4_6
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", "Verified_4_6")
-#elif ROSLYN_4_8
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", "Verified_4_8")
-#endif
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", verifiedName)
             });
         }
 

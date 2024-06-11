@@ -78,6 +78,9 @@ internal static class Helpers
 #elif ROSLYN_4_8
         return CSharpParseOptions.Default
             .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_4", "ROSLYN_4_8", .. preprocessorSymbols]));
+#elif ROSLYN_4_10
+        return CSharpParseOptions.Default
+            .WithPreprocessorSymbols(ImmutableArray.Create(["ROSLYN_4", "ROSLYN_4_10", .. preprocessorSymbols]));
 #endif
     }
 

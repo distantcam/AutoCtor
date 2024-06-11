@@ -7,10 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <RoslynVersion>3.11</RoslynVersion>
+    <!--<RoslynVersion>3.11</RoslynVersion>-->
     <!--<RoslynVersion>4.4</RoslynVersion>-->
     <!--<RoslynVersion>4.6</RoslynVersion>-->
     <!--<RoslynVersion>4.8</RoslynVersion>-->
+    <RoslynVersion>4.10</RoslynVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -36,6 +37,11 @@
   <PropertyGroup Condition=" '$(RoslynVersion)' == '4.8' ">
     <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_8</DefineConstants>
     <RoslynLibVersion>4.8.0</RoslynLibVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RoslynVersion)' == '4.10' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_10</DefineConstants>
+    <RoslynLibVersion>4.10.0</RoslynLibVersion>
   </PropertyGroup>
 
   <ItemGroup>
