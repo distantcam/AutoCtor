@@ -14,11 +14,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Diagnostics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Emitter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Parser.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneratorUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IsExternalInit.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\EquatableList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MemberModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ParameterModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ParameterList.cs" />
