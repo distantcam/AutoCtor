@@ -55,8 +55,8 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
 }
 ";
 
-        var projectA = await Helpers.Compile([projectACode], "ProjectA");
-        var projectB = await Helpers.Compile([projectBCode], "ProjectB",
+        var projectA = await Helpers.Compile<AutoConstructAttribute>([projectACode], "ProjectA");
+        var projectB = await Helpers.Compile<AutoConstructAttribute>([projectBCode], "ProjectB",
             extraReferences: [projectA.ToMetadataReference()]);
 
         return projectB;

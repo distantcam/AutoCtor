@@ -12,7 +12,7 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
-        var compilation = await Helpers.Compile(theoryData.Codes);
+        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         var driver = Helpers.CreateDriver(theoryData.Options, generator)
             .RunGenerators(compilation);
@@ -26,7 +26,7 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
-        var compilation = await Helpers.Compile(theoryData.Codes);
+        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver(theoryData.Options, generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
@@ -41,7 +41,7 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
     {
-        var compilation = await Helpers.Compile(theoryData.Codes);
+        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
 
         var driver = Helpers.CreateDriver(theoryData.Options, generator);
@@ -108,48 +108,5 @@ public class ExampleTests
         }
 
         return data;
-    }
-
-    public record CodeFileTheoryData : IXunitSerializable
-    {
-        public required string Name { get; set; }
-        public required string[] Codes { get; set; }
-        public required string VerifiedDirectory { get; set; }
-
-        public (string, string)[] Options { get; set; } = [];
-        public string[] IgnoredCompileDiagnostics { get; set; } = [];
-
-        [SetsRequiredMembers]
-        public CodeFileTheoryData(string file, params string[] codes)
-        {
-            Name = Path.GetFileNameWithoutExtension(file);
-            Codes = [File.ReadAllText(file), .. codes];
-            VerifiedDirectory = Path.Combine(Path.GetDirectoryName(file) ?? "", "Verified");
-        }
-
-        public CodeFileTheoryData() { }
-
-        public void Deserialize(IXunitSerializationInfo info)
-        {
-            Name = info.GetValue<string>(nameof(Name));
-            Codes = info.GetValue<string[]>(nameof(Codes));
-            VerifiedDirectory = info.GetValue<string>(nameof(VerifiedDirectory));
-            Options = info.GetValue<string[]>(nameof(Options))
-                .Select(o => o.Split('|'))
-                .Select(o => (o[0], o[1]))
-                .ToArray();
-            IgnoredCompileDiagnostics = info.GetValue<string[]>(nameof(IgnoredCompileDiagnostics));
-        }
-
-        public void Serialize(IXunitSerializationInfo info)
-        {
-            info.AddValue(nameof(Name), Name);
-            info.AddValue(nameof(Codes), Codes);
-            info.AddValue(nameof(VerifiedDirectory), VerifiedDirectory);
-            info.AddValue(nameof(Options), Options.Select(o => $"{o.Item1}|{o.Item2}").ToArray());
-            info.AddValue(nameof(IgnoredCompileDiagnostics), IgnoredCompileDiagnostics);
-        }
-
-        public override string ToString() => Name + ".cs";
     }
 }
