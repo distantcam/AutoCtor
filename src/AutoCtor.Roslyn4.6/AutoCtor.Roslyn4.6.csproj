@@ -11,4 +11,8 @@
 
   <Import Project="../Common.props" />
 
+  <ItemGroup>
+    <PackageReference Update="AutoHelpers" Version="0.2.0" />
+  </ItemGroup>
+
 </Project>
