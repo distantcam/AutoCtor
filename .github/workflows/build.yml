@@ -43,7 +43,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        roslyn: ["3.11", "4.4", "4.6", "4.8"]
+        roslyn: ["3.11", "4.4", "4.6", "4.8", "4.10"]
     steps:
       - name: 👨‍💻 Check-out code
         uses: actions/checkout@v4
