@@ -12,7 +12,9 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
-        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes);
+
+        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
+            preprocessorSymbols: PreprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         var driver = Helpers.CreateDriver(theoryData.Options, generator)
             .RunGenerators(compilation);
@@ -26,7 +28,8 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
-        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes);
+        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
+            preprocessorSymbols: PreprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver(theoryData.Options, generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
@@ -41,7 +44,8 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
     {
-        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes);
+        var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
+            preprocessorSymbols: PreprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
 
         var driver = Helpers.CreateDriver(theoryData.Options, generator);
@@ -58,6 +62,13 @@ public class ExampleTests
 #endif
 
     // ----------------------------------------------------------------------------------------
+
+    private static IEnumerable<string> PreprocessorSymbols =
+#if ROSLYN_3
+        ["ROSLYN_3"];
+#elif ROSLYN_4
+        ["ROSLYN_4"];
+#endif
 
     private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
 
