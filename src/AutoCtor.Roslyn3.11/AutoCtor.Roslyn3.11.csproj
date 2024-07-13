@@ -5,14 +5,15 @@
     <DefineConstants>$(DefineConstants);ROSLYN_3;ROSLYN_3_11</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" PrivateAssets="all" />
-  </ItemGroup>
-
   <Import Project="../Common.props" />
 
   <ItemGroup>
+    <Compile Include="..\AutoConstructSourceGenerator3.cs" Link="AutoConstructSourceGenerator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Update="AutoHelpers" Version="0.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

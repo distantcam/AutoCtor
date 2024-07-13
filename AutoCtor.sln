@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
@@ -27,8 +26,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Attributes", "src\
 		{D9E8A205-F993-4EBE-B4DA-224234ABC9F3} = {D9E8A205-F993-4EBE-B4DA-224234ABC9F3}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Debug", "src\AutoCtor.Debug\AutoCtor.Debug.csproj", "{3B702044-D3C4-4540-80F8-1A37B65D0AD5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Roslyn3.11", "src\AutoCtor.Roslyn3.11\AutoCtor.Roslyn3.11.csproj", "{ADC68ADD-629A-4A05-8869-CD1ECF2914C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Roslyn4.4", "src\AutoCtor.Roslyn4.4\AutoCtor.Roslyn4.4.csproj", "{56918D57-9044-452E-8830-2739B3BBE9E3}"
@@ -39,7 +36,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Roslyn4.6", "src\A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Roslyn4.8", "src\AutoCtor.Roslyn4.8\AutoCtor.Roslyn4.8.csproj", "{D9E8A205-F993-4EBE-B4DA-224234ABC9F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCtor.Roslyn4.10", "src\AutoCtor.Roslyn4.10\AutoCtor.Roslyn4.10.csproj", "{8456F844-6ED1-441B-9484-87DA1D311ADD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoCtor.Roslyn4.10", "src\AutoCtor.Roslyn4.10\AutoCtor.Roslyn4.10.csproj", "{8456F844-6ED1-441B-9484-87DA1D311ADD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +56,6 @@ Global
 		{638834EA-E4D5-429E-A11E-4BFA91FD59E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{638834EA-E4D5-429E-A11E-4BFA91FD59E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{638834EA-E4D5-429E-A11E-4BFA91FD59E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B702044-D3C4-4540-80F8-1A37B65D0AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B702044-D3C4-4540-80F8-1A37B65D0AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B702044-D3C4-4540-80F8-1A37B65D0AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B702044-D3C4-4540-80F8-1A37B65D0AD5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ADC68ADD-629A-4A05-8869-CD1ECF2914C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ADC68ADD-629A-4A05-8869-CD1ECF2914C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADC68ADD-629A-4A05-8869-CD1ECF2914C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,6 +86,13 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{0381b830-8fd4-4392-a38a-3b2ee86a2094}*SharedItemsImports = 13
 		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{56918d57-9044-452e-8830-2739b3bbe9e3}*SharedItemsImports = 5
+		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{8456f844-6ed1-441b-9484-87da1d311add}*SharedItemsImports = 5
+		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{ab1337d7-350f-4c4c-b6e3-33fca155a7b7}*SharedItemsImports = 5
+		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{adc68add-629a-4a05-8869-cd1ecf2914c1}*SharedItemsImports = 5
+		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{d9e8a205-f993-4ebe-b4da-224234abc9f3}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal
+be9e3}*SharedItemsImports = 5
 		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{8456f844-6ed1-441b-9484-87da1d311add}*SharedItemsImports = 5
 		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{ab1337d7-350f-4c4c-b6e3-33fca155a7b7}*SharedItemsImports = 5
 		src\AutoCtor.Shared\AutoCtor.Shared.projitems*{adc68add-629a-4a05-8869-cd1ecf2914c1}*SharedItemsImports = 5
