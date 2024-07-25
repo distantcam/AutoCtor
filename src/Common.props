@@ -22,11 +22,6 @@
     <AssemblyMetadata Include="PackageProjectUrl" Value="$(PackageProjectUrl)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoHelpers" Version="0.1.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
-  </ItemGroup>
-
   <Import Project="AutoCtor.Shared\AutoCtor.Shared.projitems" Label="Shared" />
 
 </Project>
