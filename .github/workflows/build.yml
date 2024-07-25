@@ -14,43 +14,17 @@ on:
       - main
 
 jobs:
-  build:
-    name: 🛠️ Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: 👨‍💻 Check-out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 👨‍🔧 Setup .NET Core SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          global-json-file: src/global.json
-
-      - name: 🔍 Enable problem matchers
-        run: echo "::add-matcher::.github/matchers/dotnet.json"
-
-      - name: 🎒 Load packages
-        run: dotnet restore
-
-      - name: 🛠️ Build code
-        run: dotnet build --configuration Release --no-restore
-
   test:
     name: 🧪 Run tests
     runs-on: ubuntu-latest
-    needs: build
     strategy:
       matrix:
         roslyn: ["3.11", "4.4", "4.6", "4.8", "4.10"]
     steps:
-      - name: 👨‍💻 Check-out code
+      - name: 🛒 Check-out code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: 👨‍🔧 Setup .NET Core SDK
+      - name: 📐 Setup .NET Core SDK
         uses: actions/setup-dotnet@v4
         with:
           global-json-file: src/global.json
@@ -67,18 +41,15 @@ jobs:
           --
           RunConfiguration.CollectSourceInformation=true
 
-  publish:
-    name: 📦 Publish nuget library
+  build:
+    name: 🛠️ Build
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
-    needs: [build]
     steps:
-      - name: 👨‍💻 Check-out code
+      - name: 🛒 Check-out code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: 👨‍🔧 Setup .NET Core SDK
+      - name: 📐 Setup .NET Core SDK
         uses: actions/setup-dotnet@v4
         with:
           global-json-file: src/global.json
@@ -86,7 +57,7 @@ jobs:
       - name: 🔍 Enable problem matchers
         run: echo "::add-matcher::.github/matchers/dotnet.json"
 
-      - name: 🎒 Load packages
+      - name: 🔧 Load packages
         run: dotnet restore
 
       - name: 🛠️ Build code
@@ -98,5 +69,37 @@ jobs:
           name: nuget
           path: nugets/*.nupkg
 
+  publish:
+    name: 📦 Publish nuget library
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
+    needs: [test, build]
+    steps:
+      - name: 📦 Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget
+
       - name: ✈️ Push Nuget
-        run: dotnet nuget push nugets/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+
+  create-release:
+    name: 📝 Create GitHub Release
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
+    needs: [test, build]
+    permissions:
+      contents: write
+    steps:
+      - name: 🛒 Check-out code
+        uses: actions/checkout@v4
+
+      - name: 📦 Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget
+
+      - name: 📝 Generate Release Notes
+        run: gh release create ${{ github.ref_name }} --generate-notes *.nupkg
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
