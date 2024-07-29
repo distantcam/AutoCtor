@@ -11,4 +11,4 @@ updates:
           - "verify.*"
       xunit:
         patterns:
-          - "xunit"
+          - "xunit*"
