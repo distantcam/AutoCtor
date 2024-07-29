@@ -5,3 +5,10 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    groups:
+      verify:
+        patterns:
+          - "verify.*"
+      xunit:
+        patterns:
+          - "xunit"
