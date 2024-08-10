@@ -11,10 +11,11 @@
 partial class PropertiesTest
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	public PropertiesTest(string getProperty, string protectedProperty, string initProperty)
+	public PropertiesTest(string getProperty, string protectedProperty, string initProperty, string requiredProperty)
 	{
 		this.GetProperty = getProperty;
 		this.ProtectedProperty = protectedProperty;
 		this.InitProperty = initProperty;
+		this.RequiredProperty = requiredProperty;
 	}
 }

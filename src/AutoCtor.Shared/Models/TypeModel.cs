@@ -27,10 +27,12 @@ internal record struct TypeModel(
 {
     readonly IReadOnlyList<string> IPartialTypeModel.TypeDeclarations => TypeDeclarations;
 
+    private static string GetTypeFullName(ITypeSymbol t) => t.ToDisplayString(FullyQualifiedFormat);
+
     public static TypeModel Create(INamedTypeSymbol type, AttributeData? attribute = null)
     {
         attribute ??= type.GetAttributes()
-            .First(a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructAttribute");
+            .First(static a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructAttribute");
 
         var guard = ((int?)attribute?.ConstructorArguments[0].Value) switch
         {
@@ -60,7 +62,7 @@ internal record struct TypeModel(
             TypeDeclarations: GeneratorUtilities.GetTypeDeclarations(type),
 
             Fields: new(type.GetMembers().OfType<IFieldSymbol>()
-                .Where(f => f is
+                .Where(static f => f is
                 {
                     IsReadOnly: true,
                     IsStatic: false,
@@ -70,7 +72,7 @@ internal record struct TypeModel(
                 .Select(MemberModel.Create)),
 
             Properties: new(type.GetMembers().OfType<IPropertySymbol>()
-                .Where(p => p is
+                .Where(static p => p is
                 {
                     IsStatic: false,
                     CanBeReferencedByName: true,
@@ -83,10 +85,10 @@ internal record struct TypeModel(
                 : null,
 
             BaseTypeArguments: genericBaseType
-                ? new(type.BaseType!.TypeArguments.Select(t => t.ToDisplayString(FullyQualifiedFormat)))
+                ? new(type.BaseType!.TypeArguments.Select(GetTypeFullName))
                 : null,
             BaseTypeParameters: genericBaseType
-                ? new(type.BaseType!.TypeParameters.Select(t => t.ToDisplayString(FullyQualifiedFormat)))
+                ? new(type.BaseType!.TypeParameters.Select(GetTypeFullName))
                 : null
         );
     }
@@ -100,7 +102,7 @@ internal record struct TypeModel(
             return false;
 
         if (ctor.GetAttributes()
-            .Any(a => a.AttributeClass?.ToDisplayString(FullyQualifiedFormat) == "global::System.ObsoleteAttribute"))
+            .Any(static a => a.AttributeClass?.ToDisplayString(FullyQualifiedFormat) == "global::System.ObsoleteAttribute"))
             return false;
 
         // Don't use the record clone ctor
@@ -164,11 +166,11 @@ internal record struct TypeModel(
             return false;
 
         if (!(property.IsReadOnly ||
-#if ROSLYN_4_4
+#if ROSLYN_4
             property.IsRequired ||
 #endif
             propertySyntax.AccessorList?.Accessors
-            .Any(a => a.Kind() == SyntaxKind.InitAccessorDeclaration) == true))
+            .Any(static a => a.Kind() == SyntaxKind.InitAccessorDeclaration) == true))
             return false;
 
         if (HasIgnoreAttribute(property.GetAttributes()))
@@ -178,5 +180,5 @@ internal record struct TypeModel(
     }
 
     private static bool HasIgnoreAttribute(IEnumerable<AttributeData> attributes) =>
-        attributes.Any(a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructIgnoreAttribute");
+        attributes.Any(static a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructIgnoreAttribute");
 }
