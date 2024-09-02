@@ -21,22 +21,22 @@
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '3.11' ">
     <DefineConstants>$(DefineConstants);ROSLYN_3;ROSLYN_3_11</DefineConstants>
-    <RoslynLibVersion>3.11.0</RoslynLibVersion>
+    <RoslynLibVersion>4.10.0</RoslynLibVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '4.4' ">
     <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_4</DefineConstants>
-    <RoslynLibVersion>4.4.0</RoslynLibVersion>
+    <RoslynLibVersion>4.10.0</RoslynLibVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '4.6' ">
     <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_6</DefineConstants>
-    <RoslynLibVersion>4.6.0</RoslynLibVersion>
+    <RoslynLibVersion>4.10.0</RoslynLibVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '4.8' ">
     <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_8</DefineConstants>
-    <RoslynLibVersion>4.8.0</RoslynLibVersion>
+    <RoslynLibVersion>4.10.0</RoslynLibVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RoslynVersion)' == '4.10' ">
