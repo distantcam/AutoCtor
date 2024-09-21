@@ -1,14 +1,24 @@
 ﻿{
   Diagnostics: [
     {
-      Id: ACTR004,
-      Title: Post construct method must not be generic,
+      Location: /*
+    [AutoCtor.AutoPostConstruct]
+    private void Initialize<T>(T t)
+                 ^^^^^^^^^^
+    {
+*/
+ : (6,17)-(6,27),
+      Message: The method 'PostCtorWithGenericTest.Initialize<T>(T)' must not be generic to be used as the post construct method,
       Severity: Warning,
       WarningLevel: 1,
-      Location: : (6,17)-(6,27),
-      MessageFormat: The method '{0}' must not be generic to be used as the post construct method,
-      Message: The method 'PostCtorWithGenericTest.Initialize<T>(T)' must not be generic to be used as the post construct method,
-      Category: AutoCtor
+      Descriptor: {
+        Id: ACTR004,
+        Title: Post construct method must not be generic,
+        MessageFormat: The method '{0}' must not be generic to be used as the post construct method,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
     }
   ]
 }

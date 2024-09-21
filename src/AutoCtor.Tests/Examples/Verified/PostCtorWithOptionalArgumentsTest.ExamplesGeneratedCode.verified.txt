@@ -1,14 +1,24 @@
 ﻿{
   Diagnostics: [
     {
-      Id: ACTR003,
-      Title: Post construct method must not have any optional arguments,
+      Location: /*
+    [AutoCtor.AutoPostConstruct]
+    private void Initialize(IB b = null)
+                 ^^^^^^^^^^
+    {
+*/
+ : (6,17)-(6,27),
+      Message: The method 'PostCtorWithOptionalArgumentsTest.Initialize(IB)' must not have optional arguments to be used as the post construct method,
       Severity: Warning,
       WarningLevel: 1,
-      Location: : (6,17)-(6,27),
-      MessageFormat: The method '{0}' must not have optional arguments to be used as the post construct method,
-      Message: The method 'PostCtorWithOptionalArgumentsTest.Initialize(IB)' must not have optional arguments to be used as the post construct method,
-      Category: AutoCtor
+      Descriptor: {
+        Id: ACTR003,
+        Title: Post construct method must not have any optional arguments,
+        MessageFormat: The method '{0}' must not have optional arguments to be used as the post construct method,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
     }
   ]
 }

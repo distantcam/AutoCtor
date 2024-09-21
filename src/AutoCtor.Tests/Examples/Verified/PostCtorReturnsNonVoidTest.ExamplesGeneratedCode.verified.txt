@@ -1,14 +1,24 @@
 ﻿{
   Diagnostics: [
     {
-      Id: ACTR002,
-      Title: Post construct method must return void,
+      Location: /*
+    [AutoCtor.AutoPostConstruct]
+    private System.Threading.Tasks.Task InitAsync() => System.Threading.Tasks.Task.CompletedTask;
+                                        ^^^^^^^^^
+}
+*/
+ : (6,40)-(6,49),
+      Message: The method 'PostCtorReturnsNonVoidTest.InitAsync()' must return void to be used as the post construct method,
       Severity: Warning,
       WarningLevel: 1,
-      Location: : (6,40)-(6,49),
-      MessageFormat: The method '{0}' must return void to be used as the post construct method,
-      Message: The method 'PostCtorReturnsNonVoidTest.InitAsync()' must return void to be used as the post construct method,
-      Category: AutoCtor
+      Descriptor: {
+        Id: ACTR002,
+        Title: Post construct method must return void,
+        MessageFormat: The method '{0}' must return void to be used as the post construct method,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
     }
   ]
 }

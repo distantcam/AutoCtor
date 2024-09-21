@@ -1,24 +1,44 @@
 ﻿{
   Diagnostics: [
     {
-      Id: ACTR001,
-      Title: Ambiguous marked post constructor method,
+      Location: /*
+    [AutoCtor.AutoPostConstruct]
+    private void Initialize()
+                 ^^^^^^^^^^
+    {
+*/
+ : (6,17)-(6,27),
+      Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Severity: Warning,
       WarningLevel: 1,
-      Location: : (6,17)-(6,27),
-      MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
-      Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
-      Category: AutoCtor
+      Descriptor: {
+        Id: ACTR001,
+        Title: Ambiguous marked post constructor method,
+        MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
     },
     {
-      Id: ACTR001,
-      Title: Ambiguous marked post constructor method,
+      Location: /*
+    [AutoCtor.AutoPostConstruct]
+    private void Initialize(IB b)
+                 ^^^^^^^^^^
+    {
+*/
+ : (11,17)-(11,27),
+      Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Severity: Warning,
       WarningLevel: 1,
-      Location: : (11,17)-(11,27),
-      MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
-      Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
-      Category: AutoCtor
+      Descriptor: {
+        Id: ACTR001,
+        Title: Ambiguous marked post constructor method,
+        MessageFormat: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
     }
   ]
 }
