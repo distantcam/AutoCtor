@@ -40,17 +40,12 @@ public partial class AutoConstructSourceGenerator
                             var baseParameterList = new List<ParameterModel>();
                             foreach (var bp in temp)
                             {
-                                var bpName = bp.Name;
-                                var bpType = bp.TypeName;
-                                for (var i = 0; i < type.BaseTypeParameters.Value.Count; i++)
-                                {
-                                    if (string.Equals(type.BaseTypeParameters.Value[i], bp.TypeName))
-                                    {
-                                        bpType = type.BaseTypeArguments.Value[i];
-                                        break;
-                                    }
-                                }
-                                baseParameterList.Add(new ParameterModel(bpName, bpType));
+                                var bpType = SetGenerics(
+                                    bp.Type.TypeSymbol,
+                                    type.BaseTypeParameters.Value,
+                                    type.BaseTypeArguments.Value);
+
+                                baseParameterList.Add(new(bp.Name, new(bpType)));
                             }
                             baseParameters = baseParameterList;
                         }
@@ -146,6 +141,41 @@ $"this.{Name} = {Parameter};"
             }
 
             return (source, parameters);
+        }
+
+        private static ITypeSymbol FindTypeForArgument(ITypeSymbol type, EquatableList<EquatableTypeSymbol> parameters, EquatableList<EquatableTypeSymbol> arguments)
+        {
+            if (type is not ITypeParameterSymbol)
+                return type;
+            var eqType = new EquatableTypeSymbol(type);
+            for (var i = 0; i < parameters.Count; i++)
+            {
+                if (parameters[i] == eqType)
+                {
+                    return arguments[i].TypeSymbol;
+                }
+            }
+            return type;
+        }
+
+        private static ITypeSymbol SetGenerics(ITypeSymbol type, EquatableList<EquatableTypeSymbol> parameters, EquatableList<EquatableTypeSymbol> arguments)
+        {
+            if (type is ITypeParameterSymbol typeParam)
+            {
+                return FindTypeForArgument(typeParam, parameters, arguments);
+            }
+
+            if (type is INamedTypeSymbol namedType)
+            {
+                if (!namedType.IsGenericType)
+                    return FindTypeForArgument(namedType, parameters, arguments);
+
+                var typeArgs = namedType.TypeArguments.Select(t => SetGenerics(t, parameters, arguments)).ToArray();
+
+                return namedType.ConstructedFrom.Construct(typeArgs);
+            }
+
+            return type;
         }
 
         private static PostCtorModel? GetPostCtorMethod(

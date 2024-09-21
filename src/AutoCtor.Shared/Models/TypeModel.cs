@@ -21,13 +21,11 @@ internal record struct TypeModel(
     EquatableList<MemberModel> Fields,
     EquatableList<MemberModel> Properties,
     EquatableList<ParameterModel>? BaseCtorParameters,
-    EquatableList<string>? BaseTypeArguments,
-    EquatableList<string>? BaseTypeParameters
+    EquatableList<EquatableTypeSymbol>? BaseTypeArguments,
+    EquatableList<EquatableTypeSymbol>? BaseTypeParameters
 ) : IPartialTypeModel
 {
     readonly IReadOnlyList<string> IPartialTypeModel.TypeDeclarations => TypeDeclarations;
-
-    private static string GetTypeFullName(ITypeSymbol t) => t.ToDisplayString(FullyQualifiedFormat);
 
     public static TypeModel Create(INamedTypeSymbol type, AttributeData? attribute = null)
     {
@@ -85,13 +83,15 @@ internal record struct TypeModel(
                 : null,
 
             BaseTypeArguments: genericBaseType
-                ? new(type.BaseType!.TypeArguments.Select(GetTypeFullName))
+                ? new(type.BaseType!.TypeArguments.Select(Create))
                 : null,
             BaseTypeParameters: genericBaseType
-                ? new(type.BaseType!.TypeParameters.Select(GetTypeFullName))
+                ? new(type.BaseType!.TypeParameters.Select(Create))
                 : null
         );
     }
+
+    private static EquatableTypeSymbol Create(ITypeSymbol type) => new(type);
 
     private static bool ValidCtor(IMethodSymbol ctor)
     {

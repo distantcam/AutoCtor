@@ -5,7 +5,7 @@ internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<Member
 {
     private readonly Dictionary<MemberModel, ParameterModel> _memberToParameterMap =
         fields.Concat(properties)
-        .ToDictionary(m => m, m => new ParameterModel(m.FriendlyName, m.TypeName));
+        .ToDictionary(m => m, m => new ParameterModel(m.FriendlyName, m.Type));
 
     private readonly List<ParameterModel> _parameters = [];
     private readonly Dictionary<ParameterModel, string> _uniqueNames = [];
@@ -46,7 +46,7 @@ internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<Member
     public string ToParameterString()
     {
         return _uniqueNames
-            .Select(u => $"{u.Key.TypeName} {u.Value}")
+            .Select(u => $"{u.Key.Type} {u.Value}")
             .AsCommaSeparated();
     }
 

@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis;
 
 internal record struct MemberModel(
-    string TypeName,
+    EquatableTypeSymbol Type,
     string FriendlyName,
     string IdentifierName,
 
@@ -15,7 +15,7 @@ internal record struct MemberModel(
             : field.Name.EscapeKeywordIdentifier();
 
         return new MemberModel(
-            TypeName: field.Type.ToDisplayString(FullyQualifiedFormat),
+            Type: new(field.Type),
             FriendlyName: friendlyName,
             IdentifierName: field.Name.EscapeKeywordIdentifier(),
 
@@ -28,7 +28,7 @@ internal record struct MemberModel(
         var friendlyName = new string([char.ToLower(property.Name[0]), .. property.Name.Substring(1)]).EscapeKeywordIdentifier();
 
         return new MemberModel(
-            TypeName: property.Type.ToDisplayString(FullyQualifiedFormat),
+            Type: new(property.Type),
             FriendlyName: friendlyName,
             IdentifierName: property.Name.EscapeKeywordIdentifier(),
 
