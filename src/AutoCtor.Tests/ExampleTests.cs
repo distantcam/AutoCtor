@@ -1,8 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Microsoft.CodeAnalysis;
-using Xunit.Abstractions;
 
 namespace AutoCtor.Tests;
 
@@ -111,6 +109,8 @@ public class ExampleTests
             var verifiedName = "Verified_4_8";
 #elif ROSLYN_4_10
             var verifiedName = "Verified_4_10";
+#elif ROSLYN_4_12
+            var verifiedName = "Verified_4_12";
 #endif
             data.Add(new CodeFileTheoryData(langExample) with
             {
