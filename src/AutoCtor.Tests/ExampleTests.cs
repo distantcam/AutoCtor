@@ -1,8 +1,6 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Microsoft.CodeAnalysis;
-using Xunit.Abstractions;
 
 namespace AutoCtor.Tests;
 
@@ -14,6 +12,7 @@ public class ExampleTests
     {
 
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
+            netCoreVersion: "8.0.8",
             preprocessorSymbols: PreprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         var driver = Helpers.CreateDriver(theoryData.Options, generator)
@@ -29,6 +28,7 @@ public class ExampleTests
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
+            netCoreVersion: "8.0.8",
             preprocessorSymbols: PreprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver(theoryData.Options, generator)
@@ -45,6 +45,7 @@ public class ExampleTests
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
     {
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
+            netCoreVersion: "8.0.8",
             preprocessorSymbols: PreprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
 
@@ -111,6 +112,8 @@ public class ExampleTests
             var verifiedName = "Verified_4_8";
 #elif ROSLYN_4_10
             var verifiedName = "Verified_4_10";
+#elif ROSLYN_4_12
+            var verifiedName = "Verified_4_12";
 #endif
             data.Add(new CodeFileTheoryData(langExample) with
             {
