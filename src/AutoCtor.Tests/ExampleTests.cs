@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using FluentAssertions;
 using Microsoft.CodeAnalysis;
 
@@ -13,7 +13,7 @@ public class ExampleTests
 
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
             netCoreVersion: "8.0.8",
-            preprocessorSymbols: PreprocessorSymbols);
+            preprocessorSymbols: s_preprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         var driver = Helpers.CreateDriver(theoryData.Options, generator)
             .RunGenerators(compilation);
@@ -29,7 +29,7 @@ public class ExampleTests
     {
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
             netCoreVersion: "8.0.8",
-            preprocessorSymbols: PreprocessorSymbols);
+            preprocessorSymbols: s_preprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver(theoryData.Options, generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
@@ -46,7 +46,7 @@ public class ExampleTests
     {
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
             netCoreVersion: "8.0.8",
-            preprocessorSymbols: PreprocessorSymbols);
+            preprocessorSymbols: s_preprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
 
         var driver = Helpers.CreateDriver(theoryData.Options, generator);
@@ -64,7 +64,7 @@ public class ExampleTests
 
     // ----------------------------------------------------------------------------------------
 
-    private static IEnumerable<string> PreprocessorSymbols =
+    private static readonly IEnumerable<string> s_preprocessorSymbols =
 #if ROSLYN_3
         ["ROSLYN_3"];
 #elif ROSLYN_4
