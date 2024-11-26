@@ -11,7 +11,7 @@ public class Issue73
     {
         var compilation = await Compile();
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
-        var driver = Helpers.CreateDriver([], generator).RunGenerators(compilation);
+        var driver = Helpers.CreateDriver(generator).RunGenerators(compilation);
 
         await Verify(driver).UseDirectory("Verified");
     }
@@ -23,7 +23,7 @@ public class Issue73
 
         var compilation = await Compile();
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
-        Helpers.CreateDriver([], generator)
+        Helpers.CreateDriver(generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         diagnostics.Should().BeEmpty();

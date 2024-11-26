@@ -1,6 +1,10 @@
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using FluentAssertions;
 using Microsoft.CodeAnalysis;
+
+#if ROSLYN_4
+using Microsoft.CodeAnalysis.CSharp;
+#endif
 
 namespace AutoCtor.Tests;
 
@@ -10,12 +14,11 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
-
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
-            netCoreVersion: "8.0.8",
+            langPreview: theoryData.LangPreview,
             preprocessorSymbols: s_preprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
-        var driver = Helpers.CreateDriver(theoryData.Options, generator)
+        var driver = Helpers.CreateDriver(theoryData.Options, theoryData.LangPreview, generator)
             .RunGenerators(compilation);
 
         await Verify(driver)
@@ -28,10 +31,10 @@ public class ExampleTests
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
-            netCoreVersion: "8.0.8",
+            langPreview: theoryData.LangPreview,
             preprocessorSymbols: s_preprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
-        Helpers.CreateDriver(theoryData.Options, generator)
+        Helpers.CreateDriver(theoryData.Options, theoryData.LangPreview, generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
 
         outputCompilation.GetDiagnostics()
@@ -45,15 +48,17 @@ public class ExampleTests
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
     {
         var compilation = await Helpers.Compile<AutoConstructAttribute>(theoryData.Codes,
-            netCoreVersion: "8.0.8",
+            langPreview: theoryData.LangPreview,
             preprocessorSymbols: s_preprocessorSymbols);
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
 
-        var driver = Helpers.CreateDriver(theoryData.Options, generator);
+        var driver = Helpers.CreateDriver(theoryData.Options, theoryData.LangPreview, generator);
         driver = driver.RunGenerators(compilation);
         var firstResult = driver.GetRunResult();
-        compilation = compilation.AddSyntaxTrees(
-            Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree.ParseText("// dummy"));
+        compilation = compilation.AddSyntaxTrees(CSharpSyntaxTree.ParseText("// dummy",
+            CSharpParseOptions.Default.WithLanguageVersion(theoryData.LangPreview
+                ? LanguageVersion.Preview
+                : LanguageVersion.Latest)));
         driver = driver.RunGenerators(compilation);
         var secondResult = driver.GetRunResult();
 
@@ -102,22 +107,16 @@ public class ExampleTests
 
         foreach (var langExample in GetExamplesFiles("LangExamples"))
         {
-#if ROSLYN_3_11
-            var verifiedName = "Verified_3_11";
-#elif ROSLYN_4_4
-            var verifiedName = "Verified_4_4";
-#elif ROSLYN_4_6
-            var verifiedName = "Verified_4_6";
-#elif ROSLYN_4_8
-            var verifiedName = "Verified_4_8";
-#elif ROSLYN_4_10
-            var verifiedName = "Verified_4_10";
-#elif ROSLYN_4_12
-            var verifiedName = "Verified_4_12";
+#if ROSLYN_3
+            var verifiedName = "Verified_3";
+#elif ROSLYN_4
+            var verifiedName = "Verified_4";
 #endif
+
             data.Add(new CodeFileTheoryData(langExample) with
             {
-                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", verifiedName)
+                VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", verifiedName),
+                LangPreview = true
             });
         }
 

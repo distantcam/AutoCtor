@@ -10,7 +10,7 @@ public class GeneratedAttributeTests
     {
         var compilation = await Helpers.Compile<AutoConstructAttribute>([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
         var generator = new AttributeSourceGenerator().AsSourceGenerator();
-        var driver = Helpers.CreateDriver([], generator)
+        var driver = Helpers.CreateDriver(generator)
             .RunGenerators(compilation);
 
         await Verify(driver).UseDirectory("Verified");
@@ -21,7 +21,7 @@ public class GeneratedAttributeTests
     {
         var compilation = await Helpers.Compile<AutoConstructAttribute>([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
         var generator = new AttributeSourceGenerator().AsSourceGenerator();
-        Helpers.CreateDriver([], generator)
+        Helpers.CreateDriver(generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         diagnostics.Should().BeEmpty();

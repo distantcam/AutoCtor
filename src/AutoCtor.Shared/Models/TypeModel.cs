@@ -153,18 +153,20 @@ internal record struct TypeModel(
 
     private static bool IsValidProperty(IPropertySymbol property)
     {
-        if (!property.ContainingType.GetMembers().OfType<IFieldSymbol>()
-            .Any(field => SymbolEqualityComparer.Default.Equals(field.AssociatedSymbol, property)))
-            return false;
-
         var propertySyntax = property.DeclaringSyntaxReferences
             .Select(x => x.GetSyntax())
             .OfType<PropertyDeclarationSyntax>()
             .First();
 
+        // Expression Body Definitions
+        // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/properties#expression-body-definitions
+        if (property.IsReadOnly && propertySyntax.AccessorList is null)
+            return false;
+
         if (propertySyntax.Initializer is not null)
             return false;
 
+        // Not required and not init properties
         if (!(property.IsReadOnly ||
 #if ROSLYN_4
             property.IsRequired ||
