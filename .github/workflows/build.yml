@@ -100,6 +100,6 @@ jobs:
           name: nuget
 
       - name: 📝 Generate Release Notes
-        run: gh release create ${{ github.ref_name }} --generate-notes *.nupkg
+        run: gh release create ${{ github.ref_name }} --draft --generate-notes *.nupkg
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
