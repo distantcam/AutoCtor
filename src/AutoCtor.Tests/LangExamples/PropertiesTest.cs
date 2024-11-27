@@ -19,5 +19,15 @@ public partial class PropertiesTest
     [AutoCtor.AutoConstructIgnore]
     public string IgnoredProperty { get; }
 
-    public string FieldProperty => field ??= "Constant";
+    public string FieldExpressionBodyProperty => field ??= "Constant";
+
+    public string FieldProperty
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(field))
+                field = "Constant";
+            return field;
+        }
+    }
 }
