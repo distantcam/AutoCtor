@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
-using Xunit.Abstractions;
+using Xunit.Sdk;
 
 public record CodeFileTheoryData : IXunitSerializable
 {
@@ -24,15 +24,20 @@ public record CodeFileTheoryData : IXunitSerializable
 
     public void Deserialize(IXunitSerializationInfo info)
     {
-        Name = info.GetValue<string>(nameof(Name));
-        Codes = info.GetValue<string[]>(nameof(Codes));
-        VerifiedDirectory = info.GetValue<string>(nameof(VerifiedDirectory));
-        Options = info.GetValue<string[]>(nameof(Options))
+        Name = info.GetValue<string>(nameof(Name))
+            ?? throw new Exception($"Missing {nameof(Name)} in theory serialization");
+        Codes = info.GetValue<string[]>(nameof(Codes))
+            ?? throw new Exception($"Missing {nameof(Codes)} in theory serialization");
+        VerifiedDirectory = info.GetValue<string>(nameof(VerifiedDirectory))
+            ?? throw new Exception($"Missing {nameof(VerifiedDirectory)} in theory serialization");
+        Options = info.GetValue<string[]>(nameof(Options))?
             .Select(o => o.Split('|'))
             .Select(o => (o[0], o[1]))
-            .ToArray();
+            .ToArray()
+            ?? throw new Exception($"Missing {nameof(Options)} in theory serialization");
         LangPreview = info.GetValue<bool>(nameof(LangPreview));
-        IgnoredCompileDiagnostics = info.GetValue<string[]>(nameof(IgnoredCompileDiagnostics));
+        IgnoredCompileDiagnostics = info.GetValue<string[]>(nameof(IgnoredCompileDiagnostics))
+            ?? throw new Exception($"Missing {nameof(IgnoredCompileDiagnostics)} in theory serialization");
     }
 
     public void Serialize(IXunitSerializationInfo info)

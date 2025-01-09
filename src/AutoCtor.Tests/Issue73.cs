@@ -11,7 +11,7 @@ public class Issue73
     {
         var compilation = await Compile();
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
-        var driver = Helpers.CreateDriver(generator).RunGenerators(compilation);
+        var driver = Helpers.CreateDriver(generator).RunGenerators(compilation, TestContext.Current.CancellationToken);
 
         await Verify(driver).UseDirectory("Verified");
     }
@@ -24,11 +24,10 @@ public class Issue73
         var compilation = await Compile();
         var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics, TestContext.Current.CancellationToken);
 
         diagnostics.Should().BeEmpty();
-        outputCompilation.GetDiagnostics()
-            .Where(d => !ignoredWarnings.Contains(d.Id))
+        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Where(d => !ignoredWarnings.Contains(d.Id))
             .Should().BeEmpty();
     }
 

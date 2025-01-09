@@ -16,7 +16,10 @@
     <PackageVersion Include="Polyfill" Version="7.11.0" />
     <PackageVersion Include="Verify.SourceGenerators" Version="2.5.0" />
     <PackageVersion Include="Verify.Xunit" Version="28.8.1" />
+    <PackageVersion Include="Verify.XunitV3" Version="28.8.1" />
     <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.analyzers" Version="1.18.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0" />
+    <PackageVersion Include="xunit.v3" Version="1.0.0" />
   </ItemGroup>
 </Project>
