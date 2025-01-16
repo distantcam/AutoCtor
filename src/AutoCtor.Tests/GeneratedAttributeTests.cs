@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 
 namespace AutoCtor.Tests;
 
@@ -24,7 +23,7 @@ public class GeneratedAttributeTests
         Helpers.CreateDriver(generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics, TestContext.Current.CancellationToken);
 
-        diagnostics.Should().BeEmpty();
-        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Should().BeEmpty();
+        Assert.Empty(diagnostics);
+        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
     }
 }

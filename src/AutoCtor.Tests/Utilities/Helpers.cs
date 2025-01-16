@@ -1,14 +1,9 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Testing;
-using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-
-#if ROSLYN_4
-using FluentAssertions;
-using FluentAssertions.Execution;
-#endif
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Testing;
 
 internal static class Helpers
 {
@@ -130,8 +125,6 @@ internal static class Helpers
         GeneratorDriverRunResult runResult2,
         IEnumerable<string> trackingNames)
     {
-        using var _ = new AssertionScope();
-
         // We're given all the tracking names, but not all the
         // stages will necessarily execute, so extract all the
         // output steps, and filter to ones we know about
@@ -139,10 +132,9 @@ internal static class Helpers
         var trackedSteps2 = GetTrackedSteps(runResult2, trackingNames);
 
         // Both runs should have the same tracked steps
-        trackedSteps1.Should()
-                     .NotBeEmpty()
-                     .And.HaveSameCount(trackedSteps2)
-                     .And.ContainKeys(trackedSteps2.Keys);
+        Assert.NotEmpty(trackedSteps1);
+        Assert.Equal(trackedSteps1.Count, trackedSteps2.Count);
+        Assert.Equal(trackedSteps1.Keys, trackedSteps2.Keys);
 
         // Get the IncrementalGeneratorRunStep collection for each run
         foreach (var (trackingName, runSteps1) in trackedSteps1)
@@ -169,7 +161,7 @@ internal static class Helpers
         ImmutableArray<IncrementalGeneratorRunStep> runSteps2,
         string stepName)
     {
-        runSteps1.Should().HaveSameCount(runSteps2);
+        Assert.Equal(runSteps1.Length, runSteps2.Length);
 
         for (var i = 0; i < runSteps1.Length; i++)
         {
@@ -180,17 +172,34 @@ internal static class Helpers
             var outputs1 = runStep1.Outputs.Select(x => x.Value);
             var outputs2 = runStep2.Outputs.Select(x => x.Value);
 
-            outputs1.Should()
-                    .Equal(outputs2, $"because {stepName} should produce cacheable outputs");
+            WithMessage(() => Assert.Equal(outputs1, outputs2),
+                $"because step {stepName} should produce cacheable outputs");
 
             // Therefore, on the second run the results should always be cached or unchanged!
             // - Unchanged is when the _input_ has changed, but the output hasn't
             // - Cached is when the the input has not changed, so the cached output is used
-            runStep2.Outputs.Should()
-                .AllSatisfy(x => x.Reason.Should()
-                .BeOneOf([IncrementalStepRunReason.Cached, IncrementalStepRunReason.Unchanged],
-                $"{stepName} expected to have reason {IncrementalStepRunReason.Cached} or {IncrementalStepRunReason.Unchanged}"));
+            IEnumerable<IncrementalStepRunReason> acceptableReasons =
+                [IncrementalStepRunReason.Cached, IncrementalStepRunReason.Unchanged];
+            foreach (var step in runStep2.Outputs)
+            {
+                Assert.Contains(step.Reason, acceptableReasons);
+            }
         }
     }
 #endif
+
+    public static void WithMessage(Action action, string message)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception ex)
+        {
+            throw new AssertMessageException(message, ex);
+        }
+    }
 }
+
+[Serializable]
+public class AssertMessageException(string message, Exception inner) : Exception(message, inner);

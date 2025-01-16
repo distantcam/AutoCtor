@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace AutoCtor.Tests;
@@ -26,9 +25,8 @@ public class Issue73
         Helpers.CreateDriver(generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics, TestContext.Current.CancellationToken);
 
-        diagnostics.Should().BeEmpty();
-        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Where(d => !ignoredWarnings.Contains(d.Id))
-            .Should().BeEmpty();
+        Assert.Empty(diagnostics);
+        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Where(d => !ignoredWarnings.Contains(d.Id)));
     }
 
     private static async Task<CSharpCompilation> Compile()

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using FluentAssertions;
 using Microsoft.CodeAnalysis;
 
 #if ROSLYN_4
@@ -37,8 +36,7 @@ public class ExampleTests
         Helpers.CreateDriver(theoryData.Options, theoryData.LangPreview, generator)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _, TestContext.Current.CancellationToken);
 
-        outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id))
-            .Should().BeEmpty();
+        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)));
     }
 
 #if ROSLYN_4
