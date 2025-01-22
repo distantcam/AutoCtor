@@ -10,7 +10,7 @@ public class GeneratedAttributeTests
         var compilation = await Helpers.Compile<AutoConstructAttribute>([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
         var generator = new AttributeSourceGenerator().AsSourceGenerator();
         var driver = Helpers.CreateDriver(generator)
-            .RunGenerators(compilation, TestContext.Current.CancellationToken);
+            .RunGenerators(compilation);
 
         await Verify(driver).UseDirectory("Verified");
     }
@@ -21,9 +21,9 @@ public class GeneratedAttributeTests
         var compilation = await Helpers.Compile<AutoConstructAttribute>([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
         var generator = new AttributeSourceGenerator().AsSourceGenerator();
         Helpers.CreateDriver(generator)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics, TestContext.Current.CancellationToken);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
+        Assert.Empty(outputCompilation.GetDiagnostics());
     }
 }
