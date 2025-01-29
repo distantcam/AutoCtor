@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
@@ -90,9 +90,9 @@ public partial class AutoConstructSourceGenerator
                     parameters.AddParameters(baseParameters);
                 }
             }
-            if (postCtorMethod != null)
+            if (postCtorMethod.HasValue)
             {
-                parameters.AddPostCtorParameters(postCtorMethod.Parameters);
+                parameters.AddPostCtorParameters(postCtorMethod.Value.Parameters);
             }
             parameters.MakeUniqueNames();
 
@@ -104,38 +104,34 @@ public partial class AutoConstructSourceGenerator
             {
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
 
-                if (parameters.HasBaseParameters)
-                {
-                    source.AppendLine($"public {type.Name}({parameters.ToParameterString()}) : base({parameters.ToBaseParameterString()})");
-                }
-                else
-                {
-                    source.AppendLine($"public {type.Name}({parameters.ToParameterString()})");
-                }
+                source.AppendIndent()
+                    .Append($"public {type.Name}({parameters})")
+                    .Append(parameters.HasBaseParameters, $" : base({parameters:B})")
+                    .AppendLine();
 
                 using (source.StartBlock())
                 {
                     var items = type.Fields
                         .Select(f => (f.IsReferenceType, Name: f.IdentifierName, Parameter: parameters.ParameterName(f)))
-                        .Concat(type.Properties
+                    .Concat(type.Properties
                         .Select(p => (p.IsReferenceType, Name: p.IdentifierName, Parameter: parameters.ParameterName(p))));
 
-                    foreach (var (IsReferenceType, Name, Parameter) in items)
+                    foreach (var (isReferenceType, name, parameter) in items)
                     {
-                        if (((type.Guard.HasValue && type.Guard.Value) ||
-                            (!type.Guard.HasValue && guards)) &&
-                            IsReferenceType)
-                            source.AppendLine(
-$"this.{Name} = {Parameter} ?? throw new global::System.ArgumentNullException(\"{Parameter}\");"
-                            );
-                        else
-                            source.AppendLine(
-$"this.{Name} = {Parameter};"
-                            );
+                        var addGuard =
+                            ((type.Guard.HasValue && type.Guard.Value)
+                                || (!type.Guard.HasValue && guards))
+                            && isReferenceType;
+
+                        source.AppendIndent()
+                            .Append($"this.{name} = {parameter}")
+                            .Append(!addGuard, ";")
+                            .Append(addGuard, $" ?? throw new global::System.ArgumentNullException(\"{parameter}\");")
+                            .AppendLine();
                     }
-                    if (postCtorMethod != null)
+                    if (postCtorMethod.HasValue)
                     {
-                        source.AppendLine($"{postCtorMethod.Name}({parameters.ToPostCtorParameterString()});");
+                        source.AppendLine($"{postCtorMethod.Value.Name}({parameters:P});");
                     }
                 }
             }
@@ -176,6 +172,12 @@ $"this.{Name} = {Parameter};"
             }
 
             return type;
+        }
+
+        private static void ReportDiagnostic(EmitterContext context, PostCtorModel method, DiagnosticDescriptor diagnostic)
+        {
+            foreach (var loc in method.Locations)
+                context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, method.ErrorName));
         }
 
         private static PostCtorModel? GetPostCtorMethod(
@@ -219,12 +221,6 @@ $"this.{Name} = {Parameter};"
             }
 
             return method;
-        }
-
-        private static void ReportDiagnostic(EmitterContext context, PostCtorModel method, DiagnosticDescriptor diagnostic)
-        {
-            foreach (var loc in method.Locations)
-                context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, method.ErrorName));
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using System.Globalization;
 using Microsoft.CodeAnalysis;
 
-internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<MemberModel> properties) : IEnumerable<ParameterModel>
+internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<MemberModel> properties)
+    : IEnumerable<ParameterModel>, IFormattable
 {
     private readonly Dictionary<MemberModel, ParameterModel> _memberToParameterMap =
         fields.Concat(properties)
@@ -43,23 +45,6 @@ internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<Member
         }
     }
 
-    public string ToParameterString()
-    {
-        return _uniqueNames
-            .Select(u => $"{u.Key.Type} {u.Value}")
-            .AsCommaSeparated();
-    }
-
-    public string ToBaseParameterString()
-    {
-        return _parameters.Select(p => _uniqueNames[p]).AsCommaSeparated();
-    }
-
-    public string ToPostCtorParameterString()
-    {
-        return _postCtorParameters.Select(p => _uniqueNames[p]).AsCommaSeparated();
-    }
-
     public string ParameterName(MemberModel f) => _uniqueNames[_memberToParameterMap[f]];
 
     public IEnumerable<ParameterModel> BaseParameters() => _parameters;
@@ -69,4 +54,18 @@ internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<Member
         .Concat(_postCtorParameters)
         .GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public override string ToString() => ToString("G", CultureInfo.InvariantCulture);
+    public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+    public string ToString(string format, IFormatProvider provider)
+    {
+        if (string.IsNullOrEmpty(format)) format = "G";
+        return format.ToUpperInvariant() switch
+        {
+            "G" => _uniqueNames.Select(u => $"{u.Key.Type} {u.Value}").AsCommaSeparated(),
+            "B" => _parameters.Select(p => _uniqueNames[p]).AsCommaSeparated(),
+            "P" => _postCtorParameters.Select(p => _uniqueNames[p]).AsCommaSeparated(),
+            _ => throw new FormatException($"The {format} format string is not supported"),
+        };
+    }
 }

@@ -27,9 +27,9 @@ internal record struct TypeModel(
 {
     readonly IReadOnlyList<string> IPartialTypeModel.TypeDeclarations => TypeDeclarations;
 
-    public static TypeModel Create(INamedTypeSymbol type, AttributeData? attribute = null)
+    public static TypeModel Create(INamedTypeSymbol type)
     {
-        attribute ??= type.GetAttributes()
+        var attribute = type.GetAttributes()
             .First(static a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructAttribute");
 
         var guard = ((int?)attribute?.ConstructorArguments[0].Value) switch
