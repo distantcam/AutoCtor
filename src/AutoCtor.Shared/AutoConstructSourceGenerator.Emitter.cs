@@ -125,8 +125,8 @@ public partial class AutoConstructSourceGenerator
 
                         source.AppendIndent()
                             .Append($"this.{name} = {parameter}")
-                            .Append(!addGuard, ";")
-                            .Append(addGuard, $" ?? throw new global::System.ArgumentNullException(\"{parameter}\");")
+                            .Append(addGuard, $" ?? throw new global::System.ArgumentNullException(\"{parameter}\")")
+                            .Append(";")
                             .AppendLine();
                     }
                     if (postCtorMethod.HasValue)

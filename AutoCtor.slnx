@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/build.yml" />
+    <File Path="mdsnippets.json" />
+    <File Path="readme.source.md" />
+    <File Path="src/AutoCtor.props" />
+    <File Path="src/Common.props" />
+    <File Path="src/Directory.Build.props" />
+    <File Path="src/Directory.Packages.props" />
+    <File Path="src/global.json" />
+  </Folder>
+  <Project Path="src/AutoCtor.Attributes/AutoCtor.Attributes.csproj">
+    <BuildDependency Project="src/AutoCtor.Roslyn3.11/AutoCtor.Roslyn3.11.csproj" />
+    <BuildDependency Project="src/AutoCtor.Roslyn4.10/AutoCtor.Roslyn4.10.csproj" />
+    <BuildDependency Project="src/AutoCtor.Roslyn4.12/AutoCtor.Roslyn4.12.csproj" />
+    <BuildDependency Project="src/AutoCtor.Roslyn4.4/AutoCtor.Roslyn4.4.csproj" />
+    <BuildDependency Project="src/AutoCtor.Roslyn4.6/AutoCtor.Roslyn4.6.csproj" />
+    <BuildDependency Project="src/AutoCtor.Roslyn4.8/AutoCtor.Roslyn4.8.csproj" />
+  </Project>
+  <Project Path="src/AutoCtor.Example/AutoCtor.Example.csproj" />
+  <Project Path="src/AutoCtor.Roslyn3.11/AutoCtor.Roslyn3.11.csproj" />
+  <Project Path="src/AutoCtor.Roslyn4.10/AutoCtor.Roslyn4.10.csproj" />
+  <Project Path="src/AutoCtor.Roslyn4.12/AutoCtor.Roslyn4.12.csproj" />
+  <Project Path="src/AutoCtor.Roslyn4.4/AutoCtor.Roslyn4.4.csproj" />
+  <Project Path="src/AutoCtor.Roslyn4.6/AutoCtor.Roslyn4.6.csproj" />
+  <Project Path="src/AutoCtor.Roslyn4.8/AutoCtor.Roslyn4.8.csproj" />
+  <Project Path="src/AutoCtor.Shared/AutoCtor.Shared.shproj" />
+  <Project Path="src/AutoCtor.Tests/AutoCtor.Tests.csproj" />
+</Solution>
