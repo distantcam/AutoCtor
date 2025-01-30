@@ -1,4 +1,4 @@
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoCtor;
@@ -9,12 +9,6 @@ public partial class AutoConstructSourceGenerator
     {
         public const string AutoConstructAttributeFullName = "AutoCtor.AutoConstructAttribute";
         public const string AutoPostConstructAttributeFullName = "AutoCtor.AutoPostConstructAttribute";
-
-        public static bool IsTypeDeclaration(SyntaxNode node, CancellationToken cancellationToken)
-            => node is TypeDeclarationSyntax { AttributeLists.Count: > 0 };
-
-        public static bool IsMethodDeclaration(SyntaxNode node, CancellationToken cancellationToken)
-            => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 };
 
         public static INamedTypeSymbol? GetMarkedNamedTypeSymbol(
             GeneratorSyntaxContext context,

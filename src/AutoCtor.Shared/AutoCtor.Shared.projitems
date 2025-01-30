@@ -9,11 +9,11 @@
     <Import_RootNamespace>AutoCtor.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AttributeSourceGenerator.AttributesEmitter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Tracking.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Diagnostics.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Emitter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator.Parser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AttributeSourceGenerator\Emitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator\Tracking.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator\Diagnostics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator\Emitter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator\Parser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneratorUtilities.cs" />

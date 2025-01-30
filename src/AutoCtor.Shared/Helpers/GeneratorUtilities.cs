@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 internal static class GeneratorUtilities
 {
@@ -63,4 +63,10 @@ internal static class GeneratorUtilities
             .Replace('<', '[')
             .Replace('>', ']');
     }
+
+    public static bool IsTypeDeclaration(SyntaxNode node, CancellationToken cancellationToken)
+        => node is TypeDeclarationSyntax { AttributeLists.Count: > 0 };
+
+    public static bool IsMethodDeclaration(SyntaxNode node, CancellationToken cancellationToken)
+        => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 };
 }

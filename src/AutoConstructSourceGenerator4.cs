@@ -7,7 +7,7 @@ public sealed partial class AttributeSourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(static c =>
-            c.AddSource(AttributeEmitter.HintName, AttributeEmitter.GenerateSource()));
+            c.AddSource(Emitter.HintName, Emitter.GenerateSource()));
     }
 }
 
@@ -26,14 +26,14 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
 
         var types = context.SyntaxProvider.ForAttributeWithMetadataName(
             Parser.AutoConstructAttributeFullName,
-            Parser.IsTypeDeclaration,
+            GeneratorUtilities.IsTypeDeclaration,
             static (c, ct) => TypeModel.Create((INamedTypeSymbol)c.TargetSymbol))
         .WithTrackingName(TrackingNames.TypeModels)
         .Collect();
 
         var postCtorMethods = context.SyntaxProvider.ForAttributeWithMetadataName(
             Parser.AutoPostConstructAttributeFullName,
-            Parser.IsMethodDeclaration,
+            GeneratorUtilities.IsMethodDeclaration,
             static (c, ct) => PostCtorModel.Create((IMethodSymbol)c.TargetSymbol))
         .WithTrackingName(TrackingNames.PostCtorMethods)
         .Collect();

@@ -62,13 +62,6 @@ internal class CodeBuilder
         return this;
     }
 
-    public CodeBuilder AppendLine(bool enabled, string line)
-    {
-        if (enabled)
-            _stringBuilder.AppendLine(Indent + line);
-        return this;
-    }
-
     public void IncreaseIndent() { _indent++; }
     public void DecreaseIndent()
     {

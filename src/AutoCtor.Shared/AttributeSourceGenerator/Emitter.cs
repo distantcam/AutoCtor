@@ -1,4 +1,4 @@
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
 namespace AutoCtor;
@@ -6,7 +6,7 @@ namespace AutoCtor;
 [Generator(LanguageNames.CSharp)]
 public partial class AttributeSourceGenerator
 {
-    private static class AttributeEmitter
+    private static class Emitter
     {
         public static string HintName = "AutoConstructAttribute.g.cs";
 

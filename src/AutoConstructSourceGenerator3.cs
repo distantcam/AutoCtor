@@ -9,7 +9,7 @@ public sealed partial class AttributeSourceGenerator : ISourceGenerator
     public void Initialize(GeneratorInitializationContext context)
     {
         context.RegisterForPostInitialization(static c =>
-            c.AddSource(AttributeEmitter.HintName, AttributeEmitter.GenerateSource()));
+            c.AddSource(Emitter.HintName, Emitter.GenerateSource()));
     }
     public void Execute(GeneratorExecutionContext context) { }
 }
