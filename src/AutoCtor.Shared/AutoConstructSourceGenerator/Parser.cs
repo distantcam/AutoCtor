@@ -7,14 +7,11 @@ public partial class AutoConstructSourceGenerator
 {
     private static class Parser
     {
-        public const string AutoConstructAttributeFullName = "AutoCtor.AutoConstructAttribute";
-        public const string AutoPostConstructAttributeFullName = "AutoCtor.AutoPostConstructAttribute";
-
         public static INamedTypeSymbol? GetMarkedNamedTypeSymbol(
             GeneratorSyntaxContext context,
             CancellationToken cancellationToken)
         {
-            if (!MemberHasAttribute(AutoConstructAttributeFullName, context, cancellationToken))
+            if (!MemberHasAttribute(AttributeNames.AutoConstruct, context, cancellationToken))
                 return null;
             return context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken) as INamedTypeSymbol;
         }
@@ -23,7 +20,7 @@ public partial class AutoConstructSourceGenerator
             GeneratorSyntaxContext context,
             CancellationToken cancellationToken)
         {
-            if (!MemberHasAttribute(AutoPostConstructAttributeFullName, context, cancellationToken))
+            if (!MemberHasAttribute(AttributeNames.AutoPostConstruct, context, cancellationToken))
                 return null;
             return context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken) as IMethodSymbol;
         }
@@ -36,7 +33,9 @@ public partial class AutoConstructSourceGenerator
             foreach (var attributeListSyntax in ((MemberDeclarationSyntax)context.Node).AttributeLists)
                 foreach (var attributeSyntax in attributeListSyntax.Attributes)
                 {
-                    if (context.SemanticModel.GetSymbolInfo(attributeSyntax, cancellationToken).Symbol is not IMethodSymbol attributeSymbol) continue;
+                    if (context.SemanticModel.GetSymbolInfo(attributeSyntax, cancellationToken)
+                        .Symbol is not IMethodSymbol attributeSymbol)
+                        continue;
 
                     var attributeContainingTypeSymbol = attributeSymbol.ContainingType;
                     var fullName = attributeContainingTypeSymbol.ToDisplayString();

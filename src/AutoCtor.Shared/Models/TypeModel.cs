@@ -30,7 +30,8 @@ internal record struct TypeModel(
     public static TypeModel Create(INamedTypeSymbol type)
     {
         var attribute = type.GetAttributes()
-            .First(static a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructAttribute");
+            .First(static a => a.AttributeClass?.ToDisplayString()
+            == AttributeNames.AutoConstruct);
 
         var guard = ((int?)attribute?.ConstructorArguments[0].Value) switch
         {
@@ -195,5 +196,6 @@ internal record struct TypeModel(
     }
 
     private static bool HasIgnoreAttribute(IEnumerable<AttributeData> attributes) =>
-        attributes.Any(static a => a.AttributeClass?.ToDisplayString() == "AutoCtor.AutoConstructIgnoreAttribute");
+        attributes.Any(static a => a.AttributeClass?.ToDisplayString()
+        == AttributeNames.AutoConstructIgnore);
 }

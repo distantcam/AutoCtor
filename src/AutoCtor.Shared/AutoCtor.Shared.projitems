@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneratorUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\AttributeNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\EquatableList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\EquatableTypeSymbol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MemberModel.cs" />
