@@ -43,6 +43,8 @@ internal record struct TypeModel(
         var baseCtorParameters = type.BaseType?.Constructors.OnlyOrDefault(ValidCtor)?.Parameters;
         var genericBaseType = type.BaseType is { IsGenericType: true };
 
+        var members = type.GetMembers();
+
         return new(
             Depth: CalculateInheritanceDepth(type),
 
@@ -60,24 +62,8 @@ internal record struct TypeModel(
 
             TypeDeclarations: GeneratorUtilities.GetTypeDeclarations(type),
 
-            Fields: new(type.GetMembers().OfType<IFieldSymbol>()
-                .Where(static f => f is
-                {
-                    IsReadOnly: true,
-                    IsStatic: false,
-                    CanBeReferencedByName: true,
-                    IsImplicitlyDeclared: false
-                } && IsValidField(f))
-                .Select(MemberModel.Create)),
-
-            Properties: new(type.GetMembers().OfType<IPropertySymbol>()
-                .Where(static p => p is
-                {
-                    IsStatic: false,
-                    CanBeReferencedByName: true,
-                    IsImplicitlyDeclared: false,
-                } && IsValidProperty(p))
-                .Select(MemberModel.Create)),
+            Fields: GetFields(members),
+            Properties: GetProperties(members),
 
             BaseCtorParameters: baseCtorParameters != null
                 ? new(baseCtorParameters.Value.Select(ParameterModel.Create))
@@ -138,6 +124,10 @@ internal record struct TypeModel(
         return type.ToDisplayString(FullyQualifiedFormat);
     }
 
+    private static bool HasIgnoreAttribute(IEnumerable<AttributeData> attributes) =>
+        attributes.Any(static a => a.AttributeClass?.ToDisplayString()
+        == AttributeNames.AutoConstructIgnore);
+
     private static bool IsValidField(IFieldSymbol field)
     {
         if (field.DeclaringSyntaxReferences
@@ -195,7 +185,30 @@ internal record struct TypeModel(
         return true;
     }
 
-    private static bool HasIgnoreAttribute(IEnumerable<AttributeData> attributes) =>
-        attributes.Any(static a => a.AttributeClass?.ToDisplayString()
-        == AttributeNames.AutoConstructIgnore);
+    private static EquatableList<MemberModel> GetFields(IEnumerable<ISymbol> members)
+    {
+        return new(members
+            .OfType<IFieldSymbol>()
+            .Where(static f => f is
+            {
+                IsReadOnly: true,
+                IsStatic: false,
+                CanBeReferencedByName: true,
+                IsImplicitlyDeclared: false
+            } && IsValidField(f))
+            .Select(MemberModel.Create));
+    }
+
+    private static EquatableList<MemberModel> GetProperties(IEnumerable<ISymbol> members)
+    {
+        return new(members
+            .OfType<IPropertySymbol>()
+            .Where(static p => p is
+            {
+                IsStatic: false,
+                CanBeReferencedByName: true,
+                IsImplicitlyDeclared: false,
+            } && IsValidProperty(p))
+            .Select(MemberModel.Create));
+    }
 }

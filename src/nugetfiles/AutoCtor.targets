@@ -1,0 +1,21 @@
+<Project>
+
+  <Target Name="_AutoCtorGatherAnalyzers">
+    <ItemGroup>
+      <_AutoCtorAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'AutoCtor'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_AutoCtorAnalyzerMultiTargeting"
+          Condition="'$(SupportsRoslynComponentVersioning)' != 'true'"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_AutoCtorGatherAnalyzers">
+
+    <ItemGroup>
+      <!-- Remove our analyzers targeting roslyn4.x -->
+      <Analyzer Remove="@(_AutoCtorAnalyzer)"
+                Condition="$([System.String]::Copy('%(_AutoCtorAnalyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+    </ItemGroup>
+  </Target>
+
+</Project>

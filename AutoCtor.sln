@@ -1,10 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 17
+# Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CC56491-C17C-44A5-8686-C41491E2E624}"
 	ProjectSection(SolutionItems) = preProject
-		src\AutoCtor.props = src\AutoCtor.props
+		src\nugetfiles\AutoCtor.badcompat.targets = src\nugetfiles\AutoCtor.badcompat.targets
+		src\nugetfiles\AutoCtor.props = src\nugetfiles\AutoCtor.props
+		src\nugetfiles\AutoCtor.targets = src\nugetfiles\AutoCtor.targets
 		.github\workflows\build.yml = .github\workflows\build.yml
 		src\Common.props = src\Common.props
 		src\Directory.Build.props = src\Directory.Build.props
