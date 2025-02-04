@@ -32,6 +32,9 @@ jobs:
       - name: 🔍 Enable problem matchers
         run: echo "::add-matcher::.github/matchers/dotnet.json"
 
+      - name: 🛠️ Build code
+        run: dotnet build --configuration Release
+
       - name: 🧪 Testing ${{ matrix.roslyn }} code
         run: >
           dotnet test
