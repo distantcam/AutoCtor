@@ -7,47 +7,26 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!--<RoslynVersion>3.11</RoslynVersion>-->
-    <!--<RoslynVersion>4.4</RoslynVersion>-->
-    <!--<RoslynVersion>4.6</RoslynVersion>-->
-    <!--<RoslynVersion>4.8</RoslynVersion>-->
-    <!--<RoslynVersion>4.10</RoslynVersion>-->
-    <RoslynVersion>4.12</RoslynVersion>
+    <!--<GeneratorVersion>3.11</GeneratorVersion>-->
+    <!--<GeneratorVersion>4.0</GeneratorVersion>-->
+    <GeneratorVersion>4.4</GeneratorVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <IntermediateOutputPath>obj\roslyn$(RoslynVersion)\</IntermediateOutputPath>
-    <OutputPath>bin\roslyn$(RoslynVersion)\</OutputPath>
+    <IntermediateOutputPath>obj\generator(GeneratorVersion)\</IntermediateOutputPath>
+    <OutputPath>bin\generator(GeneratorVersion)\</OutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RoslynVersion)' == '3.11' ">
+  <PropertyGroup Condition=" '$(GeneratorVersion)' == '3.11' ">
     <DefineConstants>$(DefineConstants);ROSLYN_3;ROSLYN_3_11</DefineConstants>
-    <RoslynLibVersion>4.12.0</RoslynLibVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RoslynVersion)' == '4.4' ">
+  <PropertyGroup Condition=" '$(GeneratorVersion)' == '4.0' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(GeneratorVersion)' == '4.4' ">
     <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_4</DefineConstants>
-    <RoslynLibVersion>4.12.0</RoslynLibVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(RoslynVersion)' == '4.6' ">
-    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_6</DefineConstants>
-    <RoslynLibVersion>4.12.0</RoslynLibVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(RoslynVersion)' == '4.8' ">
-    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_8</DefineConstants>
-    <RoslynLibVersion>4.12.0</RoslynLibVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(RoslynVersion)' == '4.10' ">
-    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_10</DefineConstants>
-    <RoslynLibVersion>4.12.0</RoslynLibVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(RoslynVersion)' == '4.12' ">
-    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_12</DefineConstants>
-    <RoslynLibVersion>4.12.0</RoslynLibVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -80,9 +59,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" VersionOverride="$(RoslynLibVersion)" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" VersionOverride="$(RoslynLibVersion)" />
-    <ProjectReference Include="..\AutoCtor.Roslyn$(RoslynVersion)\AutoCtor.Roslyn$(RoslynVersion).csproj" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+    <ProjectReference Include="..\AutoCtor.Roslyn$(GeneratorVersion)\AutoCtor.Roslyn$(GeneratorVersion).csproj" />
   </ItemGroup>
 
 </Project>

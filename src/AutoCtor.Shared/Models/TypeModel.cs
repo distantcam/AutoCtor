@@ -172,7 +172,7 @@ internal record struct TypeModel(
 
         // Not required and not init properties
         if (!(property.IsReadOnly ||
-#if ROSLYN_4
+#if ROSLYN_4_4
             property.IsRequired ||
 #endif
             propertySyntax.AccessorList?.Accessors

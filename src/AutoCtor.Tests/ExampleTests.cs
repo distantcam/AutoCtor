@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 
-#if ROSLYN_4
+#if ROSLYN_4_4
 using Microsoft.CodeAnalysis.CSharp;
 #endif
 
@@ -39,7 +39,7 @@ public class ExampleTests
         Assert.Empty(outputCompilation.GetDiagnostics().Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)));
     }
 
-#if ROSLYN_4
+#if ROSLYN_4_4
     [Theory]
     [MemberData(nameof(GetExamples))]
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
@@ -66,12 +66,23 @@ public class ExampleTests
 
     // ----------------------------------------------------------------------------------------
 
-    private static readonly IEnumerable<string> s_preprocessorSymbols =
+    private static readonly IEnumerable<string> s_preprocessorSymbols = [
 #if ROSLYN_3
-        ["ROSLYN_3"];
-#elif ROSLYN_4
-        ["ROSLYN_4"];
+        "ROSLYN_3",
 #endif
+#if ROSLYN_3_11
+        "ROSLYN_3_11",
+#endif
+#if ROSLYN_4
+        "ROSLYN_4",
+#endif
+#if ROSLYN_4_0
+        "ROSLYN_4_0",
+#endif
+#if ROSLYN_4_4
+        "ROSLYN_4_4",
+#endif
+    ];
 
     private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
 
@@ -104,12 +115,7 @@ public class ExampleTests
 
         foreach (var langExample in GetExamplesFiles("LangExamples"))
         {
-#if ROSLYN_3
-            var verifiedName = "Verified_3";
-#elif ROSLYN_4
-            var verifiedName = "Verified_4";
-#endif
-
+            var verifiedName = "Verified_" + s_preprocessorSymbols.Last().Substring(7);
             data.Add(new CodeFileTheoryData(langExample) with
             {
                 VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", verifiedName),

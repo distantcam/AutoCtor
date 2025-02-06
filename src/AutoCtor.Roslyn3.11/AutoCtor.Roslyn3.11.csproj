@@ -8,10 +8,6 @@
   <Import Project="../Common.props" />
 
   <ItemGroup>
-    <Compile Include="../AutoConstructSourceGenerator3.cs" Link="AutoConstructSourceGenerator.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" VersionOverride="3.3.4" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" VersionOverride="3.11.0" PrivateAssets="all" />
   </ItemGroup>

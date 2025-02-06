@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_4</DefineConstants>
+    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_0</DefineConstants>
   </PropertyGroup>
 
   <Import Project="../Common.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" VersionOverride="4.4.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" VersionOverride="4.0.1" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

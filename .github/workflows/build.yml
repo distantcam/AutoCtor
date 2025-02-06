@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        roslyn: ["3.11", "4.4", "4.6", "4.8", "4.10", "4.12"]
+        roslyn: ["3.11", "4.0", "4.4"]
     steps:
       - name: 🛒 Check-out code
         uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
         run: >
           dotnet test
           --configuration Release
-          -p:RoslynVersion=${{ matrix.roslyn }}
+          -p:GeneratorVersion=${{ matrix.roslyn }}
           --logger GitHubActions
           --
           RunConfiguration.CollectSourceInformation=true
