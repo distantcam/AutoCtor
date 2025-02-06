@@ -63,13 +63,16 @@ public partial class AutoConstructSourceGenerator
 
                 var (source, parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
 
+                if (source == null || parameters == null)
+                    return;
+
                 ctorMaps.Add(type.TypeKey, parameters);
 
                 context.AddSource($"{type.HintName}.g.cs", source);
             }
         }
 
-        private static (SourceText, ParameterList) GenerateSource(
+        private static (SourceText?, ParameterList?) GenerateSource(
             EmitterContext context,
             TypeModel type,
             IEnumerable<PostCtorModel> markedPostCtorMethods,
@@ -95,6 +98,9 @@ public partial class AutoConstructSourceGenerator
                 parameters.AddPostCtorParameters(postCtorMethod.Value.Parameters);
             }
             parameters.MakeUniqueNames();
+
+            if (!parameters.Any())
+                return (null, null);
 
             var source = new CodeBuilder()
                 .AppendHeader()

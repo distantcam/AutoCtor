@@ -15,7 +15,18 @@ internal static class Helpers
     => CSharpGeneratorDriver.Create(generators,
         parseOptions: CreateParseOptions(langPreview, []),
         optionsProvider: new TestAnalyzerConfigOptionsProvider(options));
-#elif ROSLYN_4
+#elif ROSLYN_4_0
+    public static GeneratorDriver CreateDriver(
+        IEnumerable<(string, string)> options,
+        bool langPreview,
+        params ISourceGenerator[] generators)
+    => CSharpGeneratorDriver.Create(generators,
+        parseOptions: CreateParseOptions(langPreview, []),
+        optionsProvider: new TestAnalyzerConfigOptionsProvider(options),
+        driverOptions: new GeneratorDriverOptions(
+            disabledOutputs: IncrementalGeneratorOutputKind.None
+        ));
+#elif ROSLYN_4_4
     public static GeneratorDriver CreateDriver(
         IEnumerable<(string, string)> options,
         bool langPreview,
