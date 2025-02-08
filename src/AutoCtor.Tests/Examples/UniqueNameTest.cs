@@ -1,19 +1,21 @@
-﻿using AutoCtor;
+﻿public interface IServiceA { }
+public interface IServiceB { }
+public interface IServiceC { }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class UniqueNameTest : BaseClass
 {
-    private readonly IA a;
+    private readonly IServiceA _serviceA;
 
-    [AutoPostConstruct]
-    private void Initialize(IB a)
+    [AutoCtor.AutoPostConstruct]
+    private void Initialize(IServiceB serviceB)
     {
     }
 }
 
 public abstract class BaseClass
 {
-    public BaseClass(IC a)
+    public BaseClass(IServiceC serviceC)
     {
     }
 }

@@ -3,12 +3,12 @@
     {
       Location: /*
     [AutoCtor.AutoPostConstruct]
-    private void Initialize(IB b = null)
+    private void Initialize(IServiceB serviceB = null)
                  ^^^^^^^^^^
     {
 */
- : (6,17)-(6,27),
-      Message: The method 'PostCtorWithOptionalArgumentsTest.Initialize(IB)' must not have optional arguments to be used as the post construct method,
+ : (9,17)-(9,27),
+      Message: The method 'PostCtorWithOptionalArgumentsTest.Initialize(IServiceB)' must not have optional arguments to be used as the post construct method,
       Severity: Warning,
       WarningLevel: 1,
       Descriptor: {

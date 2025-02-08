@@ -1,19 +1,19 @@
-﻿using AutoCtor;
+﻿public interface IService { }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class AllParametersAreSameTypeTest : BaseClass
 {
-    private readonly IA a;
+    private readonly IService _service;
 
-    [AutoPostConstruct]
-    private void Initialize(IA a)
+    [AutoCtor.AutoPostConstruct]
+    private void Initialize(IService service)
     {
     }
 }
 
 public abstract class BaseClass
 {
-    public BaseClass(IA a)
+    public BaseClass(IService baseService)
     {
     }
 }

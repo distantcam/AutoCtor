@@ -1,11 +1,11 @@
-﻿using AutoCtor;
+﻿public interface IService { }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class PostCtorAttributeTest
 {
-    private readonly IA a;
+    private readonly IService _service;
 
-    [AutoPostConstruct]
+    [AutoCtor.AutoPostConstruct]
     private void Initialize()
     {
     }

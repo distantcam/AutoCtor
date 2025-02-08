@@ -108,7 +108,10 @@ public partial class AutoConstructSourceGenerator
 
             using (source.StartPartialType(type))
             {
-                source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
+                source
+                    .AddCompilerGeneratedAttribute()
+                    .AddGeneratedCodeAttribute()
+                    .AddDebuggerNonUserCodeAttribute();
 
                 source.AppendIndent()
                     .Append($"public {type.Name}({parameters})")

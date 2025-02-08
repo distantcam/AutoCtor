@@ -7,7 +7,7 @@
                                         ^^^^^^^^^
 }
 */
- : (6,40)-(6,49),
+ : (8,40)-(8,49),
       Message: The method 'PostCtorReturnsNonVoidTest.InitAsync()' must return void to be used as the post construct method,
       Severity: Warning,
       WarningLevel: 1,

@@ -1,33 +1,37 @@
-﻿using AutoCtor;
+﻿public interface IServiceA { }
+public interface IServiceB { }
+public interface IServiceC { }
+public interface IServiceD { }
+public interface IServiceE { }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class A : B
 {
-    private readonly IA a;
+    private readonly IServiceA _serviceA;
 }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class B : C
 {
-    private readonly IB b;
+    private readonly IServiceB _serviceB;
 }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class C : D
 {
-    private readonly IC c;
+    private readonly IServiceC _serviceC;
 }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class D : E
 {
-    private readonly ID d;
+    private readonly IServiceD _serviceD;
 }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class E : F
 {
-    private readonly IE e;
+    private readonly IServiceE _serviceE;
 }
 
 public class F

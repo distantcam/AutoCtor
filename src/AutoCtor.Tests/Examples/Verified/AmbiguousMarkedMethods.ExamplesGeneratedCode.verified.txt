@@ -7,7 +7,7 @@
                  ^^^^^^^^^^
     {
 */
- : (6,17)-(6,27),
+ : (9,17)-(9,27),
       Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Severity: Warning,
       WarningLevel: 1,
@@ -23,11 +23,11 @@
     {
       Location: /*
     [AutoCtor.AutoPostConstruct]
-    private void Initialize(IB b)
+    private void Initialize(IAnotherService anotherService)
                  ^^^^^^^^^^
     {
 */
- : (11,17)-(11,27),
+ : (14,17)-(14,27),
       Message: Only one method in a type should be marked with an [AutoPostConstruct] attribute,
       Severity: Warning,
       WarningLevel: 1,

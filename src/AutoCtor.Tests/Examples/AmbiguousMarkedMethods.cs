@@ -1,7 +1,10 @@
-﻿[AutoCtor.AutoConstruct]
+﻿public interface IService { }
+public interface IAnotherService { }
+
+[AutoCtor.AutoConstruct]
 public partial class AmbiguousMarkedMethods
 {
-    private readonly IA a;
+    private readonly IService _service;
 
     [AutoCtor.AutoPostConstruct]
     private void Initialize()
@@ -9,7 +12,7 @@ public partial class AmbiguousMarkedMethods
     }
 
     [AutoCtor.AutoPostConstruct]
-    private void Initialize(IB b)
+    private void Initialize(IAnotherService anotherService)
     {
     }
 }

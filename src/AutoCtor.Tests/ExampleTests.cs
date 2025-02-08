@@ -95,11 +95,9 @@ public class ExampleTests
 
         var data = new TheoryData<CodeFileTheoryData>();
 
-        var exampleCode = File.ReadAllText(Path.Combine(BaseDir.FullName, "IExampleInterfaces.cs"));
-
         foreach (var example in GetExamplesFiles("Examples"))
         {
-            data.Add(new CodeFileTheoryData(example, exampleCode) with
+            data.Add(new CodeFileTheoryData(example) with
             {
                 IgnoredCompileDiagnostics = ["CS0414", "CS0169"] // Ignore unused fields
             });

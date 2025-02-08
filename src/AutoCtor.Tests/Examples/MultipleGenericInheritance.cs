@@ -1,20 +1,25 @@
-﻿using AutoCtor;
+﻿public interface IServiceA { }
+public interface IServiceB { }
+public interface IServiceC { }
+public interface IServiceD { }
+public interface IServiceE { }
+public interface IServiceF { }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class Generic<TA, TB>
 {
     protected readonly TA a;
     protected readonly TB b;
 }
 
-[AutoConstruct]
-public partial class Example1 : Generic<IA, IB>
+[AutoCtor.AutoConstruct]
+public partial class Example1 : Generic<IServiceA, IServiceB>
 {
-    private readonly IC c;
+    private readonly IServiceC c;
 }
 
-[AutoConstruct]
-public partial class Example2 : Generic<ID, IE>
+[AutoCtor.AutoConstruct]
+public partial class Example2 : Generic<IServiceD, IServiceE>
 {
-    private readonly IF f;
+    private readonly IServiceF f;
 }

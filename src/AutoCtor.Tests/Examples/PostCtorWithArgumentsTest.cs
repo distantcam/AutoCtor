@@ -1,12 +1,13 @@
-﻿using AutoCtor;
+﻿public interface IServiceA { }
+public interface IServiceB { }
 
-[AutoConstruct]
+[AutoCtor.AutoConstruct]
 public partial class PostCtorWithArgumentsTest
 {
-    private readonly IA a;
+    private readonly IServiceA a;
 
-    [AutoPostConstruct]
-    private void Initialize(IB b)
+    [AutoCtor.AutoPostConstruct]
+    private void Initialize(IServiceB b)
     {
     }
 }
