@@ -18,9 +18,9 @@ internal class CodeBuilder
     static CodeBuilder()
     {
         var assembly = Assembly.GetAssembly(typeof(CodeBuilder));
-        s_assemblyName = assembly.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-        s_version = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "0.0.0.0";
-        var metadata = assembly.GetCustomAttributes<AssemblyMetadataAttribute>()?.ToDictionary(m => m.Key, m => m.Value);
+        s_assemblyName = assembly?.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "Untitled";
+        s_version = assembly?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "0.0.0.0";
+        var metadata = assembly?.GetCustomAttributes<AssemblyMetadataAttribute>()?.ToDictionary(m => m.Key, m => m.Value);
         if (metadata != null)
         {
             metadata.TryGetValue("PackageProjectUrl", out s_packageProjectUrl);

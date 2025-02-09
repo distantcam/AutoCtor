@@ -7,8 +7,8 @@ internal class EquatableTypeSymbol(ITypeSymbol typeSymbol)
     public override int GetHashCode() => ToString().GetHashCode();
 
     public override bool Equals(object? obj) =>
-        obj is EquatableTypeSymbol other &&
-        StringComparer.Ordinal.Equals(ToString(), other.ToString());
+        obj is EquatableTypeSymbol other
+        && StringComparer.Ordinal.Equals(ToString(), other.ToString());
 
     public override string ToString() => TypeSymbol.ToDisplayString(FullyQualifiedFormat);
 

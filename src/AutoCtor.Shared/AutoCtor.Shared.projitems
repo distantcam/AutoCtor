@@ -13,7 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator\Tracking.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator\Diagnostics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator\Emitter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AutoConstructSourceGenerator\Parser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneratorUtilities.cs" />

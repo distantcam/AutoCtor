@@ -1,29 +1,22 @@
 ﻿using System.Collections;
 using System.Globalization;
-using Microsoft.CodeAnalysis;
 
 internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<MemberModel> properties)
     : IEnumerable<ParameterModel>, IFormattable
 {
-    private readonly Dictionary<MemberModel, ParameterModel> _memberToParameterMap =
-        fields.Concat(properties)
+    private readonly Dictionary<MemberModel, ParameterModel> _memberToParameterMap
+        = fields.Concat(properties)
         .ToDictionary(m => m, m => new ParameterModel(m.FriendlyName, m.Type));
-
     private readonly List<ParameterModel> _parameters = [];
     private readonly Dictionary<ParameterModel, string> _uniqueNames = [];
-    private IEnumerable<ParameterModel> _postCtorParameters = [];
+    private readonly List<ParameterModel> _postCtorParameters = [];
 
     public bool HasBaseParameters => _parameters?.Any() == true;
 
     public void AddParameters(IEnumerable<ParameterModel> parameters)
-    {
-        _parameters.AddRange(parameters);
-    }
-
+        => _parameters.AddRange(parameters);
     public void AddPostCtorParameters(IEnumerable<ParameterModel> parameters)
-    {
-        _postCtorParameters = parameters;
-    }
+        => _postCtorParameters.AddRange(parameters);
 
     public void MakeUniqueNames()
     {
@@ -46,8 +39,6 @@ internal class ParameterList(IEnumerable<MemberModel> fields, IEnumerable<Member
     }
 
     public string ParameterName(MemberModel f) => _uniqueNames[_memberToParameterMap[f]];
-
-    public IEnumerable<ParameterModel> BaseParameters() => _parameters;
 
     public IEnumerator<ParameterModel> GetEnumerator() => _parameters
         .Concat(_memberToParameterMap.Values)
