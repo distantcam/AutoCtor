@@ -8,9 +8,12 @@ public class Issue73
     [Fact]
     public async Task VerifyGeneratedCode()
     {
-        var compilation = await Compile();
-        var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
-        var driver = Helpers.CreateDriver(generator).RunGenerators(compilation);
+        var common = Common();
+        var compilation = await Compile(common);
+        var driver = new GeneratorDriverBuilder()
+            .AddGenerator(new AutoConstructSourceGenerator())
+            .Build(common.ParseOptions)
+            .RunGenerators(compilation);
 
         await Verify(driver).UseDirectory("Verified");
     }
@@ -20,16 +23,25 @@ public class Issue73
     {
         string[] ignoredWarnings = ["CS0414"]; // Ignore unused fields
 
-        var compilation = await Compile();
-        var generator = new AutoConstructSourceGenerator().AsSourceGenerator();
-        Helpers.CreateDriver(generator)
+        var common = Common();
+        var compilation = await Compile(common);
+        new GeneratorDriverBuilder()
+            .AddGenerator(new AutoConstructSourceGenerator())
+            .Build(common.ParseOptions)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         Assert.Empty(diagnostics);
         Assert.Empty(outputCompilation.GetDiagnostics().Where(d => !ignoredWarnings.Contains(d.Id)));
     }
 
-    private static async Task<CSharpCompilation> Compile()
+    private static CompilationBuilder Common()
+    {
+        return new CompilationBuilder()
+            .AddNetCoreReference()
+            .AddAssemblyReference<AutoConstructAttribute>();
+    }
+
+    private static async Task<CSharpCompilation> Compile(CompilationBuilder common)
     {
         var projectACode = @"
 namespace A
@@ -51,10 +63,14 @@ public abstract class BaseClass<T, U, V>
 public sealed partial class TheClass : BaseClass<object, int, string>{}
 }
 ";
+        var projectA = await common
+            .AddCode(projectACode)
+            .Build("ProjectA");
 
-        var projectA = await Helpers.Compile<AutoConstructAttribute>([projectACode], assemblyName: "ProjectA");
-        var projectB = await Helpers.Compile<AutoConstructAttribute>([projectBCode], assemblyName: "ProjectB",
-            extraReferences: [projectA.ToMetadataReference()]);
+        var projectB = await common
+            .AddCompilationReference(projectA)
+            .AddCode(projectBCode)
+            .Build("ProjectB");
 
         return projectB;
     }

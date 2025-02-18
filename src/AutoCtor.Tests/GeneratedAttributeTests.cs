@@ -1,15 +1,17 @@
-﻿using Microsoft.CodeAnalysis;
-
-namespace AutoCtor.Tests;
+﻿namespace AutoCtor.Tests;
 
 public class GeneratedAttributeTests
 {
     [Fact]
     public async Task AttributeGeneratedCode()
     {
-        var compilation = await Helpers.Compile<AutoConstructAttribute>([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var generator = new AttributeSourceGenerator().AsSourceGenerator();
-        var driver = Helpers.CreateDriver(generator)
+        var builder = new CompilationBuilder()
+            .AddNetCoreReference()
+            .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+        var driver = new GeneratorDriverBuilder()
+            .AddGenerator(new AttributeSourceGenerator())
+            .Build(builder.ParseOptions)
             .RunGenerators(compilation);
 
         await Verify(driver).UseDirectory("Verified");
@@ -18,9 +20,13 @@ public class GeneratedAttributeTests
     [Fact]
     public async Task AttributeCompilesProperly()
     {
-        var compilation = await Helpers.Compile<AutoConstructAttribute>([], preprocessorSymbols: ["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var generator = new AttributeSourceGenerator().AsSourceGenerator();
-        Helpers.CreateDriver(generator)
+        var builder = new CompilationBuilder()
+            .AddNetCoreReference()
+            .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+        var driver = new GeneratorDriverBuilder()
+            .AddGenerator(new AttributeSourceGenerator())
+            .Build(builder.ParseOptions)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         Assert.Empty(diagnostics);
