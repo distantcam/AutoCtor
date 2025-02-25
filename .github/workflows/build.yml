@@ -1,53 +1,19 @@
-name: 🛠️ Building AutoCtor
+name: 🛠️ build
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
-      - feature/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+-**"
-  pull_request:
-    branches:
-      - main
 
 jobs:
   test:
-    name: 🧪 Run tests
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        roslyn: ["3.11", "4.0", "4.4"]
-    steps:
-      - name: 🛒 Check-out code
-        uses: actions/checkout@v4
-
-      - name: 📐 Setup .NET Core SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          global-json-file: src/global.json
-
-      - name: 🔍 Enable problem matchers
-        run: echo "::add-matcher::.github/matchers/dotnet.json"
-
-      - name: 🛠️ Build code
-        run: dotnet build --configuration Release
-
-      - name: 🧪 Testing ${{ matrix.roslyn }} code
-        run: >
-          dotnet test
-          --configuration Release
-          -p:GeneratorVersion=${{ matrix.roslyn }}
-          --logger GitHubActions
-          --
-          RunConfiguration.CollectSourceInformation=true
+    uses: ./.github/workflows/test.yml
 
   build:
     name: 🛠️ Build
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag'
+    needs: test
     steps:
       - name: 🛒 Check-out code
         uses: actions/checkout@v4
@@ -66,43 +32,7 @@ jobs:
       - name: 🛠️ Build code
         run: dotnet build --configuration Release -p:Version=${{ github.ref_name }} -p:GitSha=${{ github.sha }} --no-restore
 
-      - name: 📦 Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: nuget
-          path: nugets/*.nupkg
-
-  publish:
-    name: 📦 Publish nuget library
-    runs-on: ubuntu-latest
-    if: github.ref_type == 'tag'
-    needs: [test, build]
-    steps:
-      - name: 📦 Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: nuget
-
-      - name: ✈️ Push Nuget
-        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
-
-  create-release:
-    name: 📝 Create GitHub Release
-    runs-on: ubuntu-latest
-    if: github.ref_type == 'tag'
-    needs: [test, build]
-    permissions:
-      contents: write
-    steps:
-      - name: 🛒 Check-out code
-        uses: actions/checkout@v4
-
-      - name: 📦 Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: nuget
-
       - name: 📝 Generate Release Notes
-        run: gh release create ${{ github.ref_name }} --draft --generate-notes *.nupkg
+        run: gh release create ${{ github.ref_name }} --draft --generate-notes nugets/*.nupkg
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

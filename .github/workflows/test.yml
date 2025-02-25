@@ -1,0 +1,43 @@
+name: 🧪 test
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  push:
+    branches:
+      - main
+      - feature/*
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: 🧪 Run tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        roslyn: ["3.11", "4.0", "4.4"]
+    steps:
+      - name: 🛒 Check-out code
+        uses: actions/checkout@v4
+
+      - name: 📐 Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: src/global.json
+
+      - name: 🔍 Enable problem matchers
+        run: echo "::add-matcher::.github/matchers/dotnet.json"
+
+      - name: 🛠️ Build code
+        run: dotnet build --configuration Release
+
+      - name: 🧪 Testing ${{ matrix.roslyn }} code
+        run: >
+          dotnet test
+          --configuration Release
+          -p:GeneratorVersion=${{ matrix.roslyn }}
+          --logger GitHubActions
+          --
+          RunConfiguration.CollectSourceInformation=true

@@ -1,0 +1,19 @@
+name: ✈️ publish
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish:
+    name: 📦 Publish nuget library
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Download Artifact
+        run: gh release download --repo ${{ github.repository }} --pattern '*.nupkg'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ✈️ Push Nuget
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
