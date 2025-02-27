@@ -93,6 +93,7 @@ public class ExampleTests
         var builder = new CompilationBuilder()
             .AddNetCoreReference()
             .AddAssemblyReference<AutoConstructAttribute>()
+            .WithNullableContextOptions(NullableContextOptions.Enable)
             .WithPreprocessorSymbols(s_preprocessorSymbols)
             .AddCodes(theoryData.Codes);
 

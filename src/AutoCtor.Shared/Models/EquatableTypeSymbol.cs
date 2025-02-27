@@ -1,20 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
 
-internal class EquatableTypeSymbol(ITypeSymbol typeSymbol)
+internal readonly record struct EquatableTypeSymbol(ITypeSymbol TypeSymbol)
 {
-    public ITypeSymbol TypeSymbol => typeSymbol;
+    private readonly string _fullyQualifiedString = TypeSymbol.ToDisplayString(FullyQualifiedFormat);
 
     public override int GetHashCode() => ToString().GetHashCode();
-
-    public override bool Equals(object? obj) =>
-        obj is EquatableTypeSymbol other
-        && StringComparer.Ordinal.Equals(ToString(), other.ToString());
-
-    public override string ToString() => TypeSymbol.ToDisplayString(FullyQualifiedFormat);
-
-    public static bool operator ==(EquatableTypeSymbol? left, EquatableTypeSymbol? right) =>
-        (object?)left == right || (left is not null && left.Equals(right));
-
-    public static bool operator !=(EquatableTypeSymbol? left, EquatableTypeSymbol? right) =>
-        !(left == right);
+    public bool Equals(EquatableTypeSymbol other) => EqualityComparer<string>.Default.Equals(ToString(), other.ToString());
+    public override string ToString() => _fullyQualifiedString;
 }

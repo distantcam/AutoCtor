@@ -2,5 +2,5 @@
 public partial class IgnoreField
 {
     [AutoCtor.AutoConstructIgnore]
-    private readonly string _ignored;
+    private readonly string? _ignored;
 }
