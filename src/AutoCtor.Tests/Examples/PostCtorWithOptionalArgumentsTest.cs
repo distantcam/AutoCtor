@@ -7,7 +7,7 @@ public partial class PostCtorWithOptionalArgumentsTest
     private readonly IServiceA _serviceA;
 
     [AutoCtor.AutoPostConstruct]
-    private void Initialize(IServiceB serviceB = null)
+    private void Initialize(IServiceB? serviceB = null)
     {
     }
 }

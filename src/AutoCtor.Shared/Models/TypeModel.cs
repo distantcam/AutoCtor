@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-internal record struct TypeModel(
+internal readonly record struct TypeModel(
     int Depth,
 
     string BaseTypeKey,

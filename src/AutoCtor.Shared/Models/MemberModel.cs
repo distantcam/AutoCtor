@@ -1,11 +1,12 @@
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 
-internal record struct MemberModel(
+internal readonly record struct MemberModel(
     EquatableTypeSymbol Type,
     string FriendlyName,
     string IdentifierName,
 
-    bool IsReferenceType
+    bool IsReferenceType,
+    bool IsNullableAnnotated
 )
 {
     public static MemberModel Create(IFieldSymbol field)
@@ -19,7 +20,8 @@ internal record struct MemberModel(
             FriendlyName: friendlyName,
             IdentifierName: field.Name.EscapeKeywordIdentifier(),
 
-            IsReferenceType: field.Type.IsReferenceType
+            IsReferenceType: field.Type.IsReferenceType,
+            IsNullableAnnotated: field.Type.NullableAnnotation == NullableAnnotation.Annotated
         );
     }
 
@@ -32,7 +34,8 @@ internal record struct MemberModel(
             FriendlyName: friendlyName,
             IdentifierName: property.Name.EscapeKeywordIdentifier(),
 
-            IsReferenceType: property.Type.IsReferenceType
+            IsReferenceType: property.Type.IsReferenceType,
+            IsNullableAnnotated: property.Type.NullableAnnotation == NullableAnnotation.Annotated
         );
     }
 }

@@ -120,20 +120,18 @@ public partial class AutoConstructSourceGenerator
 
                 using (source.StartBlock())
                 {
-                    var items = type.Fields
-                        .Select(f => (f.IsReferenceType, Name: f.IdentifierName, Parameter: parameters.ParameterName(f)))
-                    .Concat(type.Properties
-                        .Select(p => (p.IsReferenceType, Name: p.IdentifierName, Parameter: parameters.ParameterName(p))));
-
-                    foreach (var (isReferenceType, name, parameter) in items)
+                    foreach (var item in type.Fields.Concat(type.Properties))
                     {
+                        var parameter = parameters.ParameterName(item);
+
                         var addGuard =
                             ((type.Guard.HasValue && type.Guard.Value)
                                 || (!type.Guard.HasValue && guards))
-                            && isReferenceType;
+                            && item.IsReferenceType
+                            && !item.IsNullableAnnotated;
 
                         source.AppendIndent()
-                            .Append($"this.{name} = {parameter}")
+                            .Append($"this.{item.IdentifierName} = {parameter}")
                             .Append(addGuard, $" ?? throw new global::System.ArgumentNullException(\"{parameter}\")")
                             .Append(";")
                             .AppendLine();

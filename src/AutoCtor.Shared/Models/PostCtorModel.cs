@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-internal record struct PostCtorModel(
+internal readonly record struct PostCtorModel(
     string TypeKey,
     string Name,
     string ErrorName,

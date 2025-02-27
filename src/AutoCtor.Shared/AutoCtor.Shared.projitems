@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CodeBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneratorUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\IsExternalInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\AttributeNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\EquatableList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\EquatableTypeSymbol.cs" />
