@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📦 Download Artifact
-        run: gh release download --repo ${{ github.repository }} --pattern '*.nupkg'
+        run: gh release download ${{ github.ref_name }} --repo ${{ github.repository }} --pattern '*.nupkg'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
