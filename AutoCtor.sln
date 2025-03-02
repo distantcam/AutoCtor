@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\nugetfiles\AutoCtor.badcompat.targets = src\nugetfiles\AutoCtor.badcompat.targets
 		src\nugetfiles\AutoCtor.props = src\nugetfiles\AutoCtor.props
 		src\nugetfiles\AutoCtor.targets = src\nugetfiles\AutoCtor.targets
-		.github\workflows\build.yml = .github\workflows\build.yml
 		src\Common.props = src\Common.props
 		src\Directory.Build.props = src\Directory.Build.props
 		src\Directory.Packages.props = src\Directory.Packages.props
@@ -29,6 +28,12 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AutoCtor.Shared", "src\AutoCtor.Shared\AutoCtor.Shared.shproj", "{0381B830-8FD4-4392-A38A-3B2EE86A2094}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCtor.Roslyn4.0", "src\AutoCtor.Roslyn4.0\AutoCtor.Roslyn4.0.csproj", "{F73002A3-779E-445D-B563-85361FD8B35F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +68,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8CC56491-C17C-44A5-8686-C41491E2E624}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C1E6B0F-E4E8-410D-A9C6-D9128CAC4EC8}

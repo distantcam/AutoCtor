@@ -64,7 +64,7 @@ public partial class AutoConstructSourceGenerator
                 var (source, parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
 
                 if (source == null || parameters == null)
-                    return;
+                    continue;
 
                 ctorMaps.Add(type.TypeKey, parameters);
 
