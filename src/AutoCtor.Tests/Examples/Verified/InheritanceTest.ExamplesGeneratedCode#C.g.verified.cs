@@ -9,7 +9,11 @@ partial class C
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public C(global::IServiceE serviceE, global::IServiceD serviceD, global::IServiceC serviceC) : base(serviceE, serviceD)
+	public C(
+		global::IServiceE serviceE,
+		global::IServiceD serviceD,
+		global::IServiceC serviceC
+	) : base(serviceE, serviceD)
 	{
 		this._serviceC = serviceC;
 	}

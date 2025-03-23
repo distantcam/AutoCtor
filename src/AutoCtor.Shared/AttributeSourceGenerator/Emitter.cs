@@ -31,18 +31,18 @@ public partial class AttributeSourceGenerator
                 using (source.StartBlock())
                 {
                     source.AppendLine("public AutoConstructAttribute(GuardSetting guard = GuardSetting.Default)");
-                    source.OpenBlock().CloseBlock();
+                    source.StartBlock().Dispose();
                 }
 
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
                 source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]");
                 source.AppendLine("internal sealed class AutoPostConstructAttribute : global::System.Attribute");
-                source.OpenBlock().CloseBlock();
+                source.StartBlock().Dispose();
 
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
                 source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]");
                 source.AppendLine("internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute");
-                source.OpenBlock().CloseBlock();
+                source.StartBlock().Dispose();
             }
             source.AppendLine("#endif");
 
