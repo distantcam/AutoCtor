@@ -114,8 +114,8 @@ public partial class AutoConstructSourceGenerator
                     .AddDebuggerNonUserCodeAttribute();
 
                 source.AppendIndent()
-                    .Append($"public {type.Name}({parameters})")
-                    .Append(parameters.HasBaseParameters, $" : base({parameters:B})")
+                    .Append($"public {type.Name}({parameters.ParameterDeclarations:commaindent})")
+                    .Append(parameters.HasBaseParameters, $" : base({parameters.BaseParameters:commaindent})")
                     .AppendLine();
 
                 using (source.StartBlock())
@@ -138,7 +138,7 @@ public partial class AutoConstructSourceGenerator
                     }
                     if (postCtorMethod.HasValue)
                     {
-                        source.AppendLine($"{postCtorMethod.Value.Name}({parameters:P});");
+                        source.AppendLine($"{postCtorMethod.Value.Name}({parameters.Parameters:commaindent});");
                     }
                 }
             }

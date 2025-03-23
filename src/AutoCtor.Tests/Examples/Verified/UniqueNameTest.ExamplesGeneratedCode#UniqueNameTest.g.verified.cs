@@ -9,7 +9,11 @@ partial class UniqueNameTest
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public UniqueNameTest(global::IServiceC serviceC, global::IServiceA serviceA, global::IServiceB serviceB) : base(serviceC)
+	public UniqueNameTest(
+		global::IServiceC serviceC,
+		global::IServiceA serviceA,
+		global::IServiceB serviceB
+	) : base(serviceC)
 	{
 		this._serviceA = serviceA;
 		Initialize(serviceB);

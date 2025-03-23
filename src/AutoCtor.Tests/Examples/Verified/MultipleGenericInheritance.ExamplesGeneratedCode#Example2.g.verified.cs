@@ -9,7 +9,11 @@ partial class Example2
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public Example2(global::IServiceD a, global::IServiceE b, global::IServiceF f) : base(a, b)
+	public Example2(
+		global::IServiceD a,
+		global::IServiceE b,
+		global::IServiceF f
+	) : base(a, b)
 	{
 		this.f = f;
 	}

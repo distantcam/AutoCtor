@@ -9,7 +9,11 @@ partial class CClass
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public CClass(global::IServiceA service, global::IServiceB service0, global::IServiceC service1) : base(service, service0)
+	public CClass(
+		global::IServiceA service,
+		global::IServiceB service0,
+		global::IServiceC service1
+	) : base(service, service0)
 	{
 		this._service = service1;
 	}

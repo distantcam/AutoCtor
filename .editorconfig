@@ -227,7 +227,7 @@ csharp_preserve_single_line_statements = true
 ##########################################
 
 # Always have accessibility keyword
-dotnet_style_require_accessibility_modifiers = always:warning
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
 
 # Use file scoped namespaces
 csharp_style_namespace_declarations = file_scoped:warning
