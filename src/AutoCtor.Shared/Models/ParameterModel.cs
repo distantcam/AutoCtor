@@ -1,7 +1,26 @@
 ﻿using Microsoft.CodeAnalysis;
 
-internal readonly record struct ParameterModel(string Name, EquatableTypeSymbol Type)
+internal readonly record struct ParameterModel(
+    RefKind RefKind,
+    string Name,
+    EquatableTypeSymbol Type)
 {
     public static ParameterModel Create(IParameterSymbol parameter) =>
-        new(parameter.Name.EscapeKeywordIdentifier(), new(parameter.Type));
+        new(
+            parameter.RefKind,
+            parameter.Name.EscapeKeywordIdentifier(),
+            new(parameter.Type)
+        );
+
+    public bool Equals(ParameterModel other)
+    {
+        return EqualityComparer<string>.Default.Equals(Name, other.Name)
+            && EqualityComparer<EquatableTypeSymbol>.Default.Equals(Type, other.Type);
+    }
+
+    public override int GetHashCode()
+    {
+        return EqualityComparer<string>.Default.GetHashCode(Name) * -1521134295
+            + EqualityComparer<EquatableTypeSymbol>.Default.GetHashCode(Type);
+    }
 }
