@@ -1,4 +1,10 @@
-﻿internal partial class CodeBuilder
+﻿internal interface IPartialTypeModel
+{
+    string? Namespace { get; }
+    IReadOnlyList<string> TypeDeclarations { get; }
+}
+
+internal partial class CodeBuilder
 {
     public IDisposable StartPartialType(IPartialTypeModel typeModel)
     {

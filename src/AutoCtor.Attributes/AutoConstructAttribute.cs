@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using static System.AttributeTargets;
 
 namespace AutoCtor;
 
@@ -9,17 +10,14 @@ public enum GuardSetting
     Enabled
 }
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(Class | Struct, AllowMultiple = false, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
-public sealed class AutoConstructAttribute : Attribute
-{
-    public AutoConstructAttribute(GuardSetting guard = GuardSetting.Default) { }
-}
+public sealed class AutoConstructAttribute(GuardSetting guard = GuardSetting.Default) : Attribute;
 
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(Method, AllowMultiple = false, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoPostConstructAttribute : Attribute;
 
-[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(Field | Property, AllowMultiple = false, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoConstructIgnoreAttribute : Attribute;

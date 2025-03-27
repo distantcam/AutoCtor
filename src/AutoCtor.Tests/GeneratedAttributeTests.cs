@@ -32,4 +32,23 @@ public class GeneratedAttributeTests
         Assert.Empty(diagnostics);
         Assert.Empty(outputCompilation.GetDiagnostics());
     }
+
+    [Fact]
+    public async Task PreserveAttributesTest()
+    {
+        var builder = new CompilationBuilder()
+            .AddNetCoreReference()
+            .AddCode("[AutoCtor.AutoConstruct] public partial class Test { }")
+            .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES", "AUTOCTOR_USAGES"]);
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+
+        var driver = new GeneratorDriverBuilder()
+            .AddGenerator(new AttributeSourceGenerator())
+            .AddGenerator(new AutoConstructSourceGenerator())
+            .Build(builder.ParseOptions)
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+
+        Assert.Empty(diagnostics);
+        Assert.Empty(outputCompilation.GetDiagnostics());
+    }
 }
