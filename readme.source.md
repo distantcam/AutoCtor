@@ -7,6 +7,7 @@
 
 AutoCtor is a Roslyn Source Generator that will automatically create a constructor for your class for use with constructor Dependency Injection.
 
+<a id='toc'></a>
 toc
 
 ## NuGet packages
@@ -23,6 +24,7 @@ snippet: Basic
 
 snippet: BasicGeneratedCode
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## More Features
 
 ### Post constructor Initialisation
@@ -33,11 +35,21 @@ snippet: PostConstruct
 
 snippet: PostConstructGeneratedCode
 
+### Initialise with parameters
+
 Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
 
 snippet: PostConstructWithParameters
 
 snippet: PostConstructWithParametersGeneratedCode
+
+### Initialise readonly fields with ref or out
+
+If a parameter is marked `ref` or `out` and matches the type of a readonly field, it can set that field during construction.
+
+snippet: PostConstructWithOutParameters
+
+snippet: PostConstructWithOutParametersGeneratedCode
 
 ### Argument Guards
 
@@ -67,9 +79,10 @@ AutoCtor can set properties that are considered as read only properties.
 
 snippet: PropertyExamples
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## More examples
 
-You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
+You can also initialise readonly fields, and AutoCtor will not include them in the constructor.
 
 snippet: PresetField
 
@@ -81,12 +94,13 @@ snippet: Inherit
 
 snippet: InheritGeneratedCode
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## Embedding the attributes in your project
 
 By default, the `[AutoConstruct]` attributes referenced in your project are contained in an external dll. It is also possible to embed the attributes directly in your project. To do this, you must do two things:
 
 1. Define the MSBuild constant `AUTOCTOR_EMBED_ATTRIBUTES`. This ensures the attributes are embedded in your project.
-2. Add `compile` to the list of excluded assets in your `<PackageReference>` element. This ensures the attributes in your project are referenced, insted of the _AutoCtor.Attributes.dll_ library.
+2. Add `compile` to the list of excluded assets in your `<PackageReference>` element. This ensures the attributes in your project are referenced, instead of the _AutoCtor.Attributes.dll_ library.
 
 Your project file should look like this:
 
@@ -107,6 +121,7 @@ Your project file should look like this:
 </Project>
 ```
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## Preserving usage of the `[AutoConstruct]` attribute
 
 The `[AutoConstruct]` attributes are decorated with the `[Conditional]` attribute, so their usage will not appear in the build output of your project. If you use reflection at runtime you will not find the `[AutoConstruct]` attributes.
@@ -127,6 +142,7 @@ If you wish to preserve these attributes in the build output, you can define the
 </Project>
 ```
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## Stats
 
 ![Alt](https://repobeats.axiom.co/api/embed/8d02b2c004a5f958b4365abad3d4d1882dca200f.svg "Repobeats analytics image")

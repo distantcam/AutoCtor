@@ -21,6 +21,7 @@ internal static class GeneratorUtilities
             RefKind.Ref => "ref",
             RefKind.Out => "out",
             RefKind.In => "in",
+            (RefKind)4 => "in", // ref readonly parameter introduced in C#12
             _ => string.Empty
         };
     }

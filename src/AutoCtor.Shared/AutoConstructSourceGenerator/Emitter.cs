@@ -45,7 +45,7 @@ public partial class AutoConstructSourceGenerator
                                     type.BaseTypeParameters.Value,
                                     type.BaseTypeArguments.Value);
 
-                                baseParameterList.Add(new(bp.Name, new(bpType)));
+                                baseParameterList.Add(new(RefKind.None, bp.Name, new(bpType)));
                             }
                             baseParameters = baseParameterList;
                         }
@@ -81,23 +81,24 @@ public partial class AutoConstructSourceGenerator
         {
             var postCtorMethod = GetPostCtorMethod(context, markedPostCtorMethods);
 
-            var parameters = new ParameterList(type.Fields, type.Properties);
+            var parametersBuilder = new ParameterListBuilder(type.Fields, type.Properties);
             if (type.HasBaseType)
             {
                 if (type.BaseCtorParameters != null)
                 {
-                    parameters.AddParameters(type.BaseCtorParameters);
+                    parametersBuilder.AddBaseParameters(type.BaseCtorParameters);
                 }
                 else if (baseParameters != null)
                 {
-                    parameters.AddParameters(baseParameters);
+                    parametersBuilder.AddBaseParameters(baseParameters);
                 }
             }
             if (postCtorMethod.HasValue)
             {
-                parameters.AddPostCtorParameters(postCtorMethod.Value.Parameters);
+                parametersBuilder.AddPostCtorParameters(postCtorMethod.Value.Parameters);
             }
-            parameters.MakeUniqueNames();
+            var parameters = parametersBuilder.Build();
+
 
             if (!parameters.Any())
                 return (null, null);
@@ -114,7 +115,7 @@ public partial class AutoConstructSourceGenerator
                     .AddDebuggerNonUserCodeAttribute();
 
                 source.AppendIndent()
-                    .Append($"public {type.Name}({parameters.ParameterDeclarations:commaindent})")
+                    .Append($"public {type.Name}({parameters.CtorParameterDeclarations:commaindent})")
                     .Append(parameters.HasBaseParameters, $" : base({parameters.BaseParameters:commaindent})")
                     .AppendLine();
 
@@ -122,7 +123,9 @@ public partial class AutoConstructSourceGenerator
                 {
                     foreach (var item in type.Fields.Concat(type.Properties))
                     {
-                        var parameter = parameters.ParameterName(item);
+                        var parameter = parameters.GetParameter(item);
+                        if (parameter == null)
+                            continue;
 
                         var addGuard =
                             ((type.Guard.HasValue && type.Guard.Value)
@@ -138,7 +141,7 @@ public partial class AutoConstructSourceGenerator
                     }
                     if (postCtorMethod.HasValue)
                     {
-                        source.AppendLine($"{postCtorMethod.Value.Name}({parameters.Parameters:commaindent});");
+                        source.AppendLine($"{postCtorMethod.Value.Name}({parameters.PostCtorParameters:commaindent});");
                     }
                 }
             }

@@ -14,6 +14,7 @@ To change this file edit the source file and then run MarkdownSnippets.
 
 AutoCtor is a Roslyn Source Generator that will automatically create a constructor for your class for use with constructor Dependency Injection.
 
+<a id='toc'></a>
 <!-- toc -->
 ## Contents
 
@@ -23,6 +24,8 @@ AutoCtor is a Roslyn Source Generator that will automatically create a construct
     * [What gets generated](#what-gets-generated)
   * [More Features](#more-features)
     * [Post constructor Initialisation](#post-constructor-initialisation)
+    * [Initialise with parameters](#initialise-with-parameters)
+    * [Initialise readonly fields with ref or out](#initialise-readonly-fields-with-ref-or-out)
     * [Argument Guards](#argument-guards)
     * [Property Initialisation](#property-initialisation)
   * [More examples](#more-examples)
@@ -63,6 +66,7 @@ public ExampleClass(IService service)
 <sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L18-L23' title='Snippet source file'>snippet source</a> | <a href='#snippet-BasicGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## More Features
 
 ### Post constructor Initialisation
@@ -83,7 +87,7 @@ public partial class PostConstructMethod
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L6-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L10-L23' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: PostConstructGeneratedCode -->
@@ -95,8 +99,10 @@ public PostConstructMethod(IService service)
     Initialize();
 }
 ```
-<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L24-L30' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructGeneratedCode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L27-L33' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
+
+### Initialise with parameters
 
 Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
 
@@ -113,7 +119,7 @@ public partial class PostConstructMethodWithParameters
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L33-L45' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameters' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L36-L48' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameters' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <!-- snippet: PostConstructWithParametersGeneratedCode -->
@@ -125,7 +131,41 @@ public PostConstructMethodWithParameters(IService service, IInitialiseService in
     Initialize(initialiseService);
 }
 ```
-<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L50-L56' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParametersGeneratedCode' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L52-L58' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParametersGeneratedCode' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+### Initialise readonly fields with ref or out
+
+If a parameter is marked `ref` or `out` and matches the type of a readonly field, it can set that field during construction.
+
+<!-- snippet: PostConstructWithOutParameters -->
+<a id='snippet-PostConstructWithOutParameters'></a>
+```cs
+public partial class PostConstructWithOutParameters
+{
+    private readonly IService _service;
+    private readonly IOtherService _otherService;
+
+    [AutoPostConstruct]
+    private void Initialize(IServiceFactory serviceFactory, out IService service)
+    {
+        service = serviceFactory.CreateService();
+    }
+}
+```
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L61-L75' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameters' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+<!-- snippet: PostConstructWithOutParametersGeneratedCode -->
+<a id='snippet-PostConstructWithOutParametersGeneratedCode'></a>
+```cs
+public PostConstructWithOutParameters(IOtherService otherService, IServiceFactory serviceFactory)
+{
+    _otherService = otherService;
+    Initialize(serviceFactory, out _service);
+}
+```
+<sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L79-L85' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParametersGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### Argument Guards
@@ -191,9 +231,10 @@ public string RedirectedProperty => InitializerProperty;
 <sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L80-L94' title='Snippet source file'>snippet source</a> | <a href='#snippet-PropertyExamples' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## More examples
 
-You can also initialize readonly fields, and AutoCtor will not include them in the constructor.
+You can also initialise readonly fields, and AutoCtor will not include them in the constructor.
 
 <!-- snippet: PresetField -->
 <a id='snippet-PresetField'></a>
@@ -255,12 +296,13 @@ public ClassWithBase(IAnotherService anotherService, IService service) : base(an
 <sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L70-L75' title='Snippet source file'>snippet source</a> | <a href='#snippet-InheritGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## Embedding the attributes in your project
 
 By default, the `[AutoConstruct]` attributes referenced in your project are contained in an external dll. It is also possible to embed the attributes directly in your project. To do this, you must do two things:
 
 1. Define the MSBuild constant `AUTOCTOR_EMBED_ATTRIBUTES`. This ensures the attributes are embedded in your project.
-2. Add `compile` to the list of excluded assets in your `<PackageReference>` element. This ensures the attributes in your project are referenced, insted of the _AutoCtor.Attributes.dll_ library.
+2. Add `compile` to the list of excluded assets in your `<PackageReference>` element. This ensures the attributes in your project are referenced, instead of the _AutoCtor.Attributes.dll_ library.
 
 Your project file should look like this:
 
@@ -281,6 +323,7 @@ Your project file should look like this:
 </Project>
 ```
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## Preserving usage of the `[AutoConstruct]` attribute
 
 The `[AutoConstruct]` attributes are decorated with the `[Conditional]` attribute, so their usage will not appear in the build output of your project. If you use reflection at runtime you will not find the `[AutoConstruct]` attributes.
@@ -301,6 +344,7 @@ If you wish to preserve these attributes in the build output, you can define the
 </Project>
 ```
 
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## Stats
 
 ![Alt](https://repobeats.axiom.co/api/embed/8d02b2c004a5f958b4365abad3d4d1882dca200f.svg "Repobeats analytics image")
