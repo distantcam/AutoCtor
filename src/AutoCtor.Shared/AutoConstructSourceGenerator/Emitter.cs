@@ -134,7 +134,7 @@ public partial class AutoConstructSourceGenerator
                             && !item.IsNullableAnnotated;
 
                         source.AppendIndent()
-                            .Append($"this.{item.IdentifierName} = {parameter}")
+                            .Append($"{item.IdentifierName} = {parameter}")
                             .Append(addGuard, $" ?? throw new global::System.ArgumentNullException(\"{parameter}\")")
                             .Append(";")
                             .AppendLine();

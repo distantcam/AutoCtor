@@ -12,6 +12,6 @@ partial class PostCtorWithOutArgumentTest
 	public PostCtorWithOutArgumentTest(global::IServiceA serviceA, global::IServiceFactory serviceFactory)
 	{
 		this._serviceA = serviceA;
-		Initialise(serviceFactory, out _serviceB);
+		Initialise(serviceFactory, out this._serviceB);
 	}
 }

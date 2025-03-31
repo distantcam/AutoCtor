@@ -18,7 +18,7 @@ internal readonly record struct MemberModel(
         return new MemberModel(
             Type: new(field.Type),
             FriendlyName: friendlyName,
-            IdentifierName: field.Name.EscapeKeywordIdentifier(),
+            IdentifierName: "this." + field.Name.EscapeKeywordIdentifier(),
 
             IsReferenceType: field.Type.IsReferenceType,
             IsNullableAnnotated: field.Type.NullableAnnotation == NullableAnnotation.Annotated
@@ -32,7 +32,7 @@ internal readonly record struct MemberModel(
         return new MemberModel(
             Type: new(property.Type),
             FriendlyName: friendlyName,
-            IdentifierName: property.Name.EscapeKeywordIdentifier(),
+            IdentifierName: "this." + property.Name.EscapeKeywordIdentifier(),
 
             IsReferenceType: property.Type.IsReferenceType,
             IsNullableAnnotated: property.Type.NullableAnnotation == NullableAnnotation.Annotated
