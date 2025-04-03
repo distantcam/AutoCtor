@@ -100,7 +100,7 @@ public partial class AutoConstructSourceGenerator
             var parameters = parametersBuilder.Build();
 
 
-            if (!parameters.Any())
+            if (!parameters.Any() && !postCtorMethod.HasValue)
                 return (null, null);
 
             var source = new CodeBuilder()
