@@ -45,7 +45,8 @@ public partial class AutoConstructSourceGenerator
                                     type.BaseTypeParameters.Value,
                                     type.BaseTypeArguments.Value);
 
-                                baseParameterList.Add(new(RefKind.None, bp.Name, new(bpType)));
+                                baseParameterList.Add(
+                                    new(RefKind.None, bp.Name, bp.KeyedService, new(bpType)));
                             }
                             baseParameters = baseParameterList;
                         }

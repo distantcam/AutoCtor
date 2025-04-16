@@ -12,6 +12,8 @@ internal class CompilationBuilder
     private CSharpParseOptions _parseOptions;
     private CSharpCompilationOptions _compilationOptions;
 
+    private string _defaultTargetFramework = "net9.0";
+
     public CSharpParseOptions ParseOptions => _parseOptions;
 
     public CompilationBuilder()
@@ -47,24 +49,26 @@ internal class CompilationBuilder
             .WithOptions(_compilationOptions);
     }
 
-    public CompilationBuilder AddNugetReference(string targetFramework, string id, string version, string path)
+    public CompilationBuilder AddNugetReference(string id, string version, string targetFramework = "", string path = "")
     {
+        var framework = string.IsNullOrEmpty(targetFramework) ? _defaultTargetFramework : targetFramework;
+
         return new(this)
         {
             _nugetReferences = _nugetReferences.Add(new(
-                targetFramework,
+                framework,
                 new(id, version),
-                path
+                Path.Join(string.IsNullOrEmpty(path) ? "lib" : path, framework)
             ))
         };
     }
 
-    public CompilationBuilder AddNetCoreReference(string targetFramework = "net9.0", string version = "9.0.2")
+    public CompilationBuilder AddNetCoreReference(string targetFramework = "", string version = "9.0.4")
         => AddNugetReference(
-            targetFramework,
             "Microsoft.NETCore.App.Ref",
             version,
-            Path.Join("ref", targetFramework));
+            targetFramework,
+            "ref");
 
     public CompilationBuilder AddAssemblyReference<T>()
     {

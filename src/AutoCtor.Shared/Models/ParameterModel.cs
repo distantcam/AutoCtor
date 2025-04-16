@@ -3,12 +3,14 @@
 internal readonly record struct ParameterModel(
     RefKind RefKind,
     string Name,
+    string? KeyedService,
     EquatableTypeSymbol Type)
 {
     public static ParameterModel Create(IParameterSymbol parameter) =>
         new(
             parameter.RefKind,
             parameter.Name.EscapeKeywordIdentifier(),
+            null,
             new(parameter.Type)
         );
 

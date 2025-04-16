@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using static System.AttributeTargets;
 
+#pragma warning disable CS9113 // Parameter is unread.
+
 namespace AutoCtor;
 
 public enum GuardSetting
@@ -10,16 +12,18 @@ public enum GuardSetting
     Enabled
 }
 
-[AttributeUsage(Class | Struct, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(Class | Struct, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
-#pragma warning disable CS9113 // Parameter is unread.
 public sealed class AutoConstructAttribute(GuardSetting guard = GuardSetting.Default) : Attribute;
-#pragma warning restore CS9113 // Parameter is unread.
 
-[AttributeUsage(Method, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(Method, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoPostConstructAttribute : Attribute;
 
-[AttributeUsage(Field | Property, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(Field | Property, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoConstructIgnoreAttribute : Attribute;
+
+[AttributeUsage(Field | Property, Inherited = false)]
+[Conditional("AUTOCTOR_USAGES")]
+public sealed class FromKeyedServicesAttribute(object? key) : Attribute;
