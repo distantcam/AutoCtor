@@ -35,7 +35,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 && (p.RefKind == RefKind.Ref || p.RefKind == RefKind.Out)))
                 continue;
 
-            var p = new ParameterModel(RefKind.None, m.FriendlyName, m.Type);
+            var p = new ParameterModel(RefKind.None, m.FriendlyName, m.KeyedService, m.Type);
             var name = GetUniqueName(p, nameHash, uniqueNames);
             parameterModels.Add(p);
 
@@ -43,7 +43,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         }
         foreach (var m in properties)
         {
-            var p = new ParameterModel(RefKind.None, m.FriendlyName, m.Type);
+            var p = new ParameterModel(RefKind.None, m.FriendlyName, m.KeyedService, m.Type);
             var name = GetUniqueName(p, nameHash, uniqueNames);
             parameterModels.Add(p);
 
@@ -68,7 +68,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 ? $"{p.RefKind.ToParameterPrefix()} {name}" : name);
         }
 
-        var constructorParameters = uniqueNames.Select(u => $"{u.Key.Type} {u.Value}").ToList();
+        var constructorParameters = uniqueNames.Select(ConstructorParameterCSharp).ToList();
 
         return new(
             constructorParameters,
@@ -77,6 +77,14 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
             parametersMap,
             parameterModels
         );
+    }
+
+    private static string ConstructorParameterCSharp(KeyValuePair<ParameterModel, string> u)
+    {
+        if (u.Key.KeyedService != null)
+            return $"[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices({u.Key.KeyedService})] {u.Key.Type} {u.Value}";
+
+        return $"{u.Key.Type} {u.Value}";
     }
 
     private string GetUniqueName(ParameterModel p, HashSet<string> nameHash, Dictionary<ParameterModel, string> uniqueNames)

@@ -1,9 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 internal readonly record struct MemberModel(
     EquatableTypeSymbol Type,
     string FriendlyName,
     string IdentifierName,
+    string? KeyedService,
 
     bool IsReferenceType,
     bool IsNullableAnnotated
@@ -19,6 +21,7 @@ internal readonly record struct MemberModel(
             Type: new(field.Type),
             FriendlyName: friendlyName,
             IdentifierName: "this." + field.Name.EscapeKeywordIdentifier(),
+            KeyedService: GetServiceKey(field),
 
             IsReferenceType: field.Type.IsReferenceType,
             IsNullableAnnotated: field.Type.NullableAnnotation == NullableAnnotation.Annotated
@@ -33,9 +36,22 @@ internal readonly record struct MemberModel(
             Type: new(property.Type),
             FriendlyName: friendlyName,
             IdentifierName: "this." + property.Name.EscapeKeywordIdentifier(),
+            KeyedService: GetServiceKey(property),
 
             IsReferenceType: property.Type.IsReferenceType,
             IsNullableAnnotated: property.Type.NullableAnnotation == NullableAnnotation.Annotated
         );
+    }
+
+    private static string? GetServiceKey(ISymbol symbol)
+    {
+        var keyedService = symbol.GetAttributes()
+            .Where(a => a.AttributeClass?.ToDisplayString() == AttributeNames.FromKeyedServices)
+            .FirstOrDefault();
+
+        if (keyedService != null)
+            return keyedService.ConstructorArguments[0].ToCSharpString();
+
+        return null;
     }
 }

@@ -11,7 +11,7 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
-        var builder = CreateCompilation<AutoConstructAttribute>(theoryData);
+        var builder = CreateCompilation(theoryData);
         var compilation = await builder.Build(nameof(ExampleTests));
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
@@ -28,7 +28,7 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
-        var builder = CreateCompilation<AutoConstructAttribute>(theoryData);
+        var builder = CreateCompilation(theoryData);
         var compilation = await builder.Build(nameof(ExampleTests));
         new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
@@ -44,7 +44,7 @@ public class ExampleTests
     [MemberData(nameof(GetExamples))]
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
     {
-        var builder = CreateCompilation<AutoConstructAttribute>(theoryData);
+        var builder = CreateCompilation(theoryData);
         var compilation = await builder.Build(nameof(ExampleTests));
 
         var driver = new GeneratorDriverBuilder()
@@ -70,6 +70,13 @@ public class ExampleTests
 #endif
 
     // ----------------------------------------------------------------------------------------
+
+    private static CompilationBuilder CreateCompilation(CodeFileTheoryData theoryData)
+    {
+        return CreateCompilation<AutoConstructAttribute>(theoryData)
+            .AddNugetReference(
+            "Microsoft.Extensions.DependencyInjection.Abstractions", "9.0.4");
+    }
 
     private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent;
 
