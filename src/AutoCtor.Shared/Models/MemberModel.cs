@@ -1,15 +1,18 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using static GeneratorUtilities;
 
 internal readonly record struct MemberModel(
     EquatableTypeSymbol Type,
     string FriendlyName,
     string IdentifierName,
+    string ErrorName,
     string? KeyedService,
 
     bool IsReferenceType,
-    bool IsNullableAnnotated
-)
+    bool IsNullableAnnotated,
+
+    EquatableList<Location> Locations
+) : IHaveDiagnostics
 {
     public static MemberModel Create(IFieldSymbol field)
     {
@@ -21,10 +24,13 @@ internal readonly record struct MemberModel(
             Type: new(field.Type),
             FriendlyName: friendlyName,
             IdentifierName: "this." + field.Name.EscapeKeywordIdentifier(),
+            ErrorName: field.Name,
             KeyedService: GetServiceKey(field),
 
             IsReferenceType: field.Type.IsReferenceType,
-            IsNullableAnnotated: field.Type.NullableAnnotation == NullableAnnotation.Annotated
+            IsNullableAnnotated: field.Type.NullableAnnotation == NullableAnnotation.Annotated,
+
+            Locations: new(field.Locations)
         );
     }
 
@@ -36,22 +42,13 @@ internal readonly record struct MemberModel(
             Type: new(property.Type),
             FriendlyName: friendlyName,
             IdentifierName: "this." + property.Name.EscapeKeywordIdentifier(),
+            ErrorName: property.Name,
             KeyedService: GetServiceKey(property),
 
             IsReferenceType: property.Type.IsReferenceType,
-            IsNullableAnnotated: property.Type.NullableAnnotation == NullableAnnotation.Annotated
+            IsNullableAnnotated: property.Type.NullableAnnotation == NullableAnnotation.Annotated,
+
+            Locations: new(property.Locations)
         );
-    }
-
-    private static string? GetServiceKey(ISymbol symbol)
-    {
-        var keyedService = symbol.GetAttributes()
-            .Where(a => a.AttributeClass?.ToDisplayString() == AttributeNames.FromKeyedServices)
-            .FirstOrDefault();
-
-        if (keyedService != null)
-            return keyedService.ConstructorArguments[0].ToCSharpString();
-
-        return null;
     }
 }

@@ -17,6 +17,6 @@ partial class PostCtorWithRefReadonlyArgumentTest
 	{
 		this._serviceA = serviceA;
 		this._serviceB = serviceB;
-		Initialise(serviceFactory, in serviceB);
+		Initialize(serviceFactory, in serviceB);
 	}
 }

@@ -93,3 +93,26 @@ public partial class PropertyExamples
 
     #endregion
 }
+
+#region KeyedService
+
+[AutoConstruct]
+public partial class KeyedExampleClass
+{
+    [FromKeyedServices("key")]
+    private readonly IService _keyedService;
+}
+
+#endregion
+
+partial class KeyedExampleClass
+{
+    #region KeyedServiceGeneratedCode
+    public KeyedExampleClass(
+        [Microsoft.Extensions.DependencyInjection.FromKeyedServices("key")]
+        IService keyedService)
+    {
+        _keyedService = keyedService;
+    }
+    #endregion
+}

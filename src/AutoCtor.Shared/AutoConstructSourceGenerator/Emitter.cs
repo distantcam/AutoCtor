@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using static AutoCtor.Diagnostics;
 
 #if ROSLYN_3
 using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
@@ -45,8 +46,15 @@ public partial class AutoConstructSourceGenerator
                                     type.BaseTypeParameters.Value,
                                     type.BaseTypeArguments.Value);
 
-                                baseParameterList.Add(
-                                    new(RefKind.None, bp.Name, bp.KeyedService, new(bpType)));
+                                baseParameterList.Add(new(
+                                    RefKind: RefKind.None,
+                                    Name: bp.Name,
+                                    ErrorName: bp.ErrorName,
+                                    KeyedService: bp.KeyedService,
+                                    IsOptional: false,
+                                    IsOutOrRef: false,
+                                    Locations: bp.Locations,
+                                    Type: new(bpType)));
                             }
                             baseParameters = baseParameterList;
                         }
@@ -98,8 +106,7 @@ public partial class AutoConstructSourceGenerator
             {
                 parametersBuilder.AddPostCtorParameters(postCtorMethod.Value.Parameters);
             }
-            var parameters = parametersBuilder.Build();
-
+            var parameters = parametersBuilder.Build(context);
 
             if (!parameters.Any() && !postCtorMethod.HasValue)
                 return (null, null);
@@ -185,12 +192,6 @@ public partial class AutoConstructSourceGenerator
             return type;
         }
 
-        private static void ReportDiagnostic(EmitterContext context, PostCtorModel method, DiagnosticDescriptor diagnostic)
-        {
-            foreach (var loc in method.Locations)
-                context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, method.ErrorName));
-        }
-
         private static PostCtorModel? GetPostCtorMethod(
             EmitterContext context,
             IEnumerable<PostCtorModel> markedPostCtorMethods)
@@ -200,7 +201,7 @@ public partial class AutoConstructSourceGenerator
             {
                 foreach (var m in markedPostCtorMethods)
                 {
-                    ReportDiagnostic(context, m, Diagnostics.AmbiguousMarkedPostConstructMethodWarning);
+                    ReportDiagnostic(context, m, AmbiguousMarkedPostConstructMethod);
                 }
                 return null;
             }
@@ -213,22 +214,32 @@ public partial class AutoConstructSourceGenerator
             // ACTR002
             if (!method.ReturnsVoid)
             {
-                ReportDiagnostic(context, method, Diagnostics.PostConstructMethodNotVoidWarning);
-                return null;
-            }
-
-            // ACTR003
-            if (method.HasOptionalParameters)
-            {
-                ReportDiagnostic(context, method, Diagnostics.PostConstructMethodHasOptionalArgsWarning);
+                ReportDiagnostic(context, method, PostConstructMethodNotVoid);
                 return null;
             }
 
             // ACTR004
             if (method.IsGenericMethod)
             {
-                ReportDiagnostic(context, method, Diagnostics.PostConstructMethodCannotBeGenericWarning);
+                ReportDiagnostic(context, method, PostConstructMethodCannotBeGeneric);
                 return null;
+            }
+
+            foreach (var parameter in method.Parameters)
+            {
+                // ACTR003
+                if (parameter.IsOptional)
+                {
+                    ReportDiagnostic(context, parameter, PostConstructMethodHasOptionalArgs);
+                    return null;
+                }
+
+                // ACTR005
+                if (parameter.IsOutOrRef && parameter.KeyedService != null)
+                {
+                    ReportDiagnostic(context, parameter, PostConstructOutParameterCannotBeKeyed);
+                    return null;
+                }
             }
 
             return method;

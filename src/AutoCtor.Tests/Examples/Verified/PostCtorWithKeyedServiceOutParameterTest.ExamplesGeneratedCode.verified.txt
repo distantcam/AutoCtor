@@ -1,0 +1,24 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+    [AutoCtor.FromKeyedServices("keyed")]
+    private readonly IService _service;
+                              ^^^^^^^^
+
+*/
+ : (6,30)-(6,38),
+      Message: The field '_service' must not be a keyed service when used as a post construct out or ref parameter,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: ACTR006,
+        Title: Post construct out or ref parameter must not match a keyed field,
+        MessageFormat: The field '{0}' must not be a keyed service when used as a post construct out or ref parameter,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

@@ -4,17 +4,17 @@
       Location: /*
     [AutoCtor.AutoPostConstruct]
     private void Initialize(IServiceB? serviceB = null)
-                 ^^^^^^^^^^
+                                       ^^^^^^^^
     {
 */
- : (9,17)-(9,27),
-      Message: The method 'PostCtorWithOptionalArgumentsTest.Initialize(IServiceB?)' must not have optional arguments to be used as the post construct method,
+ : (9,39)-(9,47),
+      Message: The parameter 'serviceB' must not be optional,
       Severity: Warning,
       WarningLevel: 1,
       Descriptor: {
         Id: ACTR003,
         Title: Post construct method must not have any optional arguments,
-        MessageFormat: The method '{0}' must not have optional arguments to be used as the post construct method,
+        MessageFormat: The parameter '{0}' must not be optional,
         Category: AutoCtor,
         DefaultSeverity: Warning,
         IsEnabledByDefault: true

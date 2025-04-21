@@ -9,7 +9,7 @@ public partial class PostCtorWithOutArgumentTest
     private readonly IServiceB _serviceB;
 
     [AutoCtor.AutoPostConstruct]
-    private void Initialise(IServiceFactory serviceFactory, out IServiceB serviceB)
+    private void Initialize(IServiceFactory serviceFactory, out IServiceB serviceB)
     {
         serviceB = serviceFactory.CreateService();
     }

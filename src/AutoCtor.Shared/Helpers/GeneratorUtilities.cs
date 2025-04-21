@@ -2,6 +2,12 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+#if ROSLYN_3
+using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
+#elif ROSLYN_4
+using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
+#endif
+
 internal static class GeneratorUtilities
 {
     public static readonly SymbolDisplayFormat HintSymbolDisplayFormat = new(
@@ -67,4 +73,16 @@ internal static class GeneratorUtilities
 
     public static bool IsMethodDeclaration(SyntaxNode node, CancellationToken cancellationToken)
         => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 };
+
+    public static string? GetServiceKey(ISymbol symbol)
+    {
+        var keyedService = symbol.GetAttributes()
+            .Where(a => a.AttributeClass?.ToDisplayString() == AttributeNames.FromKeyedServices)
+            .FirstOrDefault();
+
+        if (keyedService != null)
+            return keyedService.ConstructorArguments[0].ToCSharpString();
+
+        return null;
+    }
 }

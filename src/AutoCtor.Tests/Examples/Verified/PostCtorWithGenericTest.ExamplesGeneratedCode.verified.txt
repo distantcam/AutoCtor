@@ -8,7 +8,7 @@
     {
 */
  : (8,17)-(8,27),
-      Message: The method 'PostCtorWithGenericTest.Initialize<T>(T)' must not be generic to be used as the post construct method,
+      Message: The method 'Initialize' must not be generic to be used as the post construct method,
       Severity: Warning,
       WarningLevel: 1,
       Descriptor: {

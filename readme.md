@@ -24,8 +24,9 @@ AutoCtor is a Roslyn Source Generator that will automatically create a construct
     * [What gets generated](#what-gets-generated)
   * [More Features](#more-features)
     * [Post constructor Initialisation](#post-constructor-initialisation)
-    * [Initialise with parameters](#initialise-with-parameters)
-    * [Initialise readonly fields with ref or out](#initialise-readonly-fields-with-ref-or-out)
+    * [Keyed Services](#keyed-services)
+    * [Initialize with parameters](#initialize-with-parameters)
+    * [Initialize readonly fields with ref or out](#initialize-readonly-fields-with-ref-or-out)
     * [Argument Guards](#argument-guards)
     * [Property Initialisation](#property-initialisation)
   * [More examples](#more-examples)
@@ -102,7 +103,37 @@ public PostConstructMethod(IService service)
 <sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L27-L33' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
-### Initialise with parameters
+### Keyed Services
+
+When using `Microsoft.Extensions.DependencyInjection` you can mark fields and properties with `[FromKeyedServicesAttribute]` and it will be included in the constructor.
+
+<!-- snippet: KeyedService -->
+<a id='snippet-KeyedService'></a>
+```cs
+[AutoConstruct]
+public partial class KeyedExampleClass
+{
+    [FromKeyedServices("key")]
+    private readonly IService _keyedService;
+}
+```
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L97-L106' title='Snippet source file'>snippet source</a> | <a href='#snippet-KeyedService' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+<!-- snippet: KeyedServiceGeneratedCode -->
+<a id='snippet-KeyedServiceGeneratedCode'></a>
+```cs
+public KeyedExampleClass(
+    [Microsoft.Extensions.DependencyInjection.FromKeyedServices("key")]
+    IService keyedService)
+{
+    _keyedService = keyedService;
+}
+```
+<sup><a href='/src/AutoCtor.Example/BasicExamples.cs#L110-L117' title='Snippet source file'>snippet source</a> | <a href='#snippet-KeyedServiceGeneratedCode' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+### Initialize with parameters
 
 Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
 
@@ -134,7 +165,7 @@ public PostConstructMethodWithParameters(IService service, IInitialiseService in
 <sup><a href='/src/AutoCtor.Example/PostConstructExamples.cs#L52-L58' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParametersGeneratedCode' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
-### Initialise readonly fields with ref or out
+### Initialize readonly fields with ref or out
 
 If a parameter is marked `ref` or `out` and matches the type of a readonly field, it can set that field during construction.
 

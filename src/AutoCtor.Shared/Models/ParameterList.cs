@@ -1,5 +1,12 @@
 ﻿using System.Collections;
+using AutoCtor;
 using Microsoft.CodeAnalysis;
+
+#if ROSLYN_3
+using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
+#elif ROSLYN_4
+using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
+#endif
 
 internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable<MemberModel> properties)
 {
@@ -12,7 +19,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
     public void AddPostCtorParameters(IEnumerable<ParameterModel> postCtorParameters)
         => _postCtorParameters = postCtorParameters;
 
-    public ParameterList Build()
+    public ParameterList Build(EmitterContext context)
     {
         var baseParameters = new List<string>();
         var postCtorParameters = new List<string>();
@@ -31,11 +38,20 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         }
         foreach (var m in fields)
         {
+            // ref/out from postctor
             if (_postCtorParameters.Any(p => p.Type == m.Type
                 && (p.RefKind == RefKind.Ref || p.RefKind == RefKind.Out)))
                 continue;
 
-            var p = new ParameterModel(RefKind.None, m.FriendlyName, m.KeyedService, m.Type);
+            var p = new ParameterModel(
+                RefKind: RefKind.None,
+                Name: m.FriendlyName,
+                ErrorName: m.ErrorName,
+                KeyedService: m.KeyedService,
+                IsOptional: false,
+                IsOutOrRef: false,
+                Locations: m.Locations,
+                Type: m.Type);
             var name = GetUniqueName(p, nameHash, uniqueNames);
             parameterModels.Add(p);
 
@@ -43,7 +59,15 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         }
         foreach (var m in properties)
         {
-            var p = new ParameterModel(RefKind.None, m.FriendlyName, m.KeyedService, m.Type);
+            var p = new ParameterModel(
+                RefKind: RefKind.None,
+                Name: m.FriendlyName,
+                ErrorName: m.ErrorName,
+                KeyedService: m.KeyedService,
+                IsOptional: false,
+                IsOutOrRef: false,
+                Locations: m.Locations,
+                Type: m.Type);
             var name = GetUniqueName(p, nameHash, uniqueNames);
             parameterModels.Add(p);
 
@@ -51,10 +75,16 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         }
         foreach (var p in _postCtorParameters)
         {
-            var matchingField = fields.FirstOrDefault(m => m.Type == p.Type
-                && (p.RefKind == RefKind.Ref || p.RefKind == RefKind.Out));
+            var isOutOrRefParameter = p.RefKind == RefKind.Ref || p.RefKind == RefKind.Out;
+            var matchingField = fields.FirstOrDefault(m => isOutOrRefParameter && m.Type == p.Type);
             if (matchingField != default)
             {
+                if (matchingField.KeyedService != null)
+                {
+                    Diagnostics.ReportDiagnostic(context, matchingField,
+                        Diagnostics.PostConstructOutParameterMustNotMatchKeyedField);
+                }
+
                 postCtorParameters.Add(p.RefKind != RefKind.None
                     ? $"{p.RefKind.ToParameterPrefix()} {matchingField.IdentifierName}"
                     : matchingField.IdentifierName);

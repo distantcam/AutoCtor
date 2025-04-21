@@ -12,6 +12,6 @@ partial class PostCtorWithRefArgumentTest
 	public PostCtorWithRefArgumentTest(global::IServiceA serviceA, global::IServiceFactory serviceFactory)
 	{
 		this._serviceA = serviceA;
-		Initialise(serviceFactory, ref this._serviceB);
+		Initialize(serviceFactory, ref this._serviceB);
 	}
 }

@@ -35,7 +35,15 @@ snippet: PostConstruct
 
 snippet: PostConstructGeneratedCode
 
-### Initialise with parameters
+### Keyed Services
+
+When using `Microsoft.Extensions.DependencyInjection` you can mark fields and properties with `[FromKeyedServicesAttribute]` and it will be included in the constructor.
+
+snippet: KeyedService
+
+snippet: KeyedServiceGeneratedCode
+
+### Initialize with parameters
 
 Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
 
@@ -43,7 +51,7 @@ snippet: PostConstructWithParameters
 
 snippet: PostConstructWithParametersGeneratedCode
 
-### Initialise readonly fields with ref or out
+### Initialize readonly fields with ref or out
 
 If a parameter is marked `ref` or `out` and matches the type of a readonly field, it can set that field during construction.
 

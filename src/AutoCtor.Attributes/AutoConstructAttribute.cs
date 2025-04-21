@@ -24,6 +24,6 @@ public sealed class AutoPostConstructAttribute : Attribute;
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class AutoConstructIgnoreAttribute : Attribute;
 
-[AttributeUsage(Field | Property, Inherited = false)]
+[AttributeUsage(Field | Property | Parameter, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
 public sealed class FromKeyedServicesAttribute(object? key) : Attribute;
