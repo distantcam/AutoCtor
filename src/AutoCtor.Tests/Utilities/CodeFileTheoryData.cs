@@ -17,7 +17,7 @@ public record CodeFileTheoryData : IXunitSerializable
     {
         Name = Path.GetFileNameWithoutExtension(file);
         Codes = [File.ReadAllText(file), .. codes];
-        VerifiedDirectory = Path.Combine(Path.GetDirectoryName(file) ?? "", "Verified");
+        VerifiedDirectory = Path.GetDirectoryName(file) ?? "";
     }
 
     public CodeFileTheoryData() { }

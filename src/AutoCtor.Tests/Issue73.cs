@@ -15,7 +15,7 @@ public class Issue73
             .Build(common.ParseOptions)
             .RunGenerators(compilation);
 
-        await Verify(driver).UseDirectory("Verified");
+        await Verify(driver);
     }
 
     [Fact]

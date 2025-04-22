@@ -14,7 +14,7 @@ public class GeneratedAttributeTests
             .Build(builder.ParseOptions)
             .RunGenerators(compilation);
 
-        await Verify(driver).UseDirectory("Verified");
+        await Verify(driver);
     }
 
     [Fact]

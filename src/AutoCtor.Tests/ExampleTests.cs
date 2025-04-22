@@ -21,7 +21,7 @@ public class ExampleTests
 
         await Verify(driver)
             .UseDirectory(theoryData.VerifiedDirectory)
-            .UseTypeName(theoryData.Name).IgnoreParametersForVerified(theoryData);
+            .UseTypeName(theoryData.Name);
     }
 
     [Theory]
@@ -111,7 +111,7 @@ public class ExampleTests
             data.Add(new CodeFileTheoryData(langExample) with
             {
                 VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", verifiedName),
-                LangPreview = true
+                LangPreview = true,
             });
         }
 
