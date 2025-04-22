@@ -52,9 +52,8 @@ internal partial class CodeBuilder
 
     private void AppendCommaIndented(IEnumerable<string> items)
     {
-        var count = items.Count();
-
-        if (count < 3)
+        var length = items.Sum(s => s.Length);
+        if (length < 60)
         {
             AppendCommaSeparated(items);
             return;

@@ -6,7 +6,7 @@ public partial class PostCtorWithKeyedOutParameterTest
     private readonly IService _service;
 
     [AutoCtor.AutoPostConstruct]
-    private void Initialize([AutoCtor.FromKeyedServices("keyed")] out IService service)
+    private void Initialize([AutoCtor.AutoKeyedService("keyed")] out IService service)
     {
         service = new Service();
     }

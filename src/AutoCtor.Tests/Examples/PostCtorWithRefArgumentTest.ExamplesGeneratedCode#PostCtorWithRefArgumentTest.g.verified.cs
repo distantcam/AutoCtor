@@ -9,7 +9,10 @@ partial class PostCtorWithRefArgumentTest
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public PostCtorWithRefArgumentTest(global::IServiceA serviceA, global::IServiceFactory serviceFactory)
+	public PostCtorWithRefArgumentTest(
+		global::IServiceA serviceA,
+		global::IServiceFactory serviceFactory
+	)
 	{
 		this._serviceA = serviceA;
 		Initialize(serviceFactory, ref this._serviceB);

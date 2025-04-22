@@ -77,7 +77,8 @@ internal static class GeneratorUtilities
     public static string? GetServiceKey(ISymbol symbol)
     {
         var keyedService = symbol.GetAttributes()
-            .Where(a => a.AttributeClass?.ToDisplayString() == AttributeNames.FromKeyedServices)
+            .Where(a => a.AttributeClass?.ToDisplayString() == AttributeNames.AutoKeyedService
+                || a.AttributeClass?.ToDisplayString() == "Microsoft.Extensions.DependencyInjection.FromKeyedServicesAttribute")
             .FirstOrDefault();
 
         if (keyedService != null)

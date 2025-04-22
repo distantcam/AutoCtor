@@ -17,15 +17,7 @@ partial class ChildKeyedServicesTest
 		[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices(Keys.Default)] global::IService @enum,
 		[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices("generic")] global::IService<int> generic,
 		global::IService notKeyed
-	) : base(
-		@null,
-		@string,
-		@int,
-		@bool,
-		@enum,
-		generic,
-		notKeyed
-	)
+	) : base(@null, @string, @int, @bool, @enum, generic, notKeyed)
 	{
 	}
 }

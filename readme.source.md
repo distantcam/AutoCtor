@@ -37,7 +37,7 @@ snippet: PostConstructGeneratedCode
 
 ### Keyed Services
 
-When using `Microsoft.Extensions.DependencyInjection` you can mark fields and properties with `[FromKeyedServicesAttribute]` and it will be included in the constructor.
+When using `Microsoft.Extensions.DependencyInjection` you can mark fields and properties with `[AutoKeyedService]` and it will be included in the constructor.
 
 snippet: KeyedService
 

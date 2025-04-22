@@ -9,17 +9,17 @@ public enum Keys
 [AutoCtor.AutoConstruct]
 public partial class KeyedServicesTest<T>
 {
-    [AutoCtor.FromKeyedServicesAttribute(null)]
+    [AutoCtor.AutoKeyedServiceAttribute(null)]
     private readonly IService _null;
-    [AutoCtor.FromKeyedServicesAttribute("key")]
+    [AutoCtor.AutoKeyedServiceAttribute("key")]
     private readonly IService _string;
-    [AutoCtor.FromKeyedServicesAttribute(0)]
+    [AutoCtor.AutoKeyedServiceAttribute(0)]
     private readonly IService _int;
-    [AutoCtor.FromKeyedServicesAttribute(true)]
+    [AutoCtor.AutoKeyedServiceAttribute(true)]
     private readonly IService _bool;
-    [AutoCtor.FromKeyedServicesAttribute(Keys.Default)]
+    [AutoCtor.AutoKeyedServiceAttribute(Keys.Default)]
     private readonly IService _enum;
-    [AutoCtor.FromKeyedServicesAttribute("generic")]
+    [AutoCtor.AutoKeyedServiceAttribute("generic")]
     private readonly IService<T> _generic;
     private readonly IService _notKeyed;
 }

@@ -3,7 +3,7 @@
 [AutoCtor.AutoConstruct]
 public partial class PostCtorWithKeyedServiceOutParameterTest
 {
-    [AutoCtor.FromKeyedServices("keyed")]
+    [AutoCtor.AutoKeyedService("keyed")]
     private readonly IService _service;
 
     [AutoCtor.AutoPostConstruct]

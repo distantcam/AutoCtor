@@ -14,11 +14,7 @@ partial class B
 		global::IServiceD serviceD,
 		global::IServiceC serviceC,
 		global::IServiceB serviceB
-	) : base(
-		serviceE,
-		serviceD,
-		serviceC
-	)
+	) : base(serviceE, serviceD, serviceC)
 	{
 		this._serviceB = serviceB;
 	}

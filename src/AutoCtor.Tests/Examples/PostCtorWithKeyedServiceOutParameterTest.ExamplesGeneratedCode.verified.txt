@@ -2,7 +2,7 @@
   Diagnostics: [
     {
       Location: /*
-    [AutoCtor.FromKeyedServices("keyed")]
+    [AutoCtor.AutoKeyedService("keyed")]
     private readonly IService _service;
                               ^^^^^^^^
 

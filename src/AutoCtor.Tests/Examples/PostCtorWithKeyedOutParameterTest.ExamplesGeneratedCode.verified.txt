@@ -3,11 +3,11 @@
     {
       Location: /*
     [AutoCtor.AutoPostConstruct]
-    private void Initialize([AutoCtor.FromKeyedServices("keyed")] out IService service)
-                                                                               ^^^^^^^
+    private void Initialize([AutoCtor.AutoKeyedService("keyed")] out IService service)
+                                                                              ^^^^^^^
     {
 */
- : (8,79)-(8,86),
+ : (8,78)-(8,85),
       Message: The parameter 'service' must not be a keyed service, or cannot be out or ref,
       Severity: Warning,
       WarningLevel: 1,

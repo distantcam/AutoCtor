@@ -9,11 +9,7 @@ partial class TheClass
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public TheClass(
-		int number,
-		string text,
-		bool flag
-	) : base(number, text)
+	public TheClass(int number, string text, bool flag) : base(number, text)
 	{
 		this._flag = flag;
 	}

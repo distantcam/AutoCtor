@@ -105,7 +105,7 @@ public PostConstructMethod(IService service)
 
 ### Keyed Services
 
-When using `Microsoft.Extensions.DependencyInjection` you can mark fields and properties with `[FromKeyedServicesAttribute]` and it will be included in the constructor.
+When using `Microsoft.Extensions.DependencyInjection` you can mark fields and properties with `[AutoKeyedService]` and it will be included in the constructor.
 
 <!-- snippet: KeyedService -->
 <a id='snippet-KeyedService'></a>
@@ -113,7 +113,7 @@ When using `Microsoft.Extensions.DependencyInjection` you can mark fields and pr
 [AutoConstruct]
 public partial class KeyedExampleClass
 {
-    [FromKeyedServices("key")]
+    [AutoKeyedService("key")]
     private readonly IService _keyedService;
 }
 ```

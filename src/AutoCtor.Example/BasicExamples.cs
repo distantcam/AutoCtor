@@ -99,7 +99,7 @@ public partial class PropertyExamples
 [AutoConstruct]
 public partial class KeyedExampleClass
 {
-    [FromKeyedServices("key")]
+    [AutoKeyedService("key")]
     private readonly IService _keyedService;
 }
 

@@ -9,7 +9,10 @@ partial class NullableAnnotationTests
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public NullableAnnotationTests(global::IServiceA nullableService, global::IServiceB guardedService)
+	public NullableAnnotationTests(
+		global::IServiceA nullableService,
+		global::IServiceB guardedService
+	)
 	{
 		this._nullableService = nullableService;
 		this._guardedService = guardedService ?? throw new global::System.ArgumentNullException("guardedService");

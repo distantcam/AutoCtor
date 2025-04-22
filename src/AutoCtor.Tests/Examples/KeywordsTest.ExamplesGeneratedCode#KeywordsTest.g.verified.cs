@@ -9,12 +9,7 @@ partial class KeywordsTest
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public KeywordsTest(
-		int @base,
-		int @int,
-		int @class,
-		int @private
-	)
+	public KeywordsTest(int @base, int @int, int @class, int @private)
 	{
 		this.@base = @base;
 		this.@int = @int;
