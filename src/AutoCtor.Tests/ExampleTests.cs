@@ -17,11 +17,12 @@ public class ExampleTests
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
             .Build(builder.ParseOptions)
-            .RunGenerators(compilation);
+            .RunGenerators(compilation, TestContext.Current.CancellationToken);
 
         await Verify(driver)
             .UseDirectory(theoryData.VerifiedDirectory)
-            .UseTypeName(theoryData.Name);
+            .UseTypeName(theoryData.Name)
+            .IgnoreParametersForVerified();
     }
 
     [Theory]
@@ -34,9 +35,9 @@ public class ExampleTests
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
             .Build(builder.ParseOptions)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _, TestContext.Current.CancellationToken);
 
-        Assert.Empty(outputCompilation.GetDiagnostics().Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)));
+        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)));
     }
 
 #if ROSLYN_4_4
@@ -52,16 +53,17 @@ public class ExampleTests
             .WithAnalyzerOptions(theoryData.Options)
             .Build(builder.ParseOptions);
 
-        driver = driver.RunGenerators(compilation);
+        driver = driver.RunGenerators(compilation, TestContext.Current.CancellationToken);
         var firstResult = driver.GetRunResult();
 
         // Change the compilation
         compilation = compilation.AddSyntaxTrees(CSharpSyntaxTree.ParseText("// dummy",
             CSharpParseOptions.Default.WithLanguageVersion(theoryData.LangPreview
                 ? LanguageVersion.Preview
-                : LanguageVersion.Latest)));
+                : LanguageVersion.Latest),
+            cancellationToken: TestContext.Current.CancellationToken));
 
-        driver = driver.RunGenerators(compilation);
+        driver = driver.RunGenerators(compilation, TestContext.Current.CancellationToken);
         var secondResult = driver.GetRunResult();
 
         AssertRunsEqual(firstResult, secondResult,
