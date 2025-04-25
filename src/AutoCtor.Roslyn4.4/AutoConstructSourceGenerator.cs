@@ -26,14 +26,14 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
 
         var types = context.SyntaxProvider.ForAttributeWithMetadataName(
             AttributeNames.AutoConstruct,
-            GeneratorUtilities.IsTypeDeclaration,
+            GeneratorUtilities.IsTypeDeclarationWithAttributes,
             static (c, ct) => TypeModel.Create((INamedTypeSymbol)c.TargetSymbol))
         .WithTrackingName(TrackingNames.TypeModels)
         .Collect();
 
         var postCtorMethods = context.SyntaxProvider.ForAttributeWithMetadataName(
             AttributeNames.AutoPostConstruct,
-            GeneratorUtilities.IsMethodDeclaration,
+            GeneratorUtilities.IsMethodDeclarationWithAttributes,
             static (c, ct) => PostCtorModel.Create((IMethodSymbol)c.TargetSymbol))
         .WithTrackingName(TrackingNames.PostCtorMethods)
         .Collect();

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoCtor;
 
@@ -23,47 +22,25 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {
-            if (GeneratorUtilities.IsTypeDeclaration(context.Node, CancellationToken.None)
+            INamedTypeSymbol? type;
+            IMethodSymbol? method;
+            if (GeneratorUtilities.IsTypeDeclarationWithAttributes(context.Node, cancellationToken)
 
-                && MemberHasAttribute(AttributeNames.AutoConstruct, context, cancellationToken)
+                && (type = GeneratorUtilities.GetSymbol<INamedTypeSymbol>(context, cancellationToken)) != null
 
-                && context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken)
-                    is INamedTypeSymbol type)
+                && GeneratorUtilities.HasAttribute(type, AttributeNames.AutoConstruct))
             {
                 (TypeModels ??= []).Add(TypeModel.Create(type));
             }
 
-            else if (GeneratorUtilities.IsMethodDeclaration(context.Node, CancellationToken.None)
+            else if (GeneratorUtilities.IsMethodDeclarationWithAttributes(context.Node, cancellationToken)
 
-                && MemberHasAttribute(AttributeNames.AutoPostConstruct, context, cancellationToken)
+                && (method = GeneratorUtilities.GetSymbol<IMethodSymbol>(context, cancellationToken)) != null
 
-                && context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken)
-                    is IMethodSymbol method)
+                && GeneratorUtilities.HasAttribute(method, AttributeNames.AutoPostConstruct))
             {
                 (MarkedMethods ??= []).Add(PostCtorModel.Create(method));
             }
-        }
-
-        private static bool MemberHasAttribute(
-            string attribute,
-            GeneratorSyntaxContext context,
-            CancellationToken cancellationToken)
-        {
-            foreach (var attributeListSyntax in ((MemberDeclarationSyntax)context.Node).AttributeLists)
-                foreach (var attributeSyntax in attributeListSyntax.Attributes)
-                {
-                    if (context.SemanticModel.GetSymbolInfo(attributeSyntax, cancellationToken)
-                        .Symbol is not IMethodSymbol attributeSymbol)
-                        continue;
-
-                    var attributeContainingTypeSymbol = attributeSymbol.ContainingType;
-                    var fullName = attributeContainingTypeSymbol.ToDisplayString();
-
-                    if (fullName != attribute) continue;
-
-                    return true;
-                }
-            return false;
         }
     }
 

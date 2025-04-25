@@ -24,51 +24,21 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         });
 
         var types = context.SyntaxProvider.CreateSyntaxProvider(
-            static (n, ct) => GeneratorUtilities.IsTypeDeclaration(n, ct),
-            GetTypeModel)
-        .Where(static x => x.HasValue)
-        .Select(static (x, _) => x!.Value)
+            GeneratorUtilities.IsTypeDeclarationWithAttributes,
+            GeneratorUtilities.GetSymbol<INamedTypeSymbol>)
+        .Where(static x => GeneratorUtilities.HasAttribute(x, AttributeNames.AutoConstruct))
+        .Select(static (x, _) => TypeModel.Create(x!))
         .Collect();
 
         var postCtorMethods = context.SyntaxProvider.CreateSyntaxProvider(
-            static (n, ct) => GeneratorUtilities.IsMethodDeclaration(n, ct),
-            GetPostCtorModel)
-        .Where(static x => x.HasValue)
-        .Select(static (x, _) => x!.Value)
+            GeneratorUtilities.IsMethodDeclarationWithAttributes,
+            GeneratorUtilities.GetSymbol<IMethodSymbol>)
+        .Where(static x => GeneratorUtilities.HasAttribute(x, AttributeNames.AutoPostConstruct))
+        .Select(static (x, _) => PostCtorModel.Create(x!))
         .Collect();
 
         context.RegisterSourceOutput(
             types.Combine(postCtorMethods).Combine(properties),
             Emitter.GenerateSource);
-    }
-
-    private static TypeModel? GetTypeModel(GeneratorSyntaxContext context, CancellationToken cancellationToken)
-    {
-        if (context.SemanticModel
-            .GetDeclaredSymbol(context.Node, cancellationToken) is not INamedTypeSymbol type)
-            return null;
-
-        foreach (var attr in type.GetAttributes())
-        {
-            if (attr.AttributeClass?.ToDisplayString() == AttributeNames.AutoConstruct)
-                return TypeModel.Create(type);
-        }
-
-        return null;
-    }
-
-    private static PostCtorModel? GetPostCtorModel(GeneratorSyntaxContext context, CancellationToken cancellationToken)
-    {
-        if (context.SemanticModel
-            .GetDeclaredSymbol(context.Node, cancellationToken) is not IMethodSymbol method)
-            return null;
-
-        foreach (var attr in method.GetAttributes())
-        {
-            if (attr.AttributeClass?.ToDisplayString() == AttributeNames.AutoPostConstruct)
-                return PostCtorModel.Create(method);
-        }
-
-        return null;
     }
 }

@@ -68,22 +68,17 @@ internal static class GeneratorUtilities
             .Replace('>', ']');
     }
 
-    public static bool IsTypeDeclaration(SyntaxNode node, CancellationToken cancellationToken)
+    public static bool IsTypeDeclarationWithAttributes(SyntaxNode node, CancellationToken cancellationToken)
         => node is TypeDeclarationSyntax { AttributeLists.Count: > 0 };
 
-    public static bool IsMethodDeclaration(SyntaxNode node, CancellationToken cancellationToken)
+    public static bool IsMethodDeclarationWithAttributes(SyntaxNode node, CancellationToken cancellationToken)
         => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 };
 
-    public static string? GetServiceKey(ISymbol symbol)
+    public static TSymbol? GetSymbol<TSymbol>(GeneratorSyntaxContext context, CancellationToken cancellationToken) where TSymbol : class, ISymbol
+        => context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken) as TSymbol;
+
+    public static bool HasAttribute(ISymbol? symbol, string attributeName)
     {
-        var keyedService = symbol.GetAttributes()
-            .Where(a => a.AttributeClass?.ToDisplayString() == AttributeNames.AutoKeyedService
-                || a.AttributeClass?.ToDisplayString() == "Microsoft.Extensions.DependencyInjection.FromKeyedServicesAttribute")
-            .FirstOrDefault();
-
-        if (keyedService != null)
-            return keyedService.ConstructorArguments[0].ToCSharpString();
-
-        return null;
+        return symbol != null && symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName);
     }
 }
