@@ -37,7 +37,8 @@ public class ExampleTests
             .Build(builder.ParseOptions)
             .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out _, TestContext.Current.CancellationToken);
 
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)));
+        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken)
+            .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)));
     }
 
 #if ROSLYN_4_4

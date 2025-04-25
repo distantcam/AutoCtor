@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <IntermediateOutputPath>obj\generator(GeneratorVersion)\</IntermediateOutputPath>
-    <OutputPath>bin\generator(GeneratorVersion)\</OutputPath>
+    <IntermediateOutputPath>obj\roslyn$(GeneratorVersion)\</IntermediateOutputPath>
+    <OutputPath>bin\roslyn$(GeneratorVersion)\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(GeneratorVersion)' == '3.11' ">
