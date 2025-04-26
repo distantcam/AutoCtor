@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
-using Xunit.Sdk;
+using Xunit.Abstractions;
 
 public record CodeFileTheoryData : IXunitSerializable
 {

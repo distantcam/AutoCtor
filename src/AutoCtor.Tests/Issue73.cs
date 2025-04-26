@@ -13,7 +13,7 @@ public class Issue73
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .Build(common.ParseOptions)
-            .RunGenerators(compilation, TestContext.Current.CancellationToken);
+            .RunGenerators(compilation);
 
         await Verify(driver);
     }
@@ -28,10 +28,10 @@ public class Issue73
         new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .Build(common.ParseOptions)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics, TestContext.Current.CancellationToken);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken).Where(d => !ignoredWarnings.Contains(d.Id)));
+        Assert.Empty(outputCompilation.GetDiagnostics().Where(d => !ignoredWarnings.Contains(d.Id)));
     }
 
     private static CompilationBuilder Common()

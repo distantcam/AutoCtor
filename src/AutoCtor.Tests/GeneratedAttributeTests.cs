@@ -12,7 +12,7 @@ public class GeneratedAttributeTests
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
-            .RunGenerators(compilation, TestContext.Current.CancellationToken);
+            .RunGenerators(compilation);
 
         await Verify(driver);
     }
@@ -27,10 +27,10 @@ public class GeneratedAttributeTests
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics, TestContext.Current.CancellationToken);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
+        Assert.Empty(outputCompilation.GetDiagnostics());
     }
 
     [Fact]
@@ -46,9 +46,9 @@ public class GeneratedAttributeTests
             .AddGenerator(new AttributeSourceGenerator())
             .AddGenerator(new AutoConstructSourceGenerator())
             .Build(builder.ParseOptions)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics, TestContext.Current.CancellationToken);
+            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
         Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
+        Assert.Empty(outputCompilation.GetDiagnostics());
     }
 }
