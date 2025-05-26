@@ -51,4 +51,31 @@ public class GeneratedAttributeTests
         Assert.Empty(diagnostics);
         Assert.Empty(outputCompilation.GetDiagnostics());
     }
+
+    [Fact]
+    public async Task EnsureGeneratedAttributesAreNotExternallyVisible()
+    {
+        // Issue 312
+        var compileBuilder = new CompilationBuilder()
+            .AddNetCoreReference()
+            .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
+
+        var genDriver = new GeneratorDriverBuilder()
+            .AddGenerator(new AttributeSourceGenerator())
+            .Build(compileBuilder.ParseOptions);
+
+        var projectA = await compileBuilder
+            .Build("ProjectA");
+
+        genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _);
+
+        var projectB = await compileBuilder
+            .AddCompilationReference(genProjectA)
+            .Build("ProjectB");
+
+        genDriver.RunGeneratorsAndUpdateCompilation(projectB, out var outputCompilation, out var diagnostics);
+
+        Assert.Empty(diagnostics);
+        Assert.Empty(outputCompilation.GetDiagnostics());
+    }
 }
