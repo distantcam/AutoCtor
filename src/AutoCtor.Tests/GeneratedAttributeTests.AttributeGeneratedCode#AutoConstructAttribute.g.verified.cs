@@ -9,7 +9,7 @@
 namespace AutoCtor
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	public enum GuardSetting
+	internal enum GuardSetting
 	{
 		Default,
 		Disabled,
