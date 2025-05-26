@@ -78,7 +78,7 @@ internal class CompilationBuilder
         };
     }
 
-    public CompilationBuilder AddCompilationReference(CSharpCompilation compilation)
+    public CompilationBuilder AddCompilationReference(Compilation compilation)
     {
         return new(this)
         {

@@ -18,7 +18,7 @@ public partial class AttributeSourceGenerator
             using (source.StartBlock("namespace AutoCtor"))
             {
                 source.AddCompilerGeneratedAttribute().AddGeneratedCodeAttribute();
-                using (source.StartBlock("public enum GuardSetting"))
+                using (source.StartBlock("internal enum GuardSetting"))
                 {
                     source.AppendLine("Default,");
                     source.AppendLine("Disabled,");
