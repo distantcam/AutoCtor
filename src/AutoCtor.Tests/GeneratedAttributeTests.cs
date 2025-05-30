@@ -12,7 +12,7 @@ public class GeneratedAttributeTests
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
-            .RunGenerators(compilation);
+            .RunGenerators(compilation, TestContext.Current.CancellationToken);
 
         await Verify(driver);
     }
@@ -27,10 +27,14 @@ public class GeneratedAttributeTests
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+            .RunGeneratorsAndUpdateCompilation(
+                compilation,
+                out var outputCompilation,
+                out var diagnostics,
+                TestContext.Current.CancellationToken);
 
         Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics());
+        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -46,10 +50,14 @@ public class GeneratedAttributeTests
             .AddGenerator(new AttributeSourceGenerator())
             .AddGenerator(new AutoConstructSourceGenerator())
             .Build(builder.ParseOptions)
-            .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
+            .RunGeneratorsAndUpdateCompilation(
+                compilation,
+                out var outputCompilation,
+                out var diagnostics,
+                TestContext.Current.CancellationToken);
 
         Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics());
+        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -67,15 +75,19 @@ public class GeneratedAttributeTests
         var projectA = await compileBuilder
             .Build("ProjectA");
 
-        genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _);
+        genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _, TestContext.Current.CancellationToken);
 
         var projectB = await compileBuilder
             .AddCompilationReference(genProjectA)
             .Build("ProjectB");
 
-        genDriver.RunGeneratorsAndUpdateCompilation(projectB, out var outputCompilation, out var diagnostics);
+        genDriver.RunGeneratorsAndUpdateCompilation(
+            projectB,
+            out var outputCompilation,
+            out var diagnostics,
+            TestContext.Current.CancellationToken);
 
         Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics());
+        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
     }
 }

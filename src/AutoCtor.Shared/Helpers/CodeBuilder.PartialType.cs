@@ -1,7 +1,7 @@
 ﻿internal interface IPartialTypeModel
 {
     string? Namespace { get; }
-    IReadOnlyList<string> TypeDeclarations { get; }
+    EquatableList<string> TypeDeclarations { get; }
 }
 
 internal partial class CodeBuilder

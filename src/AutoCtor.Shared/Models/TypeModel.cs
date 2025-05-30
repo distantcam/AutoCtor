@@ -25,8 +25,6 @@ internal readonly record struct TypeModel(
     EquatableList<EquatableTypeSymbol>? BaseTypeParameters
 ) : IPartialTypeModel
 {
-    readonly IReadOnlyList<string> IPartialTypeModel.TypeDeclarations => TypeDeclarations;
-
     public static TypeModel Create(INamedTypeSymbol type)
     {
         var attribute = type.GetAttributes()
