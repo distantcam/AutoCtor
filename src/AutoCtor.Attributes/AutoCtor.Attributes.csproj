@@ -14,7 +14,7 @@
     <Description>Source Generator to automatically create a constructor with all the readonly fields set.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <PackageOutputPath>$(SolutionDir)nugets</PackageOutputPath>
+    <PackageOutputPath>$(ProjectDir)..\..\nugets</PackageOutputPath>
     <PackageProjectUrl>https://github.com/distantcam/AutoCtor</PackageProjectUrl>
   </PropertyGroup>
 
@@ -41,21 +41,21 @@
     <None Include="$(ArtifactsPath)\bin\AutoCtor.Roslyn4.4\$(ArtifactsPivots)\AutoCtor.dll"
           Pack="true" PackagePath="analyzers/dotnet/roslyn4.4/cs" Visible="false"/>
 
-    <None Include="$(SolutionDir)\readme.md"
+    <None Include="$(ProjectDir)..\..\readme.md"
           Pack="true" PackagePath="\" Visible="false" />
-    <None Include="$(SolutionDir)\src\nugetfiles\AutoCtor.props"
+    <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.props"
           Pack="true" PackagePath="build" Visible="false" />
 
-    <None Include="$(SolutionDir)\src\nugetfiles\AutoCtor.targets"
+    <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.targets"
           Pack="true" PackagePath="buildTransitive\net8.0" Visible="false" />
-    <None Include="$(SolutionDir)\src\nugetfiles\AutoCtor.targets"
+    <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.targets"
           Pack="true" PackagePath="buildTransitive\net462" Visible="false" />
-    <None Include="$(SolutionDir)\src\nugetfiles\AutoCtor.targets"
+    <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.targets"
           Pack="true" PackagePath="buildTransitive\netstandard2.0" Visible="false" />
 
-    <None Include="$(SolutionDir)\src\nugetfiles\AutoCtor.badcompat.targets"
+    <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.badcompat.targets"
           Pack="true" PackagePath="buildTransitive\net461\AutoCtor.targets" Visible="false" />
-    <None Include="$(SolutionDir)\src\nugetfiles\AutoCtor.badcompat.targets"
+    <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.badcompat.targets"
           Pack="true" PackagePath="buildTransitive\netcoreapp2.0\AutoCtor.targets" Visible="false" />
   </ItemGroup>
 
