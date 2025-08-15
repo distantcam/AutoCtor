@@ -1,8 +1,10 @@
-﻿namespace AutoCtor.Tests;
+﻿using VerifyTUnit;
+
+namespace AutoCtor.Tests;
 
 public class VerifyChecksTests
 {
-    [Fact]
+    [Test]
     public Task Run() =>
         VerifyChecks.Run();
 }

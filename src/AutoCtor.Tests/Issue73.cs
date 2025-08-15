@@ -5,7 +5,7 @@ namespace AutoCtor.Tests;
 
 public class Issue73
 {
-    [Fact]
+    [Test]
     public async Task VerifyGeneratedCode()
     {
         var common = Common();
@@ -13,12 +13,12 @@ public class Issue73
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .Build(common.ParseOptions)
-            .RunGenerators(compilation, TestContext.Current.CancellationToken);
+            .RunGenerators(compilation, TestHelper.CancellationToken);
 
         await Verify(driver);
     }
 
-    [Fact]
+    [Test]
     public async Task CodeCompilesWithoutErrors()
     {
         string[] ignoredWarnings = ["CS0414"]; // Ignore unused fields
@@ -32,11 +32,14 @@ public class Issue73
                 compilation,
                 out var outputCompilation,
                 out var diagnostics,
-                TestContext.Current.CancellationToken);
+                TestHelper.CancellationToken);
 
-        Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken)
-            .Where(d => !ignoredWarnings.Contains(d.Id)));
+        var outputCompilationDiagnostics = outputCompilation
+            .GetDiagnostics(TestHelper.CancellationToken)
+            .Where(d => !ignoredWarnings.Contains(d.Id));
+
+        await Assert.That(diagnostics).IsEmpty();
+        await Assert.That(outputCompilationDiagnostics).IsEmpty();
     }
 
     private static CompilationBuilder Common()
