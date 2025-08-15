@@ -5,6 +5,9 @@ using Microsoft.CodeAnalysis.Testing;
 
 internal class CompilationBuilder
 {
+    private const string DEFAULT_TARGET_FRAMEWORK = "net9.0";
+    private const string NETCORE_VERSION = "9.0.8";
+
     private ImmutableArray<ReferenceAssemblies> _nugetReferences;
     private ImmutableArray<MetadataReference> _references;
     private ImmutableArray<string> _codes;
@@ -12,7 +15,6 @@ internal class CompilationBuilder
     private CSharpParseOptions _parseOptions;
     private CSharpCompilationOptions _compilationOptions;
 
-    private string _defaultTargetFramework = "net9.0";
 
     public CSharpParseOptions ParseOptions => _parseOptions;
 
@@ -51,7 +53,7 @@ internal class CompilationBuilder
 
     public CompilationBuilder AddNugetReference(string id, string version, string targetFramework = "", string path = "")
     {
-        var framework = string.IsNullOrEmpty(targetFramework) ? _defaultTargetFramework : targetFramework;
+        var framework = string.IsNullOrEmpty(targetFramework) ? DEFAULT_TARGET_FRAMEWORK : targetFramework;
 
         return new(this)
         {
@@ -63,7 +65,7 @@ internal class CompilationBuilder
         };
     }
 
-    public CompilationBuilder AddNetCoreReference(string targetFramework = "", string version = "9.0.4")
+    public CompilationBuilder AddNetCoreReference(string targetFramework = "", string version = NETCORE_VERSION)
         => AddNugetReference(
             "Microsoft.NETCore.App.Ref",
             version,

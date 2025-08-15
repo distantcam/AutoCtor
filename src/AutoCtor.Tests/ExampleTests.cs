@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using static ExampleTestsHelper;
@@ -80,9 +81,18 @@ public class ExampleTests
 
     private static CompilationBuilder CreateCompilation(CodeFileTheoryData theoryData)
     {
+        var srcDir = BaseDir?.Parent;
+        var packageVersionsFile = Path.Combine(srcDir?.FullName ?? "", "Directory.Packages.props");
+
+        var doc = XDocument.Load(packageVersionsFile);
+        var versionXml = doc.Root?.Descendants("PackageVersion")
+            .FirstOrDefault(el => el.Attribute("Include")?.Value == "Microsoft.Extensions.DependencyInjection.Abstractions");
+
+        var version = versionXml?.Attribute("Version")?.Value ?? "9.0.8";
+
         return CreateCompilation<AutoConstructAttribute>(theoryData)
             .AddNugetReference(
-            "Microsoft.Extensions.DependencyInjection.Abstractions", "9.0.4");
+            "Microsoft.Extensions.DependencyInjection.Abstractions", version);
     }
 
     private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent;
