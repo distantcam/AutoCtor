@@ -8,8 +8,8 @@ namespace AutoCtor.Tests;
 
 public class ExampleTests
 {
-    [Theory]
-    [MemberData(nameof(GetExamples))]
+    [Test]
+    [MethodDataSource(nameof(GetExamples))]
     public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
@@ -18,7 +18,7 @@ public class ExampleTests
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
             .Build(builder.ParseOptions)
-            .RunGenerators(compilation, TestContext.Current.CancellationToken);
+            .RunGenerators(compilation, TestHelper.CancellationToken);
 
         await Verify(driver)
             .UseDirectory(theoryData.VerifiedDirectory)
@@ -26,8 +26,8 @@ public class ExampleTests
             .IgnoreParametersForVerified();
     }
 
-    [Theory]
-    [MemberData(nameof(GetExamples))]
+    [Test]
+    [MethodDataSource(nameof(GetExamples))]
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
@@ -40,15 +40,16 @@ public class ExampleTests
                 compilation,
                 out var outputCompilation,
                 out _,
-                TestContext.Current.CancellationToken);
+                TestHelper.CancellationToken);
 
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken)
-            .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)));
+        await Assert.That(outputCompilation.GetDiagnostics(TestHelper.CancellationToken)
+            .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)))
+            .IsEmpty();
     }
 
 #if ROSLYN_4_4
-    [Theory]
-    [MemberData(nameof(GetExamples))]
+    [Test]
+    [MethodDataSource(nameof(GetExamples))]
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
@@ -59,7 +60,7 @@ public class ExampleTests
             .WithAnalyzerOptions(theoryData.Options)
             .Build(builder.ParseOptions);
 
-        driver = driver.RunGenerators(compilation, TestContext.Current.CancellationToken);
+        driver = driver.RunGenerators(compilation, TestHelper.CancellationToken);
         var firstResult = driver.GetRunResult();
 
         // Change the compilation
@@ -67,12 +68,12 @@ public class ExampleTests
             CSharpParseOptions.Default.WithLanguageVersion(theoryData.LangPreview
                 ? LanguageVersion.Preview
                 : LanguageVersion.Latest),
-            cancellationToken: TestContext.Current.CancellationToken));
+            cancellationToken: TestHelper.CancellationToken));
 
-        driver = driver.RunGenerators(compilation, TestContext.Current.CancellationToken);
+        driver = driver.RunGenerators(compilation, TestHelper.CancellationToken);
         var secondResult = driver.GetRunResult();
 
-        AssertRunsEqual(firstResult, secondResult,
+        await AssertRunsEqual(firstResult, secondResult,
             AutoConstructSourceGenerator.TrackingNames.AllTrackers);
     }
 #endif
@@ -99,39 +100,35 @@ public class ExampleTests
 
     private static IEnumerable<string> GetExamplesFiles(string path) => Directory.GetFiles(Path.Combine(BaseDir?.FullName ?? "", path), "*.cs").Where(e => !e.Contains(".g."));
 
-    public static TheoryData<CodeFileTheoryData> GetExamples()
+    public static IEnumerable<CodeFileTheoryData> GetExamples()
     {
         if (BaseDir == null)
             throw new Exception("BaseDir is null");
 
-        var data = new TheoryData<CodeFileTheoryData>();
-
         foreach (var example in GetExamplesFiles("Examples"))
         {
-            data.Add(new CodeFileTheoryData(example) with
+            yield return new CodeFileTheoryData(example) with
             {
                 IgnoredCompileDiagnostics = ["CS0414", "CS0169"] // Ignore unused fields
-            });
+            };
         }
 
         foreach (var guardExample in GetExamplesFiles("GuardExamples"))
         {
-            data.Add(new CodeFileTheoryData(guardExample) with
+            yield return new CodeFileTheoryData(guardExample) with
             {
                 Options = new() { { "build_property.AutoCtorGuards", "true" } }
-            });
+            };
         }
 
         foreach (var langExample in GetExamplesFiles("LangExamples"))
         {
             var verifiedName = string.Concat("Verified_", PreprocessorSymbols.Last().AsSpan(7));
-            data.Add(new CodeFileTheoryData(langExample) with
+            yield return new CodeFileTheoryData(langExample) with
             {
                 VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", verifiedName),
                 LangPreview = true,
-            });
+            };
         }
-
-        return data;
     }
 }

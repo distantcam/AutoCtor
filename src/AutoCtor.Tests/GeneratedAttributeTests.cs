@@ -2,7 +2,7 @@
 
 public class GeneratedAttributeTests
 {
-    [Fact]
+    [Test]
     public async Task AttributeGeneratedCode()
     {
         var builder = new CompilationBuilder()
@@ -12,12 +12,12 @@ public class GeneratedAttributeTests
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
-            .RunGenerators(compilation, TestContext.Current.CancellationToken);
+            .RunGenerators(compilation, TestHelper.CancellationToken);
 
         await Verify(driver);
     }
 
-    [Fact]
+    [Test]
     public async Task AttributeCompilesProperly()
     {
         var builder = new CompilationBuilder()
@@ -31,13 +31,16 @@ public class GeneratedAttributeTests
                 compilation,
                 out var outputCompilation,
                 out var diagnostics,
-                TestContext.Current.CancellationToken);
+                TestHelper.CancellationToken);
 
-        Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
+        var outputCompilationDiagnostics = outputCompilation
+            .GetDiagnostics(TestHelper.CancellationToken);
+
+        await Assert.That(diagnostics).IsEmpty();
+        await Assert.That(outputCompilationDiagnostics).IsEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task PreserveAttributesTest()
     {
         var builder = new CompilationBuilder()
@@ -54,13 +57,16 @@ public class GeneratedAttributeTests
                 compilation,
                 out var outputCompilation,
                 out var diagnostics,
-                TestContext.Current.CancellationToken);
+                TestHelper.CancellationToken);
 
-        Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
+        var outputCompilationDiagnostics = outputCompilation
+            .GetDiagnostics(TestHelper.CancellationToken);
+
+        await Assert.That(diagnostics).IsEmpty();
+        await Assert.That(outputCompilationDiagnostics).IsEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task EnsureGeneratedAttributesAreNotExternallyVisible()
     {
         // Issue 312
@@ -75,7 +81,7 @@ public class GeneratedAttributeTests
         var projectA = await compileBuilder
             .Build("ProjectA");
 
-        genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _, TestContext.Current.CancellationToken);
+        genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _, TestHelper.CancellationToken);
 
         var projectB = await compileBuilder
             .AddCompilationReference(genProjectA)
@@ -85,9 +91,12 @@ public class GeneratedAttributeTests
             projectB,
             out var outputCompilation,
             out var diagnostics,
-            TestContext.Current.CancellationToken);
+            TestHelper.CancellationToken);
 
-        Assert.Empty(diagnostics);
-        Assert.Empty(outputCompilation.GetDiagnostics(TestContext.Current.CancellationToken));
+        var outputCompilationDiagnostics = outputCompilation
+            .GetDiagnostics(TestHelper.CancellationToken);
+
+        await Assert.That(diagnostics).IsEmpty();
+        await Assert.That(outputCompilationDiagnostics).IsEmpty();
     }
 }
