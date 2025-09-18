@@ -1,0 +1,24 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="mdsnippets.json" />
+    <File Path="readme.source.md" />
+    <File Path="src/Common.props" />
+    <File Path="src/Directory.Build.props" />
+    <File Path="src/Directory.Packages.props" />
+    <File Path="src/global.json" />
+    <File Path="src/nugetfiles/AutoCtor.badcompat.targets" />
+    <File Path="src/nugetfiles/AutoCtor.props" />
+    <File Path="src/nugetfiles/AutoCtor.targets" />
+  </Folder>
+  <Folder Name="/Solution Items/workflows/">
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/publish.yml" />
+  </Folder>
+  <Project Path="src/AutoCtor.Attributes/AutoCtor.Attributes.csproj" />
+  <Project Path="src/AutoCtor.Example/AutoCtor.Example.csproj" />
+  <Project Path="src/AutoCtor.Roslyn3.11/AutoCtor.Roslyn3.11.csproj" />
+  <Project Path="src/AutoCtor.Roslyn4.0/AutoCtor.Roslyn4.0.csproj" />
+  <Project Path="src/AutoCtor.Roslyn4.4/AutoCtor.Roslyn4.4.csproj" />
+  <Project Path="src/AutoCtor.Shared/AutoCtor.Shared.shproj" />
+  <Project Path="src/AutoCtor.Tests/AutoCtor.Tests.csproj" />
+</Solution>
