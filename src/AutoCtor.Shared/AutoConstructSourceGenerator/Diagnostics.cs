@@ -44,13 +44,13 @@ internal static class Diagnostics
     /// Id: ACTR003<br />
     /// Title: Post construct method must not have any optional arguments
     /// </summary>
-    public static readonly DiagnosticDescriptor PostConstructMethodHasOptionalArgs = new DiagnosticDescriptor(
-        id: "ACTR003",
-        title: "Post construct method must not have any optional arguments",
-        messageFormat: "The parameter '{0}' must not be optional",
-        category: "AutoCtor",
-        DiagnosticSeverity.Warning,
-        isEnabledByDefault: true);
+    // public static readonly DiagnosticDescriptor PostConstructMethodHasOptionalArgs = new DiagnosticDescriptor(
+    //     id: "ACTR003",
+    //     title: "Post construct method must not have any optional arguments",
+    //     messageFormat: "The parameter '{0}' must not be optional",
+    //     category: "AutoCtor",
+    //     DiagnosticSeverity.Warning,
+    //     isEnabledByDefault: true);
 
     /// <summary>
     /// Id: ACTR004<br />

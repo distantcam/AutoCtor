@@ -49,7 +49,8 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 Name: m.FriendlyName,
                 ErrorName: m.ErrorName,
                 KeyedService: m.KeyedService,
-                IsOptional: false,
+                HasExplicitDefaultValue: false,
+                ExplicitDefaultValue: string.Empty,
                 IsOutOrRef: false,
                 Locations: m.Locations,
                 Type: m.Type);
@@ -65,7 +66,8 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 Name: m.FriendlyName,
                 ErrorName: m.ErrorName,
                 KeyedService: m.KeyedService,
-                IsOptional: false,
+                HasExplicitDefaultValue: false,
+                ExplicitDefaultValue: string.Empty,
                 IsOutOrRef: false,
                 Locations: m.Locations,
                 Type: m.Type);
@@ -112,10 +114,14 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
 
     private static string ConstructorParameterCSharp(KeyValuePair<ParameterModel, string> u)
     {
-        if (u.Key.KeyedService != null)
-            return $"[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices({u.Key.KeyedService})] {u.Key.Type} {u.Value}";
+        var defaultValue = u.Key.HasExplicitDefaultValue
+            ? $" = {u.Key.ExplicitDefaultValue}"
+            : string.Empty;
 
-        return $"{u.Key.Type} {u.Value}";
+        if (u.Key.KeyedService != null)
+            return $"[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices({u.Key.KeyedService})] {u.Key.Type} {u.Value}{defaultValue}";
+
+        return $"{u.Key.Type} {u.Value}{defaultValue}";
     }
 
     private bool GetUniqueName(ParameterModel p, HashSet<string> nameHash, Dictionary<ParameterModel, string> uniqueNames, out string name)
