@@ -51,7 +51,8 @@ public partial class AutoConstructSourceGenerator
                                     Name: bp.Name,
                                     ErrorName: bp.ErrorName,
                                     KeyedService: bp.KeyedService,
-                                    IsOptional: false,
+                                    HasExplicitDefaultValue: false,
+                                    ExplicitDefaultValue: string.Empty,
                                     IsOutOrRef: false,
                                     Locations: bp.Locations,
                                     Type: new(bpType)));
@@ -227,13 +228,6 @@ public partial class AutoConstructSourceGenerator
 
             foreach (var parameter in method.Parameters)
             {
-                // ACTR003
-                if (parameter.IsOptional)
-                {
-                    ReportDiagnostic(context, parameter, PostConstructMethodHasOptionalArgs);
-                    return null;
-                }
-
                 // ACTR005
                 if (parameter.IsOutOrRef && parameter.KeyedService != null)
                 {

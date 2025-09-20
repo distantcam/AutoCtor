@@ -5,7 +5,8 @@ internal readonly record struct ParameterModel(
     string Name,
     string ErrorName,
     string? KeyedService,
-    bool IsOptional,
+    bool HasExplicitDefaultValue,
+    string ExplicitDefaultValue,
     bool IsOutOrRef,
     EquatableList<Location> Locations,
     EquatableTypeSymbol Type
@@ -13,12 +14,31 @@ internal readonly record struct ParameterModel(
 {
     public static ParameterModel Create(IParameterSymbol parameter)
     {
+        var defaultValue = "";
+        if (parameter.HasExplicitDefaultValue)
+        {
+            if (parameter.ExplicitDefaultValue is string s)
+                defaultValue = $"\"{s}\"";
+
+            else if (parameter.ExplicitDefaultValue is not null
+                && parameter.Type is INamedTypeSymbol ptype
+                && ptype.TypeKind == TypeKind.Enum)
+                defaultValue = $"({ptype.ToDisplayString(FullyQualifiedFormat)}){parameter.ExplicitDefaultValue}";
+
+            else if (parameter.ExplicitDefaultValue is not null)
+                defaultValue = parameter.ExplicitDefaultValue.ToString();
+
+            else
+                defaultValue = "null";
+        }
+
         return new(
             RefKind: parameter.RefKind,
             Name: parameter.Name.EscapeKeywordIdentifier(),
             ErrorName: parameter.Name,
             KeyedService: ModelUtilities.GetServiceKey(parameter),
-            IsOptional: parameter.IsOptional,
+            HasExplicitDefaultValue: parameter.HasExplicitDefaultValue,
+            ExplicitDefaultValue: defaultValue,
             IsOutOrRef: parameter.RefKind == RefKind.Ref
                 || parameter.RefKind == RefKind.Out,
             Locations: new(parameter.Locations),
