@@ -50,13 +50,15 @@ internal readonly record struct ParameterModel(
     {
         return EqualityComparer<string>.Default.Equals(Name, other.Name)
             && EqualityComparer<string?>.Default.Equals(KeyedService, other.KeyedService)
-            && EqualityComparer<EquatableTypeSymbol>.Default.Equals(Type, other.Type);
+            && EqualityComparer<EquatableTypeSymbol>.Default.Equals(Type, other.Type)
+            && EqualityComparer<bool>.Default.Equals(HasExplicitDefaultValue, other.HasExplicitDefaultValue);
     }
 
     public override int GetHashCode()
     {
-        return (EqualityComparer<string>.Default.GetHashCode(Name) * -1521134295
+        return ((EqualityComparer<string>.Default.GetHashCode(Name) * -1521134295
             + EqualityComparer<string?>.Default.GetHashCode(KeyedService)) * -1521134295
-            + EqualityComparer<EquatableTypeSymbol>.Default.GetHashCode(Type);
+            + EqualityComparer<EquatableTypeSymbol>.Default.GetHashCode(Type)) * -1521134295
+            + EqualityComparer<bool>.Default.GetHashCode(HasExplicitDefaultValue);
     }
 }
