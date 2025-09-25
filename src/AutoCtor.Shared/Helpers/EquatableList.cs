@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Immutable;
+using System.Diagnostics;
 
+[DebuggerTypeProxy(typeof(EquatableList<>.EquatableListDebugView))]
+[DebuggerDisplay("Count = {Count}")]
 internal readonly struct EquatableList<T> : IEquatable<EquatableList<T>>, IReadOnlyList<T>, IEnumerable<T>
 {
     private readonly IEqualityComparer<T> _equalityComparer;
@@ -52,4 +55,18 @@ internal readonly struct EquatableList<T> : IEquatable<EquatableList<T>>, IReadO
         ? Enumerable.Empty<T>().GetEnumerator()
         : ((IEnumerable<T>)_data).GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    internal sealed class EquatableListDebugView(EquatableList<T> equatableList)
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+        public T[] Items
+        {
+            get
+            {
+                T[] items = new T[equatableList.Count];
+                equatableList._data.CopyTo(items, 0);
+                return items;
+            }
+        }
+    }
 }

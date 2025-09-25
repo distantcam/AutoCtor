@@ -31,9 +31,10 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
 
         foreach (var p in _baseParameters)
         {
-            var name = GetUniqueName(p, nameHash, uniqueNames);
-            parameterModels.Add(p);
+            if (GetUniqueName(p, nameHash, uniqueNames, out var name))
+                continue;
 
+            parameterModels.Add(p);
             baseParameters.Add(name);
         }
         foreach (var m in fields)
@@ -52,7 +53,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 IsOutOrRef: false,
                 Locations: m.Locations,
                 Type: m.Type);
-            var name = GetUniqueName(p, nameHash, uniqueNames);
+            GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
             parametersMap.Add(m, name);
@@ -68,7 +69,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 IsOutOrRef: false,
                 Locations: m.Locations,
                 Type: m.Type);
-            var name = GetUniqueName(p, nameHash, uniqueNames);
+            GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
             parametersMap.Add(m, name);
@@ -91,7 +92,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 continue;
             }
 
-            var name = GetUniqueName(p, nameHash, uniqueNames);
+            GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
             postCtorParameters.Add(p.RefKind != RefKind.None
@@ -117,10 +118,10 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         return $"{u.Key.Type} {u.Value}";
     }
 
-    private string GetUniqueName(ParameterModel p, HashSet<string> nameHash, Dictionary<ParameterModel, string> uniqueNames)
+    private bool GetUniqueName(ParameterModel p, HashSet<string> nameHash, Dictionary<ParameterModel, string> uniqueNames, out string name)
     {
-        if (uniqueNames.TryGetValue(p, out var name))
-            return name;
+        if (uniqueNames.TryGetValue(p, out name))
+            return true;
 
         var i = 0;
         name = p.Name;
@@ -130,7 +131,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         }
         nameHash.Add(name);
         uniqueNames.Add(p, name);
-        return name;
+        return false;
     }
 }
 
