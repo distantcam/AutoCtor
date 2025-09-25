@@ -11,6 +11,6 @@ partial class PostCtorOptionalString
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 	public PostCtorOptionalString(string value = "dfault")
 	{
-		Initialize(out this._service, value);
+		Initialize(value);
 	}
 }

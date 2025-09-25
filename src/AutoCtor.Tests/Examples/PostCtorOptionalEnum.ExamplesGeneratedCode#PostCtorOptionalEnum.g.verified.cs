@@ -11,6 +11,6 @@ partial class PostCtorOptionalEnum
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 	public PostCtorOptionalEnum(global::ConstEnum value = (global::ConstEnum)2)
 	{
-		Initialize(out this._service, value);
+		Initialize(value);
 	}
 }
