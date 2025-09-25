@@ -11,6 +11,6 @@ partial class PostCtorOptionalInt
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 	public PostCtorOptionalInt(int value = 123)
 	{
-		Initialize(out this._service, value);
+		Initialize(value);
 	}
 }
