@@ -13,10 +13,10 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
     private IEnumerable<ParameterModel> _baseParameters = [];
     private IEnumerable<ParameterModel> _postCtorParameters = [];
 
-    public void AddBaseParameters(IEnumerable<ParameterModel> baseParameters)
+    public void SetBaseParameters(IEnumerable<ParameterModel> baseParameters)
         => _baseParameters = baseParameters;
 
-    public void AddPostCtorParameters(IEnumerable<ParameterModel> postCtorParameters)
+    public void SetPostCtorParameters(IEnumerable<ParameterModel> postCtorParameters)
         => _postCtorParameters = postCtorParameters;
 
     public ParameterList Build(EmitterContext context)
@@ -44,16 +44,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 && (p.RefKind == RefKind.Ref || p.RefKind == RefKind.Out)))
                 continue;
 
-            var p = new ParameterModel(
-                RefKind: RefKind.None,
-                Name: m.FriendlyName,
-                ErrorName: m.ErrorName,
-                KeyedService: m.KeyedService,
-                HasExplicitDefaultValue: false,
-                ExplicitDefaultValue: string.Empty,
-                IsOutOrRef: false,
-                Locations: m.Locations,
-                Type: m.Type);
+            var p = ParameterModel.Create(m);
             GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
@@ -61,16 +52,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         }
         foreach (var m in properties)
         {
-            var p = new ParameterModel(
-                RefKind: RefKind.None,
-                Name: m.FriendlyName,
-                ErrorName: m.ErrorName,
-                KeyedService: m.KeyedService,
-                HasExplicitDefaultValue: false,
-                ExplicitDefaultValue: string.Empty,
-                IsOutOrRef: false,
-                Locations: m.Locations,
-                Type: m.Type);
+            var p = ParameterModel.Create(m);
             GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 

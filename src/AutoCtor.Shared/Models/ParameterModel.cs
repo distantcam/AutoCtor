@@ -46,6 +46,20 @@ internal readonly record struct ParameterModel(
         );
     }
 
+    public static ParameterModel Create(MemberModel member)
+    {
+        return new ParameterModel(
+            RefKind: RefKind.None,
+            Name: member.FriendlyName,
+            ErrorName: member.ErrorName,
+            KeyedService: member.KeyedService,
+            HasExplicitDefaultValue: false,
+            ExplicitDefaultValue: string.Empty,
+            IsOutOrRef: false,
+            Locations: member.Locations,
+            Type: member.Type);
+    }
+
     public bool Equals(ParameterModel other)
     {
         return EqualityComparer<string>.Default.Equals(Name, other.Name)
