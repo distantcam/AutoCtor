@@ -9,8 +9,8 @@ partial class PostCtorOptionalWithBase
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public PostCtorOptionalWithBase(string value) : base(value)
+	public PostCtorOptionalWithBase(string value, string value0 = "dfault") : base(value)
 	{
-		Initialize(value);
+		Initialize(value0);
 	}
 }
