@@ -7,6 +7,8 @@ public interface IExternalService;
 public interface ICacheService;
 public interface ICacheProvider;
 public interface IUserService;
+
+#pragma warning disable CS0169
 #endregion
 
 public class Original
