@@ -7,10 +7,10 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-ACTR001 | AutoCtor | Warning  | ACTR001_AutoConstructSourceGenerator
-ACTR002 | AutoCtor | Warning  | ACTR002_AutoConstructSourceGenerator
-ACTR003 | AutoCtor | Warning  | ACTR003_AutoConstructSourceGenerator
-ACTR004 | AutoCtor | Warning  | ACTR004_AutoConstructSourceGenerator
+ACTR001 | AutoCtor | Warning  | AmbiguousMarkedPostConstructMethod
+ACTR002 | AutoCtor | Warning  | PostConstructMethodNotVoid
+ACTR003 | AutoCtor | Warning  | PostConstructMethodHasOptionalArgs
+ACTR004 | AutoCtor | Warning  | PostConstructMethodCannotBeGeneric
 
 ## Release 2.8
 
@@ -18,5 +18,13 @@ ACTR004 | AutoCtor | Warning  | ACTR004_AutoConstructSourceGenerator
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-ACTR005 | AutoCtor | Warning  | ACTR005_AutoConstructSourceGenerator
-ACTR006 | AutoCtor | Warning  | ACTR006_AutoConstructSourceGenerator
+ACTR005 | AutoCtor | Warning  | PostConstructOutParameterCannotBeKeyed
+ACTR006 | AutoCtor | Warning  | PostConstructOutParameterMustNotMatchKeyedField
+
+## Release 3.0
+
+### Removed Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+ACTR003 | AutoCtor | Warning  | PostConstructMethodHasOptionalArgs
