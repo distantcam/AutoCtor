@@ -12,13 +12,13 @@ internal partial class CodeBuilder
     public CodeBuilder IncreaseIndent() { _indent++; return this; }
     public CodeBuilder DecreaseIndent() { if (_indent > 0) _indent--; return this; }
 
-    public CodeBuilder Append(string text) { _stringBuilder.Append(text); return this; }
-    public CodeBuilder Append(bool enabled, string text) { if (enabled) _stringBuilder.Append(text); return this; }
+    public CodeBuilder Append(string value) { _stringBuilder.Append(value); return this; }
+    public CodeBuilder Append(bool enabled, string value) { if (enabled) _stringBuilder.Append(value); return this; }
     public CodeBuilder AppendLine() { _stringBuilder.AppendLine(); return this; }
-    public CodeBuilder AppendLine(string line) { _stringBuilder.AppendLine(Indent + line); return this; }
-    public CodeBuilder AppendLine(bool enabled, string line) { if (enabled) _stringBuilder.AppendLine(Indent + line); return this; }
-    public CodeBuilder AppendLineRaw(string line) { _stringBuilder.AppendLine(line); return this; }
-    public CodeBuilder AppendLineRaw(bool enabled, string line) { if (enabled) _stringBuilder.AppendLine(line); return this; }
+    public CodeBuilder AppendLine(string value) { _stringBuilder.AppendLine(Indent + value); return this; }
+    public CodeBuilder AppendLine(bool enabled, string value) { if (enabled) _stringBuilder.AppendLine(Indent + value); return this; }
+    public CodeBuilder AppendLineRaw(string value) { _stringBuilder.AppendLine(value); return this; }
+    public CodeBuilder AppendLineRaw(bool enabled, string value) { if (enabled) _stringBuilder.AppendLine(value); return this; }
     public CodeBuilder AppendIndent() { _stringBuilder.Append(Indent); return this; }
 
     public static implicit operator SourceText(CodeBuilder codeBuilder)

@@ -11,7 +11,7 @@ internal partial class CodeBuilder
 
     public CodeBuilder Append(bool enabled,
         [InterpolatedStringHandlerArgument("", nameof(enabled))]
-        ref ConditionalCodeBuilderInterpolatedStringHandler builder) => this;
+        ref CodeBuilderInterpolatedStringHandler builder) => this;
 
     public CodeBuilder AppendLineRaw(
         [InterpolatedStringHandlerArgument("")]
@@ -19,7 +19,7 @@ internal partial class CodeBuilder
 
     public CodeBuilder AppendLineRaw(bool enabled,
         [InterpolatedStringHandlerArgument("", nameof(enabled))]
-        ref ConditionalCodeBuilderInterpolatedStringHandler builder) => enabled ? AppendLine() : this;
+        ref CodeBuilderInterpolatedStringHandler builder) => enabled ? AppendLine() : this;
 
     public CodeBuilder AppendLine(
         [InterpolatedStringHandlerArgument("")]
@@ -27,7 +27,7 @@ internal partial class CodeBuilder
 
     public CodeBuilder AppendLine(bool enabled,
         [InterpolatedStringHandlerArgument("", nameof(enabled))]
-        ConditionalIndentedCodeBuilderInterpolatedStringHandler builder) => enabled ? AppendLine() : this;
+        IndentedCodeBuilderInterpolatedStringHandler builder) => enabled ? AppendLine() : this;
 
     private void AppendFormatted(IEnumerable<string> items, string? format)
     {
@@ -76,51 +76,37 @@ internal partial class CodeBuilder
 
     [InterpolatedStringHandler]
     internal readonly struct CodeBuilderInterpolatedStringHandler(
-        int literalLength, int formattedCount, CodeBuilder codeBuilder)
+        int literalLength, int formattedCount, CodeBuilder codeBuilder, bool enabled = true)
     {
-        public readonly void AppendLiteral(string s) => codeBuilder.Append(s);
-        public readonly void AppendFormatted(string s) => codeBuilder.Append(s);
-        public readonly void AppendFormatted(IEnumerable<string> items, string? format)
-            => codeBuilder.AppendFormatted(items, format);
-    }
-
-    [InterpolatedStringHandler]
-    internal readonly struct ConditionalCodeBuilderInterpolatedStringHandler(
-        int literalLength, int formattedCount, CodeBuilder codeBuilder, bool enabled)
-    {
-        public readonly bool AppendLiteral(string s) { if (enabled) codeBuilder.Append(s); return enabled; }
-        public readonly bool AppendFormatted(string s) { if (enabled) codeBuilder.Append(s); return enabled; }
+        public readonly bool AppendLiteral(string s)
+        { if (enabled) codeBuilder.Append(s); return enabled; }
+        public readonly bool AppendFormatted(string s)
+        { if (enabled) codeBuilder.Append(s); return enabled; }
         public readonly bool AppendFormatted(IEnumerable<string> items, string? format)
         { if (enabled) codeBuilder.AppendFormatted(items, format); return enabled; }
     }
 
     [InterpolatedStringHandler]
     internal class IndentedCodeBuilderInterpolatedStringHandler(
-        int literalLength, int formattedCount, CodeBuilder codeBuilder)
+        int literalLength, int formattedCount, CodeBuilder codeBuilder, bool enabled = true)
     {
         private bool _hasIndented;
 
-        private void EnsureIndent()
+        private CodeBuilder EnsureIndent()
         {
-            if (_hasIndented) return;
-            codeBuilder.AppendIndent();
-            _hasIndented = true;
+            if (!_hasIndented)
+            {
+                codeBuilder.AppendIndent();
+                _hasIndented = true;
+            }
+            return codeBuilder;
         }
 
-        public void AppendLiteral(string s) { EnsureIndent(); codeBuilder.Append(s); }
-        public void AppendFormatted(string s) { EnsureIndent(); codeBuilder.Append(s); }
-        public void AppendFormatted(IEnumerable<string> items, string? format)
-        { EnsureIndent(); codeBuilder.AppendFormatted(items, format); }
-    }
-
-    [InterpolatedStringHandler]
-    internal class ConditionalIndentedCodeBuilderInterpolatedStringHandler(
-        int literalLength, int formattedCount, CodeBuilder codeBuilder, bool enabled)
-        : IndentedCodeBuilderInterpolatedStringHandler(literalLength, formattedCount, codeBuilder)
-    {
-        public new bool AppendLiteral(string s) { if (enabled) base.AppendLiteral(s); return enabled; }
-        public new bool AppendFormatted(string s) { if (enabled) base.AppendFormatted(s); return enabled; }
-        public new bool AppendFormatted(IEnumerable<string> items, string? format)
-        { if (enabled) base.AppendFormatted(items, format); return enabled; }
+        public bool AppendLiteral(string s)
+        { if (enabled) EnsureIndent().Append(s); return enabled; }
+        public bool AppendFormatted(string s)
+        { if (enabled) EnsureIndent().Append(s); return enabled; }
+        public bool AppendFormatted(IEnumerable<string> items, string? format)
+        { if (enabled) EnsureIndent().AppendFormatted(items, format); return enabled; }
     }
 }
