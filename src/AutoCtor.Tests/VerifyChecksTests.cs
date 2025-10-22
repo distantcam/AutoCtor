@@ -1,6 +1,4 @@
-﻿using VerifyTUnit;
-
-namespace AutoCtor.Tests;
+﻿namespace AutoCtor.Tests;
 
 public class VerifyChecksTests
 {

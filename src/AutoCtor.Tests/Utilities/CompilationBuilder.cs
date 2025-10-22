@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.Testing;
 internal class CompilationBuilder
 {
     private const string DEFAULT_TARGET_FRAMEWORK = "net9.0";
-    private const string NETCORE_VERSION = "9.0.8";
 
     private ImmutableArray<ReferenceAssemblies> _nugetReferences;
     private ImmutableArray<MetadataReference> _references;
@@ -51,24 +50,24 @@ internal class CompilationBuilder
             .WithOptions(_compilationOptions);
     }
 
-    public CompilationBuilder AddNugetReference(string id, string version, string targetFramework = "", string path = "")
+    public CompilationBuilder AddNugetReference(string id, string version, string targetFramework = DEFAULT_TARGET_FRAMEWORK, string path = "")
     {
-        var framework = string.IsNullOrEmpty(targetFramework) ? DEFAULT_TARGET_FRAMEWORK : targetFramework;
-
         return new(this)
         {
             _nugetReferences = _nugetReferences.Add(new(
-                framework,
+                targetFramework,
                 new(id, version),
-                Path.Join(string.IsNullOrEmpty(path) ? "lib" : path, framework)
+                Path.Join(string.IsNullOrEmpty(path) ? "lib" : path, targetFramework)
             ))
         };
     }
 
-    public CompilationBuilder AddNetCoreReference(string targetFramework = "", string version = NETCORE_VERSION)
+    public CompilationBuilder AddNetCoreReference(
+        string targetFramework = DEFAULT_TARGET_FRAMEWORK,
+        string? version = null)
         => AddNugetReference(
             "Microsoft.NETCore.App.Ref",
-            version,
+            version ?? TestFileHelper.GetPackageVersion("Microsoft.NETCore.App.Ref"),
             targetFramework,
             "ref");
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using static ExampleTestsHelper;
@@ -82,32 +81,24 @@ public class ExampleTests
 
     private static CompilationBuilder CreateCompilation(CodeFileTheoryData theoryData)
     {
-        var srcDir = BaseDir?.Parent;
-        var packageVersionsFile = Path.Combine(srcDir?.FullName ?? "", "Directory.Packages.props");
-
-        var doc = XDocument.Load(packageVersionsFile);
-        var versionXml = doc.Root?.Descendants("PackageVersion")
-            .FirstOrDefault(el => el.Attribute("Include")?.Value == "Microsoft.Extensions.DependencyInjection.Abstractions");
-
-        var version = versionXml?.Attribute("Version")?.Value ?? "9.0.8";
+        var version = TestFileHelper.GetPackageVersion("Microsoft.Extensions.DependencyInjection.Abstractions");
 
         return CreateCompilation<AutoConstructAttribute>(theoryData)
-            .AddNugetReference(
-            "Microsoft.Extensions.DependencyInjection.Abstractions", version);
+            .AddNugetReference("Microsoft.Extensions.DependencyInjection.Abstractions", version);
     }
 
-    private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent;
+    private static IEnumerable<string> GetExamplesFiles(string path)
+        => Directory.GetFiles(Path.Combine(TestFileHelper.BaseDir?.FullName ?? "", path), "*.cs")
+        .Where(e => !e.Contains(".g."));
 
-    private static IEnumerable<string> GetExamplesFiles(string path) => Directory.GetFiles(Path.Combine(BaseDir?.FullName ?? "", path), "*.cs").Where(e => !e.Contains(".g."));
-
-    public static IEnumerable<CodeFileTheoryData> GetExamples()
+    public static IEnumerable<Func<CodeFileTheoryData>> GetExamples()
     {
-        if (BaseDir == null)
+        if (TestFileHelper.BaseDir is null)
             throw new Exception("BaseDir is null");
 
         foreach (var example in GetExamplesFiles("Examples"))
         {
-            yield return new CodeFileTheoryData(example) with
+            yield return () => new CodeFileTheoryData(example) with
             {
                 IgnoredCompileDiagnostics = ["CS0414", "CS0169"] // Ignore unused fields
             };
@@ -115,7 +106,7 @@ public class ExampleTests
 
         foreach (var guardExample in GetExamplesFiles("GuardExamples"))
         {
-            yield return new CodeFileTheoryData(guardExample) with
+            yield return () => new CodeFileTheoryData(guardExample) with
             {
                 Options = new() { { "build_property.AutoCtorGuards", "true" } }
             };
@@ -124,7 +115,7 @@ public class ExampleTests
         foreach (var langExample in GetExamplesFiles("LangExamples"))
         {
             var verifiedName = string.Concat("Verified_", PreprocessorSymbols.Last().AsSpan(7));
-            yield return new CodeFileTheoryData(langExample) with
+            yield return () => new CodeFileTheoryData(langExample) with
             {
                 VerifiedDirectory = Path.Combine(Path.GetDirectoryName(langExample) ?? "", verifiedName),
                 LangPreview = true,
