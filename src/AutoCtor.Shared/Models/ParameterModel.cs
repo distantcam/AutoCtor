@@ -29,7 +29,7 @@ internal readonly record struct ParameterModel(
                 defaultValue = parameter.ExplicitDefaultValue.ToString();
 
             else
-                defaultValue = "null";
+                defaultValue = "default";
         }
 
         return new(

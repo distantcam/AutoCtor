@@ -9,7 +9,10 @@ partial class PostCtorWithOptionalArgumentsTest
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public PostCtorWithOptionalArgumentsTest(global::IServiceA serviceA, global::IServiceB serviceB = null)
+	public PostCtorWithOptionalArgumentsTest(
+		global::IServiceA serviceA,
+		global::IServiceB serviceB = default
+	)
 	{
 		this._serviceA = serviceA;
 		Initialize(serviceB);
