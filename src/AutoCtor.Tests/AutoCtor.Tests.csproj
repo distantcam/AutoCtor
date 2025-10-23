@@ -56,10 +56,4 @@
     <ProjectReference Include="..\AutoCtor.Roslyn$(GeneratorVersion)\AutoCtor.Roslyn$(GeneratorVersion).csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Examples\PostCtorOptionalDefault.ExamplesGeneratedCode#PostCtorOptionalNull.g.verified.cs">
-      <DependentUpon>PostCtorOptionalDefault.cs</DependentUpon>
-    </None>
-  </ItemGroup>
-
 </Project>
