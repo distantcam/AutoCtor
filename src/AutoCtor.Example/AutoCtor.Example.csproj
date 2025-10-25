@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>disable</Nullable>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <NoWarn>CS0169</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

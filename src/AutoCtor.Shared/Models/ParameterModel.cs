@@ -5,7 +5,8 @@ internal readonly record struct ParameterModel(
     string Name,
     string ErrorName,
     string? KeyedService,
-    bool IsOptional,
+    bool HasExplicitDefaultValue,
+    string ExplicitDefaultValue,
     bool IsOutOrRef,
     EquatableList<Location> Locations,
     EquatableTypeSymbol Type
@@ -13,12 +14,31 @@ internal readonly record struct ParameterModel(
 {
     public static ParameterModel Create(IParameterSymbol parameter)
     {
+        var defaultValue = "";
+        if (parameter.HasExplicitDefaultValue)
+        {
+            if (parameter.ExplicitDefaultValue is string s)
+                defaultValue = $"\"{s}\"";
+
+            else if (parameter.ExplicitDefaultValue is not null
+                && parameter.Type is INamedTypeSymbol ptype
+                && ptype.TypeKind == TypeKind.Enum)
+                defaultValue = $"({ptype.ToDisplayString(FullyQualifiedFormat)}){parameter.ExplicitDefaultValue}";
+
+            else if (parameter.ExplicitDefaultValue is not null)
+                defaultValue = parameter.ExplicitDefaultValue.ToString();
+
+            else
+                defaultValue = "default";
+        }
+
         return new(
             RefKind: parameter.RefKind,
             Name: parameter.Name.EscapeKeywordIdentifier(),
             ErrorName: parameter.Name,
             KeyedService: ModelUtilities.GetServiceKey(parameter),
-            IsOptional: parameter.IsOptional,
+            HasExplicitDefaultValue: parameter.HasExplicitDefaultValue,
+            ExplicitDefaultValue: defaultValue,
             IsOutOrRef: parameter.RefKind == RefKind.Ref
                 || parameter.RefKind == RefKind.Out,
             Locations: new(parameter.Locations),
@@ -26,17 +46,33 @@ internal readonly record struct ParameterModel(
         );
     }
 
+    public static ParameterModel Create(MemberModel member)
+    {
+        return new ParameterModel(
+            RefKind: RefKind.None,
+            Name: member.FriendlyName,
+            ErrorName: member.ErrorName,
+            KeyedService: member.KeyedService,
+            HasExplicitDefaultValue: false,
+            ExplicitDefaultValue: string.Empty,
+            IsOutOrRef: false,
+            Locations: member.Locations,
+            Type: member.Type);
+    }
+
     public bool Equals(ParameterModel other)
     {
         return EqualityComparer<string>.Default.Equals(Name, other.Name)
             && EqualityComparer<string?>.Default.Equals(KeyedService, other.KeyedService)
-            && EqualityComparer<EquatableTypeSymbol>.Default.Equals(Type, other.Type);
+            && EqualityComparer<EquatableTypeSymbol>.Default.Equals(Type, other.Type)
+            && EqualityComparer<bool>.Default.Equals(HasExplicitDefaultValue, other.HasExplicitDefaultValue);
     }
 
     public override int GetHashCode()
     {
-        return (EqualityComparer<string>.Default.GetHashCode(Name) * -1521134295
+        return ((EqualityComparer<string>.Default.GetHashCode(Name) * -1521134295
             + EqualityComparer<string?>.Default.GetHashCode(KeyedService)) * -1521134295
-            + EqualityComparer<EquatableTypeSymbol>.Default.GetHashCode(Type);
+            + EqualityComparer<EquatableTypeSymbol>.Default.GetHashCode(Type)) * -1521134295
+            + EqualityComparer<bool>.Default.GetHashCode(HasExplicitDefaultValue);
     }
 }
