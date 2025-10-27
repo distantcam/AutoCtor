@@ -14,7 +14,6 @@ internal class CompilationBuilder
     private CSharpParseOptions _parseOptions;
     private CSharpCompilationOptions _compilationOptions;
 
-
     public CSharpParseOptions ParseOptions => _parseOptions;
 
     public CompilationBuilder()
@@ -37,11 +36,11 @@ internal class CompilationBuilder
         _compilationOptions = other._compilationOptions;
     }
 
-    public async Task<CSharpCompilation> Build(string assemblyName)
+    public async Task<CSharpCompilation> Build(string assemblyName, CancellationToken cancellationToken = default)
     {
-        var refTasks = _nugetReferences.Select(r => r.ResolveAsync(null, CancellationToken.None));
-        await Task.WhenAll(refTasks);
-        var nugetReferences = refTasks.SelectMany(t => t.Result);
+        var nugetReferences = await _nugetReferences.ToAsyncEnumerable()
+            .SelectManyAwait(async r => (await r.ResolveAsync(null, cancellationToken)).ToAsyncEnumerable())
+            .ToListAsync(cancellationToken);
 
         return CSharpCompilation.Create(assemblyName)
             .AddReferences(nugetReferences)

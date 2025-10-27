@@ -8,7 +8,7 @@ public class GeneratedAttributeTests
         var builder = new CompilationBuilder()
             .AddNetCoreReference()
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken);
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
@@ -23,7 +23,7 @@ public class GeneratedAttributeTests
         var builder = new CompilationBuilder()
             .AddNetCoreReference()
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken);
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
@@ -47,7 +47,7 @@ public class GeneratedAttributeTests
             .AddNetCoreReference()
             .AddCode("[AutoCtor.AutoConstruct] public partial class Test { }")
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES", "AUTOCTOR_USAGES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken);
 
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
@@ -79,13 +79,13 @@ public class GeneratedAttributeTests
             .Build(compileBuilder.ParseOptions);
 
         var projectA = await compileBuilder
-            .Build("ProjectA");
+            .Build("ProjectA", TestHelper.CancellationToken);
 
         genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _, TestHelper.CancellationToken);
 
         var projectB = await compileBuilder
             .AddCompilationReference(genProjectA)
-            .Build("ProjectB");
+            .Build("ProjectB", TestHelper.CancellationToken);
 
         genDriver.RunGeneratorsAndUpdateCompilation(
             projectB,

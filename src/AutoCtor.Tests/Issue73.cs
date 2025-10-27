@@ -73,12 +73,12 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
 ";
         var projectA = await common
             .AddCode(projectACode)
-            .Build("ProjectA");
+            .Build("ProjectA", TestHelper.CancellationToken);
 
         var projectB = await common
             .AddCompilationReference(projectA)
             .AddCode(projectBCode)
-            .Build("ProjectB");
+            .Build("ProjectB", TestHelper.CancellationToken);
 
         return projectB;
     }

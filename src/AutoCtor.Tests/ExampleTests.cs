@@ -12,7 +12,7 @@ public class ExampleTests
     public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests));
+        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken);
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
@@ -30,7 +30,7 @@ public class ExampleTests
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests));
+        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken);
         new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
@@ -52,7 +52,7 @@ public class ExampleTests
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests));
+        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken);
 
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
