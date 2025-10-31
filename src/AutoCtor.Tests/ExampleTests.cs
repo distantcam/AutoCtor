@@ -128,6 +128,7 @@ public class ExampleTests
             };
         }
 
+#if ROSLYN_4_4
         foreach (var readmeExample in GetExamplesFiles("ReadmeExamples"))
         {
             yield return () => new CodeFileTheoryData(readmeExample) with
@@ -135,5 +136,6 @@ public class ExampleTests
                 IgnoredCompileDiagnostics = ["CS0414", "CS0169"] // Ignore unused fields
             };
         }
+#endif
     }
 }
