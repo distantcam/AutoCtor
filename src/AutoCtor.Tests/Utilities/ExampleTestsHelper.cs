@@ -62,7 +62,8 @@ internal static class ExampleTestsHelper
         {
             // Assert that both runs produced the same outputs
             var runSteps2 = trackedSteps2[trackingName];
-            await AssertStepsEqual(runSteps1, runSteps2);
+            await AssertStepsEqual(runSteps1, runSteps2)
+                .ConfigureAwait(false);
         }
 
         return;

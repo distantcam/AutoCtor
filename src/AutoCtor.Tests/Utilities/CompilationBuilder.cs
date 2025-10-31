@@ -39,8 +39,10 @@ internal class CompilationBuilder
     public async Task<CSharpCompilation> Build(string assemblyName, CancellationToken cancellationToken = default)
     {
         var nugetReferences = await _nugetReferences.ToAsyncEnumerable()
-            .SelectManyAwait(async r => (await r.ResolveAsync(null, cancellationToken)).ToAsyncEnumerable())
-            .ToListAsync(cancellationToken);
+            .SelectManyAwait(async r =>
+                (await r.ResolveAsync(null, cancellationToken).ConfigureAwait(false))
+                .ToAsyncEnumerable())
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return CSharpCompilation.Create(assemblyName)
             .AddReferences(nugetReferences)

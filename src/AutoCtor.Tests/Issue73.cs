@@ -9,13 +9,15 @@ public class Issue73
     public async Task VerifyGeneratedCode()
     {
         var common = Common();
-        var compilation = await Compile(common);
+        var compilation = await Compile(common)
+            .ConfigureAwait(false);
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .Build(common.ParseOptions)
             .RunGenerators(compilation, TestHelper.CancellationToken);
 
-        await Verify(driver);
+        await Verify(driver)
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -24,7 +26,8 @@ public class Issue73
         string[] ignoredWarnings = ["CS0414"]; // Ignore unused fields
 
         var common = Common();
-        var compilation = await Compile(common);
+        var compilation = await Compile(common)
+            .ConfigureAwait(false);
         new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .Build(common.ParseOptions)
@@ -73,12 +76,14 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
 ";
         var projectA = await common
             .AddCode(projectACode)
-            .Build("ProjectA", TestHelper.CancellationToken);
+            .Build("ProjectA", TestHelper.CancellationToken)
+            .ConfigureAwait(false);
 
         var projectB = await common
             .AddCompilationReference(projectA)
             .AddCode(projectBCode)
-            .Build("ProjectB", TestHelper.CancellationToken);
+            .Build("ProjectB", TestHelper.CancellationToken)
+            .ConfigureAwait(false);
 
         return projectB;
     }

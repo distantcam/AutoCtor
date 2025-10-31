@@ -12,7 +12,8 @@ public class ExampleTests
     public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken);
+        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken)
+            .ConfigureAwait(false);
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
@@ -22,7 +23,8 @@ public class ExampleTests
         await Verify(driver)
             .UseDirectory(theoryData.VerifiedDirectory)
             .UseTypeName(theoryData.Name)
-            .IgnoreParametersForVerified();
+            .IgnoreParametersForVerified()
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -30,7 +32,8 @@ public class ExampleTests
     public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken);
+        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken)
+            .ConfigureAwait(false);
         new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
@@ -52,7 +55,8 @@ public class ExampleTests
     public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
     {
         var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken);
+        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken)
+            .ConfigureAwait(false);
 
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
@@ -73,7 +77,8 @@ public class ExampleTests
         var secondResult = driver.GetRunResult();
 
         await AssertRunsEqual(firstResult, secondResult,
-            AutoConstructSourceGenerator.TrackingNames.AllTrackers);
+            AutoConstructSourceGenerator.TrackingNames.AllTrackers)
+            .ConfigureAwait(false);
     }
 #endif
 
