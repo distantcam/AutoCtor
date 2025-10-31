@@ -54,15 +54,18 @@ internal static class ExampleTestsHelper
         using var _ = Assert.Multiple();
 
         // Both runs should have the same tracked steps
-        await Assert.That(trackedSteps1).IsNotEmpty();
-        await Assert.That(trackedSteps2.Keys).IsEquivalentTo(trackedSteps1.Keys);
+        await Assert.That(trackedSteps1).IsNotEmpty()
+            .ConfigureAwait(false);
+        await Assert.That(trackedSteps2.Keys).IsEquivalentTo(trackedSteps1.Keys)
+            .ConfigureAwait(false);
 
         // Get the IncrementalGeneratorRunStep collection for each run
         foreach (var (trackingName, runSteps1) in trackedSteps1)
         {
             // Assert that both runs produced the same outputs
             var runSteps2 = trackedSteps2[trackingName];
-            await AssertStepsEqual(runSteps1, runSteps2);
+            await AssertStepsEqual(runSteps1, runSteps2)
+                .ConfigureAwait(false);
         }
 
         return;
@@ -71,17 +74,18 @@ internal static class ExampleTestsHelper
         static Dictionary<string, ImmutableArray<IncrementalGeneratorRunStep>> GetTrackedSteps(
             GeneratorDriverRunResult runResult, IEnumerable<string> trackingNames)
             => runResult
-                    .Results[0] // We're only running a single generator, so this is safe
-                    .TrackedSteps // Get the pipeline outputs
-                    .Where(step => trackingNames.Contains(step.Key)) // filter to known steps
-                    .ToDictionary(x => x.Key, x => x.Value); // Convert to a dictionary
+                .Results[0] // We're only running a single generator, so this is safe
+                .TrackedSteps // Get the pipeline outputs
+                .Where(step => trackingNames.Contains(step.Key)) // filter to known steps
+                .ToDictionary(x => x.Key, x => x.Value); // Convert to a dictionary
     }
 
     private static async Task AssertStepsEqual(
         ImmutableArray<IncrementalGeneratorRunStep> runSteps1,
         ImmutableArray<IncrementalGeneratorRunStep> runSteps2)
     {
-        await Assert.That(runSteps2.Length).IsEqualTo(runSteps2.Length);
+        await Assert.That(runSteps2.Length).IsEqualTo(runSteps2.Length)
+            .ConfigureAwait(false);
 
         for (var i = 0; i < runSteps1.Length; i++)
         {
@@ -92,7 +96,8 @@ internal static class ExampleTestsHelper
             var outputs1 = runStep1.Outputs.Select(x => x.Value);
             var outputs2 = runStep2.Outputs.Select(x => x.Value);
 
-            await Assert.That(outputs2).IsEquivalentTo(outputs1);
+            await Assert.That(outputs2).IsEquivalentTo(outputs1)
+                .ConfigureAwait(false);
 
             // Therefore, on the second run the results should always be cached or unchanged!
             // - Unchanged is when the _input_ has changed, but the output hasn't
@@ -101,7 +106,8 @@ internal static class ExampleTestsHelper
                 [IncrementalStepRunReason.Cached, IncrementalStepRunReason.Unchanged];
             foreach (var (_, reason) in runStep2.Outputs)
             {
-                await Assert.That(reason).IsIn(acceptableReasons);
+                await Assert.That(reason).IsIn(acceptableReasons)
+                    .ConfigureAwait(false);
             }
         }
     }

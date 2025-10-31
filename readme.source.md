@@ -44,52 +44,77 @@ toc
 
 https://nuget.org/packages/AutoCtor/
 
-## Usage
+## Examples
 
-### Your code
+### Basic
 
 snippet: Basic
 
-### What gets generated
+<details><summary>What gets generated</summary>
 
-snippet: BasicGeneratedCode
+snippet: Basic.ExamplesGeneratedCode#Basic.g.verified.cs
+
+</details>
+
+### Inherited
+
+snippet: Inherited
+
+<details><summary>What gets generated</summary>
+
+snippet: Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs
+
+</details>
+
+### Properties
+
+snippet: Properties
+
+<details><summary>What gets generated</summary>
+
+snippet: Properties.ExamplesGeneratedCode#Properties.g.verified.cs
+
+</details>
 
 <a href='#toc' title='Back to Contents'>Back to Contents</a>
-## More Features
-
-### Post constructor Initialisation
+## Post Constructor Initialization
 
 You can mark a method to be called at the end of the constructor with the attribute `[AutoPostConstruct]`. This method must return void.
 
 snippet: PostConstruct
 
-snippet: PostConstructGeneratedCode
+<details><summary>What gets generated</summary>
 
-### Keyed Services
+snippet: PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs
 
-When using `Microsoft.Extensions.DependencyInjection` you can mark fields and properties with `[AutoKeyedService]` and it will be included in the constructor.
+</details>
 
-snippet: KeyedService
+### Extra Parameters
 
-snippet: KeyedServiceGeneratedCode
+Post construct methods can also take parameters. The generated constructor will include these parameters.
 
-### Initialize with parameters
+snippet: PostConstructWithParameter
 
-Post constructor methods can also take parameters. These parameters will be passed in from the constructor.
+<details><summary>What gets generated</summary>
 
-snippet: PostConstructWithParameters
+snippet: PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs
 
-snippet: PostConstructWithParametersGeneratedCode
+</details>
 
-### Initialize readonly fields with ref or out
+### `out`/`ref` Parameters
 
-If a parameter is marked `ref` or `out` and matches the type of a readonly field, it can set that field during construction.
+Parameters marked with `out` or `ref` are set back to any fields that match the same type. This can be used to set readonly fields with more complex logic.
 
-snippet: PostConstructWithOutParameters
+snippet: PostConstructWithOutParameter
 
-snippet: PostConstructWithOutParametersGeneratedCode
+<details><summary>What gets generated</summary>
 
-### Argument Guards
+snippet: PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs
+
+</details>
+
+<a href='#toc' title='Back to Contents'>Back to Contents</a>
+## Argument Guards
 
 Null guards for the arguments to the constructor can be added in 2 ways.
 
@@ -105,39 +130,39 @@ In your project you can add a `AutoCtorGuards` property.
 </Project>
 ```
 
+**OR**
+
 In each `AutoConstruct` attribute you can add a setting to enable/disable guards.
 
-snippet: Guards
+snippet: Guarded
 
-snippet: GuardsGeneratedCode
+<details><summary>What gets generated</summary>
 
-### Property Initialisation
+snippet: Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs
 
-AutoCtor can set properties that are considered as read only properties.
-
-snippet: PropertyExamples
+</details>
 
 <a href='#toc' title='Back to Contents'>Back to Contents</a>
-## More examples
+## Keyed Services
 
-You can also initialise readonly fields, and AutoCtor will not include them in the constructor.
+When using `Microsoft.Extensions.DependencyInjection` you can mark fields and properties with `[AutoKeyedService]` and it will be included in the constructor.
 
-snippet: PresetField
+snippet: Keyed
 
-snippet: PresetFieldGeneratedCode
+<details><summary>What gets generated</summary>
 
-If there is a single base constructor with parameters, AutoCtor will include that base constructor in the constructor it creates.
+snippet: Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs
 
-snippet: Inherit
-
-snippet: InheritGeneratedCode
+</details>
 
 <a href='#toc' title='Back to Contents'>Back to Contents</a>
-## Embedding the attributes in your project
+## Other
+
+### Embedding The Attributes
 
 By default, the `[AutoConstruct]` attributes referenced in your project are contained in an external dll. It is also possible to embed the attributes directly in your project. To do this, you must do two things:
 
-1. Define the MSBuild constant `AUTOCTOR_EMBED_ATTRIBUTES`. This ensures the attributes are embedded in your project.
+1. Define the constant `AUTOCTOR_EMBED_ATTRIBUTES`. This ensures the attributes are embedded in your project.
 2. Add `compile` to the list of excluded assets in your `<PackageReference>` element. This ensures the attributes in your project are referenced, instead of the _AutoCtor.Attributes.dll_ library.
 
 Your project file should look like this:
@@ -147,7 +172,7 @@ Your project file should look like this:
 
   <PropertyGroup>
     <!--  Define the MSBuild constant    -->
-    <DefineConstants>AUTOCTOR_EMBED_ATTRIBUTES</DefineConstants>
+    <DefineConstants>$(DefineConstants);AUTOCTOR_EMBED_ATTRIBUTES</DefineConstants>
   </PropertyGroup>
 
   <!-- Add the package -->
@@ -159,23 +184,25 @@ Your project file should look like this:
 </Project>
 ```
 
-<a href='#toc' title='Back to Contents'>Back to Contents</a>
-## Preserving usage of the `[AutoConstruct]` attribute
+<details><summary>What gets generated</summary>
+
+snippet: GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs
+
+</details>
+
+### Keeping Attributes In Code
 
 The `[AutoConstruct]` attributes are decorated with the `[Conditional]` attribute, so their usage will not appear in the build output of your project. If you use reflection at runtime you will not find the `[AutoConstruct]` attributes.
 
-If you wish to preserve these attributes in the build output, you can define the `AUTOCTOR_USAGES` MSBuild variable.
+If you wish to preserve these attributes in the build output, add the define constant `AUTOCTOR_USAGES`.
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!--  Define the MSBuild constant    -->
-    <DefineConstants>AUTOCTOR_USAGES</DefineConstants>
+    <DefineConstants>$(DefineConstants);AUTOCTOR_USAGES</DefineConstants>
   </PropertyGroup>
-
-  <!-- Add the package -->
-  <PackageReference Include="AutoCtor" PrivateAssets="all" />
 
 </Project>
 ```

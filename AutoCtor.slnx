@@ -15,7 +15,6 @@
     <File Path=".github/workflows/publish.yml" />
   </Folder>
   <Project Path="src/AutoCtor.Attributes/AutoCtor.Attributes.csproj" />
-  <Project Path="src/AutoCtor.Example/AutoCtor.Example.csproj" />
   <Project Path="src/AutoCtor.Roslyn3.11/AutoCtor.Roslyn3.11.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.0/AutoCtor.Roslyn4.0.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.4/AutoCtor.Roslyn4.4.csproj" />

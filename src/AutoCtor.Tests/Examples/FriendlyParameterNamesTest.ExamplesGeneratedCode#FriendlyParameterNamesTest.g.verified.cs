@@ -9,10 +9,20 @@ partial class FriendlyParameterNamesTest
 {
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-	public FriendlyParameterNamesTest(int underscorePrefix, int camelCase, int PascalCase)
+	public FriendlyParameterNamesTest(
+		int _,
+		int _2,
+		int underscorePrefix,
+		int doubleUnderscorePrefix,
+		int camelCase,
+		int pascalCase
+	)
 	{
+		this._ = _;
+		this._2 = _2;
 		this._underscorePrefix = underscorePrefix;
+		this.__doubleUnderscorePrefix = doubleUnderscorePrefix;
 		this.camelCase = camelCase;
-		this.PascalCase = PascalCase;
+		this.PascalCase = pascalCase;
 	}
 }

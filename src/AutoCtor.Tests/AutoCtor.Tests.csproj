@@ -34,9 +34,11 @@
     <Compile Remove="Examples\*.cs" />
     <Compile Remove="GuardExamples\*.cs" />
     <Compile Remove="LangExamples\*.cs" />
+    <Compile Remove="ReadmeExamples\*.cs" />
     <None Include="Examples\*.cs" />
     <None Include="GuardExamples\*.cs" />
     <None Include="LangExamples\*.cs" />
+    <None Include="ReadmeExamples\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +47,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="TUnit" />
     <PackageReference Include="Verify.DiffPlex" />
     <PackageReference Include="Verify.SourceGenerators" />

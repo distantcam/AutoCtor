@@ -8,13 +8,15 @@ public class GeneratedAttributeTests
         var builder = new CompilationBuilder()
             .AddNetCoreReference()
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken)
+            .ConfigureAwait(false);
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
             .RunGenerators(compilation, TestHelper.CancellationToken);
 
-        await Verify(driver);
+        await Verify(driver)
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -23,7 +25,8 @@ public class GeneratedAttributeTests
         var builder = new CompilationBuilder()
             .AddNetCoreReference()
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken)
+            .ConfigureAwait(false);
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
@@ -36,8 +39,10 @@ public class GeneratedAttributeTests
         var outputCompilationDiagnostics = outputCompilation
             .GetDiagnostics(TestHelper.CancellationToken);
 
-        await Assert.That(diagnostics).IsEmpty();
-        await Assert.That(outputCompilationDiagnostics).IsEmpty();
+        await Assert.That(diagnostics).IsEmpty()
+            .ConfigureAwait(false);
+        await Assert.That(outputCompilationDiagnostics).IsEmpty()
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -47,7 +52,8 @@ public class GeneratedAttributeTests
             .AddNetCoreReference()
             .AddCode("[AutoCtor.AutoConstruct] public partial class Test { }")
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES", "AUTOCTOR_USAGES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests));
+        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken)
+            .ConfigureAwait(false);
 
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
@@ -62,8 +68,10 @@ public class GeneratedAttributeTests
         var outputCompilationDiagnostics = outputCompilation
             .GetDiagnostics(TestHelper.CancellationToken);
 
-        await Assert.That(diagnostics).IsEmpty();
-        await Assert.That(outputCompilationDiagnostics).IsEmpty();
+        await Assert.That(diagnostics).IsEmpty()
+            .ConfigureAwait(false);
+        await Assert.That(outputCompilationDiagnostics).IsEmpty()
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -79,13 +87,15 @@ public class GeneratedAttributeTests
             .Build(compileBuilder.ParseOptions);
 
         var projectA = await compileBuilder
-            .Build("ProjectA");
+            .Build("ProjectA", TestHelper.CancellationToken)
+            .ConfigureAwait(false);
 
         genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _, TestHelper.CancellationToken);
 
         var projectB = await compileBuilder
             .AddCompilationReference(genProjectA)
-            .Build("ProjectB");
+            .Build("ProjectB", TestHelper.CancellationToken)
+            .ConfigureAwait(false);
 
         genDriver.RunGeneratorsAndUpdateCompilation(
             projectB,
@@ -96,7 +106,9 @@ public class GeneratedAttributeTests
         var outputCompilationDiagnostics = outputCompilation
             .GetDiagnostics(TestHelper.CancellationToken);
 
-        await Assert.That(diagnostics).IsEmpty();
-        await Assert.That(outputCompilationDiagnostics).IsEmpty();
+        await Assert.That(diagnostics).IsEmpty()
+            .ConfigureAwait(false);
+        await Assert.That(outputCompilationDiagnostics).IsEmpty()
+            .ConfigureAwait(false);
     }
 }

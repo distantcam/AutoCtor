@@ -16,9 +16,16 @@ internal readonly record struct MemberModel(
 {
     public static MemberModel Create(IFieldSymbol field)
     {
-        var friendlyName = field.Name.Length > 1 && field.Name[0] == '_'
-            ? field.Name.Substring(1).EscapeKeywordIdentifier()
-            : field.Name.EscapeKeywordIdentifier();
+        var checkLength = field.Name.Length - 1;
+        var i = 0;
+        while (checkLength > i && !char.IsLetter(field.Name[i]))
+            i++;
+        if (i > 0 && !char.IsLetter(field.Name[i]))
+            i--;
+        var friendlyName = char.IsUpper(field.Name[i])
+            ? char.ToLower(field.Name[i]) + field.Name.Substring(i + 1)
+            : field.Name.Substring(i);
+        friendlyName = friendlyName.EscapeKeywordIdentifier();
 
         return new MemberModel(
             Type: new(field.Type),
