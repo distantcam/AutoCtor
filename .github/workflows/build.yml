@@ -65,12 +65,16 @@ jobs:
       - name: 🔍 Enable problem matchers
         run: echo "::add-matcher::.github/matchers/dotnet.json"
 
+      - name: 🔧 Load packages
+        run: dotnet restore
+
       - name: 🛠️ Build code
         run: >
             dotnet build
             --configuration Release
             -p:Version=${{ github.ref_name }}
             -p:GitSha=${{ github.sha }}
+            --no-restore
 
       - name: 📝 Generate Release Notes
         run: gh release create ${{ github.ref_name }} --draft --generate-notes nugets/*.nupkg

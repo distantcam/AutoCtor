@@ -51,7 +51,8 @@ public partial class AutoConstructSourceGenerator
                                     Name: bp.Name,
                                     ErrorName: bp.ErrorName,
                                     KeyedService: bp.KeyedService,
-                                    IsOptional: false,
+                                    HasExplicitDefaultValue: false,
+                                    ExplicitDefaultValue: string.Empty,
                                     IsOutOrRef: false,
                                     Locations: bp.Locations,
                                     Type: new(bpType)));
@@ -95,16 +96,16 @@ public partial class AutoConstructSourceGenerator
             {
                 if (type.BaseCtorParameters != null)
                 {
-                    parametersBuilder.AddBaseParameters(type.BaseCtorParameters);
+                    parametersBuilder.SetBaseParameters(type.BaseCtorParameters);
                 }
                 else if (baseParameters != null)
                 {
-                    parametersBuilder.AddBaseParameters(baseParameters);
+                    parametersBuilder.SetBaseParameters(baseParameters);
                 }
             }
             if (postCtorMethod.HasValue)
             {
-                parametersBuilder.AddPostCtorParameters(postCtorMethod.Value.Parameters);
+                parametersBuilder.SetPostCtorParameters(postCtorMethod.Value.Parameters);
             }
             var parameters = parametersBuilder.Build(context);
 
@@ -124,7 +125,8 @@ public partial class AutoConstructSourceGenerator
 
                 source.AppendIndent()
                     .Append($"public {type.Name}({parameters.CtorParameterDeclarations:commaindent})")
-                    .Append(parameters.HasBaseParameters, $" : base({parameters.BaseParameters:commaindent})")
+                    .Append(parameters.HasBaseParameters,
+                        $" : base({parameters.BaseParameters:commaindent})")
                     .AppendLine();
 
                 using (source.StartBlock())
@@ -143,7 +145,8 @@ public partial class AutoConstructSourceGenerator
 
                         source.AppendIndent()
                             .Append($"{item.IdentifierName} = {parameter}")
-                            .Append(addGuard, $" ?? throw new global::System.ArgumentNullException(\"{parameter}\")")
+                            .Append(addGuard,
+                                $" ?? throw new global::System.ArgumentNullException(\"{parameter}\")")
                             .Append(";")
                             .AppendLine();
                     }
@@ -157,7 +160,10 @@ public partial class AutoConstructSourceGenerator
             return (source, parameters);
         }
 
-        private static ITypeSymbol FindTypeForArgument(ITypeSymbol type, EquatableList<EquatableTypeSymbol> parameters, EquatableList<EquatableTypeSymbol> arguments)
+        private static ITypeSymbol FindTypeForArgument(
+            ITypeSymbol type,
+            EquatableList<EquatableTypeSymbol> parameters,
+            EquatableList<EquatableTypeSymbol> arguments)
         {
             if (type is not ITypeParameterSymbol)
                 return type;
@@ -172,7 +178,10 @@ public partial class AutoConstructSourceGenerator
             return type;
         }
 
-        private static ITypeSymbol SetGenerics(ITypeSymbol type, EquatableList<EquatableTypeSymbol> parameters, EquatableList<EquatableTypeSymbol> arguments)
+        private static ITypeSymbol SetGenerics(
+            ITypeSymbol type,
+            EquatableList<EquatableTypeSymbol> parameters,
+            EquatableList<EquatableTypeSymbol> arguments)
         {
             if (type is ITypeParameterSymbol typeParam)
             {
@@ -227,13 +236,6 @@ public partial class AutoConstructSourceGenerator
 
             foreach (var parameter in method.Parameters)
             {
-                // ACTR003
-                if (parameter.IsOptional)
-                {
-                    ReportDiagnostic(context, parameter, PostConstructMethodHasOptionalArgs);
-                    return null;
-                }
-
                 // ACTR005
                 if (parameter.IsOutOrRef && parameter.KeyedService != null)
                 {

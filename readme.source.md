@@ -113,6 +113,16 @@ snippet: PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOu
 
 </details>
 
+### Optional Parameters
+
+snippet: PostConstructWithDefaultParameter
+
+<details><summary>What gets generated</summary>
+
+snippet: PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs
+
+</details>
+
 <a href='#toc' title='Back to Contents'>Back to Contents</a>
 ## Argument Guards
 

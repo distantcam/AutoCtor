@@ -13,10 +13,10 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
     private IEnumerable<ParameterModel> _baseParameters = [];
     private IEnumerable<ParameterModel> _postCtorParameters = [];
 
-    public void AddBaseParameters(IEnumerable<ParameterModel> baseParameters)
+    public void SetBaseParameters(IEnumerable<ParameterModel> baseParameters)
         => _baseParameters = baseParameters;
 
-    public void AddPostCtorParameters(IEnumerable<ParameterModel> postCtorParameters)
+    public void SetPostCtorParameters(IEnumerable<ParameterModel> postCtorParameters)
         => _postCtorParameters = postCtorParameters;
 
     public ParameterList Build(EmitterContext context)
@@ -44,15 +44,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 && (p.RefKind == RefKind.Ref || p.RefKind == RefKind.Out)))
                 continue;
 
-            var p = new ParameterModel(
-                RefKind: RefKind.None,
-                Name: m.FriendlyName,
-                ErrorName: m.ErrorName,
-                KeyedService: m.KeyedService,
-                IsOptional: false,
-                IsOutOrRef: false,
-                Locations: m.Locations,
-                Type: m.Type);
+            var p = ParameterModel.Create(m);
             GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
@@ -60,15 +52,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         }
         foreach (var m in properties)
         {
-            var p = new ParameterModel(
-                RefKind: RefKind.None,
-                Name: m.FriendlyName,
-                ErrorName: m.ErrorName,
-                KeyedService: m.KeyedService,
-                IsOptional: false,
-                IsOutOrRef: false,
-                Locations: m.Locations,
-                Type: m.Type);
+            var p = ParameterModel.Create(m);
             GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
@@ -112,10 +96,14 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
 
     private static string ConstructorParameterCSharp(KeyValuePair<ParameterModel, string> u)
     {
-        if (u.Key.KeyedService != null)
-            return $"[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices({u.Key.KeyedService})] {u.Key.Type} {u.Value}";
+        var defaultValue = u.Key.HasExplicitDefaultValue
+            ? $" = {u.Key.ExplicitDefaultValue}"
+            : string.Empty;
 
-        return $"{u.Key.Type} {u.Value}";
+        if (u.Key.KeyedService != null)
+            return $"[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices({u.Key.KeyedService})] {u.Key.Type} {u.Value}{defaultValue}";
+
+        return $"{u.Key.Type} {u.Value}{defaultValue}";
     }
 
     private bool GetUniqueName(ParameterModel p, HashSet<string> nameHash, Dictionary<ParameterModel, string> uniqueNames, out string name)
