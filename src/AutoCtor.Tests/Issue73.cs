@@ -41,8 +41,10 @@ public class Issue73
             .GetDiagnostics(TestHelper.CancellationToken)
             .Where(d => !ignoredWarnings.Contains(d.Id));
 
-        await Assert.That(diagnostics).IsEmpty();
-        await Assert.That(outputCompilationDiagnostics).IsEmpty();
+        await Assert.That(diagnostics).IsEmpty()
+            .ConfigureAwait(false);
+        await Assert.That(outputCompilationDiagnostics).IsEmpty()
+            .ConfigureAwait(false);
     }
 
     private static CompilationBuilder Common()

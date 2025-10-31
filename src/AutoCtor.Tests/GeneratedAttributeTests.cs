@@ -39,8 +39,10 @@ public class GeneratedAttributeTests
         var outputCompilationDiagnostics = outputCompilation
             .GetDiagnostics(TestHelper.CancellationToken);
 
-        await Assert.That(diagnostics).IsEmpty();
-        await Assert.That(outputCompilationDiagnostics).IsEmpty();
+        await Assert.That(diagnostics).IsEmpty()
+            .ConfigureAwait(false);
+        await Assert.That(outputCompilationDiagnostics).IsEmpty()
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -66,8 +68,10 @@ public class GeneratedAttributeTests
         var outputCompilationDiagnostics = outputCompilation
             .GetDiagnostics(TestHelper.CancellationToken);
 
-        await Assert.That(diagnostics).IsEmpty();
-        await Assert.That(outputCompilationDiagnostics).IsEmpty();
+        await Assert.That(diagnostics).IsEmpty()
+            .ConfigureAwait(false);
+        await Assert.That(outputCompilationDiagnostics).IsEmpty()
+            .ConfigureAwait(false);
     }
 
     [Test]
@@ -102,7 +106,9 @@ public class GeneratedAttributeTests
         var outputCompilationDiagnostics = outputCompilation
             .GetDiagnostics(TestHelper.CancellationToken);
 
-        await Assert.That(diagnostics).IsEmpty();
-        await Assert.That(outputCompilationDiagnostics).IsEmpty();
+        await Assert.That(diagnostics).IsEmpty()
+            .ConfigureAwait(false);
+        await Assert.That(outputCompilationDiagnostics).IsEmpty()
+            .ConfigureAwait(false);
     }
 }

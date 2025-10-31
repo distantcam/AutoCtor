@@ -46,7 +46,8 @@ public class ExampleTests
 
         await Assert.That(outputCompilation.GetDiagnostics(TestHelper.CancellationToken)
             .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)))
-            .IsEmpty();
+            .IsEmpty()
+            .ConfigureAwait(false);
     }
 
 #if ROSLYN_4_4
