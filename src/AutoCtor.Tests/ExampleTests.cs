@@ -127,5 +127,13 @@ public class ExampleTests
                 LangPreview = true,
             };
         }
+
+        foreach (var readmeExample in GetExamplesFiles("ReadmeExamples"))
+        {
+            yield return () => new CodeFileTheoryData(readmeExample) with
+            {
+                IgnoredCompileDiagnostics = ["CS0414", "CS0169"] // Ignore unused fields
+            };
+        }
     }
 }

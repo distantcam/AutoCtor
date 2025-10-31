@@ -34,9 +34,11 @@
     <Compile Remove="Examples\*.cs" />
     <Compile Remove="GuardExamples\*.cs" />
     <Compile Remove="LangExamples\*.cs" />
+    <Compile Remove="ReadmeExamples\*.cs" />
     <None Include="Examples\*.cs" />
     <None Include="GuardExamples\*.cs" />
     <None Include="LangExamples\*.cs" />
+    <None Include="ReadmeExamples\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
