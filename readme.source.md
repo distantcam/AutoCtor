@@ -189,7 +189,7 @@ Your project file should look like this:
   <PackageReference Include="AutoCtor"
                     PrivateAssets="all"
                     ExcludeAssets="compile;runtime" />
-<!--                               ☝ Add compile to the list of excluded assets. -->
+  <!--                             ☝ Add compile to the list of excluded assets. -->
 
 </Project>
 ```
