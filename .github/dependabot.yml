@@ -9,9 +9,7 @@ updates:
       - dependency-name: "Microsoft.CodeAnalysis.Analyzers"
       - dependency-name: "Microsoft.CodeAnalysis.CSharp"
     groups:
-      verify:
+      tunit:
         patterns:
-          - "verify.*"
-      xunit:
-        patterns:
-          - "xunit*"
+          - "TUnit"
+          - "Verify.TUnit"
