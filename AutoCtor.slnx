@@ -1,12 +1,12 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path="global.json" />
     <File Path="mdsnippets.json" />
     <File Path="readme.nuget.md" />
     <File Path="readme.source.md" />
     <File Path="src/Common.props" />
     <File Path="src/Directory.Build.props" />
     <File Path="src/Directory.Packages.props" />
-    <File Path="src/global.json" />
     <File Path="src/nugetfiles/AutoCtor.badcompat.targets" />
     <File Path="src/nugetfiles/AutoCtor.props" />
     <File Path="src/nugetfiles/AutoCtor.targets" />
@@ -19,6 +19,5 @@
   <Project Path="src/AutoCtor.Roslyn3.11/AutoCtor.Roslyn3.11.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.0/AutoCtor.Roslyn4.0.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.4/AutoCtor.Roslyn4.4.csproj" />
-  <Project Path="src/AutoCtor.Shared/AutoCtor.Shared.shproj" />
   <Project Path="src/AutoCtor.Tests/AutoCtor.Tests.csproj" />
 </Solution>

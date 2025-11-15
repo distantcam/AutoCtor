@@ -38,7 +38,6 @@ jobs:
           dotnet test
           --configuration Release
           -p:GeneratorVersion=${{ matrix.roslyn }}
-          --logger "console;verbosity=normal"
 
       - name: Upload Test Results
         if: failure()
@@ -70,11 +69,11 @@ jobs:
 
       - name: 🛠️ Build code
         run: >
-            dotnet build
-            --configuration Release
-            -p:Version=${{ github.ref_name }}
-            -p:GitSha=${{ github.sha }}
-            --no-restore
+          dotnet build
+          --configuration Release
+          -p:Version=${{ github.ref_name }}
+          -p:GitSha=${{ github.sha }}
+          --no-restore
 
       - name: 📝 Generate Release Notes
         run: gh release create ${{ github.ref_name }} --draft --generate-notes nugets/*.nupkg

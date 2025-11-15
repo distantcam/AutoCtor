@@ -22,6 +22,9 @@
     <AssemblyMetadata Include="PackageProjectUrl" Value="$(PackageProjectUrl)" />
   </ItemGroup>
 
-  <Import Project="AutoCtor.Shared\AutoCtor.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AutoCtor.Shared\*\*.cs" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)AutoCtor.Shared\*.md" />
+  </ItemGroup>
 
 </Project>
