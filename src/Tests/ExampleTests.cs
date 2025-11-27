@@ -1,18 +1,21 @@
-﻿using System.Collections.Immutable;
-using AutoCtor;
+﻿using AutoCtor;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using static ExampleTestsHelper;
+
+#if ROSLYN_4_4
+using Microsoft.CodeAnalysis.CSharp;
+#endif
 
 public class ExampleTests
 {
     [Test]
-    [MethodDataSource(nameof(GetExamples))]
-    public async Task ExamplesGeneratedCode(CodeFileTheoryData theoryData)
+    [CombinedDataSources]
+    public async Task ExamplesGeneratedCode(
+        [MethodDataSource(nameof(GetExamples))] CodeFileTheoryData theoryData,
+        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)] CompilationBuilderFactory builderFactory)
     {
-        var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+        var builder = builderFactory.Create(theoryData);
+        var compilation = builder.Build(nameof(ExampleTests));
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
@@ -27,12 +30,13 @@ public class ExampleTests
     }
 
     [Test]
-    [MethodDataSource(nameof(GetExamples))]
-    public async Task CodeCompilesProperly(CodeFileTheoryData theoryData)
+    [CombinedDataSources]
+    public async Task CodeCompilesProperly(
+        [MethodDataSource(nameof(GetExamples))] CodeFileTheoryData theoryData,
+        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)] CompilationBuilderFactory builderFactory)
     {
-        var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+        var builder = builderFactory.Create(theoryData);
+        var compilation = builder.Build(nameof(ExampleTests));
         new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
             .WithAnalyzerOptions(theoryData.Options)
@@ -51,12 +55,13 @@ public class ExampleTests
 
 #if ROSLYN_4_4
     [Test]
-    [MethodDataSource(nameof(GetExamples))]
-    public async Task EnsureRunsAreCachedCorrectly(CodeFileTheoryData theoryData)
+    [CombinedDataSources]
+    public async Task EnsureRunsAreCachedCorrectly(
+        [MethodDataSource(nameof(GetExamples))] CodeFileTheoryData theoryData,
+        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)] CompilationBuilderFactory builderFactory)
     {
-        var builder = CreateCompilation(theoryData);
-        var compilation = await builder.Build(nameof(ExampleTests), TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+        var builder = builderFactory.Create(theoryData);
+        var compilation = builder.Build(nameof(ExampleTests));
 
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
@@ -84,12 +89,9 @@ public class ExampleTests
 
     // ----------------------------------------------------------------------------------------
 
-    private static CompilationBuilder CreateCompilation(CodeFileTheoryData theoryData)
+    public class CompilationBuilderFactory : CompilationBuilderFactoryBase<AutoConstructAttribute>
     {
-        var version = TestFileHelper.GetPackageVersion("Microsoft.Extensions.DependencyInjection.Abstractions");
-
-        return CreateCompilation<AutoConstructAttribute>(theoryData)
-            .AddNugetReference("Microsoft.Extensions.DependencyInjection.Abstractions", version);
+        protected override IEnumerable<string> GetNuGetIds() => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
     }
 
     private static IEnumerable<string> GetExamplesFiles(string path)

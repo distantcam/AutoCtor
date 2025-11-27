@@ -1,18 +1,19 @@
 ﻿using AutoCtor;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using static ExampleTestsHelper;
 
 public class Issue73
 {
     [Test]
-    public async Task VerifyGeneratedCode()
+    [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+    public async Task VerifyGeneratedCode(CompilationBuilderFactory builderFactory)
     {
-        var common = Common();
-        var compilation = await Compile(common)
-            .ConfigureAwait(false);
+        var builder = builderFactory.Builder;
+        var compilation = Compile(builder);
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
-            .Build(common.ParseOptions)
+            .Build(builder.ParseOptions)
             .RunGenerators(compilation, TestHelper.CancellationToken);
 
         await Verify(driver)
@@ -20,16 +21,16 @@ public class Issue73
     }
 
     [Test]
-    public async Task CodeCompilesWithoutErrors()
+    [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+    public async Task CodeCompilesWithoutErrors(CompilationBuilderFactory builderFactory)
     {
         string[] ignoredWarnings = ["CS0414"]; // Ignore unused fields
 
-        var common = Common();
-        var compilation = await Compile(common)
-            .ConfigureAwait(false);
+        var builder = builderFactory.Builder;
+        var compilation = Compile(builder);
         new GeneratorDriverBuilder()
             .AddGenerator(new AutoConstructSourceGenerator())
-            .Build(common.ParseOptions)
+            .Build(builder.ParseOptions)
             .RunGeneratorsAndUpdateCompilation(
                 compilation,
                 out var outputCompilation,
@@ -46,14 +47,7 @@ public class Issue73
             .ConfigureAwait(false);
     }
 
-    private static CompilationBuilder Common()
-    {
-        return new CompilationBuilder()
-            .AddNetCoreReference()
-            .AddAssemblyReference<AutoConstructAttribute>();
-    }
-
-    private static async Task<CSharpCompilation> Compile(CompilationBuilder common)
+    private static CSharpCompilation Compile(CompilationBuilder common)
     {
         var projectACode = @"
 namespace A
@@ -75,17 +69,17 @@ public abstract class BaseClass<T, U, V>
 public sealed partial class TheClass : BaseClass<object, int, string>{}
 }
 ";
-        var projectA = await common
+        var projectA = common
             .AddCode(projectACode)
-            .Build("ProjectA", TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+            .Build("ProjectA");
 
-        var projectB = await common
+        var projectB = common
             .AddCompilationReference(projectA)
             .AddCode(projectBCode)
-            .Build("ProjectB", TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+            .Build("ProjectB");
 
         return projectB;
     }
+
+    public class CompilationBuilderFactory : CompilationBuilderFactoryBase<AutoConstructAttribute>;
 }

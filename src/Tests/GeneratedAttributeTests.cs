@@ -1,15 +1,15 @@
 ﻿using AutoCtor;
+using static ExampleTestsHelper;
 
 public class GeneratedAttributeTests
 {
     [Test]
-    public async Task AttributeGeneratedCode()
+    [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+    public async Task AttributeGeneratedCode(CompilationBuilderFactory builderFactory)
     {
-        var builder = new CompilationBuilder()
-            .AddNetCoreReference()
+        var builder = builderFactory.Builder
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+        var compilation = builder.Build(nameof(GeneratedAttributeTests));
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
@@ -20,13 +20,12 @@ public class GeneratedAttributeTests
     }
 
     [Test]
-    public async Task AttributeCompilesProperly()
+    [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+    public async Task AttributeCompilesProperly(CompilationBuilderFactory builderFactory)
     {
-        var builder = new CompilationBuilder()
-            .AddNetCoreReference()
+        var builder = builderFactory.Builder
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+        var compilation = builder.Build(nameof(GeneratedAttributeTests));
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(builder.ParseOptions)
@@ -46,14 +45,13 @@ public class GeneratedAttributeTests
     }
 
     [Test]
-    public async Task PreserveAttributesTest()
+    [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+    public async Task PreserveAttributesTest(CompilationBuilderFactory builderFactory)
     {
-        var builder = new CompilationBuilder()
-            .AddNetCoreReference()
+        var builder = builderFactory.Builder
             .AddCode("[AutoCtor.AutoConstruct] public partial class Test { }")
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES", "AUTOCTOR_USAGES"]);
-        var compilation = await builder.Build(nameof(GeneratedAttributeTests), TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+        var compilation = builder.Build(nameof(GeneratedAttributeTests));
 
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
@@ -75,27 +73,24 @@ public class GeneratedAttributeTests
     }
 
     [Test]
-    public async Task EnsureGeneratedAttributesAreNotExternallyVisible()
+    [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+    public async Task EnsureGeneratedAttributesAreNotExternallyVisible(CompilationBuilderFactory builderFactory)
     {
         // Issue 312
-        var compileBuilder = new CompilationBuilder()
-            .AddNetCoreReference()
+        var compileBuilder = builderFactory.Builder
             .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
 
         var genDriver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
             .Build(compileBuilder.ParseOptions);
 
-        var projectA = await compileBuilder
-            .Build("ProjectA", TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+        var projectA = compileBuilder.Build("ProjectA");
 
         genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _, TestHelper.CancellationToken);
 
-        var projectB = await compileBuilder
+        var projectB = compileBuilder
             .AddCompilationReference(genProjectA)
-            .Build("ProjectB", TestHelper.CancellationToken)
-            .ConfigureAwait(false);
+            .Build("ProjectB");
 
         genDriver.RunGeneratorsAndUpdateCompilation(
             projectB,
@@ -111,4 +106,6 @@ public class GeneratedAttributeTests
         await Assert.That(outputCompilationDiagnostics).IsEmpty()
             .ConfigureAwait(false);
     }
+
+    public class CompilationBuilderFactory : CompilationBuilderFactoryBase;
 }

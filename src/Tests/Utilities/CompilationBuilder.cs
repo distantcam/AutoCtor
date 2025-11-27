@@ -1,13 +1,9 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Testing;
 
-internal class CompilationBuilder
+public class CompilationBuilder
 {
-    private const string DEFAULT_TARGET_FRAMEWORK = "net9.0";
-
-    private ImmutableArray<ReferenceAssemblies> _nugetReferences;
     private ImmutableArray<MetadataReference> _references;
     private ImmutableArray<string> _codes;
 
@@ -18,7 +14,6 @@ internal class CompilationBuilder
 
     public CompilationBuilder()
     {
-        _nugetReferences = [];
         _references = [];
         _codes = [];
 
@@ -28,7 +23,6 @@ internal class CompilationBuilder
 
     private CompilationBuilder(CompilationBuilder other)
     {
-        _nugetReferences = other._nugetReferences;
         _references = other._references;
         _codes = other._codes;
 
@@ -36,42 +30,21 @@ internal class CompilationBuilder
         _compilationOptions = other._compilationOptions;
     }
 
-    public async Task<CSharpCompilation> Build(string assemblyName, CancellationToken cancellationToken = default)
+    public CSharpCompilation Build(string assemblyName)
     {
-        var nugetReferences = await _nugetReferences.ToAsyncEnumerable()
-            .SelectMany<ReferenceAssemblies, MetadataReference>(static async (r, ct) =>
-                await r.ResolveAsync(null, ct)
-                .ConfigureAwait(false))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-
         return CSharpCompilation.Create(assemblyName)
-            .AddReferences(nugetReferences)
             .AddReferences(_references)
             .AddSyntaxTrees(_codes.Select(c => CSharpSyntaxTree.ParseText(c, _parseOptions)))
             .WithOptions(_compilationOptions);
     }
 
-    public CompilationBuilder AddNugetReference(string id, string version, string targetFramework = DEFAULT_TARGET_FRAMEWORK, string path = "")
+    public CompilationBuilder AddReferences(params IEnumerable<MetadataReference> references)
     {
         return new(this)
         {
-            _nugetReferences = _nugetReferences.Add(new(
-                targetFramework,
-                new(id, version),
-                Path.Join(string.IsNullOrEmpty(path) ? "lib" : path, targetFramework)
-            ))
+            _references = _references.AddRange(references)
         };
     }
-
-    public CompilationBuilder AddNetCoreReference(
-        string targetFramework = DEFAULT_TARGET_FRAMEWORK,
-        string? version = null)
-        => AddNugetReference(
-            "Microsoft.NETCore.App.Ref",
-            version ?? TestFileHelper.GetPackageVersion("Microsoft.NETCore.App.Ref"),
-            targetFramework,
-            "ref");
 
     public CompilationBuilder AddAssemblyReference<T>()
     {

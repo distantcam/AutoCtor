@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-internal class GeneratorDriverBuilder
+public class GeneratorDriverBuilder
 {
     private ImmutableArray<ISourceGenerator> _generators;
     private ImmutableDictionary<string, string> _analyzerOptions;

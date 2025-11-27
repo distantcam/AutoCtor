@@ -1,8 +1,10 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Testing;
+using TUnit.Core.Interfaces;
 
-internal static class ExampleTestsHelper
+public static class ExampleTestsHelper
 {
     public static readonly IEnumerable<string> PreprocessorSymbols = [
 #if ROSLYN_3
@@ -22,21 +24,56 @@ internal static class ExampleTestsHelper
 #endif
     ];
 
-    public static CompilationBuilder CreateCompilation<TAssemblyReference>(CodeFileTheoryData theoryData)
+    public abstract class CompilationBuilderFactoryBase<TAttribute> : CompilationBuilderFactoryBase
     {
-        var builder = new CompilationBuilder()
-            .AddNetCoreReference()
-            .AddAssemblyReference<TAssemblyReference>()
-            .WithNullableContextOptions(NullableContextOptions.Enable)
-            .WithPreprocessorSymbols(PreprocessorSymbols)
-            .AddCodes(theoryData.Codes);
-
-        if (theoryData.LangPreview)
+        public override async Task InitializeAsync()
         {
-            builder = builder.WithLanguageVersion(LanguageVersion.Preview);
+            await base.InitializeAsync();
+            Builder = Builder.AddAssemblyReference<TAttribute>();
+        }
+    }
+
+    public abstract class CompilationBuilderFactoryBase : IAsyncInitializer
+    {
+        private const string DEFAULT_TARGET_FRAMEWORK = "net10.0";
+
+        public CompilationBuilder Builder { get; protected set; } = null!;
+
+        public virtual async Task InitializeAsync()
+        {
+            Builder = new CompilationBuilder()
+                .WithNullableContextOptions(NullableContextOptions.Enable)
+                .WithPreprocessorSymbols(PreprocessorSymbols);
+            Builder = await AddNugetReference(Builder, "Microsoft.NETCore.App.Ref", "ref");
+            foreach (var id in GetNuGetIds())
+            {
+                Builder = await AddNugetReference(Builder, id);
+            }
         }
 
-        return builder;
+        protected virtual IEnumerable<string> GetNuGetIds() => [];
+
+        public CompilationBuilder Create(CodeFileTheoryData theoryData)
+        {
+            var builder = Builder.AddCodes(theoryData.Codes);
+            if (theoryData.LangPreview)
+            {
+                builder = builder.WithLanguageVersion(LanguageVersion.Preview);
+            }
+            return builder;
+        }
+
+        private static async Task<CompilationBuilder> AddNugetReference(CompilationBuilder builder, string id, string path = "", CancellationToken cancellationToken = default)
+        {
+            var version = TestFileHelper.GetPackageVersion(id);
+            var nugetReference = new ReferenceAssemblies(
+                DEFAULT_TARGET_FRAMEWORK,
+                new(id, version),
+                Path.Join(string.IsNullOrEmpty(path) ? "lib" : path, DEFAULT_TARGET_FRAMEWORK));
+            var references = await nugetReference.ResolveAsync(null, cancellationToken)
+                .ConfigureAwait(false);
+            return builder.AddReferences(references);
+        }
     }
 
 #if ROSLYN_4
