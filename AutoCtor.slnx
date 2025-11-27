@@ -7,6 +7,8 @@
     <File Path="src/Common.props" />
     <File Path="src/Directory.Build.props" />
     <File Path="src/Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/Solution Items/nugetfiles/">
     <File Path="src/nugetfiles/AutoCtor.badcompat.targets" />
     <File Path="src/nugetfiles/AutoCtor.props" />
     <File Path="src/nugetfiles/AutoCtor.targets" />
