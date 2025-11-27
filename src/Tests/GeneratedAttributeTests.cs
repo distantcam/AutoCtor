@@ -16,6 +16,7 @@ public class GeneratedAttributeTests
             .RunGenerators(compilation, TestHelper.CancellationToken);
 
         await Verify(driver)
+            .IgnoreParameters(nameof(builderFactory))
             .ConfigureAwait(false);
     }
 
