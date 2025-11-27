@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AutoCtor.Shared\*\*.cs" />
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)AutoCtor.Shared\*.md" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\*\*.cs" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Shared\*.md" />
   </ItemGroup>
 
 </Project>

@@ -19,5 +19,6 @@
   <Project Path="src/AutoCtor.Roslyn3.11/AutoCtor.Roslyn3.11.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.0/AutoCtor.Roslyn4.0.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.4/AutoCtor.Roslyn4.4.csproj" />
-  <Project Path="src/AutoCtor.Tests/AutoCtor.Tests.csproj" />
+  <Project Path="src/Shared/Shared.csproj" />
+  <Project Path="src/Tests/Tests.csproj" />
 </Solution>

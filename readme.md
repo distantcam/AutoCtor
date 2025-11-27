@@ -82,7 +82,7 @@ public partial class Basic
     private readonly IList<string> _list = new List<string>();
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Basic.cs#L6-L15' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Basic.cs#L6-L15' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -99,15 +99,17 @@ public partial class Basic
 
 partial class Basic
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public Basic(global::IService service)
 	{
 		this._service = service;
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Basic.ExamplesGeneratedCode#Basic.g.verified.cs#L1-L16' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic.ExamplesGeneratedCode#Basic.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Basic.ExamplesGeneratedCode#Basic.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic.ExamplesGeneratedCode#Basic.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -133,7 +135,7 @@ public partial class Inherited : BaseClass
     private readonly IService _service;
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Inherited.cs#L6-L24' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherited' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Inherited.cs#L6-L24' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherited' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -150,8 +152,10 @@ public partial class Inherited : BaseClass
 
 partial class Inherited
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public Inherited(
 		global::IAnotherService anotherService,
 		global::IService service
@@ -161,7 +165,7 @@ partial class Inherited
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs#L1-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs#L1-L21' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -183,7 +187,7 @@ public string GetSetProperty { get; set; }
 public string FixedProperty => "Constant";
 public string RedirectedProperty => InitializerProperty;
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Properties.cs#L4-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Properties' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Properties.cs#L4-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Properties' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -200,8 +204,10 @@ public string RedirectedProperty => InitializerProperty;
 
 partial class Properties
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public Properties(
 		string getProperty,
 		string protectedProperty,
@@ -216,7 +222,7 @@ partial class Properties
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Properties.ExamplesGeneratedCode#Properties.g.verified.cs#L1-L24' title='Snippet source file'>snippet source</a> | <a href='#snippet-Properties.ExamplesGeneratedCode#Properties.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Properties.ExamplesGeneratedCode#Properties.g.verified.cs#L1-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-Properties.ExamplesGeneratedCode#Properties.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -240,7 +246,7 @@ public partial class PostConstruct
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/PostConstruct.cs#L5-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstruct.cs#L5-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -257,8 +263,10 @@ public partial class PostConstruct
 
 partial class PostConstruct
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public PostConstruct(global::IService service)
 	{
 		this._service = service;
@@ -266,7 +274,7 @@ partial class PostConstruct
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs#L1-L17' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs#L1-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -289,7 +297,7 @@ public partial class PostConstructWithParameter
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/PostConstructWithParameter.cs#L6-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameter' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithParameter.cs#L6-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameter' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -306,8 +314,10 @@ public partial class PostConstructWithParameter
 
 partial class PostConstructWithParameter
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public PostConstructWithParameter(
 		global::IService service,
 		global::IInitializeService initialiseService
@@ -318,7 +328,7 @@ partial class PostConstructWithParameter
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs#L1-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -343,7 +353,7 @@ public partial class PostConstructWithOutParameter
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/PostConstructWithOutParameter.cs#L7-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameter' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithOutParameter.cs#L7-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameter' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -360,8 +370,10 @@ public partial class PostConstructWithOutParameter
 
 partial class PostConstructWithOutParameter
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public PostConstructWithOutParameter(
 		global::IOtherService otherService,
 		global::IServiceProvider services
@@ -372,7 +384,7 @@ partial class PostConstructWithOutParameter
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs#L1-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -391,7 +403,7 @@ public partial class PostConstructWithDefaultParameter
     }
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/PostConstructWithDefaultParameter.cs#L5-L16' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithDefaultParameter' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithDefaultParameter.cs#L5-L16' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithDefaultParameter' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -408,15 +420,17 @@ public partial class PostConstructWithDefaultParameter
 
 partial class PostConstructWithDefaultParameter
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public PostConstructWithDefaultParameter(global::Service service = default)
 	{
 		Initialize(service);
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs#L1-L16' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -451,7 +465,7 @@ public partial class Guarded
     private readonly IService _service;
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Guarded.cs#L5-L13' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guarded' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Guarded.cs#L5-L13' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guarded' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -468,15 +482,17 @@ public partial class Guarded
 
 partial class Guarded
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public Guarded(global::IService service)
 	{
 		this._service = service ?? throw new global::System.ArgumentNullException("service");
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs#L1-L16' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -496,7 +512,7 @@ public partial class Keyed
     private readonly IService _keyedService;
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Keyed.cs#L5-L14' title='Snippet source file'>snippet source</a> | <a href='#snippet-Keyed' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Keyed.cs#L5-L14' title='Snippet source file'>snippet source</a> | <a href='#snippet-Keyed' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 <details><summary>What gets generated</summary>
@@ -513,8 +529,10 @@ public partial class Keyed
 
 partial class Keyed
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
-	[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	public Keyed(
 		[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices("key")] global::IService keyedService
 	)
@@ -523,7 +541,7 @@ partial class Keyed
 	}
 }
 ```
-<sup><a href='/src/AutoCtor.Tests/ReadmeExamples/Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs#L1-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -572,14 +590,18 @@ Your project file should look like this:
 #if AUTOCTOR_EMBED_ATTRIBUTES
 namespace AutoCtor
 {
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	internal enum GuardSetting
 	{
 		Default,
 		Disabled,
 		Enabled
 	}
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Class | global::System.AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoConstructAttribute : global::System.Attribute
 	{
@@ -587,12 +609,18 @@ namespace AutoCtor
 		{
 		}
 	}
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoPostConstructAttribute : global::System.Attribute
 	{
 	}
-	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute
 	{
@@ -600,7 +628,7 @@ namespace AutoCtor
 }
 #endif
 ```
-<sup><a href='/src/AutoCtor.Tests/GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs#L1-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs#L1-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>

@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <NoWarn>CS0169;CS0414</NoWarn>
+    <AssemblyName>AutoCtor.Tests</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--<GeneratorVersion>3.11</GeneratorVersion>-->
+    <!--<GeneratorVersion>4.0</GeneratorVersion>-->
+    <GeneratorVersion>4.4</GeneratorVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IntermediateOutputPath>obj\roslyn$(GeneratorVersion)\</IntermediateOutputPath>
+    <OutputPath>bin\roslyn$(GeneratorVersion)\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(GeneratorVersion)' == '3.11' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_3;ROSLYN_3_11</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(GeneratorVersion)' == '4.0' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(GeneratorVersion)' == '4.4' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_4</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Examples\*.cs" />
+    <Compile Remove="GuardExamples\*.cs" />
+    <Compile Remove="LangExamples\*.cs" />
+    <Compile Remove="ReadmeExamples\*.cs" />
+    <None Include="Examples\*.cs" />
+    <None Include="GuardExamples\*.cs" />
+    <None Include="LangExamples\*.cs" />
+    <None Include="ReadmeExamples\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MarkdownSnippets.MsBuild" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="TUnit" />
+    <PackageReference Include="Verify.DiffPlex" />
+    <PackageReference Include="Verify.SourceGenerators" />
+    <PackageReference Include="Verify.TUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoCtor.Attributes\AutoCtor.Attributes.csproj" />
+    <ProjectReference Include="..\AutoCtor.Roslyn$(GeneratorVersion)\AutoCtor.Roslyn$(GeneratorVersion).csproj" />
+  </ItemGroup>
+
+</Project>
