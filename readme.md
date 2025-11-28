@@ -87,8 +87,8 @@ public partial class Basic
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: Basic.ExamplesGeneratedCode#Basic.g.verified.cs -->
-<a id='snippet-Basic.ExamplesGeneratedCode#Basic.g.verified.cs'></a>
+<!-- snippet: Basic.cs#Basic.g.verified.cs -->
+<a id='snippet-Basic.cs#Basic.g.verified.cs'></a>
 ```cs
 //HintName: Basic.g.cs
 //------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ partial class Basic
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Basic.ExamplesGeneratedCode#Basic.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic.ExamplesGeneratedCode#Basic.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Basic.cs#Basic.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic.cs#Basic.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -140,8 +140,8 @@ public partial class Inherited : BaseClass
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs -->
-<a id='snippet-Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs'></a>
+<!-- snippet: Inherited.cs#Inherited.g.verified.cs -->
+<a id='snippet-Inherited.cs#Inherited.g.verified.cs'></a>
 ```cs
 //HintName: Inherited.g.cs
 //------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ partial class Inherited
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs#L1-L21' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Inherited.cs#Inherited.g.verified.cs#L1-L21' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherited.cs#Inherited.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -192,8 +192,8 @@ public string RedirectedProperty => InitializerProperty;
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: Properties.ExamplesGeneratedCode#Properties.g.verified.cs -->
-<a id='snippet-Properties.ExamplesGeneratedCode#Properties.g.verified.cs'></a>
+<!-- snippet: Properties.cs#Properties.g.verified.cs -->
+<a id='snippet-Properties.cs#Properties.g.verified.cs'></a>
 ```cs
 //HintName: Properties.g.cs
 //------------------------------------------------------------------------------
@@ -222,7 +222,7 @@ partial class Properties
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Properties.ExamplesGeneratedCode#Properties.g.verified.cs#L1-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-Properties.ExamplesGeneratedCode#Properties.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Properties.cs#Properties.g.verified.cs#L1-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-Properties.cs#Properties.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -251,8 +251,8 @@ public partial class PostConstruct
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs -->
-<a id='snippet-PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs'></a>
+<!-- snippet: PostConstruct.cs#PostConstruct.g.verified.cs -->
+<a id='snippet-PostConstruct.cs#PostConstruct.g.verified.cs'></a>
 ```cs
 //HintName: PostConstruct.g.cs
 //------------------------------------------------------------------------------
@@ -274,7 +274,7 @@ partial class PostConstruct
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs#L1-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstruct.cs#PostConstruct.g.verified.cs#L1-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct.cs#PostConstruct.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -302,8 +302,8 @@ public partial class PostConstructWithParameter
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs -->
-<a id='snippet-PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs'></a>
+<!-- snippet: PostConstructWithParameter.cs#PostConstructWithParameter.g.verified.cs -->
+<a id='snippet-PostConstructWithParameter.cs#PostConstructWithParameter.g.verified.cs'></a>
 ```cs
 //HintName: PostConstructWithParameter.g.cs
 //------------------------------------------------------------------------------
@@ -328,7 +328,7 @@ partial class PostConstructWithParameter
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithParameter.cs#PostConstructWithParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameter.cs#PostConstructWithParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -358,8 +358,8 @@ public partial class PostConstructWithOutParameter
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs -->
-<a id='snippet-PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs'></a>
+<!-- snippet: PostConstructWithOutParameter.cs#PostConstructWithOutParameter.g.verified.cs -->
+<a id='snippet-PostConstructWithOutParameter.cs#PostConstructWithOutParameter.g.verified.cs'></a>
 ```cs
 //HintName: PostConstructWithOutParameter.g.cs
 //------------------------------------------------------------------------------
@@ -384,7 +384,7 @@ partial class PostConstructWithOutParameter
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithOutParameter.cs#PostConstructWithOutParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameter.cs#PostConstructWithOutParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -408,8 +408,8 @@ public partial class PostConstructWithDefaultParameter
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs -->
-<a id='snippet-PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs'></a>
+<!-- snippet: PostConstructWithDefaultParameter.cs#PostConstructWithDefaultParameter.g.verified.cs -->
+<a id='snippet-PostConstructWithDefaultParameter.cs#PostConstructWithDefaultParameter.g.verified.cs'></a>
 ```cs
 //HintName: PostConstructWithDefaultParameter.g.cs
 //------------------------------------------------------------------------------
@@ -430,7 +430,7 @@ partial class PostConstructWithDefaultParameter
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithDefaultParameter.cs#PostConstructWithDefaultParameter.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithDefaultParameter.cs#PostConstructWithDefaultParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -470,8 +470,8 @@ public partial class Guarded
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs -->
-<a id='snippet-Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs'></a>
+<!-- snippet: Guarded.cs#Guarded.g.verified.cs -->
+<a id='snippet-Guarded.cs#Guarded.g.verified.cs'></a>
 ```cs
 //HintName: Guarded.g.cs
 //------------------------------------------------------------------------------
@@ -492,7 +492,7 @@ partial class Guarded
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Guarded.cs#Guarded.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guarded.cs#Guarded.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -517,8 +517,8 @@ public partial class Keyed
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs -->
-<a id='snippet-Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs'></a>
+<!-- snippet: Keyed.cs#Keyed.g.verified.cs -->
+<a id='snippet-Keyed.cs#Keyed.g.verified.cs'></a>
 ```cs
 //HintName: Keyed.g.cs
 //------------------------------------------------------------------------------
@@ -541,7 +541,7 @@ partial class Keyed
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs#L1-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Keyed.cs#Keyed.g.verified.cs#L1-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-Keyed.cs#Keyed.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -577,8 +577,8 @@ Your project file should look like this:
 
 <details><summary>What gets generated</summary>
 
-<!-- snippet: GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs -->
-<a id='snippet-GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs'></a>
+<!-- snippet: GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs -->
+<a id='snippet-GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs'></a>
 ```cs
 //HintName: AutoConstructAttribute.g.cs
 //------------------------------------------------------------------------------
@@ -628,7 +628,7 @@ namespace AutoCtor
 }
 #endif
 ```
-<sup><a href='/src/Tests/GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs#L1-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs#L1-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>

@@ -52,7 +52,7 @@ snippet: Basic
 
 <details><summary>What gets generated</summary>
 
-snippet: Basic.ExamplesGeneratedCode#Basic.g.verified.cs
+snippet: Basic.cs#Basic.g.verified.cs
 
 </details>
 
@@ -62,7 +62,7 @@ snippet: Inherited
 
 <details><summary>What gets generated</summary>
 
-snippet: Inherited.ExamplesGeneratedCode#Inherited.g.verified.cs
+snippet: Inherited.cs#Inherited.g.verified.cs
 
 </details>
 
@@ -72,7 +72,7 @@ snippet: Properties
 
 <details><summary>What gets generated</summary>
 
-snippet: Properties.ExamplesGeneratedCode#Properties.g.verified.cs
+snippet: Properties.cs#Properties.g.verified.cs
 
 </details>
 
@@ -85,7 +85,7 @@ snippet: PostConstruct
 
 <details><summary>What gets generated</summary>
 
-snippet: PostConstruct.ExamplesGeneratedCode#PostConstruct.g.verified.cs
+snippet: PostConstruct.cs#PostConstruct.g.verified.cs
 
 </details>
 
@@ -97,7 +97,7 @@ snippet: PostConstructWithParameter
 
 <details><summary>What gets generated</summary>
 
-snippet: PostConstructWithParameter.ExamplesGeneratedCode#PostConstructWithParameter.g.verified.cs
+snippet: PostConstructWithParameter.cs#PostConstructWithParameter.g.verified.cs
 
 </details>
 
@@ -109,7 +109,7 @@ snippet: PostConstructWithOutParameter
 
 <details><summary>What gets generated</summary>
 
-snippet: PostConstructWithOutParameter.ExamplesGeneratedCode#PostConstructWithOutParameter.g.verified.cs
+snippet: PostConstructWithOutParameter.cs#PostConstructWithOutParameter.g.verified.cs
 
 </details>
 
@@ -119,7 +119,7 @@ snippet: PostConstructWithDefaultParameter
 
 <details><summary>What gets generated</summary>
 
-snippet: PostConstructWithDefaultParameter.ExamplesGeneratedCode#PostConstructWithDefaultParameter.g.verified.cs
+snippet: PostConstructWithDefaultParameter.cs#PostConstructWithDefaultParameter.g.verified.cs
 
 </details>
 
@@ -148,7 +148,7 @@ snippet: Guarded
 
 <details><summary>What gets generated</summary>
 
-snippet: Guarded.ExamplesGeneratedCode#Guarded.g.verified.cs
+snippet: Guarded.cs#Guarded.g.verified.cs
 
 </details>
 
@@ -161,7 +161,7 @@ snippet: Keyed
 
 <details><summary>What gets generated</summary>
 
-snippet: Keyed.ExamplesGeneratedCode#Keyed.g.verified.cs
+snippet: Keyed.cs#Keyed.g.verified.cs
 
 </details>
 
@@ -196,7 +196,7 @@ Your project file should look like this:
 
 <details><summary>What gets generated</summary>
 
-snippet: GeneratedAttributeTests.AttributeGeneratedCode#AutoConstructAttribute.g.verified.cs
+snippet: GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs
 
 </details>
 

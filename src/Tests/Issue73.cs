@@ -17,7 +17,8 @@ public class Issue73
             .RunGenerators(compilation, TestHelper.CancellationToken);
 
         await Verify(driver)
-            .IgnoreParameters(nameof(builderFactory))
+            .UseMethodName("cs")
+            .IgnoreParameters()
             .ConfigureAwait(false);
     }
 

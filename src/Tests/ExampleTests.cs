@@ -25,7 +25,8 @@ public class ExampleTests
         await Verify(driver)
             .UseDirectory(theoryData.VerifiedDirectory)
             .UseTypeName(theoryData.Name)
-            .IgnoreParametersForVerified()
+            .UseMethodName("cs")
+            .IgnoreParameters()
             .ConfigureAwait(false);
     }
 
