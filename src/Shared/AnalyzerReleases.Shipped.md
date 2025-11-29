@@ -21,7 +21,7 @@ Rule ID | Category | Severity | Notes
 ACTR005 | AutoCtor | Warning  | PostConstructOutParameterCannotBeKeyed
 ACTR006 | AutoCtor | Warning  | PostConstructOutParameterMustNotMatchKeyedField
 
-## Release 2.9
+## Release 2.10
 
 ### Removed Rules
 

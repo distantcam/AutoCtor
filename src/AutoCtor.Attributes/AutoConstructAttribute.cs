@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using static System.AttributeTargets;
 
-#pragma warning disable CS9113 // Parameter is unread.
-
 namespace AutoCtor;
 
 public enum GuardSetting
@@ -14,7 +12,10 @@ public enum GuardSetting
 
 [AttributeUsage(Class | Struct, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
-public sealed class AutoConstructAttribute(GuardSetting guard = GuardSetting.Default) : Attribute;
+public sealed class AutoConstructAttribute(GuardSetting guard = GuardSetting.Default) : Attribute
+{
+    public GuardSetting Guard { get; } = guard;
+}
 
 [AttributeUsage(Method, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
@@ -26,4 +27,7 @@ public sealed class AutoConstructIgnoreAttribute : Attribute;
 
 [AttributeUsage(Field | Property | Parameter, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
-public sealed class AutoKeyedServiceAttribute(object? key) : Attribute;
+public sealed class AutoKeyedServiceAttribute(object? key) : Attribute
+{
+    public object? Key { get; } = key;
+}

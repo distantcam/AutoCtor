@@ -1,5 +1,11 @@
 <Project>
+
   <ItemGroup>
     <CompilerVisibleProperty Include="AutoCtorGuards" />
   </ItemGroup>
+
+  <ItemGroup Condition="$(Language) == 'C#' and ($(ImplicitUsings) == 'enable' or $(ImplicitUsings) == 'true')">
+    <Using Include="AutoCtor" />
+  </ItemGroup>
+
 </Project>

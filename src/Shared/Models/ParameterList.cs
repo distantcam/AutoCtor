@@ -67,7 +67,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
                 if (matchingField.KeyedService != null)
                 {
                     Diagnostics.ReportDiagnostic(context, matchingField,
-                        Diagnostics.PostConstructOutParameterMustNotMatchKeyedField);
+                        Diagnostics.ACTR006_PostConstructOutParameterMustNotMatchKeyedField);
                 }
 
                 postCtorParameters.Add(p.RefKind != RefKind.None

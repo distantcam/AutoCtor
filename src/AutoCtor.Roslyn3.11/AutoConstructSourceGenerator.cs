@@ -3,16 +3,6 @@ using Microsoft.CodeAnalysis;
 
 namespace AutoCtor;
 
-public sealed partial class AttributeSourceGenerator : ISourceGenerator
-{
-    public void Initialize(GeneratorInitializationContext context)
-    {
-        context.RegisterForPostInitialization(static c =>
-            c.AddSource(Emitter.HintName, Emitter.GenerateSource()));
-    }
-    public void Execute(GeneratorExecutionContext context) { }
-}
-
 public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 {
     private sealed class SyntaxContextReceiver(CancellationToken cancellationToken) : ISyntaxContextReceiver
