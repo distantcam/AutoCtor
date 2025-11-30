@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Shared\*\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\**\*.cs" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Shared\*.md" />
   </ItemGroup>
 

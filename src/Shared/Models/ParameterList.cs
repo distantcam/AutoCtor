@@ -64,6 +64,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
             var matchingField = fields.FirstOrDefault(m => isOutOrRefParameter && m.Type == p.Type);
             if (matchingField != default)
             {
+                // ACTR006
                 if (matchingField.KeyedService != null)
                 {
                     Diagnostics.ReportDiagnostic(context, matchingField,
