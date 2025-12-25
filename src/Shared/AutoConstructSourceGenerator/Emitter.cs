@@ -208,7 +208,7 @@ public partial class AutoConstructSourceGenerator
             {
                 foreach (var m in markedPostCtorMethods)
                 {
-                    ReportDiagnostic(context, m, ACTR001_AmbiguousMarkedPostConstructMethod);
+                    context.ReportDiagnostic(m, ACTR001_AmbiguousMarkedPostConstructMethod);
                 }
                 return null;
             }
@@ -221,14 +221,14 @@ public partial class AutoConstructSourceGenerator
             // ACTR002
             if (!method.ReturnsVoid)
             {
-                ReportDiagnostic(context, method, ACTR002_PostConstructMethodNotVoid);
+                context.ReportDiagnostic(method, ACTR002_PostConstructMethodNotVoid);
                 return null;
             }
 
             // ACTR004
             if (method.IsGenericMethod)
             {
-                ReportDiagnostic(context, method, ACTR004_PostConstructMethodCannotBeGeneric);
+                context.ReportDiagnostic(method, ACTR004_PostConstructMethodCannotBeGeneric);
                 return null;
             }
 
@@ -237,7 +237,7 @@ public partial class AutoConstructSourceGenerator
                 // ACTR005
                 if (parameter.IsOutOrRef && parameter.KeyedService != null)
                 {
-                    ReportDiagnostic(context, parameter, ACTR005_PostConstructOutParameterCannotBeKeyed);
+                    context.ReportDiagnostic(parameter, ACTR005_PostConstructOutParameterCannotBeKeyed);
                     return null;
                 }
             }

@@ -95,15 +95,8 @@ public class ExampleTests
         protected override IEnumerable<string> GetNuGetIds() => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
     }
 
-    private static IEnumerable<string> GetExamplesFiles(string path)
-        => Directory.GetFiles(Path.Combine(TestFileHelper.BaseDir?.FullName ?? "", path), "*.cs")
-        .Where(e => !e.Contains(".g."));
-
     public static IEnumerable<Func<CodeFileTheoryData>> GetExamples()
     {
-        if (TestFileHelper.BaseDir is null)
-            throw new Exception("BaseDir is null");
-
         foreach (var example in GetExamplesFiles("Examples"))
         {
             yield return () => new CodeFileTheoryData(example) with

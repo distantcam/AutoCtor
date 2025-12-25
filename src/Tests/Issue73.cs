@@ -72,12 +72,12 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
 }
 ";
         var projectA = common
-            .AddCode(projectACode)
+            .AddCodes(projectACode)
             .Build("ProjectA");
 
         var projectB = common
             .AddCompilationReference(projectA)
-            .AddCode(projectBCode)
+            .AddCodes(projectBCode)
             .Build("ProjectB");
 
         return projectB;

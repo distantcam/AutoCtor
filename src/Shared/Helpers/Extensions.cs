@@ -1,4 +1,13 @@
-﻿internal static class Extensions
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis;
+
+#if ROSLYN_3
+using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
+#elif ROSLYN_4
+using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
+#endif
+
+internal static class Extensions
 {
     public static T? OnlyOrDefault<T>(this IEnumerable<T> source)
     {
@@ -46,5 +55,15 @@
                 return true;
         }
         return false;
+    }
+
+    [SuppressMessage(
+        "MicrosoftCodeAnalysisCorrectness",
+        "RS1035:Do not use APIs banned for analyzers",
+        Justification = "Old generator still maintained")]
+    public static void ReportDiagnostic(this EmitterContext context, IHaveDiagnostics item, DiagnosticDescriptor diagnostic)
+    {
+        foreach (var loc in item.Locations)
+            context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, item.ErrorName));
     }
 }

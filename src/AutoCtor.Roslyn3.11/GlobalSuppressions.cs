@@ -6,4 +6,3 @@
     Justification = "Old generator still maintained",
     Scope = "namespaceanddescendants",
     Target = "~N:AutoCtor")]
-

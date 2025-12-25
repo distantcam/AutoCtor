@@ -1,21 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
 
-#if ROSLYN_3
-using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
-#elif ROSLYN_4
-using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
-#endif
-
 namespace AutoCtor;
 
 internal static class Diagnostics
 {
-    public static void ReportDiagnostic(EmitterContext context, IHaveDiagnostics item, DiagnosticDescriptor diagnostic)
-    {
-        foreach (var loc in item.Locations)
-            context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, item.ErrorName));
-    }
-
     /// <summary>
     /// Id: ACTR001<br />
     /// Title: Ambiguous marked post constructor method

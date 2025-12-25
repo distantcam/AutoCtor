@@ -44,21 +44,9 @@ internal partial class CodeBuilder
         switch (attributeTargets)
         {
             case AttributeTargets.Class:
-                AddDebuggerNonUserCodeAttribute();
-                AddExcludeFromCodeCoverage();
-                break;
             case AttributeTargets.Struct:
-                AddDebuggerNonUserCodeAttribute();
-                AddExcludeFromCodeCoverage();
-                break;
             case AttributeTargets.Constructor:
-                AddDebuggerNonUserCodeAttribute();
-                AddExcludeFromCodeCoverage();
-                break;
             case AttributeTargets.Method:
-                AddDebuggerNonUserCodeAttribute();
-                AddExcludeFromCodeCoverage();
-                break;
             case AttributeTargets.Property:
                 AddDebuggerNonUserCodeAttribute();
                 AddExcludeFromCodeCoverage();

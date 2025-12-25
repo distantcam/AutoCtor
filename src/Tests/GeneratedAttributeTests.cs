@@ -26,7 +26,7 @@ public class GeneratedAttributeTests
     public async Task AttributeCompilesProperly(CompilationBuilderFactory builderFactory)
     {
         var builder = builderFactory.Builder
-            .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
+            .WithPreprocessorSymbols("AUTOCTOR_EMBED_ATTRIBUTES");
         var compilation = builder.Build(nameof(GeneratedAttributeTests));
         var driver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())
@@ -51,8 +51,8 @@ public class GeneratedAttributeTests
     public async Task PreserveAttributesTest(CompilationBuilderFactory builderFactory)
     {
         var builder = builderFactory.Builder
-            .AddCode("[AutoCtor.AutoConstruct] public partial class Test { }")
-            .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES", "AUTOCTOR_USAGES"]);
+            .AddCodes("[AutoCtor.AutoConstruct] public partial class Test { }")
+            .WithPreprocessorSymbols("AUTOCTOR_EMBED_ATTRIBUTES", "AUTOCTOR_USAGES");
         var compilation = builder.Build(nameof(GeneratedAttributeTests));
 
         var driver = new GeneratorDriverBuilder()
@@ -80,7 +80,7 @@ public class GeneratedAttributeTests
     {
         // Issue 312
         var compileBuilder = builderFactory.Builder
-            .WithPreprocessorSymbols(["AUTOCTOR_EMBED_ATTRIBUTES"]);
+            .WithPreprocessorSymbols("AUTOCTOR_EMBED_ATTRIBUTES");
 
         var genDriver = new GeneratorDriverBuilder()
             .AddGenerator(new AttributeSourceGenerator())

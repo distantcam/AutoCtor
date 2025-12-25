@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Testing;
 using TUnit.Core.Interfaces;
 
 public static class ExampleTestsHelper
@@ -24,6 +23,17 @@ public static class ExampleTestsHelper
 #endif
     ];
 
+    private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent;
+
+    public static IEnumerable<string> GetExamplesFiles(string path)
+    {
+        var examplesPath = Path.Combine(BaseDir?.FullName ?? "", path);
+        if (!Directory.Exists(examplesPath))
+            return [];
+        return Directory.GetFiles(examplesPath, "*.cs")
+        .Where(e => !e.Contains(".g."));
+    }
+
     public abstract class CompilationBuilderFactoryBase<TAttribute> : CompilationBuilderFactoryBase
     {
         public override async Task InitializeAsync()
@@ -35,8 +45,6 @@ public static class ExampleTestsHelper
 
     public abstract class CompilationBuilderFactoryBase : IAsyncInitializer
     {
-        private const string DEFAULT_TARGET_FRAMEWORK = "net10.0";
-
         public CompilationBuilder Builder { get; protected set; } = null!;
 
         public virtual async Task InitializeAsync()
@@ -44,10 +52,13 @@ public static class ExampleTestsHelper
             Builder = new CompilationBuilder()
                 .WithNullableContextOptions(NullableContextOptions.Enable)
                 .WithPreprocessorSymbols(PreprocessorSymbols);
-            Builder = await AddNugetReference(Builder, "Microsoft.NETCore.App.Ref", "ref");
+
+            Builder = await Builder.AddNugetReference("Microsoft.NETCore.App.Ref", "ref")
+                .ConfigureAwait(false);
             foreach (var id in GetNuGetIds())
             {
-                Builder = await AddNugetReference(Builder, id);
+                Builder = await Builder.AddNugetReference(id)
+                    .ConfigureAwait(false);
             }
         }
 
@@ -61,18 +72,6 @@ public static class ExampleTestsHelper
                 builder = builder.WithLanguageVersion(LanguageVersion.Preview);
             }
             return builder;
-        }
-
-        private static async Task<CompilationBuilder> AddNugetReference(CompilationBuilder builder, string id, string path = "", CancellationToken cancellationToken = default)
-        {
-            var version = TestFileHelper.GetPackageVersion(id);
-            var nugetReference = new ReferenceAssemblies(
-                DEFAULT_TARGET_FRAMEWORK,
-                new(id, version),
-                Path.Join(string.IsNullOrEmpty(path) ? "lib" : path, DEFAULT_TARGET_FRAMEWORK));
-            var references = await nugetReference.ResolveAsync(null, cancellationToken)
-                .ConfigureAwait(false);
-            return builder.AddReferences(references);
         }
     }
 

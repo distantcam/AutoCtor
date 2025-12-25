@@ -1,14 +1,26 @@
 ﻿using System.Collections.Immutable;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Testing;
 
 public class CompilationBuilder
 {
+    private static readonly XDocument s_packageVersionDoc;
+    static CompilationBuilder()
+    {
+        var srcDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
+        var packageVersionsFile = Path.Combine(srcDir?.FullName ?? "", "Directory.Packages.props");
+        s_packageVersionDoc = XDocument.Load(packageVersionsFile);
+    }
+
     private ImmutableArray<MetadataReference> _references;
     private ImmutableArray<string> _codes;
 
     private CSharpParseOptions _parseOptions;
     private CSharpCompilationOptions _compilationOptions;
+
+    private string _targetFramework = "net10.0";
 
     public CSharpParseOptions ParseOptions => _parseOptions;
 
@@ -62,19 +74,37 @@ public class CompilationBuilder
         };
     }
 
-    public CompilationBuilder AddCode(string code)
-    {
-        return new(this)
-        {
-            _codes = _codes.Add(code)
-        };
-    }
-
-    public CompilationBuilder AddCodes(IEnumerable<string> codes)
+    public CompilationBuilder AddCodes(params IEnumerable<string> codes)
     {
         return new(this)
         {
             _codes = _codes.AddRange(codes)
+        };
+    }
+
+    public async Task<CompilationBuilder> AddNugetReference(string id, string path = "lib", CancellationToken cancellationToken = default)
+    {
+        var versionXml = s_packageVersionDoc.Root?.Descendants("PackageVersion")
+            .FirstOrDefault(el => el.Attribute("Include")?.Value == id);
+        var version = versionXml?.Attribute("Version")?.Value
+            ?? throw new Exception($"{id} missing from Directory.Packages.props");
+        var nugetReference = new ReferenceAssemblies(
+            _targetFramework,
+            new(id, version),
+            Path.Combine(path, _targetFramework));
+        var references = await nugetReference.ResolveAsync(_parseOptions.Language, cancellationToken)
+            .ConfigureAwait(false);
+        return new(this)
+        {
+            _references = _references.AddRange(references)
+        };
+    }
+
+    public CompilationBuilder WithTargetFramework(string targetFramework)
+    {
+        return new(this)
+        {
+            _targetFramework = targetFramework
         };
     }
 
@@ -86,7 +116,7 @@ public class CompilationBuilder
         };
     }
 
-    public CompilationBuilder WithPreprocessorSymbols(IEnumerable<string>? preprocessorSymbols)
+    public CompilationBuilder WithPreprocessorSymbols(params IEnumerable<string>? preprocessorSymbols)
     {
         return new(this)
         {
