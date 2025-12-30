@@ -69,7 +69,7 @@ public partial class AutoConstructSourceGenerator
 
                 var postCtorMethods = input.Models.PostCtorMethods
                     .Where(m => m.TypeKey == type.TypeKey)
-                    .ToList();
+                    .ToImmutableArray();
 
                 var (source, parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
 
@@ -85,7 +85,7 @@ public partial class AutoConstructSourceGenerator
         private static (SourceText?, ParameterList?) GenerateSource(
             EmitterContext context,
             TypeModel type,
-            IEnumerable<PostCtorModel> markedPostCtorMethods,
+            ImmutableArray<PostCtorModel> markedPostCtorMethods,
             IEnumerable<ParameterModel>? baseParameters,
             bool guards)
         {
@@ -201,10 +201,10 @@ public partial class AutoConstructSourceGenerator
 
         private static PostCtorModel? GetPostCtorMethod(
             EmitterContext context,
-            IEnumerable<PostCtorModel> markedPostCtorMethods)
+            ImmutableArray<PostCtorModel> markedPostCtorMethods)
         {
             // ACTR001
-            if (markedPostCtorMethods.MoreThan(1))
+            if (markedPostCtorMethods.Length > 1)
             {
                 foreach (var m in markedPostCtorMethods)
                 {
@@ -213,10 +213,10 @@ public partial class AutoConstructSourceGenerator
                 return null;
             }
 
-            if (!markedPostCtorMethods.Any())
+            if (markedPostCtorMethods.Length != 1)
                 return null;
 
-            var method = markedPostCtorMethods.First();
+            var method = markedPostCtorMethods[0];
 
             // ACTR002
             if (!method.ReturnsVoid)

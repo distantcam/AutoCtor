@@ -56,7 +56,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
         }
 
         var models = (
-            receiver.TypeModels?.ToImmutableArray() ?? ImmutableArray<TypeModel>.Empty,
+            receiver.TypeModels.ToImmutableArray(),
             receiver.MarkedMethods?.ToImmutableArray() ?? ImmutableArray<PostCtorModel>.Empty
         );
         Emitter.GenerateSource(context, (models, enableGuards));

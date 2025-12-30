@@ -32,13 +32,13 @@ internal partial class CodeBuilder
     private void AppendFormatted(IEnumerable<string> items, string? format)
     {
         if (format == "comma")
-            AppendCommaSeparated(items);
+            AppendCommaSeparated(items.ToList());
 
-        if (format == "commaindent")
-            AppendCommaIndented(items);
+        else if (format == "commaindent")
+            AppendCommaIndented(items.ToList());
     }
 
-    private void AppendCommaSeparated(IEnumerable<string> items)
+    private void AppendCommaSeparated(List<string> items)
     {
         var comma = false;
         foreach (var item in items)
@@ -50,7 +50,7 @@ internal partial class CodeBuilder
         }
     }
 
-    private void AppendCommaIndented(IEnumerable<string> items)
+    private void AppendCommaIndented(List<string> items)
     {
         var length = items.Sum(s => s.Length);
         if (length < 60)
@@ -87,7 +87,7 @@ internal partial class CodeBuilder
     }
 
     [InterpolatedStringHandler]
-    internal class IndentedCodeBuilderInterpolatedStringHandler(
+    internal sealed class IndentedCodeBuilderInterpolatedStringHandler(
         int literalLength, int formattedCount, CodeBuilder codeBuilder, bool enabled = true)
     {
         private bool _hasIndented;

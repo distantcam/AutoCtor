@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using static ExampleTestsHelper;
 
-public class Issue73
+internal sealed class Issue73
 {
     [Test]
     [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
@@ -83,5 +83,8 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
         return projectB;
     }
 
-    public class CompilationBuilderFactory : CompilationBuilderFactoryBase<AutoConstructAttribute>;
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Performance", "CA1812:Avoid uninstantiated internal classes",
+        Justification = "Instantiated in generated code.")]
+    internal sealed class CompilationBuilderFactory : CompilationBuilderFactoryBase<AutoConstructAttribute>;
 }

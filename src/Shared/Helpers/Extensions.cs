@@ -42,21 +42,6 @@ internal static class Extensions
         return default;
     }
 
-    public static bool MoreThan<T>(this IEnumerable<T> source, int limit)
-    {
-        if (source is ICollection<T> collection)
-            return collection.Count > limit;
-        var count = 0;
-        using var e = source.GetEnumerator();
-        while (e.MoveNext())
-        {
-            count++;
-            if (count > limit)
-                return true;
-        }
-        return false;
-    }
-
     [SuppressMessage(
         "MicrosoftCodeAnalysisCorrectness",
         "RS1035:Do not use APIs banned for analyzers",

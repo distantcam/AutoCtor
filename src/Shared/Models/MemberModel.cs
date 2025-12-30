@@ -23,7 +23,7 @@ internal readonly record struct MemberModel(
         if (i > 0 && !char.IsLetter(field.Name[i]))
             i--;
         var friendlyName = char.IsUpper(field.Name[i])
-            ? char.ToLower(field.Name[i]) + field.Name.Substring(i + 1)
+            ? char.ToLowerInvariant(field.Name[i]) + field.Name.Substring(i + 1)
             : field.Name.Substring(i);
         friendlyName = friendlyName.EscapeKeywordIdentifier();
 
@@ -43,7 +43,7 @@ internal readonly record struct MemberModel(
 
     public static MemberModel Create(IPropertySymbol property)
     {
-        var friendlyName = new string([char.ToLower(property.Name[0]), .. property.Name.Substring(1)]).EscapeKeywordIdentifier();
+        var friendlyName = new string([char.ToLowerInvariant(property.Name[0]), .. property.Name.Substring(1)]).EscapeKeywordIdentifier();
 
         return new MemberModel(
             Type: new(property.Type),

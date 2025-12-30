@@ -8,7 +8,7 @@ using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
 using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
 #endif
 
-internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable<MemberModel> properties)
+internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable<MemberModel> properties)
 {
     private IEnumerable<ParameterModel> _baseParameters = [];
     private IEnumerable<ParameterModel> _postCtorParameters = [];
@@ -107,7 +107,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
         return $"{u.Key.Type} {u.Value}{defaultValue}";
     }
 
-    private bool GetUniqueName(ParameterModel p, HashSet<string> nameHash, Dictionary<ParameterModel, string> uniqueNames, out string name)
+    private static bool GetUniqueName(ParameterModel p, HashSet<string> nameHash, Dictionary<ParameterModel, string> uniqueNames, out string name)
     {
         if (uniqueNames.TryGetValue(p, out name))
             return true;
@@ -124,7 +124,7 @@ internal class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable
     }
 }
 
-internal class ParameterList(
+internal sealed class ParameterList(
     IEnumerable<string> ctorParameterDeclarations,
     IEnumerable<string> baseParameters,
     IEnumerable<string> postCtorParameters,

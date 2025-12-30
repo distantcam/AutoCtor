@@ -1,4 +1,4 @@
-﻿public class VerifyChecksTests
+﻿internal sealed class VerifyChecksTests
 {
     [Test]
     public Task Run() =>

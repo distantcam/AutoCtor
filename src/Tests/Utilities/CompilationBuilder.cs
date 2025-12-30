@@ -4,12 +4,16 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
 
-public class CompilationBuilder
+internal sealed class CompilationBuilder
 {
     private static readonly XDocument s_packageVersionDoc;
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Performance", "CA1810:Initialize reference type static fields inline",
+        Justification = "No static members or inheritance.")]
     static CompilationBuilder()
     {
-        var srcDir = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent?.Parent;
+        var srcDir = new DirectoryInfo(Environment.CurrentDirectory).Parent?.Parent?.Parent;
         var packageVersionsFile = Path.Combine(srcDir?.FullName ?? "", "Directory.Packages.props");
         s_packageVersionDoc = XDocument.Load(packageVersionsFile);
     }
@@ -87,7 +91,7 @@ public class CompilationBuilder
         var versionXml = s_packageVersionDoc.Root?.Descendants("PackageVersion")
             .FirstOrDefault(el => el.Attribute("Include")?.Value == id);
         var version = versionXml?.Attribute("Version")?.Value
-            ?? throw new Exception($"{id} missing from Directory.Packages.props");
+            ?? throw new InvalidOperationException($"{id} missing from Directory.Packages.props");
         var nugetReference = new ReferenceAssemblies(
             _targetFramework,
             new(id, version),

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-public record CodeFileTheoryData
+internal sealed record CodeFileTheoryData
 {
     public required string Name { get; set; }
     public required string[] Codes { get; set; }

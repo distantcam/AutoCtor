@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using TUnit.Core.Interfaces;
 
-public static class ExampleTestsHelper
+internal static class ExampleTestsHelper
 {
     public static readonly IEnumerable<string> PreprocessorSymbols = [
 #if ROSLYN_3
@@ -23,7 +23,7 @@ public static class ExampleTestsHelper
 #endif
     ];
 
-    private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory)?.Parent?.Parent;
+    private static DirectoryInfo? BaseDir { get; } = new DirectoryInfo(Environment.CurrentDirectory).Parent?.Parent;
 
     public static IEnumerable<string> GetExamplesFiles(string path)
     {
@@ -31,19 +31,19 @@ public static class ExampleTestsHelper
         if (!Directory.Exists(examplesPath))
             return [];
         return Directory.GetFiles(examplesPath, "*.cs")
-        .Where(e => !e.Contains(".g."));
+            .Where(e => !e.Contains(".g.", StringComparison.InvariantCulture));
     }
 
-    public abstract class CompilationBuilderFactoryBase<TAttribute> : CompilationBuilderFactoryBase
+    internal abstract class CompilationBuilderFactoryBase<TAttribute> : CompilationBuilderFactoryBase
     {
         public override async Task InitializeAsync()
         {
-            await base.InitializeAsync();
+            await base.InitializeAsync().ConfigureAwait(false);
             Builder = Builder.AddAssemblyReference<TAttribute>();
         }
     }
 
-    public abstract class CompilationBuilderFactoryBase : IAsyncInitializer
+    internal abstract class CompilationBuilderFactoryBase : IAsyncInitializer
     {
         public CompilationBuilder Builder { get; protected set; } = null!;
 

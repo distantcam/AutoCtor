@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.Text;
 internal partial class CodeBuilder
 {
     private readonly StringBuilder _stringBuilder = new();
-    private int _indent = 0;
+    private int _indent;
 
     public char IndentChar { get; set; } = '\t';
     public string Indent => new(IndentChar, _indent);

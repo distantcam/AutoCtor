@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using TUnit.Assertions.Core;
 
-public static class TestHelper
+internal static class TestHelper
 {
     public static CancellationToken CancellationToken =>
         TestContext.Current?.Execution?.CancellationToken ?? CancellationToken.None;

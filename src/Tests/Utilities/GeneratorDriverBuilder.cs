@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-public class GeneratorDriverBuilder
+internal sealed class GeneratorDriverBuilder
 {
     private ImmutableArray<ISourceGenerator> _generators;
     private ImmutableDictionary<string, string> _analyzerOptions;
@@ -70,7 +70,7 @@ public class GeneratorDriverBuilder
 #endif
     }
 
-    private class TestAnalyzerConfigOptionsProvider(
+    private sealed class TestAnalyzerConfigOptionsProvider(
         ImmutableDictionary<string, string> analyzerConfigOptions
     ) : AnalyzerConfigOptionsProvider
     {
@@ -79,7 +79,7 @@ public class GeneratorDriverBuilder
         public override AnalyzerConfigOptions GetOptions(AdditionalText textFile) => GlobalOptions;
     }
 
-    private class TestAnalyzerConfigOptions(
+    private sealed class TestAnalyzerConfigOptions(
         ImmutableDictionary<string, string> analyzerConfigOptions
     ) : AnalyzerConfigOptions
     {

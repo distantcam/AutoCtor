@@ -1,18 +1,24 @@
 ﻿using System.Reflection;
 
-internal partial class CodeBuilder
+internal sealed partial class CodeBuilder
 {
     private static readonly string s_assemblyName;
     private static readonly string s_version;
     private static readonly string? s_packageProjectUrl;
     private static readonly string? s_gitSha;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Performance", "CA1810:Initialize reference type static fields inline",
+        Justification = "No static members or inheritance.")]
     static CodeBuilder()
     {
-        var assembly = Assembly.GetAssembly(typeof(CodeBuilder));
-        s_assemblyName = assembly?.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "Untitled";
-        s_version = assembly?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "0.0.0.0";
-        var metadata = assembly?.GetCustomAttributes<AssemblyMetadataAttribute>()?.ToDictionary(m => m.Key, m => m.Value);
+        var assembly = typeof(CodeBuilder).Assembly;
+        s_assemblyName = assembly?.GetCustomAttribute<AssemblyTitleAttribute>()?.Title
+            ?? "Untitled";
+        s_version = assembly?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version
+            ?? "0.0.0.0";
+        var metadata = assembly?.GetCustomAttributes<AssemblyMetadataAttribute>()?
+            .ToDictionary(m => m.Key, m => m.Value);
         if (metadata != null)
         {
             metadata.TryGetValue("PackageProjectUrl", out s_packageProjectUrl);

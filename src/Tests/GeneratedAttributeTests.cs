@@ -1,7 +1,7 @@
 ﻿using AutoCtor;
 using static ExampleTestsHelper;
 
-public class GeneratedAttributeTests
+internal sealed class GeneratedAttributeTests
 {
     [Test]
     [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
@@ -109,5 +109,8 @@ public class GeneratedAttributeTests
             .ConfigureAwait(false);
     }
 
-    public class CompilationBuilderFactory : CompilationBuilderFactoryBase;
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Performance", "CA1812:Avoid uninstantiated internal classes",
+        Justification = "Instantiated in generated code.")]
+    internal sealed class CompilationBuilderFactory : CompilationBuilderFactoryBase;
 }

@@ -232,6 +232,12 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
 # Use file scoped namespaces
 csharp_style_namespace_declarations = file_scoped:warning
 
+# CA1019: Define accessors for attribute arguments
+dotnet_diagnostic.CA1019.severity = none
+
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = none
+
 # Verify settings
 [*.{received,verified}.{cs,txt}]
 charset = "utf-8-bom"

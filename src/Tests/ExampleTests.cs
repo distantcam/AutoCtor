@@ -6,7 +6,7 @@ using static ExampleTestsHelper;
 using Microsoft.CodeAnalysis.CSharp;
 #endif
 
-public class ExampleTests
+internal sealed class ExampleTests
 {
     [Test]
     [CombinedDataSources]
@@ -90,7 +90,10 @@ public class ExampleTests
 
     // ----------------------------------------------------------------------------------------
 
-    public class CompilationBuilderFactory : CompilationBuilderFactoryBase<AutoConstructAttribute>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Performance", "CA1812:Avoid uninstantiated internal classes",
+        Justification = "Instantiated in generated code.")]
+    internal sealed class CompilationBuilderFactory : CompilationBuilderFactoryBase<AutoConstructAttribute>
     {
         protected override IEnumerable<string> GetNuGetIds() => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
     }
