@@ -3,13 +3,9 @@ name: 🛠️ build
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+-**"
-  pull_request:
-    types: [opened, reopened, edited, synchronize]
 
 jobs:
   test:
