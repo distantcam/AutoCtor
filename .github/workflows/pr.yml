@@ -1,0 +1,33 @@
+name: ✏️ pr
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+jobs:
+  test:
+    name: 🧪 Run tests
+    uses: ./.github/workflows/test.yml
+
+  merge:
+    name: 🤖 Merge
+    runs-on: ubuntu-latest
+    needs: test
+    if: |
+      github.event_name == 'pull_request'
+      && github.event.pull_request.user.login == 'dependabot[bot]'
+      && github.repository == 'distantcam/autoctor'
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: 📡 Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2
+
+      - name: ✔️ Merge PR
+        if: steps.dependabot-metadata.outputs.dependency-group == 'tunit'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
