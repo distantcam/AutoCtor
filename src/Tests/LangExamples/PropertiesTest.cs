@@ -6,7 +6,7 @@ public partial class PropertiesTest
     protected string ProtectedProperty { get; }
     public string InitProperty { get; init; }
 
-#if ROSLYN_4_4
+#if ROSLYN_4_4 || ROSLYN_5
     public required string RequiredProperty { get; set; }
 #endif
 

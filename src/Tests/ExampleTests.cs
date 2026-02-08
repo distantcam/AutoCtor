@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using static ExampleTestsHelper;
 
-#if ROSLYN_4_4
+#if ROSLYN_4_4 || ROSLYN_5
 using Microsoft.CodeAnalysis.CSharp;
 #endif
 
@@ -54,7 +54,7 @@ internal sealed class ExampleTests
             .ConfigureAwait(false);
     }
 
-#if ROSLYN_4_4
+#if ROSLYN_4_4 || ROSLYN_5
     [Test]
     [CombinedDataSources]
     public async Task EnsureRunsAreCachedCorrectly(
@@ -126,7 +126,7 @@ internal sealed class ExampleTests
             };
         }
 
-#if ROSLYN_4_4
+#if ROSLYN_4_4 || ROSLYN_5
         foreach (var readmeExample in GetExamplesFiles("ReadmeExamples"))
         {
             yield return () => new CodeFileTheoryData(readmeExample) with
