@@ -13,13 +13,16 @@ internal partial class CodeBuilder
     public CodeBuilder DecreaseIndent() { if (_indent > 0) _indent--; return this; }
 
     public CodeBuilder Append(string value) { _stringBuilder.Append(value); return this; }
-    public CodeBuilder Append(bool enabled, string value) { if (enabled) _stringBuilder.Append(value); return this; }
+    public CodeBuilder Append(bool enabled, string value) => enabled ? Append(value) : this;
+
     public CodeBuilder AppendLine() { _stringBuilder.AppendLine(); return this; }
-    public CodeBuilder AppendLine(string value) { _stringBuilder.AppendLine(Indent + value); return this; }
-    public CodeBuilder AppendLine(bool enabled, string value) { if (enabled) _stringBuilder.AppendLine(Indent + value); return this; }
+    public CodeBuilder AppendLine(string value) => AppendLineRaw(Indent + value);
+    public CodeBuilder AppendLine(bool enabled, string value) => enabled ? AppendLine(value) : this;
+
     public CodeBuilder AppendLineRaw(string value) { _stringBuilder.AppendLine(value); return this; }
-    public CodeBuilder AppendLineRaw(bool enabled, string value) { if (enabled) _stringBuilder.AppendLine(value); return this; }
-    public CodeBuilder AppendIndent() { _stringBuilder.Append(Indent); return this; }
+    public CodeBuilder AppendLineRaw(bool enabled, string value) => enabled ? AppendLineRaw(value) : this;
+
+    public CodeBuilder AppendIndent() => Append(Indent);
 
     public static implicit operator SourceText(CodeBuilder codeBuilder)
         => SourceText.From(codeBuilder._stringBuilder.ToString(), Encoding.UTF8);

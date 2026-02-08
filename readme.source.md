@@ -37,6 +37,10 @@ public partial class AService
 }
 ```
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=distantcam/autoctor&type=date&legend=top-left)](https://www.star-history.com/#distantcam/autoctor&type=date&legend=top-left)
+
 <a id='toc'></a>
 toc
 
