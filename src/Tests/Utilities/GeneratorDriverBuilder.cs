@@ -67,6 +67,14 @@ internal sealed class GeneratorDriverBuilder
                 disabledOutputs: IncrementalGeneratorOutputKind.None,
                 trackIncrementalGeneratorSteps: true
             ));
+#elif ROSLYN_5_0
+        return CSharpGeneratorDriver.Create(_generators,
+            parseOptions: parseOptions,
+            optionsProvider: new TestAnalyzerConfigOptionsProvider(_analyzerOptions),
+            driverOptions: new GeneratorDriverOptions(
+                disabledOutputs: IncrementalGeneratorOutputKind.None,
+                trackIncrementalGeneratorSteps: true
+            ));
 #endif
     }
 
