@@ -1,7 +1,10 @@
-﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using TUnit.Core.Interfaces;
+
+#if ROSLYN_4 || ROSLYN_5
+using System.Collections.Immutable;
+#endif
 
 internal static class ExampleTestsHelper
 {
@@ -20,6 +23,12 @@ internal static class ExampleTestsHelper
 #endif
 #if ROSLYN_4_4
         "ROSLYN_4_4",
+#endif
+#if ROSLYN_5
+        "ROSLYN_5",
+#endif
+#if ROSLYN_5_0
+        "ROSLYN_5_0",
 #endif
     ];
 
@@ -75,7 +84,7 @@ internal static class ExampleTestsHelper
         }
     }
 
-#if ROSLYN_4
+#if ROSLYN_4 || ROSLYN_5
     public static async Task AssertRunsEqual(
         GeneratorDriverRunResult runResult1,
         GeneratorDriverRunResult runResult2,

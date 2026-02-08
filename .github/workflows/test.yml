@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        roslyn: ["3.11", "4.0", "4.4"]
+        roslyn: ["3.11", "4.0", "4.4", "5.0"]
     steps:
       - name: 🛒 Check-out code
         uses: actions/checkout@v4
