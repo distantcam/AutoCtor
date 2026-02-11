@@ -36,10 +36,10 @@ public partial class AutoConstructSourceGenerator
                 {
                     if (type is { BaseTypeArguments: not null, BaseTypeParameters: not null })
                     {
-                        if (ctorMaps.TryGetValue(type.BaseTypeKey, out var temp))
+                        if (ctorMaps.TryGetValue(type.BaseTypeKey, out var paramList))
                         {
                             var baseParameterList = new List<ParameterModel>();
-                            foreach (var bp in temp)
+                            foreach (var bp in paramList)
                             {
                                 var bpType = SetGenerics(
                                     bp.Type.TypeSymbol,
@@ -191,7 +191,9 @@ public partial class AutoConstructSourceGenerator
                 if (!namedType.IsGenericType)
                     return FindTypeForArgument(namedType, parameters, arguments);
 
-                var typeArgs = namedType.TypeArguments.Select(t => SetGenerics(t, parameters, arguments)).ToArray();
+                var typeArgs = namedType.TypeArguments
+                    .Select(t => SetGenerics(t, parameters, arguments))
+                    .ToArray();
 
                 return namedType.ConstructedFrom.Construct(typeArgs);
             }
