@@ -10,7 +10,7 @@ partial class KeyedServicesTest<T>
 	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public KeyedServicesTest(
 		[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices(null)] global::IService @null,
 		[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices("key")] global::IService @string,
