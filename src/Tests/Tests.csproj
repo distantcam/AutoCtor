@@ -11,7 +11,8 @@
   <PropertyGroup>
     <!--<GeneratorVersion>3.11</GeneratorVersion>-->
     <!--<GeneratorVersion>4.0</GeneratorVersion>-->
-    <GeneratorVersion>4.4</GeneratorVersion>
+    <!--<GeneratorVersion>4.4</GeneratorVersion>-->
+    <GeneratorVersion>5.0</GeneratorVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,6 +30,10 @@
 
   <PropertyGroup Condition=" '$(GeneratorVersion)' == '4.4' ">
     <DefineConstants>$(DefineConstants);ROSLYN_4;ROSLYN_4_4</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(GeneratorVersion)' == '5.0' ">
+    <DefineConstants>$(DefineConstants);ROSLYN_5;ROSLYN_5_0</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

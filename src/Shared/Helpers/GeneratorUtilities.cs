@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 #if ROSLYN_3
 using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
-#elif ROSLYN_4
+#elif ROSLYN_4 || ROSLYN_5
 using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
 #endif
 
