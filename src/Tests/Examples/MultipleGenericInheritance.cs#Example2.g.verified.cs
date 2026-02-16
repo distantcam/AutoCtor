@@ -10,7 +10,7 @@ partial class Example2
 	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public Example2(global::IServiceD a, global::IServiceE b, global::IServiceF f) : base(a, b)
 	{
 		this.f = f;

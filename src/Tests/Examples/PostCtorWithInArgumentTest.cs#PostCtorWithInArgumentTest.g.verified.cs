@@ -10,7 +10,7 @@ partial class PostCtorWithInArgumentTest
 	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public PostCtorWithInArgumentTest(
 		global::IServiceA serviceA,
 		global::IServiceB serviceB,

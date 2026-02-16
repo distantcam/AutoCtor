@@ -10,7 +10,7 @@ partial class PostCtorOptionalDefault
 	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public PostCtorOptionalDefault(string value = default, global::Flag flag = (global::Flag)0)
 	{
 		Initialize(value, flag);

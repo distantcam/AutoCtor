@@ -10,7 +10,7 @@ partial class PostCtorWithMSKeyedServiceTest
 	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public PostCtorWithMSKeyedServiceTest(
 		[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices("field")] global::IService service,
 		[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices("postconstruct")] global::IService postConstructService

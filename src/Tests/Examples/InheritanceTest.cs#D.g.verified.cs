@@ -10,7 +10,7 @@ partial class D
 	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage(Justification = "Generated code.")]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public D(global::IServiceE serviceE, global::IServiceD serviceD) : base(serviceE)
 	{
 		this._serviceD = serviceD;
