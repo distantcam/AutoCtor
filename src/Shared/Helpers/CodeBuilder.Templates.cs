@@ -39,7 +39,7 @@ internal sealed partial class CodeBuilder
         => AppendLine("[global::System.Diagnostics.DebuggerNonUserCode]");
 
     // Class | Struct | Constructor | Method | Property | Event
-    private void AddExcludeFromCodeCoverage(string justification = "Generated code.")
+    private void AddExcludeFromCodeCoverage()
         => AppendLine($"[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]");
 
     public CodeBuilder AddGeneratedAttributes(AttributeTargets attributeTargets)

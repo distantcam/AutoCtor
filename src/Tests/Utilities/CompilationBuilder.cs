@@ -86,17 +86,27 @@ internal sealed class CompilationBuilder
         };
     }
 
-    public async Task<CompilationBuilder> AddNugetReference(string id, string path = "lib", CancellationToken cancellationToken = default)
+    public Task<CompilationBuilder> AddNugetReference(string id, string path = "lib", CancellationToken cancellationToken = default)
     {
         var versionXml = s_packageVersionDoc.Root?.Descendants("PackageVersion")
             .FirstOrDefault(el => el.Attribute("Include")?.Value == id);
         var version = versionXml?.Attribute("Version")?.Value
             ?? throw new InvalidOperationException($"{id} missing from Directory.Packages.props");
+        return AddNugetReference(id, version, path, cancellationToken);
+    }
+
+    public Task<CompilationBuilder> AddNugetReference(string id, string version, string path = "lib", CancellationToken cancellationToken = default)
+    {
         var nugetReference = new ReferenceAssemblies(
             _targetFramework,
             new(id, version),
             Path.Combine(path, _targetFramework));
-        var references = await nugetReference.ResolveAsync(_parseOptions.Language, cancellationToken)
+        return AddReference(nugetReference, cancellationToken);
+    }
+
+    public async Task<CompilationBuilder> AddReference(ReferenceAssemblies reference, CancellationToken cancellationToken = default)
+    {
+        var references = await reference.ResolveAsync(_parseOptions.Language, cancellationToken)
             .ConfigureAwait(false);
         return new(this)
         {

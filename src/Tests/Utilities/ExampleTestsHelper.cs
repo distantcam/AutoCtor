@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Testing;
 using TUnit.Core.Interfaces;
 
 internal static class ExampleTestsHelper
@@ -53,13 +54,31 @@ internal static class ExampleTestsHelper
                 .WithNullableContextOptions(NullableContextOptions.Enable)
                 .WithPreprocessorSymbols(PreprocessorSymbols);
 
-            Builder = await Builder.AddNugetReference("Microsoft.NETCore.App.Ref", "ref")
+            Builder = await Builder
+                .AddReference(ReferenceAssemblies.NetStandard.NetStandard20)
                 .ConfigureAwait(false);
             foreach (var id in GetNuGetIds())
             {
                 Builder = await Builder.AddNugetReference(id)
                     .ConfigureAwait(false);
             }
+            Builder = Builder.AddCodes(@"
+namespace System.Runtime.CompilerServices;
+
+internal static class IsExternalInit;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+internal sealed class RequiredMemberAttribute : Attribute;
+
+[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = false)]
+public sealed class CompilerFeatureRequiredAttribute(string featureName) : Attribute
+{
+    public string FeatureName { get; } = featureName;
+    public bool IsOptional { get; init; }
+    public const string RefStructs = nameof(RefStructs);
+    public const string RequiredMembers = nameof(RequiredMembers);
+}
+");
         }
 
         protected virtual IEnumerable<string> GetNuGetIds() => [];
