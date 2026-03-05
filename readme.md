@@ -113,7 +113,7 @@ partial class Basic
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Basic.cs#Basic.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic.cs#Basic.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Basic.cs%23Basic.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Basic.cs#Basic.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -169,7 +169,7 @@ partial class Inherited
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Inherited.cs#Inherited.g.verified.cs#L1-L21' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherited.cs#Inherited.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Inherited.cs%23Inherited.g.verified.cs#L1-L21' title='Snippet source file'>snippet source</a> | <a href='#snippet-Inherited.cs#Inherited.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -226,7 +226,7 @@ partial class Properties
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Properties.cs#Properties.g.verified.cs#L1-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-Properties.cs#Properties.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Properties.cs%23Properties.g.verified.cs#L1-L26' title='Snippet source file'>snippet source</a> | <a href='#snippet-Properties.cs#Properties.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -278,7 +278,7 @@ partial class PostConstruct
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/PostConstruct.cs#PostConstruct.g.verified.cs#L1-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct.cs#PostConstruct.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstruct.cs%23PostConstruct.g.verified.cs#L1-L19' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstruct.cs#PostConstruct.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -332,7 +332,7 @@ partial class PostConstructWithParameter
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithParameter.cs#PostConstructWithParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameter.cs#PostConstructWithParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithParameter.cs%23PostConstructWithParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithParameter.cs#PostConstructWithParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -388,7 +388,7 @@ partial class PostConstructWithOutParameter
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithOutParameter.cs#PostConstructWithOutParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameter.cs#PostConstructWithOutParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithOutParameter.cs%23PostConstructWithOutParameter.g.verified.cs#L1-L22' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithOutParameter.cs#PostConstructWithOutParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -434,7 +434,7 @@ partial class PostConstructWithDefaultParameter
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithDefaultParameter.cs#PostConstructWithDefaultParameter.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithDefaultParameter.cs#PostConstructWithDefaultParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/PostConstructWithDefaultParameter.cs%23PostConstructWithDefaultParameter.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-PostConstructWithDefaultParameter.cs#PostConstructWithDefaultParameter.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -496,7 +496,7 @@ partial class Guarded
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Guarded.cs#Guarded.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guarded.cs#Guarded.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Guarded.cs%23Guarded.g.verified.cs#L1-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-Guarded.cs#Guarded.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -545,7 +545,7 @@ partial class Keyed
 	}
 }
 ```
-<sup><a href='/src/Tests/ReadmeExamples/Keyed.cs#Keyed.g.verified.cs#L1-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-Keyed.cs#Keyed.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/ReadmeExamples/Keyed.cs%23Keyed.g.verified.cs#L1-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-Keyed.cs#Keyed.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
@@ -632,7 +632,7 @@ namespace AutoCtor
 }
 #endif
 ```
-<sup><a href='/src/Tests/GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs#L1-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/GeneratedAttributeTests.cs%23AutoConstructAttribute.g.verified.cs#L1-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>
