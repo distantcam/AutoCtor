@@ -12,10 +12,10 @@ jobs:
         roslyn: ["3.11", "4.0", "4.4"]
     steps:
       - name: 🛒 Check-out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 📐 Setup .NET Core SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           global-json-file: src/global.json
 
