@@ -13,3 +13,7 @@ updates:
         patterns:
           - "TUnit"
           - "Verify.TUnit"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
