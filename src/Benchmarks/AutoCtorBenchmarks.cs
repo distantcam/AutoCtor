@@ -30,13 +30,16 @@ public class AutoCtorBenchmarks
     [Params(1, 100, 500, 1000)]
     public int FileCount { get; set; }
 
+    [Params(1, 5, 10)]
+    public int FieldCount { get; set; }
+
     [GlobalSetup]
     public void Setup()
     {
         _compilation = CSharpCompilation.Create(
             "BenchmarkAssembly",
             Enumerable.Range(0, FileCount)
-                .Select(i => CSharpSyntaxTree.ParseText(BuildCode(i)))
+                .Select(i => CSharpSyntaxTree.ParseText(BuildCode(i, FieldCount)))
                 .ToArray(),
             s_references,
             new CSharpCompilationOptions(
@@ -66,15 +69,27 @@ public class AutoCtorBenchmarks
             parseOptions: CSharpParseOptions.Default);
     }
 
-    private static string BuildCode(int fileIndex)
+    private static string BuildCode(int fileIndex, int fieldCount)
     {
+        var interfaces = string.Join(
+            "\n",
+            Enumerable.Range(1, fieldCount)
+                .Select(i => $"public interface IService{fileIndex}_{i} {{ }}"));
+
+        var fields = string.Join(
+            "\n",
+            Enumerable.Range(1, fieldCount)
+                .Select(i => $"    private readonly IService{fileIndex}_{i} _service{i};"));
+
         return $$"""
             using AutoCtor;
+
+            {{interfaces}}
 
             [AutoConstruct]
             public partial class TestService{{fileIndex}}
             {
-                private readonly object _dependency;
+            {{fields}}
             }
             """;
     }
