@@ -22,15 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AutoCtor.Roslyn3.11\AutoCtor.Roslyn3.11.csproj"
-                      PrivateAssets="All" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\AutoCtor.Roslyn4.0\AutoCtor.Roslyn4.0.csproj"
-                      PrivateAssets="All" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\AutoCtor.Roslyn4.4\AutoCtor.Roslyn4.4.csproj"
-                      PrivateAssets="All" ReferenceOutputAssembly="false" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="$(ArtifactsPath)\bin\AutoCtor.Roslyn3.11\$(ArtifactsPivots)\AutoCtor.dll"
           Pack="true" PackagePath="analyzers/dotnet/roslyn3.11/cs" Visible="false"/>
 
