@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>AutoCtor</RootNamespace>
     <IsPackable>true</IsPackable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,15 +19,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AutoCtor.Roslyn3.11\AutoCtor.Roslyn3.11.csproj"
-                      PrivateAssets="All" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\AutoCtor.Roslyn4.0\AutoCtor.Roslyn4.0.csproj"
-                      PrivateAssets="All" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\AutoCtor.Roslyn4.4\AutoCtor.Roslyn4.4.csproj"
-                      PrivateAssets="All" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
