@@ -1,4 +1,8 @@
 ﻿using AutoCtor.Benchmarks;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-BenchmarkRunner.Run<AutoCtorBenchmarks>(args: args);
+var config = ManualConfig.Create(DefaultConfig.Instance)
+    .WithOptions(ConfigOptions.DisableOptimizationsValidator);
+
+BenchmarkRunner.Run<AutoCtorBenchmarks>(config, args);
