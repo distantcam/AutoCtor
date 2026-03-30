@@ -2,27 +2,14 @@
 using BenchmarkDotNet.Attributes;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Testing;
 
 namespace AutoCtor.Benchmarks;
 
 [MemoryDiagnoser]
 public class AutoCtorBenchmarks
 {
-    private static readonly MetadataReference[] s_references;
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Performance", "CA1810:Initialize reference type static fields inline",
-        Justification = "Requires Path.GetDirectoryName which cannot be used inline.")]
-    static AutoCtorBenchmarks()
-    {
-        var runtimeDir = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
-        s_references =
-        [
-            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-            MetadataReference.CreateFromFile(Path.Combine(runtimeDir, "System.Runtime.dll")),
-            MetadataReference.CreateFromFile(typeof(AutoConstructAttribute).Assembly.Location),
-        ];
-    }
+    private static IReadOnlyList<MetadataReference>? s_references;
 
     private CSharpCompilation _compilation = null!;
     private GeneratorDriver _warmDriver = null!;
@@ -34,8 +21,13 @@ public class AutoCtorBenchmarks
     public int FieldCount { get; set; }
 
     [GlobalSetup]
-    public void Setup()
+    public async Task Setup()
     {
+        s_references ??= (await ReferenceAssemblies.NetStandard.NetStandard20
+            .ResolveAsync(LanguageNames.CSharp, CancellationToken.None)
+            .ConfigureAwait(false))
+            .Add(MetadataReference.CreateFromFile(typeof(AutoConstructAttribute).Assembly.Location));
+
         _compilation = CSharpCompilation.Create(
             "BenchmarkAssembly",
             Enumerable.Range(0, FileCount)
