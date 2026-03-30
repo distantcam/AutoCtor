@@ -14,10 +14,10 @@ public class AutoCtorBenchmarks
     private CSharpCompilation _compilation = null!;
     private GeneratorDriver _warmDriver = null!;
 
-    [Params(1, 100, 500, 1000)]
+    [Params(100, 500, 1000)]
     public int FileCount { get; set; }
 
-    [Params(1, 5, 10)]
+    [Params(5, 10)]
     public int FieldCount { get; set; }
 
     [GlobalSetup]
