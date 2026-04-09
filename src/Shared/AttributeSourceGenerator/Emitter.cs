@@ -43,6 +43,15 @@ public partial class AttributeSourceGenerator
                 source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]");
                 source.AppendLine("internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute");
                 source.StartBlock().Dispose();
+
+                source.AddGeneratedAttributes(AttributeTargets.Class);
+                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property | global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]");
+                source.AppendLine("internal sealed class AutoKeyedServiceAttribute : global::System.Attribute");
+                using (source.StartBlock())
+                {
+                    source.AppendLine("public object Key { get; }");
+                    source.AppendLine("public AutoKeyedServiceAttribute(object key) => Key = key;");
+                }
             }
             source.AppendLine("#endif");
 

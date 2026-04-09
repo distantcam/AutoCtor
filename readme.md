@@ -629,10 +629,20 @@ namespace AutoCtor
 	internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute
 	{
 	}
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property | global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+	internal sealed class AutoKeyedServiceAttribute : global::System.Attribute
+	{
+		public object Key { get; }
+		public AutoKeyedServiceAttribute(object key) => Key = key;
+	}
 }
 #endif
 ```
-<sup><a href='/src/Tests/GeneratedAttributeTests.cs%23AutoConstructAttribute.g.verified.cs#L1-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/GeneratedAttributeTests.cs%23AutoConstructAttribute.g.verified.cs#L1-L57' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>

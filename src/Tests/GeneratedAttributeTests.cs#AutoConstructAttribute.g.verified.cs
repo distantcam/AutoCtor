@@ -43,5 +43,15 @@ namespace AutoCtor
 	internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute
 	{
 	}
+	[global::System.Runtime.CompilerServices.CompilerGenerated]
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCode]
+	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property | global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+	internal sealed class AutoKeyedServiceAttribute : global::System.Attribute
+	{
+		public object Key { get; }
+		public AutoKeyedServiceAttribute(object key) => Key = key;
+	}
 }
 #endif
