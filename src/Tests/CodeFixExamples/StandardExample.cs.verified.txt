@@ -1,0 +1,20 @@
+﻿// Before: 
+
+public class StandardExample
+{
+    private readonly string _value;
+
+    public StandardExample(string value)
+    {
+        _value = value;
+    }
+}
+
+
+// After: 
+
+[AutoConstruct]
+public partial class StandardExample
+{
+    private readonly string _value;
+}

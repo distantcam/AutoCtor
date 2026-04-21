@@ -31,6 +31,11 @@
     <None Include="$(ArtifactsPath)\bin\AutoCtor.Roslyn4.4\$(ArtifactsPivots)\AutoCtor.dll"
           Pack="true" PackagePath="analyzers/dotnet/roslyn4.4/cs" Visible="false"/>
 
+
+    <None Include="$(ArtifactsPath)\bin\AutoCtor.CodeFixes\$(ArtifactsPivots)\AutoCtor.CodeFixes.dll"
+          Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+
+
     <None Include="$(ProjectDir)..\..\readme.nuget.md"
           Pack="true" PackagePath="\readme.md" Visible="false" />
     <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.props"

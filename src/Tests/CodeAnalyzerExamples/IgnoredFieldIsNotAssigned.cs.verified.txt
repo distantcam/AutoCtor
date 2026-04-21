@@ -1,0 +1,22 @@
+﻿[
+  {
+    Location: /*
+
+    public IgnoredFieldIsNotAssigned(string value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    {
+*/
+ : (8,11)-(8,36),
+    Message: Constructor for 'IgnoredFieldIsNotAssigned' can be replaced with [AutoConstruct],
+    Severity: Info,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: ACTR007,
+      Title: Use [AutoConstruct] instead of manual constructor,
+      MessageFormat: Constructor for '{0}' can be replaced with [AutoConstruct],
+      Category: AutoCtor,
+      DefaultSeverity: Info,
+      IsEnabledByDefault: true
+    }
+  }
+]
