@@ -52,9 +52,8 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
         if (ctorDeclaration.Parent is not TypeDeclarationSyntax typeDeclaration)
             return document;
 
-
         // Remove the constructor from the type
-        var newType = typeDeclaration.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepNoTrivia)!;
+        var newType = typeDeclaration.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
 
         // Add partial modifier if not already present
         if (!newType.Modifiers.Any(SyntaxKind.PartialKeyword))

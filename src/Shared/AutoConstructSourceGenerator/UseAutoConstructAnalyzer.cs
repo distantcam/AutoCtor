@@ -69,6 +69,10 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
     {
         location = Location.None;
 
+        // Not public
+        if (ctor.DeclaredAccessibility != Accessibility.Public)
+            return false;
+
         // No attributes on constructor
         if (ctor.GetAttributes().Any())
             return false;

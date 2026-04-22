@@ -1,0 +1,27 @@
+﻿// Before: 
+
+public class Region
+{
+    private readonly string _value;
+
+    #region Constructors
+    public Region(string value)
+    {
+        _value = value;
+    }
+    #endregion
+}
+
+
+// After: 
+
+using AutoCtor;
+
+[AutoConstruct]
+public partial class Region
+{
+    private readonly string _value;
+
+    #region Constructors
+    #endregion
+}
