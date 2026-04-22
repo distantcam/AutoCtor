@@ -1,12 +1,12 @@
 ﻿// Before: 
 
-using System;
+using AutoCtor;
 
-public class StandardExample
+public class ExistingUsingAutoCtor
 {
     private readonly string _value;
 
-    public StandardExample(string value)
+    public ExistingUsingAutoCtor(string value)
     {
         _value = value;
     }
@@ -15,11 +15,10 @@ public class StandardExample
 
 // After: 
 
-using System;
 using AutoCtor;
 
 [AutoConstruct]
-public partial class StandardExample
+public partial class ExistingUsingAutoCtor
 {
     private readonly string _value;
 }

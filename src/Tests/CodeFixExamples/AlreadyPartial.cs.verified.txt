@@ -13,6 +13,8 @@ public partial class AlreadyPartial
 
 // After: 
 
+using AutoCtor;
+
 [AutoConstruct]
 public partial class AlreadyPartial
 {

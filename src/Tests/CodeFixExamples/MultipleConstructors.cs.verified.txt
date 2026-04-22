@@ -18,6 +18,8 @@ public class MultipleConstructors
 
 // After: 
 
+using AutoCtor;
+
 [AutoConstruct]
 public partial class MultipleConstructors
 {

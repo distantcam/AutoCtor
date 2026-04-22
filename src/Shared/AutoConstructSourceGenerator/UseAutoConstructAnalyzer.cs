@@ -82,6 +82,9 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
         if (ctorSyntax.Body is null)
             return false;
 
+        if (ctorSyntax.Body.Statements.Count == 0)
+            return false;
+
         var assignedMembers = new Dictionary<ISymbol, string>(SymbolEqualityComparer.Default);
 
         // Every statement must be a qualifying assignment
