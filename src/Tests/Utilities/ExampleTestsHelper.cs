@@ -35,7 +35,7 @@ internal static class ExampleTestsHelper
             .Where(e => !e.Contains(".g.", StringComparison.InvariantCulture));
     }
 
-    internal class CompilationBuilderFactoryBase<TAssemblyReference> : CompilationBuilderFactoryBase
+    internal class CompilationBuilderFactory<TAssemblyReference> : CompilationBuilderFactory
     {
         public override async Task InitializeAsync()
         {
@@ -44,7 +44,7 @@ internal static class ExampleTestsHelper
         }
     }
 
-    internal class CompilationBuilderFactoryBase : IAsyncInitializer
+    internal class CompilationBuilderFactory : IAsyncInitializer
     {
         public CompilationBuilder Builder { get; protected set; } = null!;
 

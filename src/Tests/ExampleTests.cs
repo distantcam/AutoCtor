@@ -93,7 +93,7 @@ internal sealed class ExampleTests
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Performance", "CA1812:Avoid uninstantiated internal classes",
         Justification = "Instantiated in generated code.")]
-    internal sealed class CompilationBuilderFactory : CompilationBuilderFactoryBase<AutoConstructAttribute>
+    internal sealed class CompilationBuilderFactory : CompilationBuilderFactory<AutoConstructAttribute>
     {
         protected override IEnumerable<string> GetNuGetIds() => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
     }

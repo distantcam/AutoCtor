@@ -1,4 +1,6 @@
-﻿public class ConstructorAssignsIgnoredField
+﻿using AutoCtor;
+
+public class ConstructorAssignsIgnoredField
 {
     [AutoConstructIgnore]
     private readonly string _ignored;

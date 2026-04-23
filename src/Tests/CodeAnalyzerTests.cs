@@ -8,8 +8,8 @@ internal sealed class CodeAnalyzerTests
     [CombinedDataSources]
     public async Task CheckDiagnostics(
         [MethodDataSource(nameof(GetExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<CompilationBuilderFactoryBase<AutoConstructAttribute>>(Shared = SharedType.PerTestSession)]
-        CompilationBuilderFactoryBase builderFactory)
+        [ClassDataSource<CompilationBuilderFactory<AutoConstructAttribute>>(Shared = SharedType.PerTestSession)]
+        CompilationBuilderFactory builderFactory)
     {
         var builder = builderFactory.Create(theoryData);
         var compilation = builder.Build(nameof(CodeAnalyzerTests));
@@ -19,7 +19,8 @@ internal sealed class CodeAnalyzerTests
         var diagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync(TestHelper.CancellationToken)
             .ConfigureAwait(false);
 
-        await Verify(diagnostics.Where(d => d.Id == "ACTR007"))
+        await Verify(diagnostics
+                .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)))
             .UseDirectory(theoryData.VerifiedDirectory)
             .UseTypeName(theoryData.Name)
             .UseMethodName("cs")
@@ -31,7 +32,13 @@ internal sealed class CodeAnalyzerTests
     {
         foreach (var codeAnalyzerExample in GetExamplesFiles("CodeAnalyzerExamples"))
         {
-            yield return () => new CodeFileTheoryData(codeAnalyzerExample);
+            yield return () => new CodeFileTheoryData(codeAnalyzerExample) with
+            {
+                IgnoredCompileDiagnostics = [
+                    "CS0414", "CS0169", // Ignore unused fields
+                    "CS8618" // Non-null field must be set after exiting constructor
+                ]
+            };
         }
     }
 }

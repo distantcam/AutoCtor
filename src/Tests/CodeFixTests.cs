@@ -13,8 +13,8 @@ internal sealed class CodeFixTests
     [CombinedDataSources]
     public async Task ApplyCodeFix(
         [MethodDataSource(nameof(GetExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<CompilationBuilderFactoryBase<AutoConstructAttribute>>(Shared = SharedType.PerTestSession)]
-        CompilationBuilderFactoryBase builderFactory)
+        [ClassDataSource<CompilationBuilderFactory<AutoConstructAttribute>>(Shared = SharedType.PerTestSession)]
+        CompilationBuilderFactory builderFactory)
     {
         var builder = builderFactory.Create(theoryData);
         var compilation = builder.Build(nameof(CodeFixTests));
