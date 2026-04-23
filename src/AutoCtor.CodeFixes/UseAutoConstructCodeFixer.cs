@@ -56,6 +56,13 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
 
     private sealed class AutoCtorRewriter(ConstructorDeclarationSyntax ctorDeclaration) : CSharpSyntaxRewriter
     {
+        // The target type and all containing types – the only types that need 'partial'.
+        private readonly ImmutableArray<BaseTypeDeclarationSyntax> _targetAndAncestors =
+            ctorDeclaration
+                .Ancestors()
+                .OfType<BaseTypeDeclarationSyntax>()
+                .ToImmutableArray();
+
         public override SyntaxNode? VisitCompilationUnit(CompilationUnitSyntax node)
         {
             node = (CompilationUnitSyntax)base.VisitCompilationUnit(node)!;
@@ -74,6 +81,8 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
 
         public override SyntaxNode? VisitClassDeclaration(ClassDeclarationSyntax node)
         {
+            var isTargetOrAncestor = _targetAndAncestors.Any(a => a.IsEquivalentTo(node));
+
             // Remove matching constructor
             // Add [AutoConstruct] attribute
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
@@ -83,8 +92,8 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
                 node = node.AddAttributeLists(attrList);
             }
 
-            // Add partial modifier if not already present
-            if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
+            // Add partial modifier only to the target type and its containing types
+            if (isTargetOrAncestor && !node.Modifiers.Any(SyntaxKind.PartialKeyword))
             {
                 var partialToken = CreatePartialToken(node.Modifiers.Count == 0);
                 node = node.AddModifiers(partialToken);
@@ -95,6 +104,8 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
 
         public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
         {
+            var isTargetOrAncestor = _targetAndAncestors.Any(a => a.IsEquivalentTo(node));
+
             // Remove matching constructor
             // Add [AutoConstruct] attribute
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
@@ -104,8 +115,8 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
                 node = node.AddAttributeLists(attrList);
             }
 
-            // Add partial modifier if not already present
-            if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
+            // Add partial modifier only to the target type and its containing types
+            if (isTargetOrAncestor && !node.Modifiers.Any(SyntaxKind.PartialKeyword))
             {
                 var partialToken = CreatePartialToken(node.Modifiers.Count == 0);
                 node = node.AddModifiers(partialToken);
@@ -116,6 +127,8 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
 
         public override SyntaxNode? VisitRecordDeclaration(RecordDeclarationSyntax node)
         {
+            var isTargetOrAncestor = _targetAndAncestors.Any(a => a.IsEquivalentTo(node));
+
             // Remove matching constructor
             // Add [AutoConstruct] attribute
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
@@ -125,8 +138,8 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
                 node = node.AddAttributeLists(attrList);
             }
 
-            // Add partial modifier if not already present
-            if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
+            // Add partial modifier only to the target type and its containing types
+            if (isTargetOrAncestor && !node.Modifiers.Any(SyntaxKind.PartialKeyword))
             {
                 var partialToken = CreatePartialToken(node.Modifiers.Count == 0);
                 node = node.AddModifiers(partialToken);
