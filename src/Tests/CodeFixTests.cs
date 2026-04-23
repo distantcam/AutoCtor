@@ -37,20 +37,21 @@ internal sealed class CodeFixTests
             string.Join(Environment.NewLine, theoryData.Codes));
         workspace.TryApplyChanges(solution);
 
-        var document = workspace.CurrentSolution.GetDocument(documentId)!;
         var fixer = new UseAutoConstructCodeFixer();
 
         foreach (var diagnostic in diagnostics)
         {
+            var currentDocument = workspace.CurrentSolution.GetDocument(documentId)!;
             var actions = new List<CodeAction>();
             var fixContext = new CodeFixContext(
-                document,
-                diagnostics[0],
+                currentDocument,
+                diagnostic,
                 (action, _) => actions.Add(action),
                 TestHelper.CancellationToken);
 
             await fixer.RegisterCodeFixesAsync(fixContext).ConfigureAwait(false);
 
+            await Assert.That(actions.Count).IsGreaterThan(0);
             var operations = await actions[0].GetOperationsAsync(TestHelper.CancellationToken)
                 .ConfigureAwait(false);
             var applyOp = operations.OfType<ApplyChangesOperation>().First();
