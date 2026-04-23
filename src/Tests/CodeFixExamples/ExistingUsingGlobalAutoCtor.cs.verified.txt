@@ -1,0 +1,24 @@
+﻿// Before: 
+
+using global::AutoCtor;
+
+public class ExistingUsingGlobalAutoCtor
+{
+    private readonly string _value;
+
+    public ExistingUsingGlobalAutoCtor(string value)
+    {
+        _value = value;
+    }
+}
+
+
+// After: 
+
+using global::AutoCtor;
+
+[AutoConstruct]
+public partial class ExistingUsingGlobalAutoCtor
+{
+    private readonly string _value;
+}

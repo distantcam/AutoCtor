@@ -2,11 +2,11 @@
 
 public class Nested
 {
-    public class Child
+    class NoDeclaredVisibility
     {
         private readonly string _value;
 
-        public Child(string value)
+        public NoDeclaredVisibility(string value)
         {
             _value = value;
         }
@@ -21,7 +21,7 @@ using AutoCtor;
 public partial class Nested
 {
     [AutoConstruct]
-    public partial class Child
+    partial class NoDeclaredVisibility
     {
         private readonly string _value;
     }

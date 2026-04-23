@@ -61,7 +61,8 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             node = (CompilationUnitSyntax)base.VisitCompilationUnit(node)!;
 
             // Add using AutoCtor;
-            if (node.Usings.All(u => u.Name is not IdentifierNameSyntax { Identifier.Text: "AutoCtor" }))
+            if (!node.Usings.Any(u => u.Name is IdentifierNameSyntax { Identifier.Text: "AutoCtor" }
+                || u.Name is AliasQualifiedNameSyntax { Name.Identifier.Text: "AutoCtor" }))
             {
                 var usingName = IdentifierName("AutoCtor");
                 var usingDirective = UsingDirective(usingName);
@@ -77,7 +78,7 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             // Add [AutoConstruct] attribute
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
             {
-                node = node.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
+                node = RemoveCtor(node);
                 var attrList = CreateAutoConstructAttributeList();
                 node = node.AddAttributeLists(attrList);
             }
@@ -85,7 +86,7 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             // Add partial modifier if not already present
             if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
             {
-                var partialToken = CreatePartialToken();
+                var partialToken = CreatePartialToken(node.Modifiers.Count == 0);
                 node = node.AddModifiers(partialToken);
             }
 
@@ -98,7 +99,7 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             // Add [AutoConstruct] attribute
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
             {
-                node = node.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
+                node = RemoveCtor(node);
                 var attrList = CreateAutoConstructAttributeList();
                 node = node.AddAttributeLists(attrList);
             }
@@ -106,7 +107,7 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             // Add partial modifier if not already present
             if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
             {
-                var partialToken = CreatePartialToken();
+                var partialToken = CreatePartialToken(node.Modifiers.Count == 0);
                 node = node.AddModifiers(partialToken);
             }
 
@@ -119,7 +120,7 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             // Add [AutoConstruct] attribute
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
             {
-                node = node.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
+                node = RemoveCtor(node);
                 var attrList = CreateAutoConstructAttributeList();
                 node = node.AddAttributeLists(attrList);
             }
@@ -127,19 +128,25 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             // Add partial modifier if not already present
             if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
             {
-                var partialToken = CreatePartialToken();
+                var partialToken = CreatePartialToken(node.Modifiers.Count == 0);
                 node = node.AddModifiers(partialToken);
             }
 
             return base.VisitRecordDeclaration(node);
         }
 
-        private static SyntaxToken CreatePartialToken()
+        private TRoot RemoveCtor<TRoot>(TRoot node) where TRoot : SyntaxNode
+        {
+            var ctor = node.ChildNodes().First(ctor => ctor.IsEquivalentTo(ctorDeclaration));
+            return node.RemoveNode(ctor, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
+        }
+
+        private static SyntaxToken CreatePartialToken(bool noSpace)
         {
             return Token(
                 SyntaxTriviaList.Empty,
                 SyntaxKind.PartialKeyword,
-                SyntaxTriviaList.Create(Space));
+                noSpace ? SyntaxTriviaList.Empty : SyntaxTriviaList.Create(Space));
         }
 
         private static AttributeListSyntax CreateAutoConstructAttributeList()
