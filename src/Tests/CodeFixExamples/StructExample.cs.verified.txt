@@ -1,0 +1,22 @@
+﻿// Before: 
+
+public struct StructExample
+{
+    private readonly string _value;
+
+    public StructExample(string value)
+    {
+        _value = value;
+    }
+}
+
+
+// After: 
+
+using AutoCtor;
+
+[AutoConstruct]
+public partial struct StructExample
+{
+    private readonly string _value;
+}

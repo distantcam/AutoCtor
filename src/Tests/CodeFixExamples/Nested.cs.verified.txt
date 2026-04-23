@@ -1,0 +1,33 @@
+﻿// Before: 
+
+public class Nested
+{
+    public class Child
+    {
+        private readonly string _value;
+
+        public Child(string value)
+        {
+            _value = value;
+        }
+    }
+}
+
+
+// After: 
+
+using AutoCtor;
+
+public partial class Nested
+{
+    [AutoConstruct]
+    public partial class Child
+    {
+        private readonly string _value;
+
+        public Child(string value)
+        {
+            _value = value;
+        }
+    }
+}

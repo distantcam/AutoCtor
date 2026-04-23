@@ -1,0 +1,39 @@
+﻿// Before: 
+
+public class MultipleNested
+{
+    public class Parent
+    {
+        public class Child
+        {
+            private readonly string _value;
+
+            public Child(string value)
+            {
+                _value = value;
+            }
+        }
+    }
+}
+
+
+// After: 
+
+using AutoCtor;
+
+public partial class MultipleNested
+{
+    public partial class Parent
+    {
+        [AutoConstruct]
+        public partial class Child
+        {
+            private readonly string _value;
+
+            public Child(string value)
+            {
+                _value = value;
+            }
+        }
+    }
+}

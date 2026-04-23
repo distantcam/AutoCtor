@@ -46,42 +46,108 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
     {
         var root = (CompilationUnitSyntax?)await document.GetSyntaxRootAsync(cancellationToken)
             .ConfigureAwait(false);
+
         if (root is null)
             return document;
 
-        if (ctorDeclaration.Parent is not TypeDeclarationSyntax typeDeclaration)
-            return document;
+        root = (CompilationUnitSyntax)new AutoCtorRewriter(ctorDeclaration).Visit(root);
+        return document.WithSyntaxRoot(root);
+    }
 
-        // Remove the constructor from the type
-        var newType = typeDeclaration.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
-
-        // Add partial modifier if not already present
-        if (!newType.Modifiers.Any(SyntaxKind.PartialKeyword))
+    private sealed class AutoCtorRewriter(ConstructorDeclarationSyntax ctorDeclaration) : CSharpSyntaxRewriter
+    {
+        public override SyntaxNode? VisitCompilationUnit(CompilationUnitSyntax node)
         {
-            var partialToken = Token(
+            node = (CompilationUnitSyntax)base.VisitCompilationUnit(node)!;
+
+            // Add using AutoCtor;
+            if (node.Usings.All(u => u.Name is not IdentifierNameSyntax { Identifier.Text: "AutoCtor" }))
+            {
+                var usingName = IdentifierName("AutoCtor");
+                var usingDirective = UsingDirective(usingName);
+                node = node.AddUsings(usingDirective);
+            }
+
+            return node;
+        }
+
+        public override SyntaxNode? VisitClassDeclaration(ClassDeclarationSyntax node)
+        {
+            // Remove matching constructor
+            // Add [AutoConstruct] attribute
+            if (node.IsEquivalentTo(ctorDeclaration.Parent))
+            {
+                node = node.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
+                var attrList = CreateAutoConstructAttributeList();
+                node = node.AddAttributeLists(attrList);
+            }
+
+            // Add partial modifier if not already present
+            if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
+            {
+                var partialToken = CreatePartialToken();
+                node = node.AddModifiers(partialToken);
+            }
+
+            return base.VisitClassDeclaration(node);
+        }
+
+        public override SyntaxNode? VisitStructDeclaration(StructDeclarationSyntax node)
+        {
+            // Remove matching constructor
+            // Add [AutoConstruct] attribute
+            if (node.IsEquivalentTo(ctorDeclaration.Parent))
+            {
+                node = node.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
+                var attrList = CreateAutoConstructAttributeList();
+                node = node.AddAttributeLists(attrList);
+            }
+
+            // Add partial modifier if not already present
+            if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
+            {
+                var partialToken = CreatePartialToken();
+                node = node.AddModifiers(partialToken);
+            }
+
+            return base.VisitStructDeclaration(node);
+        }
+
+        public override SyntaxNode? VisitRecordDeclaration(RecordDeclarationSyntax node)
+        {
+            // Remove matching constructor
+            // Add [AutoConstruct] attribute
+            if (node.IsEquivalentTo(ctorDeclaration.Parent))
+            {
+                node = node.RemoveNode(ctorDeclaration, SyntaxRemoveOptions.KeepUnbalancedDirectives)!;
+                var attrList = CreateAutoConstructAttributeList();
+                node = node.AddAttributeLists(attrList);
+            }
+
+            // Add partial modifier if not already present
+            if (!node.Modifiers.Any(SyntaxKind.PartialKeyword))
+            {
+                var partialToken = CreatePartialToken();
+                node = node.AddModifiers(partialToken);
+            }
+
+            return base.VisitRecordDeclaration(node);
+        }
+
+        private static SyntaxToken CreatePartialToken()
+        {
+            return Token(
                 SyntaxTriviaList.Empty,
                 SyntaxKind.PartialKeyword,
                 SyntaxTriviaList.Create(Space));
-            newType = newType.AddModifiers(partialToken);
         }
 
-        // Add [AutoConstruct] attribute list above the class declaration
-        var attrName = IdentifierName("AutoConstruct");
-        var attr = Attribute(attrName);
-        var attrList = AttributeList(SingletonSeparatedList(attr))
-            .WithTrailingTrivia(ElasticEndOfLine("\n"));
-        newType = newType.AddAttributeLists(attrList);
-
-        var newRoot = root.ReplaceNode(typeDeclaration, newType);
-
-        // Add using AutoCtor;
-        if (newRoot.Usings.All(u => u.Name is not IdentifierNameSyntax { Identifier.Text: "AutoCtor" }))
+        private static AttributeListSyntax CreateAutoConstructAttributeList()
         {
-            var usingName = IdentifierName("AutoCtor");
-            var usingDirective = UsingDirective(usingName);
-            newRoot = newRoot.AddUsings(usingDirective);
+            var attrName = IdentifierName("AutoConstruct");
+            var attr = Attribute(attrName);
+            return AttributeList(SingletonSeparatedList(attr))
+                .WithTrailingTrivia(ElasticEndOfLine("\n"));
         }
-
-        return document.WithSyntaxRoot(newRoot);
     }
 }
