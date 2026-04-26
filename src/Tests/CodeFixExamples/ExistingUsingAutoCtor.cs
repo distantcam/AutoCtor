@@ -1,4 +1,6 @@
-﻿using AutoCtor;
+﻿#pragma warning disable CS8019 // Unnecessary using directive.
+
+using AutoCtor;
 
 public class ExistingUsingAutoCtor
 {

@@ -1,5 +1,7 @@
 ﻿// Before: 
 
+#pragma warning disable CS8019 // Unnecessary using directive.
+
 using AutoCtor;
 
 public class ExistingUsingAutoCtor
@@ -14,6 +16,8 @@ public class ExistingUsingAutoCtor
 
 
 // After: 
+
+#pragma warning disable CS8019 // Unnecessary using directive.
 
 using AutoCtor;
 

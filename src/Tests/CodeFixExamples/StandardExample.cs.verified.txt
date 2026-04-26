@@ -1,7 +1,5 @@
 ﻿// Before: 
 
-using System;
-
 public class StandardExample
 {
     private readonly string _value;
@@ -15,7 +13,6 @@ public class StandardExample
 
 // After: 
 
-using System;
 using AutoCtor;
 
 [AutoConstruct]

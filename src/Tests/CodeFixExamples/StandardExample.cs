@@ -1,6 +1,4 @@
-﻿using System;
-
-public class StandardExample
+﻿public class StandardExample
 {
     private readonly string _value;
 

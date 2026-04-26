@@ -1,4 +1,6 @@
-﻿using global::AutoCtor;
+﻿#pragma warning disable CS8019 // Unnecessary using directive.
+
+using global::AutoCtor;
 
 public class ExistingUsingGlobalAutoCtor
 {

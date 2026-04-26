@@ -83,11 +83,16 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
         if (ctorSyntax.Initializer is not null)
             return false;
 
-        if (ctorSyntax.Body is null)
+        // No empty constructors
+        if (ctorSyntax.Body is null || ctorSyntax.Body.Statements.Count == 0)
             return false;
 
-        if (ctorSyntax.Body.Statements.Count == 0)
-            return false;
+        // No parameter with explicit default
+        foreach (var param in ctor.Parameters)
+        {
+            if (param.HasExplicitDefaultValue)
+                return false;
+        }
 
         var assignedMembers = new Dictionary<ISymbol, string>(SymbolEqualityComparer.Default);
 

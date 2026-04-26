@@ -1,4 +1,5 @@
-﻿using AutoCtor;
+﻿using System.Collections.Immutable;
+using AutoCtor;
 using Microsoft.CodeAnalysis.Diagnostics;
 using static ExampleTestsHelper;
 
@@ -36,7 +37,8 @@ internal sealed class CodeAnalyzerTests
             {
                 IgnoredCompileDiagnostics = [
                     "CS0414", "CS0169", // Ignore unused fields
-                    "CS8618" // Non-null field must be set after exiting constructor
+                    "CS8618", // Non-null field must be set after exiting constructor
+                    "CS8019" // Unnecessary using directive
                 ]
             };
         }
