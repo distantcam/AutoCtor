@@ -13,6 +13,17 @@ public class ExistingAttribute
     }
 }
 
+[Serializable, Obsolete]
+public class ExistingAttributeList
+{
+    private readonly string _value;
+
+    public ExistingAttributeList(string value)
+    {
+        _value = value;
+    }
+}
+
 
 // After: 
 
@@ -22,6 +33,13 @@ using AutoCtor;
 [Serializable]
 [AutoConstruct]
 public partial class ExistingAttribute
+{
+    private readonly string _value;
+}
+
+[Serializable, Obsolete]
+[AutoConstruct]
+public partial class ExistingAttributeList
 {
     private readonly string _value;
 }

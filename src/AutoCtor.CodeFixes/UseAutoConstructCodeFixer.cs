@@ -44,7 +44,7 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
         ConstructorDeclarationSyntax ctorDeclaration,
         CancellationToken cancellationToken)
     {
-        var root = (CompilationUnitSyntax?)await document.GetSyntaxRootAsync(cancellationToken)
+        var root = await document.GetSyntaxRootAsync(cancellationToken)
             .ConfigureAwait(false);
 
         if (root is null)
@@ -54,7 +54,9 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
         return document.WithSyntaxRoot(root);
     }
 
-    private sealed class AutoCtorRewriter(ConstructorDeclarationSyntax ctorDeclaration) : CSharpSyntaxRewriter
+    private sealed class AutoCtorRewriter(
+        ConstructorDeclarationSyntax ctorDeclaration
+    ) : CSharpSyntaxRewriter
     {
         // The target type and all containing types – the only types that need 'partial'.
         private readonly ImmutableArray<BaseTypeDeclarationSyntax> _targetAndAncestors =
@@ -88,8 +90,11 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
             {
                 node = RemoveCtor(node);
-                var attrList = CreateAutoConstructAttributeList();
-                node = node.AddAttributeLists(attrList);
+                if (!HasAutoConstructAttribute(node.AttributeLists))
+                {
+                    var attrList = CreateAutoConstructAttributeList();
+                    node = node.AddAttributeLists(attrList);
+                }
             }
 
             // Add partial modifier only to the target type and its containing types
@@ -111,8 +116,11 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
             {
                 node = RemoveCtor(node);
-                var attrList = CreateAutoConstructAttributeList();
-                node = node.AddAttributeLists(attrList);
+                if (!HasAutoConstructAttribute(node.AttributeLists))
+                {
+                    var attrList = CreateAutoConstructAttributeList();
+                    node = node.AddAttributeLists(attrList);
+                }
             }
 
             // Add partial modifier only to the target type and its containing types
@@ -134,8 +142,11 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             if (node.IsEquivalentTo(ctorDeclaration.Parent))
             {
                 node = RemoveCtor(node);
-                var attrList = CreateAutoConstructAttributeList();
-                node = node.AddAttributeLists(attrList);
+                if (!HasAutoConstructAttribute(node.AttributeLists))
+                {
+                    var attrList = CreateAutoConstructAttributeList();
+                    node = node.AddAttributeLists(attrList);
+                }
             }
 
             // Add partial modifier only to the target type and its containing types
@@ -168,6 +179,28 @@ public sealed class UseAutoConstructCodeFixer : CodeFixProvider
             var attr = Attribute(attrName);
             return AttributeList(SingletonSeparatedList(attr))
                 .WithTrailingTrivia(ElasticEndOfLine("\n"));
+        }
+
+        private static bool HasAutoConstructAttribute(SyntaxList<AttributeListSyntax> attributeLists)
+        {
+            foreach (var attributeList in attributeLists)
+            {
+                foreach (var attribute in attributeList.Attributes)
+                {
+                    var simplifiedName = attribute.Name switch
+                    {
+                        IdentifierNameSyntax i => i,
+                        QualifiedNameSyntax q => q.Right,
+                        AliasQualifiedNameSyntax a => a.Name,
+                        _ => null
+                    };
+
+                    if (simplifiedName?.Identifier.Text == "AutoConstruct")
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }

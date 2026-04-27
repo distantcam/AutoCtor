@@ -18,12 +18,7 @@ internal sealed class CodeFixTests
     {
         var builder = builderFactory.Create(theoryData);
         var compilation = builder.Build(nameof(CodeFixTests));
-
-        var compilationWithAnalyzers = compilation.WithAnalyzers([new UseAutoConstructAnalyzer()]);
-
-        var allDiagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync(TestHelper.CancellationToken)
-            .ConfigureAwait(false);
-        var diagnostics = allDiagnostics.Where(d => d.Id == "ACTR007").ToImmutableArray();
+        var fixer = new UseAutoConstructCodeFixer();
 
         using var workspace = new AdhocWorkspace();
 
@@ -37,11 +32,22 @@ internal sealed class CodeFixTests
             string.Join(Environment.NewLine, theoryData.Codes));
         workspace.TryApplyChanges(solution);
 
-        var fixer = new UseAutoConstructCodeFixer();
-
-        foreach (var diagnostic in diagnostics)
+        while (true)
         {
             var currentDocument = workspace.CurrentSolution.GetDocument(documentId)!;
+            var currentCompilation = await currentDocument.Project
+                .GetCompilationAsync(TestHelper.CancellationToken)
+                .ConfigureAwait(false);
+            var withAnalyzers = currentCompilation!.WithAnalyzers([new UseAutoConstructAnalyzer()]);
+            var allDiagnostics = await withAnalyzers
+                .GetAllDiagnosticsAsync(TestHelper.CancellationToken)
+                .ConfigureAwait(false);
+            var diagnostics = allDiagnostics.Where(d => d.Id == "ACTR007").ToImmutableArray();
+
+            if (diagnostics.IsEmpty)
+                break;
+
+            var diagnostic = diagnostics[0];
             var actions = new List<CodeAction>();
             var fixContext = new CodeFixContext(
                 currentDocument,
@@ -49,13 +55,23 @@ internal sealed class CodeFixTests
                 (action, _) => actions.Add(action),
                 TestHelper.CancellationToken);
 
-            await fixer.RegisterCodeFixesAsync(fixContext).ConfigureAwait(false);
-
-            await Assert.That(actions.Count).IsGreaterThan(0);
-            var operations = await actions[0].GetOperationsAsync(TestHelper.CancellationToken)
+            await fixer.RegisterCodeFixesAsync(fixContext)
                 .ConfigureAwait(false);
-            var applyOp = operations.OfType<ApplyChangesOperation>().First();
-            applyOp.Apply(workspace, TestHelper.CancellationToken);
+
+            var changed = false;
+            foreach (var action in actions)
+            {
+                var operations = await action.GetOperationsAsync(TestHelper.CancellationToken)
+                    .ConfigureAwait(false);
+                foreach (var applyOp in operations.OfType<ApplyChangesOperation>())
+                {
+                    applyOp.Apply(workspace, TestHelper.CancellationToken);
+                    changed = true;
+                }
+            }
+
+            if (!changed)
+                break;
         }
 
         var newDocument = workspace.CurrentSolution.GetDocument(documentId)!;
