@@ -1,0 +1,10 @@
+﻿using AutoCtor;
+
+public partial class Nested
+{
+    [AutoConstruct]
+    partial class NoDeclaredVisibility
+    {
+        private readonly string _value;
+    }
+}

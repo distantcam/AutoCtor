@@ -1,0 +1,14 @@
+﻿using System;
+using AutoCtor;
+
+[AutoCtor.AutoConstruct]
+public partial class ExistingAutoConstructAttribute
+{
+    private readonly string _value;
+}
+
+[Serializable, AutoConstruct]
+public partial class ExistingAutoConstructAttributeList
+{
+    private readonly string _value;
+}

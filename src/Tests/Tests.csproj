@@ -33,10 +33,14 @@
 
   <ItemGroup>
     <Compile Remove="Examples\*.cs" />
+    <Compile Remove="CodeAnalyzerExamples\*.cs" />
+    <Compile Remove="CodeFixExamples\*.cs" />
     <Compile Remove="GuardExamples\*.cs" />
     <Compile Remove="LangExamples\*.cs" />
     <Compile Remove="ReadmeExamples\*.cs" />
     <None Include="Examples\*.cs" />
+    <None Include="CodeAnalyzerExamples\*.cs" />
+    <None Include="CodeFixExamples\*.cs" />
     <None Include="GuardExamples\*.cs" />
     <None Include="LangExamples\*.cs" />
     <None Include="ReadmeExamples\*.cs" />
@@ -57,6 +61,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AutoCtor.Attributes\AutoCtor.Attributes.csproj" />
     <ProjectReference Include="..\AutoCtor.Roslyn$(GeneratorVersion)\AutoCtor.Roslyn$(GeneratorVersion).csproj" />
+    <ProjectReference Include="..\AutoCtor.CodeFixes\AutoCtor.CodeFixes.csproj" />
   </ItemGroup>
 
 </Project>

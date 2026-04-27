@@ -76,4 +76,16 @@ internal static class Diagnostics
         category: "AutoCtor",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
+
+    /// <summary>
+    /// Id: ACTR007<br />
+    /// Title: Use [AutoConstruct] instead of manual constructor
+    /// </summary>
+    public static readonly DiagnosticDescriptor ACTR007_UseAutoConstruct = new DiagnosticDescriptor(
+        id: "ACTR007",
+        title: "Use [AutoConstruct] instead of manual constructor",
+        messageFormat: "Constructor for '{0}' can be replaced with [AutoConstruct]",
+        category: "AutoCtor",
+        DiagnosticSeverity.Info,
+        isEnabledByDefault: true);
 }

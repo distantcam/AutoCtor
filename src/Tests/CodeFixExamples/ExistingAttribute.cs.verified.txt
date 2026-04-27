@@ -1,0 +1,16 @@
+﻿using System;
+using AutoCtor;
+
+[Serializable]
+[AutoConstruct]
+public partial class ExistingAttribute
+{
+    private readonly string _value;
+}
+
+[Serializable, Obsolete]
+[AutoConstruct]
+public partial class ExistingAttributeList
+{
+    private readonly string _value;
+}

@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IsRoslynComponent>true</IsRoslynComponent>
+
+    <Version>0.0.0</Version>
+    <GitSha>abc</GitSha>
+    <PackageProjectUrl>https://github.com/distantcam/AutoCtor</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;RS2008</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;RS2008</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="GitSha" Value="$(GitSha)" />
+    <AssemblyMetadata Include="PackageProjectUrl" Value="$(PackageProjectUrl)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" VersionOverride="3.11.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\Constants\Diagnostics.cs" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Shared\*.md" />
+  </ItemGroup>
+
+</Project>

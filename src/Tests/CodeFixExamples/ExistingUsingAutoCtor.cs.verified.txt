@@ -1,0 +1,9 @@
+﻿#pragma warning disable CS8019 // Unnecessary using directive.
+
+using AutoCtor;
+
+[AutoConstruct]
+public partial class ExistingUsingAutoCtor
+{
+    private readonly string _value;
+}

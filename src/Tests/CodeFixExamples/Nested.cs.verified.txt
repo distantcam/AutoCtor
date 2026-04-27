@@ -1,0 +1,10 @@
+﻿using AutoCtor;
+
+public partial class Nested
+{
+    [AutoConstruct]
+    public partial class Child
+    {
+        private readonly string _value;
+    }
+}

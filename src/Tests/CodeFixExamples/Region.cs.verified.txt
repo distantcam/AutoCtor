@@ -1,0 +1,10 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial class Region
+{
+    private readonly string _value;
+
+    #region Constructors
+    #endregion
+}

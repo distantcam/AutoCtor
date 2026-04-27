@@ -1,0 +1,8 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial class MultipleMatchingCtors
+{
+    private readonly string _str;
+    private readonly int _num;
+}
