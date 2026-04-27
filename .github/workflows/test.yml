@@ -29,6 +29,13 @@ jobs:
       - name: 🔍 Enable problem matchers
         run: echo "::add-matcher::.github/matchers/dotnet.json"
 
+      - name: ⚙️ Enable Automated Test Report Artifact Upload
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env['ACTIONS_RUNTIME_TOKEN']);
+            core.exportVariable('ACTIONS_RESULTS_URL', process.env['ACTIONS_RESULTS_URL']);
+
       - name: 🛠️ Build code
         run: dotnet build --configuration Release
 
