@@ -78,8 +78,7 @@ internal sealed class CodeFixTests
         var newText = await newDocument.GetTextAsync(TestHelper.CancellationToken)
             .ConfigureAwait(false);
 
-        var verifyText = string.Join(Environment.NewLine,
-            ["// Before: ", "", .. theoryData.Codes, "", "// After: ", "", newText]);
+        var verifyText = string.Join(Environment.NewLine, newText);
 
         await Verify(verifyText)
             .UseDirectory(theoryData.VerifiedDirectory)

@@ -1,22 +1,4 @@
-﻿// Before: 
-
-public class Nested
-{
-    class NoDeclaredVisibility
-    {
-        private readonly string _value;
-
-        public NoDeclaredVisibility(string value)
-        {
-            _value = value;
-        }
-    }
-}
-
-
-// After: 
-
-using AutoCtor;
+﻿using AutoCtor;
 
 public partial class Nested
 {

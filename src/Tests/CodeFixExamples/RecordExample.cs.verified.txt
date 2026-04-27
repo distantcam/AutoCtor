@@ -1,19 +1,4 @@
-﻿// Before: 
-
-public record RecordExample
-{
-    private readonly string _value;
-
-    public RecordExample(string value)
-    {
-        _value = value;
-    }
-}
-
-
-// After: 
-
-using AutoCtor;
+﻿using AutoCtor;
 
 [AutoConstruct]
 public partial record RecordExample

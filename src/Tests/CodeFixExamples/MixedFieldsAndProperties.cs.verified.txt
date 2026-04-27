@@ -1,21 +1,4 @@
-﻿// Before: 
-
-public class MixedFieldsAndProperties
-{
-    private readonly string _value;
-    public int Count { get; }
-
-    public MixedFieldsAndProperties(string value, int count)
-    {
-        _value = value;
-        Count = count;
-    }
-}
-
-
-// After: 
-
-using AutoCtor;
+﻿using AutoCtor;
 
 [AutoConstruct]
 public partial class MixedFieldsAndProperties
