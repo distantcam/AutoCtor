@@ -26,10 +26,11 @@
     <File Path="src/nugetfiles/AutoCtor.targets" />
   </Folder>
   <Project Path="src/AutoCtor.Attributes/AutoCtor.Attributes.csproj" />
-  <Project Path="src/Benchmarks/AutoCtor.Benchmarks.csproj" />
+  <Project Path="src/AutoCtor.CodeFixes/AutoCtor.CodeFixes.csproj" Id="65bdebc0-1942-4d1f-a4d3-3e5f5ebd58c2" />
   <Project Path="src/AutoCtor.Roslyn3.11/AutoCtor.Roslyn3.11.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.0/AutoCtor.Roslyn4.0.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.4/AutoCtor.Roslyn4.4.csproj" />
+  <Project Path="src/Benchmarks/AutoCtor.Benchmarks.csproj" />
   <Project Path="src/Shared/Shared.csproj" />
   <Project Path="src/Tests/Tests.csproj" />
 </Solution>

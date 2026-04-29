@@ -86,5 +86,5 @@ public sealed partial class TheClass : BaseClass<object, int, string>{}
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Performance", "CA1812:Avoid uninstantiated internal classes",
         Justification = "Instantiated in generated code.")]
-    internal sealed class CompilationBuilderFactory : CompilationBuilderFactoryBase<AutoConstructAttribute>;
+    internal sealed class CompilationBuilderFactory : CompilationBuilderFactory<AutoConstructAttribute>;
 }

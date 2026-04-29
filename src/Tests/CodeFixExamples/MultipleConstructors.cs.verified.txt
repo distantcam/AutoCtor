@@ -1,0 +1,12 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial class MultipleConstructors
+{
+    private readonly string _value;
+
+    public MultipleConstructors()
+    {
+        _value = string.Empty;
+    }
+}

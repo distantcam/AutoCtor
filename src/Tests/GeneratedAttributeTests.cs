@@ -112,5 +112,5 @@ internal sealed class GeneratedAttributeTests
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Performance", "CA1812:Avoid uninstantiated internal classes",
         Justification = "Instantiated in generated code.")]
-    internal sealed class CompilationBuilderFactory : CompilationBuilderFactoryBase;
+    internal sealed class CompilationBuilderFactory : ExampleTestsHelper.CompilationBuilderFactory;
 }

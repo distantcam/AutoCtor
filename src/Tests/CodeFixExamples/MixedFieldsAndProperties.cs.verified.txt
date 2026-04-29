@@ -1,0 +1,8 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial class MixedFieldsAndProperties
+{
+    private readonly string _value;
+    public int Count { get; }
+}

@@ -35,16 +35,16 @@ internal static class ExampleTestsHelper
             .Where(e => !e.Contains(".g.", StringComparison.InvariantCulture));
     }
 
-    internal abstract class CompilationBuilderFactoryBase<TAttribute> : CompilationBuilderFactoryBase
+    internal class CompilationBuilderFactory<TAssemblyReference> : CompilationBuilderFactory
     {
         public override async Task InitializeAsync()
         {
             await base.InitializeAsync().ConfigureAwait(false);
-            Builder = Builder.AddAssemblyReference<TAttribute>();
+            Builder = Builder.AddAssemblyReference<TAssemblyReference>();
         }
     }
 
-    internal abstract class CompilationBuilderFactoryBase : IAsyncInitializer
+    internal class CompilationBuilderFactory : IAsyncInitializer
     {
         public CompilationBuilder Builder { get; protected set; } = null!;
 
