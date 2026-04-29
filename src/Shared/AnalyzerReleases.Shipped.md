@@ -28,3 +28,11 @@ ACTR006 | AutoCtor | Warning  | PostConstructOutParameterMustNotMatchKeyedField
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 ACTR003 | AutoCtor | Warning  | PostConstructMethodHasOptionalArgs
+
+## Release 3.0
+
+### New Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+ACTR007 | AutoCtor | Info     | UseAutoConstruct

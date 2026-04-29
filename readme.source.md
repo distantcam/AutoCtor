@@ -1,9 +1,9 @@
 # AutoCtor
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/distantcam/autoctor/build.yml)](https://github.com/distantcam/AutoCtor/actions/workflows/build.yml)
 [![NuGet Status](https://img.shields.io/nuget/v/AutoCtor.svg)](https://www.nuget.org/packages/AutoCtor/)
 [![Nuget Downloads](https://img.shields.io/nuget/dt/autoctor.svg)](https://www.nuget.org/packages/AutoCtor/)
-
+[![Build Status](https://img.shields.io/github/actions/workflow/status/distantcam/autoctor/build.yml)](https://github.com/distantcam/AutoCtor/actions/workflows/build.yml)
+![GitHub last commit](https://img.shields.io/github/last-commit/distantcam/autoctor)
 
 AutoCtor is a Roslyn Source Generator that will automatically create a constructor for your class for use with constructor Dependency Injection.
 
@@ -37,16 +37,16 @@ public partial class AService
 }
 ```
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=distantcam/autoctor&type=date&legend=top-left)](https://www.star-history.com/#distantcam/autoctor&type=date&legend=top-left)
-
 <a id='toc'></a>
 toc
 
 ## NuGet packages
 
 https://nuget.org/packages/AutoCtor/
+
+## Code Fix (new in 3.0)
+
+Starting in version 3.0, a new diagnostic has been introduced: `ACTR007 Use [AutoConstruct] instead of manual constructor`. This will appear on constructors that can be automatically converted to use `[AutoConstruct]`. A code fix is also available to perform the conversion automatically.
 
 ## Examples
 
@@ -222,6 +222,10 @@ If you wish to preserve these attributes in the build output, add the define con
 ```
 
 <a href='#toc' title='Back to Contents'>Back to Contents</a>
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=distantcam/autoctor&type=date&legend=top-left)](https://www.star-history.com/#distantcam/autoctor&type=date&legend=top-left)
+
 ## Stats
 
 ![Alt](https://repobeats.axiom.co/api/embed/8d02b2c004a5f958b4365abad3d4d1882dca200f.svg "Repobeats analytics image")
