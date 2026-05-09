@@ -22,6 +22,9 @@ public sealed class AddAutoConstructAnalyzer : DiagnosticAnalyzer
 
         context.RegisterCompilationStartAction(static compilationContext =>
         {
+            if (!Utilities.IsAutoConstructInCompilation(compilationContext.Compilation))
+                return;
+
             compilationContext.RegisterSyntaxNodeAction(AnalyzeType, SyntaxKind.ClassDeclaration);
             compilationContext.RegisterSyntaxNodeAction(AnalyzeType, SyntaxKind.StructDeclaration);
             compilationContext.RegisterSyntaxNodeAction(AnalyzeType, SyntaxKind.RecordDeclaration);
@@ -33,10 +36,10 @@ public sealed class AddAutoConstructAnalyzer : DiagnosticAnalyzer
     {
         var typeSyntax = (TypeDeclarationSyntax)context.Node;
 
-        if (Utilities.HasAutoConstructAttribute(typeSyntax))
+        if (context.SemanticModel.GetDeclaredSymbol(typeSyntax, context.CancellationToken) is not INamedTypeSymbol type)
             return;
 
-        if (context.SemanticModel.GetDeclaredSymbol(typeSyntax, context.CancellationToken) is not INamedTypeSymbol type)
+        if (Utilities.HasAttribute(type, AttributeNames.AutoConstruct))
             return;
 
         // no constructors
@@ -46,12 +49,11 @@ public sealed class AddAutoConstructAnalyzer : DiagnosticAnalyzer
         if (!Utilities.HasEligibleMember(type))
             return;
 
-        foreach (var location in type.Locations)
-        {
-            context.ReportDiagnostic(Diagnostic.Create(
-                Diagnostics.ACTR008_AddAutoConstruct,
-                location,
-                type.Name));
-        }
+        var location = typeSyntax.Identifier.GetLocation();
+
+        context.ReportDiagnostic(Diagnostic.Create(
+            Diagnostics.ACTR008_AddAutoConstruct,
+            location,
+            type.Name));
     }
 }

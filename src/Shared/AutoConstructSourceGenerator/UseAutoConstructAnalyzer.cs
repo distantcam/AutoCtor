@@ -22,6 +22,9 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
 
         context.RegisterCompilationStartAction(static compilationContext =>
         {
+            if (!Utilities.IsAutoConstructInCompilation(compilationContext.Compilation))
+                return;
+
             compilationContext.RegisterSyntaxNodeAction(
                 AnalyzeConstructor,
                 SyntaxKind.ConstructorDeclaration);
@@ -41,15 +44,15 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
         if (ctor.IsImplicitlyDeclared)
             return;
 
-        if (IsEligibleConstructor(ctor, ctorSyntax, type, context.SemanticModel))
-        {
-            var location = ctorSyntax.Identifier.GetLocation();
+        if (!IsEligibleConstructor(ctor, ctorSyntax, type, context.SemanticModel))
+            return;
 
-            context.ReportDiagnostic(Diagnostic.Create(
-                Diagnostics.ACTR007_UseAutoConstruct,
-                location,
-                type.Name));
-        }
+        var location = ctorSyntax.Identifier.GetLocation();
+
+        context.ReportDiagnostic(Diagnostic.Create(
+            Diagnostics.ACTR007_UseAutoConstruct,
+            location,
+            type.Name));
     }
 
     private static bool IsEligibleConstructor(

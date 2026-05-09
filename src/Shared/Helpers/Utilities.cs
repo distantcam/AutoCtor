@@ -115,25 +115,13 @@ internal static class Utilities
         }
     }
 
-    public static bool HasAutoConstructAttribute(TypeDeclarationSyntax typeDeclaration)
+    public static bool HasAttribute(ISymbol? symbol, string attributeName)
     {
-        foreach (var attributeList in typeDeclaration.AttributeLists)
-        {
-            foreach (var attribute in attributeList.Attributes)
-            {
-                var simplifiedName = attribute.Name switch
-                {
-                    IdentifierNameSyntax i => i,
-                    QualifiedNameSyntax q => q.Right,
-                    AliasQualifiedNameSyntax a => a.Name,
-                    _ => null
-                };
+        return symbol != null && symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName);
+    }
 
-                if (simplifiedName?.Identifier.Text == "AutoConstruct")
-                    return true;
-            }
-        }
-
-        return false;
+    public static bool IsAutoConstructInCompilation(Compilation compilation)
+    {
+        return compilation.GetTypeByMetadataName(AttributeNames.AutoConstruct) is not null;
     }
 }

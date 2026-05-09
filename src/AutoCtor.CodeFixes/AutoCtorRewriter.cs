@@ -1,7 +1,7 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Immutable;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace AutoCtor.CodeFixes;
@@ -43,7 +43,7 @@ internal sealed class AutoCtorRewriter(
         if (node.IsEquivalentTo(typeDeclaration))
         {
             node = RemoveCtor(node);
-            if (!Utilities.HasAutoConstructAttribute(node))
+            if (!HasAutoConstructAttribute(node))
             {
                 var attrList = CreateAutoConstructAttributeList();
                 node = node.AddAttributeLists(attrList);
@@ -69,7 +69,7 @@ internal sealed class AutoCtorRewriter(
         if (node.IsEquivalentTo(typeDeclaration))
         {
             node = RemoveCtor(node);
-            if (!Utilities.HasAutoConstructAttribute(node))
+            if (!HasAutoConstructAttribute(node))
             {
                 var attrList = CreateAutoConstructAttributeList();
                 node = node.AddAttributeLists(attrList);
@@ -95,7 +95,7 @@ internal sealed class AutoCtorRewriter(
         if (node.IsEquivalentTo(typeDeclaration))
         {
             node = RemoveCtor(node);
-            if (!Utilities.HasAutoConstructAttribute(node))
+            if (!HasAutoConstructAttribute(node))
             {
                 var attrList = CreateAutoConstructAttributeList();
                 node = node.AddAttributeLists(attrList);
@@ -134,5 +134,27 @@ internal sealed class AutoCtorRewriter(
         var attr = Attribute(attrName);
         return AttributeList(SingletonSeparatedList(attr))
             .WithTrailingTrivia(ElasticEndOfLine("\n"));
+    }
+
+    private static bool HasAutoConstructAttribute(TypeDeclarationSyntax typeDeclaration)
+    {
+        foreach (var attributeList in typeDeclaration.AttributeLists)
+        {
+            foreach (var attribute in attributeList.Attributes)
+            {
+                var simplifiedName = attribute.Name switch
+                {
+                    IdentifierNameSyntax i => i,
+                    QualifiedNameSyntax q => q.Right,
+                    AliasQualifiedNameSyntax a => a.Name,
+                    _ => null
+                };
+
+                if (simplifiedName?.Identifier.Text == "AutoConstruct")
+                    return true;
+            }
+        }
+
+        return false;
     }
 }
