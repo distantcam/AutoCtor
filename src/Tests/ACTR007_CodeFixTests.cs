@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using static ExampleTestsHelper;
 
-internal sealed class CodeFixTests
+internal sealed class ACTR007_CodeFixTests
 {
     [Test]
     [CombinedDataSources]
@@ -17,7 +17,7 @@ internal sealed class CodeFixTests
         CompilationBuilderFactory builderFactory)
     {
         var builder = builderFactory.Create(theoryData);
-        var compilation = builder.Build(nameof(CodeFixTests));
+        var compilation = builder.Build(nameof(ACTR007_CodeFixTests));
         var fixer = new UseAutoConstructCodeFixer();
 
         using var workspace = new AdhocWorkspace();
@@ -25,7 +25,7 @@ internal sealed class CodeFixTests
         var projectId = ProjectId.CreateNewId();
         var documentId = DocumentId.CreateNewId(projectId);
         var solution = workspace.CurrentSolution
-            .AddProject(projectId, nameof(CodeFixTests), nameof(CodeFixTests), LanguageNames.CSharp);
+            .AddProject(projectId, nameof(ACTR007_CodeFixTests), nameof(ACTR007_CodeFixTests), LanguageNames.CSharp);
         foreach (var reference in compilation.References)
             solution = solution.AddMetadataReference(projectId, reference);
         solution = solution.AddDocument(documentId, theoryData.ToString(),
@@ -90,7 +90,7 @@ internal sealed class CodeFixTests
 
     public static IEnumerable<Func<CodeFileTheoryData>> GetExamples()
     {
-        foreach (var codeFixExample in GetExamplesFiles("CodeFixExamples"))
+        foreach (var codeFixExample in GetExamplesFiles("ACTR007_CodeFixExamples"))
         {
             yield return () => new CodeFileTheoryData(codeFixExample);
         }

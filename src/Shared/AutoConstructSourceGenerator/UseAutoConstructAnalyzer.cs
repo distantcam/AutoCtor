@@ -22,18 +22,13 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
 
         context.RegisterCompilationStartAction(static compilationContext =>
         {
-            var autoConstructType = compilationContext.Compilation
-                .GetTypeByMetadataName(AttributeNames.AutoConstruct);
-            if (autoConstructType is null)
-                return;
-
             compilationContext.RegisterSyntaxNodeAction(
-                ctx => AnalyzeConstructor(ctx, autoConstructType),
+                AnalyzeConstructor,
                 SyntaxKind.ConstructorDeclaration);
         });
     }
 
-    private static void AnalyzeConstructor(SyntaxNodeAnalysisContext context, INamedTypeSymbol autoConstructType)
+    private static void AnalyzeConstructor(SyntaxNodeAnalysisContext context)
     {
         var ctorSyntax = (ConstructorDeclarationSyntax)context.Node;
 
@@ -46,8 +41,10 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
         if (ctor.IsImplicitlyDeclared)
             return;
 
-        if (IsEligibleConstructor(ctor, ctorSyntax, type, context.SemanticModel, out var location))
+        if (IsEligibleConstructor(ctor, ctorSyntax, type, context.SemanticModel))
         {
+            var location = ctorSyntax.Identifier.GetLocation();
+
             context.ReportDiagnostic(Diagnostic.Create(
                 Diagnostics.ACTR007_UseAutoConstruct,
                 location,
@@ -59,11 +56,8 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
         IMethodSymbol ctor,
         ConstructorDeclarationSyntax ctorSyntax,
         INamedTypeSymbol type,
-        SemanticModel semanticModel,
-        out Location location)
+        SemanticModel semanticModel)
     {
-        location = Location.None;
-
         // Not public
         if (ctor.DeclaredAccessibility != Accessibility.Public)
             return false;
@@ -71,8 +65,6 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
         // No attributes on constructor
         if (ctor.GetAttributes().Any())
             return false;
-
-        location = ctorSyntax.Identifier.GetLocation();
 
         // No initializer (: base() or : this())
         if (ctorSyntax.Initializer is not null)
@@ -92,7 +84,7 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
         var assignedMembers = new Dictionary<ISymbol, string>(SymbolEqualityComparer.Default);
 
         // Every eligible member in the type must be covered
-        var eligibleMembers = GetEligibleMembers(type);
+        var eligibleMembers = Utilities.GetEligibleMembers(type).ToList();
 
         // Every statement must be a qualifying assignment
         foreach (var statement in ctorSyntax.Body.Statements)
@@ -137,19 +129,5 @@ public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
         }
 
         return true;
-    }
-
-    private static List<ISymbol> GetEligibleMembers(INamedTypeSymbol type)
-    {
-        var result = new List<ISymbol>();
-        foreach (var member in type.GetMembers())
-        {
-            if (member is IFieldSymbol field && ModelUtilities.IsValidField(field))
-                result.Add(member);
-
-            if (member is IPropertySymbol property && ModelUtilities.IsValidProperty(property))
-                result.Add(member);
-        }
-        return result;
     }
 }

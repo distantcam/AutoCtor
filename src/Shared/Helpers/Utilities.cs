@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-internal static class ModelUtilities
+internal static class Utilities
 {
     public static string? GetServiceKey(ISymbol symbol)
     {
@@ -88,5 +88,52 @@ internal static class ModelUtilities
             return false;
 
         return true;
+    }
+
+    public static bool HasEligibleMember(INamedTypeSymbol type)
+    {
+        foreach (var member in type.GetMembers())
+        {
+            if (member is IFieldSymbol field && IsValidField(field))
+                return true;
+
+            if (member is IPropertySymbol property && IsValidProperty(property))
+                return true;
+        }
+        return false;
+    }
+
+    public static IEnumerable<ISymbol> GetEligibleMembers(INamedTypeSymbol type)
+    {
+        foreach (var member in type.GetMembers())
+        {
+            if (member is IFieldSymbol field && IsValidField(field))
+                yield return member;
+
+            if (member is IPropertySymbol property && IsValidProperty(property))
+                yield return member;
+        }
+    }
+
+    public static bool HasAutoConstructAttribute(TypeDeclarationSyntax typeDeclaration)
+    {
+        foreach (var attributeList in typeDeclaration.AttributeLists)
+        {
+            foreach (var attribute in attributeList.Attributes)
+            {
+                var simplifiedName = attribute.Name switch
+                {
+                    IdentifierNameSyntax i => i,
+                    QualifiedNameSyntax q => q.Right,
+                    AliasQualifiedNameSyntax a => a.Name,
+                    _ => null
+                };
+
+                if (simplifiedName?.Identifier.Text == "AutoConstruct")
+                    return true;
+            }
+        }
+
+        return false;
     }
 }

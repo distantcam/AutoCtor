@@ -1,0 +1,21 @@
+﻿[
+  {
+    Location: /*
+public class Standard
+             ^^^^^^^^
+{
+*/
+ : (0,13)-(0,21),
+    Message: [AutoConstruct] can be added to type 'Standard',
+    Severity: Info,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: ACTR008,
+      Title: Add [AutoConstruct] to type,
+      MessageFormat: [AutoConstruct] can be added to type '{0}',
+      Category: AutoCtor,
+      DefaultSeverity: Info,
+      IsEnabledByDefault: true
+    }
+  }
+]

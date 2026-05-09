@@ -88,4 +88,16 @@ internal static class Diagnostics
         category: "AutoCtor",
         DiagnosticSeverity.Info,
         isEnabledByDefault: true);
+
+    /// <summary>
+    /// Id: ACTR008<br />
+    /// Title: Add [AutoConstruct] to type
+    /// </summary>
+    public static readonly DiagnosticDescriptor ACTR008_AddAutoConstruct = new DiagnosticDescriptor(
+        id: "ACTR008",
+        title: "Add [AutoConstruct] to type",
+        messageFormat: "[AutoConstruct] can be added to type '{0}'",
+        category: "AutoCtor",
+        DiagnosticSeverity.Info,
+        isEnabledByDefault: true);
 }

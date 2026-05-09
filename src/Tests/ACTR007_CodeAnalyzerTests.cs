@@ -3,7 +3,7 @@ using AutoCtor;
 using Microsoft.CodeAnalysis.Diagnostics;
 using static ExampleTestsHelper;
 
-internal sealed class CodeAnalyzerTests
+internal sealed class ACTR007_CodeAnalyzerTests
 {
     [Test]
     [CombinedDataSources]
@@ -13,7 +13,7 @@ internal sealed class CodeAnalyzerTests
         CompilationBuilderFactory builderFactory)
     {
         var builder = builderFactory.Create(theoryData);
-        var compilation = builder.Build(nameof(CodeAnalyzerTests));
+        var compilation = builder.Build(nameof(ACTR007_CodeAnalyzerTests));
 
         var compilationWithAnalyzers = compilation.WithAnalyzers([new UseAutoConstructAnalyzer()]);
 
@@ -31,7 +31,7 @@ internal sealed class CodeAnalyzerTests
 
     public static IEnumerable<Func<CodeFileTheoryData>> GetExamples()
     {
-        foreach (var codeAnalyzerExample in GetExamplesFiles("CodeAnalyzerExamples"))
+        foreach (var codeAnalyzerExample in GetExamplesFiles("ACTR007_CodeAnalyzerExamples"))
         {
             yield return () => new CodeFileTheoryData(codeAnalyzerExample) with
             {
