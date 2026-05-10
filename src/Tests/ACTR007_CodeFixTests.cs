@@ -1,10 +1,6 @@
-﻿using System.Collections.Immutable;
-using AutoCtor;
+﻿using AutoCtor;
 using AutoCtor.CodeFixes;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Diagnostics;
+using Tests.Utilities;
 using static ExampleTestsHelper;
 
 internal sealed class ACTR007_CodeFixTests
@@ -18,67 +14,27 @@ internal sealed class ACTR007_CodeFixTests
     {
         var builder = builderFactory.Create(theoryData);
         var compilation = builder.Build(nameof(ACTR007_CodeFixTests));
-        var fixer = new UseAutoConstructCodeFixer();
 
-        using var workspace = new AdhocWorkspace();
+        var workspaceBuilder = new WorkspaceBuilder()
+            .WithName(nameof(ACTR007_CodeFixTests))
+            .WithReferences(compilation.References);
+        var documentId = workspaceBuilder.AddDocument(theoryData.ToString(), string.Join(Environment.NewLine, theoryData.Codes));
 
-        var projectId = ProjectId.CreateNewId();
-        var documentId = DocumentId.CreateNewId(projectId);
-        var solution = workspace.CurrentSolution
-            .AddProject(projectId, nameof(ACTR007_CodeFixTests), nameof(ACTR007_CodeFixTests), LanguageNames.CSharp);
-        foreach (var reference in compilation.References)
-            solution = solution.AddMetadataReference(projectId, reference);
-        solution = solution.AddDocument(documentId, theoryData.ToString(),
-            string.Join(Environment.NewLine, theoryData.Codes));
-        workspace.TryApplyChanges(solution);
+        using var workspace = workspaceBuilder.Build();
 
-        while (true)
-        {
-            var currentDocument = workspace.CurrentSolution.GetDocument(documentId)!;
-            var currentCompilation = await currentDocument.Project
-                .GetCompilationAsync(TestHelper.CancellationToken)
-                .ConfigureAwait(false);
-            var withAnalyzers = currentCompilation!.WithAnalyzers([new UseAutoConstructAnalyzer()]);
-            var allDiagnostics = await withAnalyzers
-                .GetAllDiagnosticsAsync(TestHelper.CancellationToken)
-                .ConfigureAwait(false);
-            var diagnostics = allDiagnostics.Where(d => d.Id == "ACTR007").ToImmutableArray();
-
-            if (diagnostics.IsEmpty)
-                break;
-
-            var diagnostic = diagnostics[0];
-            var actions = new List<CodeAction>();
-            var fixContext = new CodeFixContext(
-                currentDocument,
-                diagnostic,
-                (action, _) => actions.Add(action),
-                TestHelper.CancellationToken);
-
-            await fixer.RegisterCodeFixesAsync(fixContext)
-                .ConfigureAwait(false);
-
-            var changed = false;
-            foreach (var action in actions)
-            {
-                var operations = await action.GetOperationsAsync(TestHelper.CancellationToken)
-                    .ConfigureAwait(false);
-                foreach (var applyOp in operations.OfType<ApplyChangesOperation>())
-                {
-                    applyOp.Apply(workspace, TestHelper.CancellationToken);
-                    changed = true;
-                }
-            }
-
-            if (!changed)
-                break;
-        }
+        await TestHelper.ApplyCodeFix(
+            workspace,
+            documentId,
+            new UseAutoConstructAnalyzer(),
+            new UseAutoConstructCodeFixer(),
+            TestHelper.CancellationToken)
+            .ConfigureAwait(false);
 
         var newDocument = workspace.CurrentSolution.GetDocument(documentId)!;
         var newText = await newDocument.GetTextAsync(TestHelper.CancellationToken)
             .ConfigureAwait(false);
 
-        var verifyText = string.Join(Environment.NewLine, newText);
+        var verifyText = newText.ToString();
 
         await Verify(verifyText)
             .UseDirectory(theoryData.VerifiedDirectory)
