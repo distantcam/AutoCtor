@@ -1,0 +1,15 @@
+﻿using AutoCtor;
+
+namespace First
+{
+    [AutoConstruct]
+    public partial class MultipleNamespaces
+    {
+        private readonly string _value;
+    }
+}
+
+namespace Second
+{
+    public class Other { }
+}

@@ -1,0 +1,9 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+// Leading line comment.
+
+public partial class WithLeadingTrivia
+{
+    private readonly string _value;
+}

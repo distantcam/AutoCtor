@@ -1,0 +1,9 @@
+﻿using AutoCtor;
+
+namespace MyNs;
+
+[AutoConstruct]
+public partial class FileScopedNamespace
+{
+    private readonly string _value;
+}

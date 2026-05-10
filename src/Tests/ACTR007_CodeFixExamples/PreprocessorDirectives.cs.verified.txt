@@ -1,0 +1,10 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial class PreprocessorDirectives
+{
+    private readonly string _value;
+
+#if !DEBUG
+#endif
+}

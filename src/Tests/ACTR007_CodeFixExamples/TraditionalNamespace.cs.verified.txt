@@ -1,0 +1,10 @@
+﻿using AutoCtor;
+
+namespace MyNs
+{
+    [AutoConstruct]
+    public partial class TraditionalNamespace
+    {
+        private readonly string _value;
+    }
+}

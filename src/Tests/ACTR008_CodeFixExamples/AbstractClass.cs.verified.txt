@@ -1,0 +1,7 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public abstract partial class AbstractClass
+{
+    private readonly string _value;
+}

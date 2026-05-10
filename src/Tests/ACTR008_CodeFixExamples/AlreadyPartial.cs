@@ -1,0 +1,4 @@
+public partial class AlreadyPartial
+{
+    private readonly string _value;
+}

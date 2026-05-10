@@ -1,0 +1,7 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+internal partial class InternalClass
+{
+    private readonly string _value;
+}
