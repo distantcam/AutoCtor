@@ -1,0 +1,7 @@
+﻿using AC = AutoCtor;
+
+[AutoConstruct]
+public partial class AutoCtorAlias
+{
+    private readonly string _value;
+}

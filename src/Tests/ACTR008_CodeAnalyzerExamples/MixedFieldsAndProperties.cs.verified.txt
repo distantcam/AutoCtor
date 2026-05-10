@@ -1,0 +1,21 @@
+﻿[
+  {
+    Location: /*
+public class MixedFieldsAndProperties
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+{
+*/
+ : (0,13)-(0,37),
+    Message: [AutoConstruct] can be added to type 'MixedFieldsAndProperties',
+    Severity: Info,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: ACTR008,
+      Title: Add [AutoConstruct] to type,
+      MessageFormat: [AutoConstruct] can be added to type '{0}',
+      Category: AutoCtor,
+      DefaultSeverity: Info,
+      IsEnabledByDefault: true
+    }
+  }
+]

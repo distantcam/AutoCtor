@@ -1,0 +1,21 @@
+﻿[
+  {
+    Location: /*
+public record struct RecordStruct
+                     ^^^^^^^^^^^^
+{
+*/
+ : (0,21)-(0,33),
+    Message: [AutoConstruct] can be added to type 'RecordStruct',
+    Severity: Info,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: ACTR008,
+      Title: Add [AutoConstruct] to type,
+      MessageFormat: [AutoConstruct] can be added to type '{0}',
+      Category: AutoCtor,
+      DefaultSeverity: Info,
+      IsEnabledByDefault: true
+    }
+  }
+]

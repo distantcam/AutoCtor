@@ -1,0 +1,9 @@
+﻿using AutoCtor;
+
+namespace A.B.C;
+
+[AutoConstruct]
+public partial class NestedNamespace
+{
+    private readonly string _value;
+}

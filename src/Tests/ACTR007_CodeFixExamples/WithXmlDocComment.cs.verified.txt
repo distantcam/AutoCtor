@@ -1,0 +1,8 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+/// <summary>A class with documentation.</summary>
+public partial class WithXmlDocComment
+{
+    private readonly string _value;
+}

@@ -1,0 +1,7 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public sealed partial class SealedClass
+{
+    private readonly string _value;
+}

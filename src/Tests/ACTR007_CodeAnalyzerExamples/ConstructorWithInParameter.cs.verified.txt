@@ -1,0 +1,22 @@
+﻿[
+  {
+    Location: /*
+
+    public ConstructorWithInParameter(in int value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    {
+*/
+ : (4,11)-(4,37),
+    Message: Constructor for 'ConstructorWithInParameter' can be replaced with [AutoConstruct],
+    Severity: Info,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: ACTR007,
+      Title: Use [AutoConstruct] instead of manual constructor,
+      MessageFormat: Constructor for '{0}' can be replaced with [AutoConstruct],
+      Category: AutoCtor,
+      DefaultSeverity: Info,
+      IsEnabledByDefault: true
+    }
+  }
+]

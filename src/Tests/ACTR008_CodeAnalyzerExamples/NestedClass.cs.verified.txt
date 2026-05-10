@@ -1,0 +1,22 @@
+﻿[
+  {
+    Location: /*
+{
+    public class Inner
+                 ^^^^^
+    {
+*/
+ : (2,17)-(2,22),
+    Message: [AutoConstruct] can be added to type 'Inner',
+    Severity: Info,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: ACTR008,
+      Title: Add [AutoConstruct] to type,
+      MessageFormat: [AutoConstruct] can be added to type '{0}',
+      Category: AutoCtor,
+      DefaultSeverity: Info,
+      IsEnabledByDefault: true
+    }
+  }
+]

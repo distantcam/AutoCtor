@@ -1,0 +1,7 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial struct Struct
+{
+    private readonly string _value;
+}
