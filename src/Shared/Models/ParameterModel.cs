@@ -36,7 +36,7 @@ internal readonly record struct ParameterModel(
             RefKind: parameter.RefKind,
             Name: parameter.Name.EscapeKeywordIdentifier(),
             ErrorName: parameter.Name,
-            KeyedService: ModelUtilities.GetServiceKey(parameter),
+            KeyedService: Utilities.GetServiceKey(parameter),
             HasExplicitDefaultValue: parameter.HasExplicitDefaultValue,
             ExplicitDefaultValue: defaultValue,
             IsOutOrRef: parameter.RefKind == RefKind.Ref

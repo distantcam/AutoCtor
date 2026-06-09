@@ -1,0 +1,7 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial class Standard
+{
+    private readonly string _value;
+}

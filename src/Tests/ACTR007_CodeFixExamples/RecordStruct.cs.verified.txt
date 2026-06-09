@@ -1,0 +1,7 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial record struct RecordStruct
+{
+    private readonly string _value;
+}

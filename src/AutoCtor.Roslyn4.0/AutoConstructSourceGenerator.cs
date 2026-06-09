@@ -17,14 +17,14 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         var types = context.SyntaxProvider.CreateSyntaxProvider(
             GeneratorUtilities.IsTypeDeclarationWithAttributes,
             GeneratorUtilities.GetSymbol<INamedTypeSymbol>)
-        .Where(static x => GeneratorUtilities.HasAttribute(x, AttributeNames.AutoConstruct))
+        .Where(static x => Utilities.HasAttribute(x, AttributeNames.AutoConstruct))
         .Select(static (x, _) => TypeModel.Create(x!))
         .Collect();
 
         var postCtorMethods = context.SyntaxProvider.CreateSyntaxProvider(
             GeneratorUtilities.IsMethodDeclarationWithAttributes,
             GeneratorUtilities.GetSymbol<IMethodSymbol>)
-        .Where(static x => GeneratorUtilities.HasAttribute(x, AttributeNames.AutoPostConstruct))
+        .Where(static x => Utilities.HasAttribute(x, AttributeNames.AutoPostConstruct))
         .Select(static (x, _) => PostCtorModel.Create(x!))
         .Collect();
 

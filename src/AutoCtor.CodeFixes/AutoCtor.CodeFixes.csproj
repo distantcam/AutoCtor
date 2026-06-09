@@ -12,14 +12,6 @@
     <PackageProjectUrl>https://github.com/distantcam/AutoCtor</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;RS2008</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;RS2008</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
     <AssemblyMetadata Include="GitSha" Value="$(GitSha)" />
     <AssemblyMetadata Include="PackageProjectUrl" Value="$(PackageProjectUrl)" />
@@ -30,8 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\Constants\Diagnostics.cs" />
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Shared\*.md" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\Constants\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\Helpers\Utilities.cs" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\Shared\*.md" />
   </ItemGroup>
 
 </Project>

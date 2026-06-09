@@ -1,0 +1,41 @@
+﻿[
+  {
+    Location: /*
+public partial class PartialClassNoAttribute
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+{
+*/
+ : (0,21)-(0,44),
+    Message: [AutoConstruct] can be added to type 'PartialClassNoAttribute',
+    Severity: Info,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: ACTR008,
+      Title: Add [AutoConstruct] to type,
+      MessageFormat: [AutoConstruct] can be added to type '{0}',
+      Category: AutoCtor,
+      DefaultSeverity: Info,
+      IsEnabledByDefault: true
+    }
+  },
+  {
+    Location: /*
+
+public partial class PartialClassNoAttribute
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+{
+*/
+ : (5,21)-(5,44),
+    Message: [AutoConstruct] can be added to type 'PartialClassNoAttribute',
+    Severity: Info,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: ACTR008,
+      Title: Add [AutoConstruct] to type,
+      MessageFormat: [AutoConstruct] can be added to type '{0}',
+      Category: AutoCtor,
+      DefaultSeverity: Info,
+      IsEnabledByDefault: true
+    }
+  }
+]

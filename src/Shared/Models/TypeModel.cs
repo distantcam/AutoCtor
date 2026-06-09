@@ -124,7 +124,7 @@ internal readonly record struct TypeModel(
     {
         return new(members
             .OfType<IFieldSymbol>()
-            .Where(ModelUtilities.IsValidField)
+            .Where(Utilities.IsValidField)
             .Select(MemberModel.Create));
     }
 
@@ -132,7 +132,7 @@ internal readonly record struct TypeModel(
     {
         return new(members
             .OfType<IPropertySymbol>()
-            .Where(ModelUtilities.IsValidProperty)
+            .Where(Utilities.IsValidProperty)
             .Select(MemberModel.Create));
     }
 }

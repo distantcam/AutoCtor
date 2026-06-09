@@ -1,5 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
-using static ModelUtilities;
+using static Utilities;
 
 internal readonly record struct MemberModel(
     EquatableTypeSymbol Type,

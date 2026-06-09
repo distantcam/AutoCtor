@@ -1,0 +1,9 @@
+﻿using System;
+using AutoCtor;
+
+[Serializable]
+[AutoConstruct]
+public partial class WithExistingAttribute
+{
+    private readonly string _value;
+}

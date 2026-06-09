@@ -1,0 +1,7 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial record class RecordClass
+{
+    private readonly string _value;
+}

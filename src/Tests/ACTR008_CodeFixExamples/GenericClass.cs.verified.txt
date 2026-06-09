@@ -1,0 +1,7 @@
+﻿using AutoCtor;
+
+[AutoConstruct]
+public partial class GenericClass<T>
+{
+    private readonly T _value;
+}
