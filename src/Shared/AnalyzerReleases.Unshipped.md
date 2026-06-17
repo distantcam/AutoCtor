@@ -6,3 +6,4 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 ACTR008 | AutoCtor | Info     | AddAutoConstruct
+ACTR009 | AutoCtor | Warning  | PostConstructOutParameterMustMatchMember

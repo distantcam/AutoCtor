@@ -100,4 +100,16 @@ internal static class Diagnostics
         category: "AutoCtor",
         DiagnosticSeverity.Info,
         isEnabledByDefault: true);
+
+    /// <summary>
+    /// Id: ACTR009<br />
+    /// Title: Post construct out or ref parameter must match a field
+    /// </summary>
+    public static readonly DiagnosticDescriptor ACTR009_PostConstructOutParameterMustMatchMember = new DiagnosticDescriptor(
+        id: "ACTR009",
+        title: "Post construct out or ref parameter must match a field",
+        messageFormat: "The parameter '{0}' must match a field when used as a post construct out or ref parameter",
+        category: "AutoCtor",
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
 }
