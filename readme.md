@@ -49,7 +49,7 @@ public partial class AService
 ## Contents
 
   * [NuGet packages](#nuget-packages)
-  * [Code Fix (new in 3.0)](#code-fix-new-in-30)
+  * [Code Fixes (new in 3.0)](#code-fixes-new-in-30)
   * [Examples](#examples)
     * [Basic](#basic)
     * [Inherited](#inherited)
@@ -70,9 +70,11 @@ public partial class AService
 
 https://nuget.org/packages/AutoCtor/
 
-## Code Fix (new in 3.0)
+## Code Fixes (new in 3.0)
 
 Starting in version 3.0, a new diagnostic has been introduced: `ACTR007 Use [AutoConstruct] instead of manual constructor`. This will appear on constructors that can be automatically converted to use `[AutoConstruct]`. A code fix is also available to perform the conversion automatically.
+
+In 3.1 another code fix was added: `Add [AutoConstruct] to type`. This will add `[AutoConstruct]` to a type with no constructor and relevant fields. This is useful when working on a new type.
 
 ## Examples
 

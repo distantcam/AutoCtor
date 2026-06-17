@@ -36,3 +36,12 @@ ACTR003 | AutoCtor | Warning  | PostConstructMethodHasOptionalArgs
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 ACTR007 | AutoCtor | Info     | UseAutoConstruct
+
+## Release 3.1
+
+### New Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+ACTR008 | AutoCtor | Info     | AddAutoConstruct
+ACTR009 | AutoCtor | Warning  | PostConstructOutParameterMustMatchMember
