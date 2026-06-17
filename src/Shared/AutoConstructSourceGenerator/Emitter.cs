@@ -89,7 +89,7 @@ public partial class AutoConstructSourceGenerator
             IEnumerable<ParameterModel>? baseParameters,
             bool guards)
         {
-            var postCtorMethod = GetPostCtorMethod(context, markedPostCtorMethods);
+            var postCtorMethod = GetPostCtorMethod(context, type, markedPostCtorMethods);
 
             var parametersBuilder = new ParameterListBuilder(type.Fields, type.Properties);
             if (type.HasBaseType)
@@ -203,6 +203,7 @@ public partial class AutoConstructSourceGenerator
 
         private static PostCtorModel? GetPostCtorMethod(
             EmitterContext context,
+            TypeModel type,
             ImmutableArray<PostCtorModel> markedPostCtorMethods)
         {
             // ACTR001
@@ -219,32 +220,53 @@ public partial class AutoConstructSourceGenerator
                 return null;
 
             var method = markedPostCtorMethods[0];
+            var diagnosticReported = false;
 
             // ACTR002
             if (!method.ReturnsVoid)
             {
                 context.ReportDiagnostic(method, ACTR002_PostConstructMethodNotVoid);
-                return null;
+                diagnosticReported = true;
             }
 
             // ACTR004
             if (method.IsGenericMethod)
             {
                 context.ReportDiagnostic(method, ACTR004_PostConstructMethodCannotBeGeneric);
-                return null;
+                diagnosticReported = true;
             }
 
             foreach (var parameter in method.Parameters)
             {
+                if (!parameter.IsOutOrRef)
+                    continue;
+
+                var matchingMember = type.Fields
+                    .FirstOrDefault(m => m.Type == parameter.Type);
+
                 // ACTR005
-                if (parameter.IsOutOrRef && parameter.KeyedService != null)
+                if (parameter.KeyedService != null)
                 {
                     context.ReportDiagnostic(parameter, ACTR005_PostConstructOutParameterCannotBeKeyed);
-                    return null;
+                    diagnosticReported = true;
+                }
+
+                // ACTR006
+                if (matchingMember != default && matchingMember.KeyedService != null)
+                {
+                    context.ReportDiagnostic(matchingMember, ACTR006_PostConstructOutParameterMustNotMatchKeyedField);
+                    // legacy: diagnostic reported but emitter still uses the method
+                }
+
+                // ACTR009
+                if (matchingMember == default)
+                {
+                    context.ReportDiagnostic(parameter, ACTR009_PostConstructOutParameterMustMatchMember);
+                    diagnosticReported = true;
                 }
             }
 
-            return method;
+            return diagnosticReported ? null : method;
         }
     }
 }

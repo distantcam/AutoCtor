@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using AutoCtor;
 using Microsoft.CodeAnalysis;
 
 #if ROSLYN_3
@@ -40,8 +39,7 @@ internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnu
         foreach (var m in fields)
         {
             // ref/out from postctor
-            if (_postCtorParameters.Any(p => p.Type == m.Type
-                && (p.RefKind == RefKind.Ref || p.RefKind == RefKind.Out)))
+            if (_postCtorParameters.Any(p => p.IsOutOrRef && m.Type == p.Type))
                 continue;
 
             var p = ParameterModel.Create(m);
@@ -52,25 +50,22 @@ internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnu
         }
         foreach (var m in properties)
         {
+            // properties cannot be out parameters, so no need to do the same check as fields
+
             var p = ParameterModel.Create(m);
             GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
             parametersMap.Add(m, name);
         }
+
         foreach (var p in _postCtorParameters)
         {
-            var isOutOrRefParameter = p.RefKind == RefKind.Ref || p.RefKind == RefKind.Out;
-            var matchingField = fields.FirstOrDefault(m => isOutOrRefParameter && m.Type == p.Type);
+            var matchingField = p.IsOutOrRef
+                ? fields.FirstOrDefault(m => m.Type == p.Type)
+                : default;
             if (matchingField != default)
             {
-                // ACTR006
-                if (matchingField.KeyedService != null)
-                {
-                    context.ReportDiagnostic(matchingField,
-                        Diagnostics.ACTR006_PostConstructOutParameterMustNotMatchKeyedField);
-                }
-
                 postCtorParameters.Add(p.RefKind != RefKind.None
                     ? $"{p.RefKind.ToParameterPrefix()} {matchingField.IdentifierName}"
                     : matchingField.IdentifierName);
