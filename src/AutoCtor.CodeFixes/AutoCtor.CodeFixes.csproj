@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)..\Shared\Constants\*.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\Helpers\Utilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\Shared\Models\Utilities.cs" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\Shared\*.md" />
   </ItemGroup>
 

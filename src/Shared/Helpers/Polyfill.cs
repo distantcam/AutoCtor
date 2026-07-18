@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace System.Runtime.CompilerServices;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/IsExternalInit.cs
 [EditorBrowsable(EditorBrowsableState.Never)]

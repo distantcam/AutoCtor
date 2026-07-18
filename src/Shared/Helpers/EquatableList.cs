@@ -63,7 +63,7 @@ internal readonly struct EquatableList<T> : IEquatable<EquatableList<T>>, IReadO
         {
             get
             {
-                T[] items = new T[equatableList.Count];
+                var items = new T[equatableList.Count];
                 equatableList._data.CopyTo(items, 0);
                 return items;
             }

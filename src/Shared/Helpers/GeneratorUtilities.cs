@@ -2,12 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-#if ROSLYN_3
-using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
-#elif ROSLYN_4
-using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
-#endif
-
 internal static class GeneratorUtilities
 {
     public static readonly SymbolDisplayFormat HintSymbolDisplayFormat = new(
@@ -54,7 +48,7 @@ internal static class GeneratorUtilities
             };
 
             var staticKeyword = currentType.IsStatic ? "static " : "";
-            var typeName = currentType.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+            var typeName = currentType.ToDisplayString(MinimallyQualifiedFormat);
             typeDeclarations.Push($"{staticKeyword}partial {typeKeyword} {typeName}");
             currentType = currentType.ContainingType;
         }
