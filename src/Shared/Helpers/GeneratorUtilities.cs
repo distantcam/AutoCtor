@@ -43,7 +43,8 @@ internal static class GeneratorUtilities
                 { IsRecord: true, IsValueType: true } => "record struct",
                 { IsRecord: true, IsValueType: false } => "record",
                 { IsRecord: false, IsValueType: true } => "struct",
-                { IsRecord: false, IsValueType: false } => "class",
+                { IsRecord: false, IsValueType: false, TypeKind: TypeKind.Class } => "class",
+                { IsRecord: false, IsValueType: false, TypeKind: TypeKind.Interface } => "interface",
                 _ => string.Empty
             };
 
