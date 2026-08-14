@@ -1,4 +1,7 @@
 changelog:
+  exclude:
+    authors:
+      - dependabot
   categories:
     - title: 🐞 Bug Fixes
       labels:
