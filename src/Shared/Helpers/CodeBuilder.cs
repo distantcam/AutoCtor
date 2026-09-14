@@ -6,8 +6,12 @@ internal partial class CodeBuilder
     private readonly StringBuilder _stringBuilder = new();
     private int _indent;
 
-    public char IndentChar { get; set; } = '\t';
-    public string Indent => new(IndentChar, _indent);
+    //public char IndentChar { get; set; } = '\t';
+    // Every emitted line asks for this, so the common tab indents are shared, not rebuilt.
+    private static readonly string[] s_tabIndents = [.. Enumerable.Range(0, 16).Select(static i => new string('\t', i))];
+    public string Indent => _indent < s_tabIndents.Length
+        ? s_tabIndents[_indent]
+        : new('\t', _indent);
 
     public CodeBuilder IncreaseIndent() { _indent++; return this; }
     public CodeBuilder DecreaseIndent() { if (_indent > 0) _indent--; return this; }

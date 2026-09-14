@@ -1,8 +1,12 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
 
 internal readonly record struct EquatableTypeSymbol(ITypeSymbol TypeSymbol)
 {
-    private readonly string _fullyQualifiedString = TypeSymbol.ToDisplayString(FullyQualifiedFormat);
+    private static readonly ConditionalWeakTable<ITypeSymbol, string> s_displayStrings = new();
+
+    private readonly string _fullyQualifiedString = s_displayStrings.GetValue(
+        TypeSymbol, static t => t.ToDisplayString(FullyQualifiedFormat));
 
     public override int GetHashCode() => ToString().GetHashCode();
     public bool Equals(EquatableTypeSymbol other) => EqualityComparer<string>.Default.Equals(ToString(), other.ToString());

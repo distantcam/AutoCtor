@@ -32,13 +32,13 @@ internal partial class CodeBuilder
     private void AppendFormatted(IEnumerable<string> items, string? format)
     {
         if (format == "comma")
-            AppendCommaSeparated(items.ToList());
+            AppendCommaSeparated(items as IReadOnlyList<string> ?? items.ToList());
 
         else if (format == "commaindent")
-            AppendCommaIndented(items.ToList());
+            AppendCommaIndented(items as IReadOnlyList<string> ?? items.ToList());
     }
 
-    private void AppendCommaSeparated(List<string> items)
+    private void AppendCommaSeparated(IReadOnlyList<string> items)
     {
         var comma = false;
         foreach (var item in items)
@@ -50,7 +50,7 @@ internal partial class CodeBuilder
         }
     }
 
-    private void AppendCommaIndented(List<string> items)
+    private void AppendCommaIndented(IReadOnlyList<string> items)
     {
         var length = items.Sum(s => s.Length);
         if (length < 60)

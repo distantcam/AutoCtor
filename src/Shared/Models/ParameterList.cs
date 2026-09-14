@@ -7,7 +7,7 @@ using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
 using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
 #endif
 
-internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnumerable<MemberModel> properties)
+internal sealed class ParameterListBuilder(IReadOnlyList<MemberModel> fields, IReadOnlyList<MemberModel> properties)
 {
     private IEnumerable<ParameterModel> _baseParameters = [];
     private IEnumerable<ParameterModel> _postCtorParameters = [];
@@ -20,13 +20,17 @@ internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnu
 
     public ParameterList Build(EmitterContext context)
     {
+        // Keyed by large structs: letting these regrow for a type with hundreds of members
+        // pushes their entry arrays onto the large object heap.
+        var memberCount = fields.Count + properties.Count;
         var baseParameters = new List<string>();
         var postCtorParameters = new List<string>();
-        var parametersMap = new Dictionary<MemberModel, string>();
-        var parameterModels = new List<ParameterModel>();
+        // Keyed by IdentifierName (unique within a type) rather than the whole MemberModel.
+        var parametersMap = new Dictionary<string, string>(memberCount);
+        var parameterModels = new List<ParameterModel>(memberCount);
 
         var nameHash = new HashSet<string>();
-        var uniqueNames = new Dictionary<ParameterModel, string>();
+        var uniqueNames = new Dictionary<ParameterModel, string>(memberCount);
 
         foreach (var p in _baseParameters)
         {
@@ -39,14 +43,15 @@ internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnu
         foreach (var m in fields)
         {
             // ref/out from postctor
-            if (_postCtorParameters.Any(p => p.IsOutOrRef && m.Type == p.Type))
+            if (IsOutOrRefPostCtorParameter(m))
                 continue;
 
             var p = ParameterModel.Create(m);
             GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
-            parametersMap.Add(m, name);
+            // Indexer, not Add: code mid-edit can declare the same member name twice.
+            parametersMap[m.IdentifierName] = name;
         }
         foreach (var m in properties)
         {
@@ -56,7 +61,8 @@ internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnu
             GetUniqueName(p, nameHash, uniqueNames, out var name);
             parameterModels.Add(p);
 
-            parametersMap.Add(m, name);
+            // Indexer, not Add: code mid-edit can declare the same member name twice.
+            parametersMap[m.IdentifierName] = name;
         }
 
         foreach (var p in _postCtorParameters)
@@ -79,7 +85,9 @@ internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnu
                 ? $"{p.RefKind.ToParameterPrefix()} {name}" : name);
         }
 
-        var constructorParameters = uniqueNames.Select(ConstructorParameterCSharp).ToList();
+        var constructorParameters = new List<string>(uniqueNames.Count);
+        foreach (var u in uniqueNames)
+            constructorParameters.Add(ConstructorParameterCSharp(u));
 
         return new(
             constructorParameters,
@@ -88,6 +96,17 @@ internal sealed class ParameterListBuilder(IEnumerable<MemberModel> fields, IEnu
             parametersMap,
             parameterModels
         );
+    }
+
+    // A loop rather than Any(lambda): capturing the member allocated a closure per field.
+    private bool IsOutOrRefPostCtorParameter(MemberModel m)
+    {
+        foreach (var p in _postCtorParameters)
+        {
+            if (p.IsOutOrRef && m.Type == p.Type)
+                return true;
+        }
+        return false;
     }
 
     private static string ConstructorParameterCSharp(KeyValuePair<ParameterModel, string> u)
@@ -123,7 +142,7 @@ internal sealed class ParameterList(
     IEnumerable<string> ctorParameterDeclarations,
     IEnumerable<string> baseParameters,
     IEnumerable<string> postCtorParameters,
-    Dictionary<MemberModel, string> parameterMap,
+    Dictionary<string, string> parameterMap,
     IEnumerable<ParameterModel> parameterModels
 ) : IEnumerable<ParameterModel>
 {
@@ -133,7 +152,7 @@ internal sealed class ParameterList(
     public IEnumerable<string> PostCtorParameters => postCtorParameters;
 
     public string? GetParameter(MemberModel m) =>
-        parameterMap.TryGetValue(m, out var result) ? result : null;
+        parameterMap.TryGetValue(m.IdentifierName, out var result) ? result : null;
 
     public IEnumerator<ParameterModel> GetEnumerator() => parameterModels.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

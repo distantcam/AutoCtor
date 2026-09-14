@@ -4,7 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <NoWarn>CA1515</NoWarn>
+    <AnalysisMode>default</AnalysisMode>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AutoCtorVersion Condition="'$(AutoCtorVersion)' == ''">local</AutoCtorVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,9 +18,14 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(AutoCtorVersion)' == 'local'">
     <ProjectReference Include="..\AutoCtor.Attributes\AutoCtor.Attributes.csproj" />
     <ProjectReference Include="..\AutoCtor.Roslyn4.4\AutoCtor.Roslyn4.4.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(AutoCtorVersion)' != 'local'">
+    <PackageReference Include="AutoCtor" VersionOverride="$(AutoCtorVersion)" GeneratePathProperty="true" ExcludeAssets="analyzers" />
+    <Reference Include="$(PkgAutoCtor)\analyzers\dotnet\roslyn4.4\cs\AutoCtor.dll" />
   </ItemGroup>
 
 </Project>
