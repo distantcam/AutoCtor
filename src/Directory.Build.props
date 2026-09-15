@@ -16,6 +16,11 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
+    <Verify_SponsorshipExemptionUntil>2027-01</Verify_SponsorshipExemptionUntil>
+  </PropertyGroup>
+
   <ItemGroup>
     <Using Include="System" />
     <Using Include="System.Collections.Generic" />
