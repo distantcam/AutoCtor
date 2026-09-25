@@ -1,27 +1,30 @@
 ﻿internal partial class CodeBuilder
 {
-    public IDisposable StartBlock() => StartIndent("{", "}");
+    public IDisposable StartBlock()
+    {
+        AppendLine("{").IncreaseIndent();
+        return new SingleBlockDisposable(this);
+    }
+
     public IDisposable StartBlock(string line)
     {
         AppendLine(line);
-        return StartIndent("{", "}");
+        return StartBlock();
     }
 
-    public IDisposable StartIndent(string? startLine = null, string? endLine = null)
+    public IDisposable StartType(string typeDeclaration, IEnumerable<string>? baseList = null)
     {
-        if (!string.IsNullOrEmpty(startLine))
-            AppendLine(startLine!);
+        if (baseList is { })
+            AppendLine($"{typeDeclaration} : {baseList:commaindent}");
+        else
+            AppendLine(typeDeclaration);
+        AppendLine("{");
         IncreaseIndent();
-        return new DetentDisposable(this, endLine);
+        return new SingleBlockDisposable(this);
     }
 
-    private readonly struct DetentDisposable(CodeBuilder codeBuilder, string? endLine) : IDisposable
+    private readonly struct SingleBlockDisposable(CodeBuilder codeBuilder) : IDisposable
     {
-        public void Dispose()
-        {
-            codeBuilder.DecreaseIndent();
-            if (!string.IsNullOrEmpty(endLine))
-                codeBuilder.AppendLine(endLine!);
-        }
+        public void Dispose() => codeBuilder.DecreaseIndent().AppendLine("}");
     }
 }

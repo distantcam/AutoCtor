@@ -7,25 +7,53 @@
 
 #nullable enable
 
-partial class ScopedAutoConstructProvider : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, ScopedAutoConstructProvider.IResolver<global::IScAcDependency>, ScopedAutoConstructProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScAcDependency>>, ScopedAutoConstructProvider.IResolver<global::System.IServiceProvider>, ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+partial class ScopedAutoConstructProvider : 
+	global::System.IServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+	global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+	global::System.IDisposable,
+	ScopedAutoConstructProvider.IResolver<global::IScAcDependency>,
+	ScopedAutoConstructProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScAcDependency>>,
+	ScopedAutoConstructProvider.IResolver<global::System.IServiceProvider>,
+	ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+	ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+	ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+	ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IScAcDependency? _S0;
-	private global::IScAcDependency S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::ScAcDependency()); }
+	private global::IScAcDependency S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::ScAcDependency());
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IScAcDependency)) return probe ? this : (object)(S0());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScAcDependency>)) return probe ? this : (object)(new global::IScAcDependency[] { S0() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+			if (type == typeof(global::IScAcDependency))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScAcDependency>))
+				return probe ? this : (object)(new global::IScAcDependency[] { S0() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -53,14 +81,46 @@ partial class ScopedAutoConstructProvider : global::System.IServiceProvider, glo
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, global::Microsoft.Extensions.DependencyInjection.IServiceScope, ScopedAutoConstructProvider.IResolver<global::IScAcDependency>, ScopedAutoConstructProvider.IResolver<global::IScAcService>, ScopedAutoConstructProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScAcDependency>>, ScopedAutoConstructProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScAcService>>, ScopedAutoConstructProvider.IResolver<global::System.IServiceProvider>, ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+		global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+		global::System.IDisposable,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScope,
+		ScopedAutoConstructProvider.IResolver<global::IScAcDependency>,
+		ScopedAutoConstructProvider.IResolver<global::IScAcService>,
+		ScopedAutoConstructProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScAcDependency>>,
+		ScopedAutoConstructProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScAcService>>,
+		ScopedAutoConstructProvider.IResolver<global::System.IServiceProvider>,
+		ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+		ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+		ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+		ScopedAutoConstructProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -70,21 +130,37 @@ partial class ScopedAutoConstructProvider : global::System.IServiceProvider, glo
 
 		private global::IScAcDependency S0() => _root.S0();
 		private volatile global::IScAcService? _S1;
-		private global::IScAcService S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::ScAcService(S0())); }
+		private global::IScAcService S1()
+		{
+			var service = _S1;
+			if (service is not null)
+				return service;
+			lock (_lock)
+				return (_S1 ??= new global::ScAcService(S0()));
+		}
 
 		private object? Resolve(global::System.Type type, object? key, bool probe)
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IScAcDependency)) return probe ? this : (object)(S0());
-				if (type == typeof(global::IScAcService)) return probe ? this : (object)(S1());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScAcDependency>)) return probe ? this : (object)(new global::IScAcDependency[] { S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScAcService>)) return probe ? this : (object)(new global::IScAcService[] { S1() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+				if (type == typeof(global::IScAcDependency))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::IScAcService))
+					return probe ? this : (object)(S1());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScAcDependency>))
+					return probe ? this : (object)(new global::IScAcDependency[] { S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScAcService>))
+					return probe ? this : (object)(new global::IScAcService[] { S1() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -113,10 +189,25 @@ partial class ScopedAutoConstructProvider : global::System.IServiceProvider, glo
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

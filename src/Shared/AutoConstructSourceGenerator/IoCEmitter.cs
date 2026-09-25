@@ -57,73 +57,7 @@ public partial class AutoConstructSourceGenerator
             if (duck.Keyed)
                 builtIns.AddRange([DI + "IKeyedServiceProvider", DI + "IServiceProviderIsKeyedService"]);
 
-            // Every registration of a service, closing any open generic rule that matches it.
-            // A rule whose constraints the type arguments break is skipped, and named in unsatisfied.
-            List<Node> Find(ITypeSymbol type, string? key, out RegistrationModel? unsatisfied)
-            {
-                unsatisfied = null;
-                var name = type.ToDisplayString(FullyQualifiedFormat);
-                if (type is INamedTypeSymbol { IsGenericType: true } closed)
-                {
-                    var definition = closed.OriginalDefinition.ToDisplayString(FullyQualifiedFormat);
-                    for (var i = 0; i < registrations.Count; i++)
-                    {
-                        var r = registrations[i];
-                        if (r.IsOpenGeneric && r.Key == key && r.Service.ToString() == definition
-                            && r.Implementation.TypeSymbol is INamedTypeSymbol open && open.Arity == closed.Arity
-                            && !nodes.Any(n => n.Order == i && n.Service == name))
-                        {
-                            if (!SatisfiesConstraints(open, closed.TypeArguments))
-                            {
-                                unsatisfied = r;
-                                continue;
-                            }
-                            nodes.Add(new(nodes.Count, i, r, closed, open.Construct([.. closed.TypeArguments])));
-                        }
-                    }
-                }
-                return nodes.Where(n => n.Service == name && n.R.Key == key).OrderBy(n => n.Order).ToList();
-            }
-
             var failed = false;
-
-            string Argument(Node node, ITypeSymbol type, string? key, string parameterName)
-            {
-                var name = type.ToDisplayString(FullyQualifiedFormat);
-                var typeName = type.ToDisplayString(MinimallyQualifiedFormat);
-                var found = Find(type, key, out var unsatisfied);
-                if (found.Count > 0)
-                {
-                    node.Dependencies.Add(found[found.Count - 1]);
-                    return $"{found[found.Count - 1].Name}()";
-                }
-                if (unsatisfied is { } rule)
-                {
-                    context.ReportDiagnostic(rule, ACTR020_OpenGenericConstraintNotSatisfied, typeName, parameterName, rule.ErrorName);
-                    failed = true;
-                    return "";
-                }
-
-                if (type is INamedTypeSymbol { ConstructedFrom.SpecialType: SpecialType.System_Collections_Generic_IEnumerable_T } enumerable)
-                {
-                    var elements = Find(enumerable.TypeArguments[0], key, out _);
-                    node.Dependencies.AddRange(elements);
-                    return Array(enumerable.TypeArguments[0].ToDisplayString(FullyQualifiedFormat), elements);
-                }
-
-                if (key is null && builtIns.Contains(name))
-                    return "this";
-
-                if (provider.Fallback is not null && (key is null || duck.Keyed))
-                    return $"Required<{name}>(GetKeyedService(typeof({name}), {key ?? "null"}))";
-
-                if (key is null)
-                    context.ReportDiagnostic(node.R, ACTR012_ServiceDependencyNotRegistered, typeName, node.R.ErrorName);
-                else
-                    context.ReportDiagnostic(node.R, ACTR014_KeyedServiceDependencyNotRegistered, typeName, node.R.ErrorName, key);
-                failed = true;
-                return "";
-            }
 
             // Closing an open generic adds a node, so this walks the list as it grows.
             for (var i = 0; i < nodes.Count; i++)
@@ -147,49 +81,19 @@ public partial class AutoConstructSourceGenerator
 
                 EquatableList<EquatableTypeSymbol> typeParameters = new(node.Implementation.OriginalDefinition.TypeParameters.Select(t => new EquatableTypeSymbol(t)));
                 EquatableList<EquatableTypeSymbol> typeArguments = new(node.Implementation.TypeArguments.Select(t => new EquatableTypeSymbol(t)));
-                var args = string.Join(", ", parameters.Select(p =>
-                    Argument(node, Emitter.SetGenerics(p.Type.TypeSymbol, typeParameters, typeArguments), p.KeyedService, p.ErrorName)));
+                var argList = parameters.Select(p => Argument(context, provider, duck, builtIns, nodes, node,
+                    Emitter.SetGenerics(p.Type.TypeSymbol, typeParameters, typeArguments), p.KeyedService, p.ErrorName)).ToList();
+                if (argList.Contains(null))
+                    failed = true;
+                var args = string.Join(", ", argList);
 
                 node.Create = node.R.Factory is { } factory
                     ? node.R.FactoryIsMethod ? $"{factory}({args})" : factory
                     : $"new {node.Implementation.ToDisplayString(FullyQualifiedFormat)}({args})";
             }
 
-            // Cycles, and which services can only live in a scope.
-            void Visit(Node node)
-            {
-                if (node.VisitState == 2)
-                    return;
-                if (node.VisitState == 1)
-                {
-                    context.ReportDiagnostic(node.R, ACTR013_CircularServiceDependency);
-                    failed = true;
-                    return;
-                }
-
-                node.VisitState = 1;
-                foreach (var dependency in node.Dependencies)
-                {
-                    Visit(dependency);
-                    node.Scoped |= dependency.Scoped;
-                    if (node.R.Lifetime != Lifetime.Singleton)
-                        continue;
-
-                    if (dependency.Scoped)
-                    {
-                        context.ReportDiagnostic(node.R, ACTR019_ScopedServiceCapturedBySingleton, dependency.R.ErrorName, node.R.ErrorName);
-                        failed = true;
-                    }
-                    else if (dependency.R.Lifetime == Lifetime.Transient)
-                    {
-                        context.ReportDiagnostic(node.R, ACTR018_TransientServiceCaptured, dependency.R.ErrorName, node.R.ErrorName);
-                    }
-                }
-                node.VisitState = 2;
-            }
-
             foreach (var node in nodes)
-                Visit(node);
+                failed |= !Visit(context, node);
 
             if (failed)
                 return;
@@ -203,7 +107,7 @@ public partial class AutoConstructSourceGenerator
                 var last = ordered[ordered.Count - 1];
                 singles.Add((group.Key.Service, group.Key.Key ?? "null", $"{last.Name}()", last.Scoped));
                 collections.Add(($"global::System.Collections.Generic.IEnumerable<{group.Key.Service}>", group.Key.Key ?? "null",
-                    Array(group.Key.Service, ordered), ordered.Any(n => n.Scoped)));
+                    NewArray(group.Key.Service, ordered), ordered.Any(n => n.Scoped)));
             }
             if (duck.Keyed)
             {
@@ -212,12 +116,10 @@ public partial class AutoConstructSourceGenerator
                 {
                     var ordered = group.OrderBy(n => n.Order).ToList();
                     collections.Add(($"global::System.Collections.Generic.IEnumerable<{group.Key}>", DI + "KeyedService.AnyKey",
-                        Array(group.Key, ordered), ordered.Any(n => n.Scoped)));
+                        NewArray(group.Key, ordered), ordered.Any(n => n.Scoped)));
                 }
             }
             var entries = singles.Concat(collections).Concat(builtIns.Select(b => (b, "null", "this", false))).ToList();
-
-            var interfaces = string.Join(", ", builtIns) + ", global::System.IDisposable" + (duck.Async ? ", global::System.IAsyncDisposable" : "");
 
             var source = new CodeBuilder()
                 .AppendHeader()
@@ -225,15 +127,26 @@ public partial class AutoConstructSourceGenerator
                 .AppendLine("#nullable enable")
                 .AppendLine();
 
-            string Resolved(bool inScope) => string.Concat(Resolvers(entries, inScope).Select(t => $", {provider.Name}.IResolver<{t}>"));
+            List<string> baseTypes = [
+                .. builtIns,
+                "global::System.IDisposable"
+            ];
+            if (duck.Async)
+                baseTypes.Add("global::System.IAsyncDisposable");
 
-            using (source.StartPartialType(provider, interfaces + Resolved(false)))
+            using (source.StartPartialType(provider, [
+                .. baseTypes,
+                .. Resolvers(entries, false).Select(t => $"{provider.Name}.IResolver<{t}>")]))
             {
+                if (duck.DI)
+                    baseTypes.Add(DI + "IServiceScope");
+
                 EmitContainer(source, provider, nodes, entries, duck, inScope: false);
                 source.AppendLine();
                 source.AddGeneratedCodeAttribute();
-                source.AppendLine($"public sealed class Scope : {interfaces}{(duck.DI ? $", {DI}IServiceScope" : "")}{Resolved(true)}");
-                using (source.StartBlock())
+                using (source.StartType("public sealed class Scope", [
+                    .. baseTypes,
+                    .. Resolvers(entries, true).Select(t => $"{provider.Name}.IResolver<{t}>")]))
                     EmitContainer(source, provider, nodes, entries, duck, inScope: true);
             }
 
@@ -243,6 +156,115 @@ public partial class AutoConstructSourceGenerator
         // The first registration of each unkeyed type wins, the same as in Resolve.
         private static IEnumerable<string> Resolvers(List<(string Type, string Key, string Value, bool Scoped)> entries, bool inScope)
             => entries.Where(e => e.Key == "null" && (inScope || !e.Scoped)).Select(e => e.Type).Distinct();
+
+        // Every registration of a service, closing any open generic rule that matches it.
+        // A rule whose constraints the type arguments break is skipped, and named in unsatisfied.
+        private static List<Node> Find(ServiceProviderModel provider, List<Node> nodes, ITypeSymbol type, string? key, out RegistrationModel? unsatisfied)
+        {
+            var registrations = provider.Registrations;
+            unsatisfied = null;
+            var name = type.ToDisplayString(FullyQualifiedFormat);
+            if (type is INamedTypeSymbol { IsGenericType: true } closed)
+            {
+                var definition = closed.OriginalDefinition.ToDisplayString(FullyQualifiedFormat);
+                for (var i = 0; i < registrations.Count; i++)
+                {
+                    var r = registrations[i];
+                    if (r.IsOpenGeneric && r.Key == key && r.Service.ToString() == definition
+                        && r.Implementation.TypeSymbol is INamedTypeSymbol open && open.Arity == closed.Arity
+                        && !nodes.Any(n => n.Order == i && n.Service == name))
+                    {
+                        if (!SatisfiesConstraints(open, closed.TypeArguments))
+                        {
+                            unsatisfied = r;
+                            continue;
+                        }
+                        nodes.Add(new(nodes.Count, i, r, closed, open.Construct([.. closed.TypeArguments])));
+                    }
+                }
+            }
+            return nodes.Where(n => n.Service == name && n.R.Key == key).OrderBy(n => n.Order).ToList();
+        }
+
+        // The expression that resolves one constructor argument, or null after reporting why it can't.
+        private static string? Argument(
+            EmitterContext context,
+            ServiceProviderModel provider,
+            DuckTypes duck,
+            List<string> builtIns,
+            List<Node> nodes,
+            Node node,
+            ITypeSymbol type,
+            string? key,
+            string parameterName)
+        {
+            var name = type.ToDisplayString(FullyQualifiedFormat);
+            var typeName = type.ToDisplayString(MinimallyQualifiedFormat);
+            var found = Find(provider, nodes, type, key, out var unsatisfied);
+            if (found.Count > 0)
+            {
+                node.Dependencies.Add(found[found.Count - 1]);
+                return $"{found[found.Count - 1].Name}()";
+            }
+            if (unsatisfied is { } rule)
+            {
+                context.ReportDiagnostic(rule, ACTR020_OpenGenericConstraintNotSatisfied, typeName, parameterName, rule.ErrorName);
+                return null;
+            }
+
+            if (type is INamedTypeSymbol { ConstructedFrom.SpecialType: SpecialType.System_Collections_Generic_IEnumerable_T } enumerable)
+            {
+                var elements = Find(provider, nodes, enumerable.TypeArguments[0], key, out _);
+                node.Dependencies.AddRange(elements);
+                return NewArray(enumerable.TypeArguments[0].ToDisplayString(FullyQualifiedFormat), elements);
+            }
+
+            if (key is null && builtIns.Contains(name))
+                return "this";
+
+            if (provider.Fallback is not null && (key is null || duck.Keyed))
+                return $"Required<{name}>(GetKeyedService(typeof({name}), {key ?? "null"}))";
+
+            if (key is null)
+                context.ReportDiagnostic(node.R, ACTR012_ServiceDependencyNotRegistered, typeName, node.R.ErrorName);
+            else
+                context.ReportDiagnostic(node.R, ACTR014_KeyedServiceDependencyNotRegistered, typeName, node.R.ErrorName, key);
+            return null;
+        }
+
+        // Cycles, and which services can only live in a scope. False when an error was reported.
+        private static bool Visit(EmitterContext context, Node node)
+        {
+            if (node.VisitState == 2)
+                return true;
+            if (node.VisitState == 1)
+            {
+                context.ReportDiagnostic(node.R, ACTR013_CircularServiceDependency);
+                return false;
+            }
+
+            var ok = true;
+            node.VisitState = 1;
+            foreach (var dependency in node.Dependencies)
+            {
+                ok &= Visit(context, dependency);
+                node.Scoped |= dependency.Scoped;
+                if (node.R.Lifetime != Lifetime.Singleton)
+                    continue;
+
+                if (dependency.Scoped)
+                {
+                    context.ReportDiagnostic(node.R, ACTR019_ScopedServiceCapturedBySingleton, dependency.R.ErrorName, node.R.ErrorName);
+                    ok = false;
+                }
+                else if (dependency.R.Lifetime == Lifetime.Transient)
+                {
+                    context.ReportDiagnostic(node.R, ACTR018_TransientServiceCaptured, dependency.R.ErrorName, node.R.ErrorName);
+                }
+            }
+            node.VisitState = 2;
+            return ok;
+        }
 
         private static bool SatisfiesConstraints(INamedTypeSymbol definition, IReadOnlyList<ITypeSymbol> arguments)
         {
@@ -258,8 +280,8 @@ public partial class AutoConstructSourceGenerator
                 .All(ok => ok);
         }
 
-        private static string Array(string elementType, List<Node> elements)
-            => $"new {elementType}[] {{ {string.Join(", ", elements.Select(n => $"{n.Name}()"))} }}";
+        private static string NewArray(string elementType, List<Node> elements)
+            => $"new {elementType}[] {{ {string.Join(", ", elements.Select(static n => $"{n.Name}()"))} }}";
 
         private static void EmitContainer(
             CodeBuilder source,
@@ -302,7 +324,18 @@ public partial class AutoConstructSourceGenerator
                     // value type is held boxed.
                     var (field, cast) = node.R.ServiceIsReferenceType ? ($"{type}?", "") : ("object?", $"({type})");
                     source.AppendLine($"private volatile {field} _{name};");
-                    source.AppendLine($"private {type} {name}() {{ var service = _{name}; if (service is not null) return {cast}service; lock (_lock) return {cast}(_{name} ??= {tracked}); }}");
+                    using (source.StartBlock($"private {type} {name}()"))
+                    {
+                        source.AppendLine($"var service = _{name};");
+                        source.AppendLine("if (service is not null)")
+                            .IncreaseIndent()
+                            .AppendLine($"return {cast}service;")
+                            .DecreaseIndent();
+                        source.AppendLine("lock (_lock)")
+                            .IncreaseIndent()
+                            .AppendLine($"return {cast}(_{name} ??= {tracked});")
+                            .DecreaseIndent();
+                    }
                 }
             }
             source.AppendLine();
@@ -313,11 +346,17 @@ public partial class AutoConstructSourceGenerator
                 using (source.StartBlock("if (key is null)"))
                 {
                     foreach (var (type, _, value, _) in visible.Where(e => e.Key == "null"))
-                        source.AppendLine($"if (type == typeof({type})) return probe ? this : (object)({value});");
+                        source.AppendLine($"if (type == typeof({type}))")
+                            .IncreaseIndent()
+                            .AppendLine($"return probe ? this : (object)({value});")
+                            .DecreaseIndent();
                     source.AppendLine("return null;");
                 }
                 foreach (var (type, key, value, _) in visible.Where(e => e.Key != "null"))
-                    source.AppendLine($"if (type == typeof({type}) && object.Equals(key, {key})) return probe ? this : (object)({value});");
+                    source.AppendLine($"if (type == typeof({type}) && object.Equals(key, {key}))")
+                        .IncreaseIndent()
+                        .AppendLine($"return probe ? this : (object)({value});")
+                        .DecreaseIndent();
                 source.AppendLine("return null;");
             }
             source.AppendLine();
@@ -359,19 +398,48 @@ public partial class AutoConstructSourceGenerator
             source.AppendLine("private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException(\"No service for type '\" + typeof(T) + \"' has been registered.\");");
             using (source.StartBlock("private T Track<T>(T service)"))
             {
-                source.AppendLine($"if (service is global::System.IDisposable{(duck.Async ? " || service is global::System.IAsyncDisposable" : "")}) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);");
+                source.AppendLine($"if (service is global::System.IDisposable{(duck.Async ? " || service is global::System.IAsyncDisposable" : "")})");
+                source.IncreaseIndent();
+                source.AppendLine("lock (_lock)");
+                source.IncreaseIndent();
+                source.AppendLine("(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);");
+                source.DecreaseIndent();
+                source.DecreaseIndent();
                 source.AppendLine("return service;");
             }
             // Disposed in reverse order of creation, and only once.
-            source.AppendLine("private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }");
-            source.AppendLine("public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException(\"'\" + item.GetType() + \"' only implements IAsyncDisposable, use DisposeAsync.\")).Dispose(); }");
+            using (source.StartBlock("private object[] Drain()"))
+            using (source.StartBlock("lock (_lock)"))
+            {
+                source.AppendLine("var items = _disposables?.ToArray() ?? new object[0];");
+                source.AppendLine("_disposables = null;");
+                source.AppendLine("global::System.Array.Reverse(items);");
+                source.AppendLine("return items;");
+            }
+
+            using (source.StartBlock("public void Dispose()"))
+            {
+                source.AppendLine("foreach (var item in Drain())");
+                source.IncreaseIndent();
+                source.AppendLine("(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException(\"'\" + item.GetType() + \"' only implements IAsyncDisposable, use DisposeAsync.\")).Dispose();");
+                source.DecreaseIndent();
+            }
+
             if (duck.Async)
             {
                 using (source.StartBlock("public async global::System.Threading.Tasks.ValueTask DisposeAsync()"))
                 {
                     source.AppendLine("foreach (var item in Drain())");
-                    source.AppendLine("\tif (item is global::System.IAsyncDisposable d) await d.DisposeAsync().ConfigureAwait(false);");
-                    source.AppendLine("\telse ((global::System.IDisposable)item).Dispose();");
+                    source.IncreaseIndent();
+                    source.AppendLine("if (item is global::System.IAsyncDisposable d)");
+                    source.IncreaseIndent();
+                    source.AppendLine("await d.DisposeAsync().ConfigureAwait(false);");
+                    source.DecreaseIndent();
+                    source.AppendLine("else");
+                    source.IncreaseIndent();
+                    source.AppendLine("((global::System.IDisposable)item).Dispose();");
+                    source.DecreaseIndent();
+                    source.DecreaseIndent();
                 }
             }
         }

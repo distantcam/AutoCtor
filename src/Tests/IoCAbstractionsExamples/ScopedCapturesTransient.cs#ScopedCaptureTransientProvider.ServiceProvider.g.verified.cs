@@ -7,7 +7,21 @@
 
 #nullable enable
 
-partial class ScopedCaptureTransientProvider : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, ScopedCaptureTransientProvider.IResolver<global::IScopedWorker>, ScopedCaptureTransientProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScopedWorker>>, ScopedCaptureTransientProvider.IResolver<global::System.IServiceProvider>, ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+partial class ScopedCaptureTransientProvider : 
+	global::System.IServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+	global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+	global::System.IDisposable,
+	ScopedCaptureTransientProvider.IResolver<global::IScopedWorker>,
+	ScopedCaptureTransientProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScopedWorker>>,
+	ScopedCaptureTransientProvider.IResolver<global::System.IServiceProvider>,
+	ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+	ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+	ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+	ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
@@ -18,13 +32,20 @@ partial class ScopedCaptureTransientProvider : global::System.IServiceProvider, 
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IScopedWorker)) return probe ? this : (object)(S1());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScopedWorker>)) return probe ? this : (object)(new global::IScopedWorker[] { S1() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+			if (type == typeof(global::IScopedWorker))
+				return probe ? this : (object)(S1());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScopedWorker>))
+				return probe ? this : (object)(new global::IScopedWorker[] { S1() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -52,14 +73,46 @@ partial class ScopedCaptureTransientProvider : global::System.IServiceProvider, 
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, global::Microsoft.Extensions.DependencyInjection.IServiceScope, ScopedCaptureTransientProvider.IResolver<global::IScopedHolder>, ScopedCaptureTransientProvider.IResolver<global::IScopedWorker>, ScopedCaptureTransientProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScopedHolder>>, ScopedCaptureTransientProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScopedWorker>>, ScopedCaptureTransientProvider.IResolver<global::System.IServiceProvider>, ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+		global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+		global::System.IDisposable,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScope,
+		ScopedCaptureTransientProvider.IResolver<global::IScopedHolder>,
+		ScopedCaptureTransientProvider.IResolver<global::IScopedWorker>,
+		ScopedCaptureTransientProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScopedHolder>>,
+		ScopedCaptureTransientProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IScopedWorker>>,
+		ScopedCaptureTransientProvider.IResolver<global::System.IServiceProvider>,
+		ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+		ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+		ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+		ScopedCaptureTransientProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -68,22 +121,38 @@ partial class ScopedCaptureTransientProvider : global::System.IServiceProvider, 
 		public global::System.IServiceProvider ServiceProvider => this;
 
 		private volatile global::IScopedHolder? _S0;
-		private global::IScopedHolder S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::ScopedHolder(S1())); }
+		private global::IScopedHolder S0()
+		{
+			var service = _S0;
+			if (service is not null)
+				return service;
+			lock (_lock)
+				return (_S0 ??= new global::ScopedHolder(S1()));
+		}
 		private global::IScopedWorker S1() => new global::ScopedWorker();
 
 		private object? Resolve(global::System.Type type, object? key, bool probe)
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IScopedHolder)) return probe ? this : (object)(S0());
-				if (type == typeof(global::IScopedWorker)) return probe ? this : (object)(S1());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScopedHolder>)) return probe ? this : (object)(new global::IScopedHolder[] { S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScopedWorker>)) return probe ? this : (object)(new global::IScopedWorker[] { S1() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+				if (type == typeof(global::IScopedHolder))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::IScopedWorker))
+					return probe ? this : (object)(S1());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScopedHolder>))
+					return probe ? this : (object)(new global::IScopedHolder[] { S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IScopedWorker>))
+					return probe ? this : (object)(new global::IScopedWorker[] { S1() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -112,10 +181,25 @@ partial class ScopedCaptureTransientProvider : global::System.IServiceProvider, 
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

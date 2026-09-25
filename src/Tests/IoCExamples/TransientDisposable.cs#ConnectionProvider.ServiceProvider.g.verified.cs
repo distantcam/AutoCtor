@@ -7,13 +7,30 @@
 
 #nullable enable
 
-partial class ConnectionProvider : global::System.IServiceProvider, global::System.IDisposable, ConnectionProvider.IResolver<global::IClock>, ConnectionProvider.IResolver<global::IConnection>, ConnectionProvider.IResolver<global::IFormatter>, ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IClock>>, ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IConnection>>, ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IFormatter>>, ConnectionProvider.IResolver<global::System.IServiceProvider>
+partial class ConnectionProvider : 
+	global::System.IServiceProvider,
+	global::System.IDisposable,
+	ConnectionProvider.IResolver<global::IClock>,
+	ConnectionProvider.IResolver<global::IConnection>,
+	ConnectionProvider.IResolver<global::IFormatter>,
+	ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IClock>>,
+	ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IConnection>>,
+	ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IFormatter>>,
+	ConnectionProvider.IResolver<global::System.IServiceProvider>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IClock? _S0;
-	private global::IClock S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::Clock()); }
+	private global::IClock S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::Clock());
+	}
 	private global::IConnection S1() => Track<global::IConnection>(new global::Connection(S0()));
 	private global::IFormatter S2() => new global::Formatter(S0());
 
@@ -21,13 +38,20 @@ partial class ConnectionProvider : global::System.IServiceProvider, global::Syst
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IClock)) return probe ? this : (object)(S0());
-			if (type == typeof(global::IConnection)) return probe ? this : (object)(S1());
-			if (type == typeof(global::IFormatter)) return probe ? this : (object)(S2());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IClock>)) return probe ? this : (object)(new global::IClock[] { S0() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IConnection>)) return probe ? this : (object)(new global::IConnection[] { S1() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IFormatter>)) return probe ? this : (object)(new global::IFormatter[] { S2() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+			if (type == typeof(global::IClock))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::IConnection))
+				return probe ? this : (object)(S1());
+			if (type == typeof(global::IFormatter))
+				return probe ? this : (object)(S2());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IClock>))
+				return probe ? this : (object)(new global::IClock[] { S0() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IConnection>))
+				return probe ? this : (object)(new global::IConnection[] { S1() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IFormatter>))
+				return probe ? this : (object)(new global::IFormatter[] { S2() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -54,14 +78,39 @@ partial class ConnectionProvider : global::System.IServiceProvider, global::Syst
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::System.IDisposable, ConnectionProvider.IResolver<global::IClock>, ConnectionProvider.IResolver<global::IConnection>, ConnectionProvider.IResolver<global::IFormatter>, ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IClock>>, ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IConnection>>, ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IFormatter>>, ConnectionProvider.IResolver<global::System.IServiceProvider>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::System.IDisposable,
+		ConnectionProvider.IResolver<global::IClock>,
+		ConnectionProvider.IResolver<global::IConnection>,
+		ConnectionProvider.IResolver<global::IFormatter>,
+		ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IClock>>,
+		ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IConnection>>,
+		ConnectionProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IFormatter>>,
+		ConnectionProvider.IResolver<global::System.IServiceProvider>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -77,13 +126,20 @@ partial class ConnectionProvider : global::System.IServiceProvider, global::Syst
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IClock)) return probe ? this : (object)(S0());
-				if (type == typeof(global::IConnection)) return probe ? this : (object)(S1());
-				if (type == typeof(global::IFormatter)) return probe ? this : (object)(S2());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IClock>)) return probe ? this : (object)(new global::IClock[] { S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IConnection>)) return probe ? this : (object)(new global::IConnection[] { S1() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IFormatter>)) return probe ? this : (object)(new global::IFormatter[] { S2() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+				if (type == typeof(global::IClock))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::IConnection))
+					return probe ? this : (object)(S1());
+				if (type == typeof(global::IFormatter))
+					return probe ? this : (object)(S2());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IClock>))
+					return probe ? this : (object)(new global::IClock[] { S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IConnection>))
+					return probe ? this : (object)(new global::IConnection[] { S1() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IFormatter>))
+					return probe ? this : (object)(new global::IFormatter[] { S2() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -109,10 +165,25 @@ partial class ConnectionProvider : global::System.IServiceProvider, global::Syst
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

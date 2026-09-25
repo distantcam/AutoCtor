@@ -7,25 +7,52 @@
 
 #nullable enable
 
-partial class HostedProvider : global::System.IServiceProvider, global::System.IDisposable, HostedProvider.IResolver<global::IClock>, HostedProvider.IResolver<global::ILedger>, HostedProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IClock>>, HostedProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::ILedger>>, HostedProvider.IResolver<global::System.IServiceProvider>
+partial class HostedProvider : 
+	global::System.IServiceProvider,
+	global::System.IDisposable,
+	HostedProvider.IResolver<global::IClock>,
+	HostedProvider.IResolver<global::ILedger>,
+	HostedProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IClock>>,
+	HostedProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::ILedger>>,
+	HostedProvider.IResolver<global::System.IServiceProvider>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IClock? _S0;
-	private global::IClock S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::Clock(Required<global::IReporter>(GetKeyedService(typeof(global::IReporter), null)))); }
+	private global::IClock S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::Clock(Required<global::IReporter>(GetKeyedService(typeof(global::IReporter), null))));
+	}
 	private volatile global::ILedger? _S1;
-	private global::ILedger S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::Ledger(new global::IAudit[] {  })); }
+	private global::ILedger S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::Ledger(new global::IAudit[] {  }));
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IClock)) return probe ? this : (object)(S0());
-			if (type == typeof(global::ILedger)) return probe ? this : (object)(S1());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IClock>)) return probe ? this : (object)(new global::IClock[] { S0() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ILedger>)) return probe ? this : (object)(new global::ILedger[] { S1() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+			if (type == typeof(global::IClock))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::ILedger))
+				return probe ? this : (object)(S1());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IClock>))
+				return probe ? this : (object)(new global::IClock[] { S0() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ILedger>))
+				return probe ? this : (object)(new global::ILedger[] { S1() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -50,14 +77,37 @@ partial class HostedProvider : global::System.IServiceProvider, global::System.I
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::System.IDisposable, HostedProvider.IResolver<global::IClock>, HostedProvider.IResolver<global::ILedger>, HostedProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IClock>>, HostedProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::ILedger>>, HostedProvider.IResolver<global::System.IServiceProvider>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::System.IDisposable,
+		HostedProvider.IResolver<global::IClock>,
+		HostedProvider.IResolver<global::ILedger>,
+		HostedProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IClock>>,
+		HostedProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::ILedger>>,
+		HostedProvider.IResolver<global::System.IServiceProvider>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -72,11 +122,16 @@ partial class HostedProvider : global::System.IServiceProvider, global::System.I
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IClock)) return probe ? this : (object)(S0());
-				if (type == typeof(global::ILedger)) return probe ? this : (object)(S1());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IClock>)) return probe ? this : (object)(new global::IClock[] { S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ILedger>)) return probe ? this : (object)(new global::ILedger[] { S1() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+				if (type == typeof(global::IClock))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::ILedger))
+					return probe ? this : (object)(S1());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IClock>))
+					return probe ? this : (object)(new global::IClock[] { S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ILedger>))
+					return probe ? this : (object)(new global::ILedger[] { S1() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -100,10 +155,25 @@ partial class HostedProvider : global::System.IServiceProvider, global::System.I
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

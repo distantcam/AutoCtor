@@ -7,31 +7,76 @@
 
 #nullable enable
 
-partial class StoreProvider : global::System.IServiceProvider, global::System.IDisposable, StoreProvider.IResolver<global::IStore<global::Special>>, StoreProvider.IResolver<global::IStoreHost>, StoreProvider.IResolver<global::IStore<global::Ordinary>>, StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStore<global::Special>>>, StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStoreHost>>, StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStore<global::Ordinary>>>, StoreProvider.IResolver<global::System.IServiceProvider>
+partial class StoreProvider : 
+	global::System.IServiceProvider,
+	global::System.IDisposable,
+	StoreProvider.IResolver<global::IStore<global::Special>>,
+	StoreProvider.IResolver<global::IStoreHost>,
+	StoreProvider.IResolver<global::IStore<global::Ordinary>>,
+	StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStore<global::Special>>>,
+	StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStoreHost>>,
+	StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStore<global::Ordinary>>>,
+	StoreProvider.IResolver<global::System.IServiceProvider>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IStore<global::Special>? _S0;
-	private global::IStore<global::Special> S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::SpecialStore()); }
+	private global::IStore<global::Special> S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::SpecialStore());
+	}
 	private volatile global::IStoreHost? _S1;
-	private global::IStoreHost S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::StoreHost(S0(), S3())); }
+	private global::IStoreHost S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::StoreHost(S0(), S3()));
+	}
 	private volatile global::IStore<global::Special>? _S2;
-	private global::IStore<global::Special> S2() { var service = _S2; if (service is not null) return service; lock (_lock) return (_S2 ??= new global::Store<global::Special>()); }
+	private global::IStore<global::Special> S2()
+	{
+		var service = _S2;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S2 ??= new global::Store<global::Special>());
+	}
 	private volatile global::IStore<global::Ordinary>? _S3;
-	private global::IStore<global::Ordinary> S3() { var service = _S3; if (service is not null) return service; lock (_lock) return (_S3 ??= new global::Store<global::Ordinary>()); }
+	private global::IStore<global::Ordinary> S3()
+	{
+		var service = _S3;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S3 ??= new global::Store<global::Ordinary>());
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IStore<global::Special>)) return probe ? this : (object)(S0());
-			if (type == typeof(global::IStoreHost)) return probe ? this : (object)(S1());
-			if (type == typeof(global::IStore<global::Ordinary>)) return probe ? this : (object)(S3());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStore<global::Special>>)) return probe ? this : (object)(new global::IStore<global::Special>[] { S2(), S0() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStoreHost>)) return probe ? this : (object)(new global::IStoreHost[] { S1() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStore<global::Ordinary>>)) return probe ? this : (object)(new global::IStore<global::Ordinary>[] { S3() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+			if (type == typeof(global::IStore<global::Special>))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::IStoreHost))
+				return probe ? this : (object)(S1());
+			if (type == typeof(global::IStore<global::Ordinary>))
+				return probe ? this : (object)(S3());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStore<global::Special>>))
+				return probe ? this : (object)(new global::IStore<global::Special>[] { S2(), S0() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStoreHost>))
+				return probe ? this : (object)(new global::IStoreHost[] { S1() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStore<global::Ordinary>>))
+				return probe ? this : (object)(new global::IStore<global::Ordinary>[] { S3() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -58,14 +103,39 @@ partial class StoreProvider : global::System.IServiceProvider, global::System.ID
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::System.IDisposable, StoreProvider.IResolver<global::IStore<global::Special>>, StoreProvider.IResolver<global::IStoreHost>, StoreProvider.IResolver<global::IStore<global::Ordinary>>, StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStore<global::Special>>>, StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStoreHost>>, StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStore<global::Ordinary>>>, StoreProvider.IResolver<global::System.IServiceProvider>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::System.IDisposable,
+		StoreProvider.IResolver<global::IStore<global::Special>>,
+		StoreProvider.IResolver<global::IStoreHost>,
+		StoreProvider.IResolver<global::IStore<global::Ordinary>>,
+		StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStore<global::Special>>>,
+		StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStoreHost>>,
+		StoreProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IStore<global::Ordinary>>>,
+		StoreProvider.IResolver<global::System.IServiceProvider>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -82,13 +152,20 @@ partial class StoreProvider : global::System.IServiceProvider, global::System.ID
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IStore<global::Special>)) return probe ? this : (object)(S0());
-				if (type == typeof(global::IStoreHost)) return probe ? this : (object)(S1());
-				if (type == typeof(global::IStore<global::Ordinary>)) return probe ? this : (object)(S3());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStore<global::Special>>)) return probe ? this : (object)(new global::IStore<global::Special>[] { S2(), S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStoreHost>)) return probe ? this : (object)(new global::IStoreHost[] { S1() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStore<global::Ordinary>>)) return probe ? this : (object)(new global::IStore<global::Ordinary>[] { S3() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+				if (type == typeof(global::IStore<global::Special>))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::IStoreHost))
+					return probe ? this : (object)(S1());
+				if (type == typeof(global::IStore<global::Ordinary>))
+					return probe ? this : (object)(S3());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStore<global::Special>>))
+					return probe ? this : (object)(new global::IStore<global::Special>[] { S2(), S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStoreHost>))
+					return probe ? this : (object)(new global::IStoreHost[] { S1() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IStore<global::Ordinary>>))
+					return probe ? this : (object)(new global::IStore<global::Ordinary>[] { S3() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -114,10 +191,25 @@ partial class StoreProvider : global::System.IServiceProvider, global::System.ID
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

@@ -7,29 +7,67 @@
 
 #nullable enable
 
-partial class ValueTypeProvider : global::System.IServiceProvider, global::System.IDisposable, ValueTypeProvider.IResolver<global::Stamp>, ValueTypeProvider.IResolver<global::IMarker>, ValueTypeProvider.IResolver<global::IPrinter>, ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::Stamp>>, ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IMarker>>, ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPrinter>>, ValueTypeProvider.IResolver<global::System.IServiceProvider>
+partial class ValueTypeProvider : 
+	global::System.IServiceProvider,
+	global::System.IDisposable,
+	ValueTypeProvider.IResolver<global::Stamp>,
+	ValueTypeProvider.IResolver<global::IMarker>,
+	ValueTypeProvider.IResolver<global::IPrinter>,
+	ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::Stamp>>,
+	ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IMarker>>,
+	ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPrinter>>,
+	ValueTypeProvider.IResolver<global::System.IServiceProvider>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile object? _S0;
-	private global::Stamp S0() { var service = _S0; if (service is not null) return (global::Stamp)service; lock (_lock) return (global::Stamp)(_S0 ??= new global::Stamp()); }
+	private global::Stamp S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return (global::Stamp)service;
+		lock (_lock)
+			return (global::Stamp)(_S0 ??= new global::Stamp());
+	}
 	private volatile global::IMarker? _S1;
-	private global::IMarker S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::MarkerStruct()); }
+	private global::IMarker S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::MarkerStruct());
+	}
 	private volatile global::IPrinter? _S2;
-	private global::IPrinter S2() { var service = _S2; if (service is not null) return service; lock (_lock) return (_S2 ??= new global::Printer(S0(), S1())); }
+	private global::IPrinter S2()
+	{
+		var service = _S2;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S2 ??= new global::Printer(S0(), S1()));
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::Stamp)) return probe ? this : (object)(S0());
-			if (type == typeof(global::IMarker)) return probe ? this : (object)(S1());
-			if (type == typeof(global::IPrinter)) return probe ? this : (object)(S2());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::Stamp>)) return probe ? this : (object)(new global::Stamp[] { S0() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IMarker>)) return probe ? this : (object)(new global::IMarker[] { S1() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPrinter>)) return probe ? this : (object)(new global::IPrinter[] { S2() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+			if (type == typeof(global::Stamp))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::IMarker))
+				return probe ? this : (object)(S1());
+			if (type == typeof(global::IPrinter))
+				return probe ? this : (object)(S2());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::Stamp>))
+				return probe ? this : (object)(new global::Stamp[] { S0() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IMarker>))
+				return probe ? this : (object)(new global::IMarker[] { S1() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPrinter>))
+				return probe ? this : (object)(new global::IPrinter[] { S2() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -56,14 +94,39 @@ partial class ValueTypeProvider : global::System.IServiceProvider, global::Syste
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::System.IDisposable, ValueTypeProvider.IResolver<global::Stamp>, ValueTypeProvider.IResolver<global::IMarker>, ValueTypeProvider.IResolver<global::IPrinter>, ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::Stamp>>, ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IMarker>>, ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPrinter>>, ValueTypeProvider.IResolver<global::System.IServiceProvider>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::System.IDisposable,
+		ValueTypeProvider.IResolver<global::Stamp>,
+		ValueTypeProvider.IResolver<global::IMarker>,
+		ValueTypeProvider.IResolver<global::IPrinter>,
+		ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::Stamp>>,
+		ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IMarker>>,
+		ValueTypeProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPrinter>>,
+		ValueTypeProvider.IResolver<global::System.IServiceProvider>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -79,13 +142,20 @@ partial class ValueTypeProvider : global::System.IServiceProvider, global::Syste
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::Stamp)) return probe ? this : (object)(S0());
-				if (type == typeof(global::IMarker)) return probe ? this : (object)(S1());
-				if (type == typeof(global::IPrinter)) return probe ? this : (object)(S2());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::Stamp>)) return probe ? this : (object)(new global::Stamp[] { S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IMarker>)) return probe ? this : (object)(new global::IMarker[] { S1() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPrinter>)) return probe ? this : (object)(new global::IPrinter[] { S2() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+				if (type == typeof(global::Stamp))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::IMarker))
+					return probe ? this : (object)(S1());
+				if (type == typeof(global::IPrinter))
+					return probe ? this : (object)(S2());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::Stamp>))
+					return probe ? this : (object)(new global::Stamp[] { S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IMarker>))
+					return probe ? this : (object)(new global::IMarker[] { S1() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPrinter>))
+					return probe ? this : (object)(new global::IPrinter[] { S2() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -111,10 +181,25 @@ partial class ValueTypeProvider : global::System.IServiceProvider, global::Syste
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

@@ -7,21 +7,37 @@
 
 #nullable enable
 
-partial class ClosedGenericProvider : global::System.IServiceProvider, global::System.IDisposable, ClosedGenericProvider.IResolver<global::IBox<global::Widget>>, ClosedGenericProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IBox<global::Widget>>>, ClosedGenericProvider.IResolver<global::System.IServiceProvider>
+partial class ClosedGenericProvider : 
+	global::System.IServiceProvider,
+	global::System.IDisposable,
+	ClosedGenericProvider.IResolver<global::IBox<global::Widget>>,
+	ClosedGenericProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IBox<global::Widget>>>,
+	ClosedGenericProvider.IResolver<global::System.IServiceProvider>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IBox<global::Widget>? _S0;
-	private global::IBox<global::Widget> S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::Box<global::Widget>()); }
+	private global::IBox<global::Widget> S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::Box<global::Widget>());
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IBox<global::Widget>)) return probe ? this : (object)(S0());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IBox<global::Widget>>)) return probe ? this : (object)(new global::IBox<global::Widget>[] { S0() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+			if (type == typeof(global::IBox<global::Widget>))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IBox<global::Widget>>))
+				return probe ? this : (object)(new global::IBox<global::Widget>[] { S0() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -44,14 +60,35 @@ partial class ClosedGenericProvider : global::System.IServiceProvider, global::S
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::System.IDisposable, ClosedGenericProvider.IResolver<global::IBox<global::Widget>>, ClosedGenericProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IBox<global::Widget>>>, ClosedGenericProvider.IResolver<global::System.IServiceProvider>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::System.IDisposable,
+		ClosedGenericProvider.IResolver<global::IBox<global::Widget>>,
+		ClosedGenericProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IBox<global::Widget>>>,
+		ClosedGenericProvider.IResolver<global::System.IServiceProvider>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -65,9 +102,12 @@ partial class ClosedGenericProvider : global::System.IServiceProvider, global::S
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IBox<global::Widget>)) return probe ? this : (object)(S0());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IBox<global::Widget>>)) return probe ? this : (object)(new global::IBox<global::Widget>[] { S0() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+				if (type == typeof(global::IBox<global::Widget>))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IBox<global::Widget>>))
+					return probe ? this : (object)(new global::IBox<global::Widget>[] { S0() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -89,10 +129,25 @@ partial class ClosedGenericProvider : global::System.IServiceProvider, global::S
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

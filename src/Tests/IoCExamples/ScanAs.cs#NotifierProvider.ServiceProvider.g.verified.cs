@@ -7,37 +7,100 @@
 
 #nullable enable
 
-partial class NotifierProvider : global::System.IServiceProvider, global::System.IDisposable, NotifierProvider.IResolver<global::EmailNotifier>, NotifierProvider.IResolver<global::INotifier>, NotifierProvider.IResolver<global::IAuditable>, NotifierProvider.IResolver<global::SmsNotifier>, NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::EmailNotifier>>, NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::INotifier>>, NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IAuditable>>, NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::SmsNotifier>>, NotifierProvider.IResolver<global::System.IServiceProvider>
+partial class NotifierProvider : 
+	global::System.IServiceProvider,
+	global::System.IDisposable,
+	NotifierProvider.IResolver<global::EmailNotifier>,
+	NotifierProvider.IResolver<global::INotifier>,
+	NotifierProvider.IResolver<global::IAuditable>,
+	NotifierProvider.IResolver<global::SmsNotifier>,
+	NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::EmailNotifier>>,
+	NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::INotifier>>,
+	NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IAuditable>>,
+	NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::SmsNotifier>>,
+	NotifierProvider.IResolver<global::System.IServiceProvider>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::EmailNotifier? _S0;
-	private global::EmailNotifier S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::EmailNotifier()); }
+	private global::EmailNotifier S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::EmailNotifier());
+	}
 	private volatile global::INotifier? _S1;
-	private global::INotifier S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::EmailNotifier()); }
+	private global::INotifier S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::EmailNotifier());
+	}
 	private volatile global::IAuditable? _S2;
-	private global::IAuditable S2() { var service = _S2; if (service is not null) return service; lock (_lock) return (_S2 ??= new global::EmailNotifier()); }
+	private global::IAuditable S2()
+	{
+		var service = _S2;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S2 ??= new global::EmailNotifier());
+	}
 	private volatile global::SmsNotifier? _S3;
-	private global::SmsNotifier S3() { var service = _S3; if (service is not null) return service; lock (_lock) return (_S3 ??= new global::SmsNotifier()); }
+	private global::SmsNotifier S3()
+	{
+		var service = _S3;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S3 ??= new global::SmsNotifier());
+	}
 	private volatile global::INotifier? _S4;
-	private global::INotifier S4() { var service = _S4; if (service is not null) return service; lock (_lock) return (_S4 ??= new global::SmsNotifier()); }
+	private global::INotifier S4()
+	{
+		var service = _S4;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S4 ??= new global::SmsNotifier());
+	}
 	private volatile global::IAuditable? _S5;
-	private global::IAuditable S5() { var service = _S5; if (service is not null) return service; lock (_lock) return (_S5 ??= new global::AuditLog()); }
+	private global::IAuditable S5()
+	{
+		var service = _S5;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S5 ??= new global::AuditLog());
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::EmailNotifier)) return probe ? this : (object)(S0());
-			if (type == typeof(global::INotifier)) return probe ? this : (object)(S4());
-			if (type == typeof(global::IAuditable)) return probe ? this : (object)(S5());
-			if (type == typeof(global::SmsNotifier)) return probe ? this : (object)(S3());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::EmailNotifier>)) return probe ? this : (object)(new global::EmailNotifier[] { S0() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::INotifier>)) return probe ? this : (object)(new global::INotifier[] { S1(), S4() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IAuditable>)) return probe ? this : (object)(new global::IAuditable[] { S2(), S5() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::SmsNotifier>)) return probe ? this : (object)(new global::SmsNotifier[] { S3() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+			if (type == typeof(global::EmailNotifier))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::INotifier))
+				return probe ? this : (object)(S4());
+			if (type == typeof(global::IAuditable))
+				return probe ? this : (object)(S5());
+			if (type == typeof(global::SmsNotifier))
+				return probe ? this : (object)(S3());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::EmailNotifier>))
+				return probe ? this : (object)(new global::EmailNotifier[] { S0() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::INotifier>))
+				return probe ? this : (object)(new global::INotifier[] { S1(), S4() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IAuditable>))
+				return probe ? this : (object)(new global::IAuditable[] { S2(), S5() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::SmsNotifier>))
+				return probe ? this : (object)(new global::SmsNotifier[] { S3() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -66,14 +129,41 @@ partial class NotifierProvider : global::System.IServiceProvider, global::System
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::System.IDisposable, NotifierProvider.IResolver<global::EmailNotifier>, NotifierProvider.IResolver<global::INotifier>, NotifierProvider.IResolver<global::IAuditable>, NotifierProvider.IResolver<global::SmsNotifier>, NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::EmailNotifier>>, NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::INotifier>>, NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IAuditable>>, NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::SmsNotifier>>, NotifierProvider.IResolver<global::System.IServiceProvider>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::System.IDisposable,
+		NotifierProvider.IResolver<global::EmailNotifier>,
+		NotifierProvider.IResolver<global::INotifier>,
+		NotifierProvider.IResolver<global::IAuditable>,
+		NotifierProvider.IResolver<global::SmsNotifier>,
+		NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::EmailNotifier>>,
+		NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::INotifier>>,
+		NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IAuditable>>,
+		NotifierProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::SmsNotifier>>,
+		NotifierProvider.IResolver<global::System.IServiceProvider>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -92,15 +182,24 @@ partial class NotifierProvider : global::System.IServiceProvider, global::System
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::EmailNotifier)) return probe ? this : (object)(S0());
-				if (type == typeof(global::INotifier)) return probe ? this : (object)(S4());
-				if (type == typeof(global::IAuditable)) return probe ? this : (object)(S5());
-				if (type == typeof(global::SmsNotifier)) return probe ? this : (object)(S3());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::EmailNotifier>)) return probe ? this : (object)(new global::EmailNotifier[] { S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::INotifier>)) return probe ? this : (object)(new global::INotifier[] { S1(), S4() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IAuditable>)) return probe ? this : (object)(new global::IAuditable[] { S2(), S5() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::SmsNotifier>)) return probe ? this : (object)(new global::SmsNotifier[] { S3() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+				if (type == typeof(global::EmailNotifier))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::INotifier))
+					return probe ? this : (object)(S4());
+				if (type == typeof(global::IAuditable))
+					return probe ? this : (object)(S5());
+				if (type == typeof(global::SmsNotifier))
+					return probe ? this : (object)(S3());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::EmailNotifier>))
+					return probe ? this : (object)(new global::EmailNotifier[] { S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::INotifier>))
+					return probe ? this : (object)(new global::INotifier[] { S1(), S4() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IAuditable>))
+					return probe ? this : (object)(new global::IAuditable[] { S2(), S5() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::SmsNotifier>))
+					return probe ? this : (object)(new global::SmsNotifier[] { S3() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -128,10 +227,25 @@ partial class NotifierProvider : global::System.IServiceProvider, global::System
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

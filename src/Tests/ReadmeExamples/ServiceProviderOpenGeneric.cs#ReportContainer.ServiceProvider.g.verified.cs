@@ -7,33 +7,83 @@
 
 #nullable enable
 
-partial class ReportContainer : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, ReportContainer.IResolver<global::ISession>, ReportContainer.IResolver<global::ICustomerReport>, ReportContainer.IResolver<global::IRepository<global::Customer>>, ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::ISession>>, ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::ICustomerReport>>, ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::IRepository<global::Customer>>>, ReportContainer.IResolver<global::System.IServiceProvider>, ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+partial class ReportContainer : 
+	global::System.IServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+	global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+	global::System.IDisposable,
+	ReportContainer.IResolver<global::ISession>,
+	ReportContainer.IResolver<global::ICustomerReport>,
+	ReportContainer.IResolver<global::IRepository<global::Customer>>,
+	ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::ISession>>,
+	ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::ICustomerReport>>,
+	ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::IRepository<global::Customer>>>,
+	ReportContainer.IResolver<global::System.IServiceProvider>,
+	ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+	ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+	ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+	ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::ISession? _S0;
-	private global::ISession S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::Session()); }
+	private global::ISession S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::Session());
+	}
 	private volatile global::ICustomerReport? _S1;
-	private global::ICustomerReport S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::CustomerReport(S2())); }
+	private global::ICustomerReport S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::CustomerReport(S2()));
+	}
 	private volatile global::IRepository<global::Customer>? _S2;
-	private global::IRepository<global::Customer> S2() { var service = _S2; if (service is not null) return service; lock (_lock) return (_S2 ??= new global::Repository<global::Customer>(S0())); }
+	private global::IRepository<global::Customer> S2()
+	{
+		var service = _S2;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S2 ??= new global::Repository<global::Customer>(S0()));
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::ISession)) return probe ? this : (object)(S0());
-			if (type == typeof(global::ICustomerReport)) return probe ? this : (object)(S1());
-			if (type == typeof(global::IRepository<global::Customer>)) return probe ? this : (object)(S2());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ISession>)) return probe ? this : (object)(new global::ISession[] { S0() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ICustomerReport>)) return probe ? this : (object)(new global::ICustomerReport[] { S1() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IRepository<global::Customer>>)) return probe ? this : (object)(new global::IRepository<global::Customer>[] { S2() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+			if (type == typeof(global::ISession))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::ICustomerReport))
+				return probe ? this : (object)(S1());
+			if (type == typeof(global::IRepository<global::Customer>))
+				return probe ? this : (object)(S2());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ISession>))
+				return probe ? this : (object)(new global::ISession[] { S0() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ICustomerReport>))
+				return probe ? this : (object)(new global::ICustomerReport[] { S1() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IRepository<global::Customer>>))
+				return probe ? this : (object)(new global::IRepository<global::Customer>[] { S2() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -65,14 +115,48 @@ partial class ReportContainer : global::System.IServiceProvider, global::Microso
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, global::Microsoft.Extensions.DependencyInjection.IServiceScope, ReportContainer.IResolver<global::ISession>, ReportContainer.IResolver<global::ICustomerReport>, ReportContainer.IResolver<global::IRepository<global::Customer>>, ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::ISession>>, ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::ICustomerReport>>, ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::IRepository<global::Customer>>>, ReportContainer.IResolver<global::System.IServiceProvider>, ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+		global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+		global::System.IDisposable,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScope,
+		ReportContainer.IResolver<global::ISession>,
+		ReportContainer.IResolver<global::ICustomerReport>,
+		ReportContainer.IResolver<global::IRepository<global::Customer>>,
+		ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::ISession>>,
+		ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::ICustomerReport>>,
+		ReportContainer.IResolver<global::System.Collections.Generic.IEnumerable<global::IRepository<global::Customer>>>,
+		ReportContainer.IResolver<global::System.IServiceProvider>,
+		ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+		ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+		ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+		ReportContainer.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -88,17 +172,28 @@ partial class ReportContainer : global::System.IServiceProvider, global::Microso
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::ISession)) return probe ? this : (object)(S0());
-				if (type == typeof(global::ICustomerReport)) return probe ? this : (object)(S1());
-				if (type == typeof(global::IRepository<global::Customer>)) return probe ? this : (object)(S2());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ISession>)) return probe ? this : (object)(new global::ISession[] { S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ICustomerReport>)) return probe ? this : (object)(new global::ICustomerReport[] { S1() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IRepository<global::Customer>>)) return probe ? this : (object)(new global::IRepository<global::Customer>[] { S2() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+				if (type == typeof(global::ISession))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::ICustomerReport))
+					return probe ? this : (object)(S1());
+				if (type == typeof(global::IRepository<global::Customer>))
+					return probe ? this : (object)(S2());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ISession>))
+					return probe ? this : (object)(new global::ISession[] { S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::ICustomerReport>))
+					return probe ? this : (object)(new global::ICustomerReport[] { S1() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IRepository<global::Customer>>))
+					return probe ? this : (object)(new global::IRepository<global::Customer>[] { S2() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -129,10 +224,25 @@ partial class ReportContainer : global::System.IServiceProvider, global::Microso
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

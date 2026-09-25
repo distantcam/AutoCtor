@@ -7,31 +7,74 @@
 
 #nullable enable
 
-partial class DuplicateResolverProvider : global::System.IServiceProvider, global::System.IDisposable, DuplicateResolverProvider.IResolver<global::IPlugin>, DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPlugin>>, DuplicateResolverProvider.IResolver<global::System.IServiceProvider>, DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<global::IPlugin>>>, DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::System.IServiceProvider>>
+partial class DuplicateResolverProvider : 
+	global::System.IServiceProvider,
+	global::System.IDisposable,
+	DuplicateResolverProvider.IResolver<global::IPlugin>,
+	DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPlugin>>,
+	DuplicateResolverProvider.IResolver<global::System.IServiceProvider>,
+	DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<global::IPlugin>>>,
+	DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::System.IServiceProvider>>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IPlugin? _S0;
-	private global::IPlugin S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::FirstPlugin()); }
+	private global::IPlugin S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::FirstPlugin());
+	}
 	private volatile global::IPlugin? _S1;
-	private global::IPlugin S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::SecondPlugin()); }
+	private global::IPlugin S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::SecondPlugin());
+	}
 	private volatile global::System.Collections.Generic.IEnumerable<global::IPlugin>? _S2;
-	private global::System.Collections.Generic.IEnumerable<global::IPlugin> S2() { var service = _S2; if (service is not null) return service; lock (_lock) return (_S2 ??= new global::PluginList()); }
+	private global::System.Collections.Generic.IEnumerable<global::IPlugin> S2()
+	{
+		var service = _S2;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S2 ??= new global::PluginList());
+	}
 	private volatile global::System.IServiceProvider? _S3;
-	private global::System.IServiceProvider S3() { var service = _S3; if (service is not null) return service; lock (_lock) return (_S3 ??= new global::AmbientProvider()); }
+	private global::System.IServiceProvider S3()
+	{
+		var service = _S3;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S3 ??= new global::AmbientProvider());
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IPlugin)) return probe ? this : (object)(S1());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPlugin>)) return probe ? this : (object)(S2());
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(S3());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPlugin>)) return probe ? this : (object)(new global::IPlugin[] { S0(), S1() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<global::IPlugin>>)) return probe ? this : (object)(new global::System.Collections.Generic.IEnumerable<global::IPlugin>[] { S2() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::System.IServiceProvider>)) return probe ? this : (object)(new global::System.IServiceProvider[] { S3() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+			if (type == typeof(global::IPlugin))
+				return probe ? this : (object)(S1());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPlugin>))
+				return probe ? this : (object)(S2());
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(S3());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPlugin>))
+				return probe ? this : (object)(new global::IPlugin[] { S0(), S1() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<global::IPlugin>>))
+				return probe ? this : (object)(new global::System.Collections.Generic.IEnumerable<global::IPlugin>[] { S2() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::System.IServiceProvider>))
+				return probe ? this : (object)(new global::System.IServiceProvider[] { S3() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -56,14 +99,37 @@ partial class DuplicateResolverProvider : global::System.IServiceProvider, globa
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::System.IDisposable, DuplicateResolverProvider.IResolver<global::IPlugin>, DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPlugin>>, DuplicateResolverProvider.IResolver<global::System.IServiceProvider>, DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<global::IPlugin>>>, DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::System.IServiceProvider>>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::System.IDisposable,
+		DuplicateResolverProvider.IResolver<global::IPlugin>,
+		DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPlugin>>,
+		DuplicateResolverProvider.IResolver<global::System.IServiceProvider>,
+		DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<global::IPlugin>>>,
+		DuplicateResolverProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::System.IServiceProvider>>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -80,13 +146,20 @@ partial class DuplicateResolverProvider : global::System.IServiceProvider, globa
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IPlugin)) return probe ? this : (object)(S1());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPlugin>)) return probe ? this : (object)(S2());
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(S3());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPlugin>)) return probe ? this : (object)(new global::IPlugin[] { S0(), S1() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<global::IPlugin>>)) return probe ? this : (object)(new global::System.Collections.Generic.IEnumerable<global::IPlugin>[] { S2() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::System.IServiceProvider>)) return probe ? this : (object)(new global::System.IServiceProvider[] { S3() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+				if (type == typeof(global::IPlugin))
+					return probe ? this : (object)(S1());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPlugin>))
+					return probe ? this : (object)(S2());
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(S3());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPlugin>))
+					return probe ? this : (object)(new global::IPlugin[] { S0(), S1() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::System.Collections.Generic.IEnumerable<global::IPlugin>>))
+					return probe ? this : (object)(new global::System.Collections.Generic.IEnumerable<global::IPlugin>[] { S2() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::System.IServiceProvider>))
+					return probe ? this : (object)(new global::System.IServiceProvider[] { S3() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -110,10 +183,25 @@ partial class DuplicateResolverProvider : global::System.IServiceProvider, globa
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

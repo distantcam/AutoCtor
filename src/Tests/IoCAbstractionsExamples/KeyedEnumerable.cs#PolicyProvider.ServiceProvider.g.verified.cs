@@ -7,38 +7,94 @@
 
 #nullable enable
 
-partial class PolicyProvider : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, PolicyProvider.IResolver<global::IPolicy>, PolicyProvider.IResolver<global::IPolicyHost>, PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicy>>, PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicyHost>>, PolicyProvider.IResolver<global::System.IServiceProvider>, PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+partial class PolicyProvider : 
+	global::System.IServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+	global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+	global::System.IDisposable,
+	PolicyProvider.IResolver<global::IPolicy>,
+	PolicyProvider.IResolver<global::IPolicyHost>,
+	PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicy>>,
+	PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicyHost>>,
+	PolicyProvider.IResolver<global::System.IServiceProvider>,
+	PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+	PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+	PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+	PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IPolicy? _S0;
-	private global::IPolicy S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::DefaultPolicy()); }
+	private global::IPolicy S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::DefaultPolicy());
+	}
 	private volatile global::IPolicy? _S1;
-	private global::IPolicy S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::StrictPolicy()); }
+	private global::IPolicy S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::StrictPolicy());
+	}
 	private volatile global::IPolicy? _S2;
-	private global::IPolicy S2() { var service = _S2; if (service is not null) return service; lock (_lock) return (_S2 ??= new global::LoosePolicy()); }
+	private global::IPolicy S2()
+	{
+		var service = _S2;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S2 ??= new global::LoosePolicy());
+	}
 	private volatile global::IPolicyHost? _S3;
-	private global::IPolicyHost S3() { var service = _S3; if (service is not null) return service; lock (_lock) return (_S3 ??= new global::PolicyHost(new global::IPolicy[] { S0() })); }
+	private global::IPolicyHost S3()
+	{
+		var service = _S3;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S3 ??= new global::PolicyHost(new global::IPolicy[] { S0() }));
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IPolicy)) return probe ? this : (object)(S0());
-			if (type == typeof(global::IPolicyHost)) return probe ? this : (object)(S3());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>)) return probe ? this : (object)(new global::IPolicy[] { S0() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicyHost>)) return probe ? this : (object)(new global::IPolicyHost[] { S3() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+			if (type == typeof(global::IPolicy))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::IPolicyHost))
+				return probe ? this : (object)(S3());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>))
+				return probe ? this : (object)(new global::IPolicy[] { S0() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicyHost>))
+				return probe ? this : (object)(new global::IPolicyHost[] { S3() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+				return probe ? this : (object)(this);
 			return null;
 		}
-		if (type == typeof(global::IPolicy) && object.Equals(key, "strict")) return probe ? this : (object)(S2());
-		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>) && object.Equals(key, "strict")) return probe ? this : (object)(new global::IPolicy[] { S1(), S2() });
-		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>) && object.Equals(key, global::Microsoft.Extensions.DependencyInjection.KeyedService.AnyKey)) return probe ? this : (object)(new global::IPolicy[] { S1(), S2() });
+		if (type == typeof(global::IPolicy) && object.Equals(key, "strict"))
+			return probe ? this : (object)(S2());
+		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>) && object.Equals(key, "strict"))
+			return probe ? this : (object)(new global::IPolicy[] { S1(), S2() });
+		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>) && object.Equals(key, global::Microsoft.Extensions.DependencyInjection.KeyedService.AnyKey))
+			return probe ? this : (object)(new global::IPolicy[] { S1(), S2() });
 		return null;
 	}
 
@@ -66,14 +122,46 @@ partial class PolicyProvider : global::System.IServiceProvider, global::Microsof
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, global::Microsoft.Extensions.DependencyInjection.IServiceScope, PolicyProvider.IResolver<global::IPolicy>, PolicyProvider.IResolver<global::IPolicyHost>, PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicy>>, PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicyHost>>, PolicyProvider.IResolver<global::System.IServiceProvider>, PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+		global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+		global::System.IDisposable,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScope,
+		PolicyProvider.IResolver<global::IPolicy>,
+		PolicyProvider.IResolver<global::IPolicyHost>,
+		PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicy>>,
+		PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicyHost>>,
+		PolicyProvider.IResolver<global::System.IServiceProvider>,
+		PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+		PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+		PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+		PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -90,20 +178,32 @@ partial class PolicyProvider : global::System.IServiceProvider, global::Microsof
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IPolicy)) return probe ? this : (object)(S0());
-				if (type == typeof(global::IPolicyHost)) return probe ? this : (object)(S3());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>)) return probe ? this : (object)(new global::IPolicy[] { S0() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicyHost>)) return probe ? this : (object)(new global::IPolicyHost[] { S3() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+				if (type == typeof(global::IPolicy))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::IPolicyHost))
+					return probe ? this : (object)(S3());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>))
+					return probe ? this : (object)(new global::IPolicy[] { S0() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicyHost>))
+					return probe ? this : (object)(new global::IPolicyHost[] { S3() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+					return probe ? this : (object)(this);
 				return null;
 			}
-			if (type == typeof(global::IPolicy) && object.Equals(key, "strict")) return probe ? this : (object)(S2());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>) && object.Equals(key, "strict")) return probe ? this : (object)(new global::IPolicy[] { S1(), S2() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>) && object.Equals(key, global::Microsoft.Extensions.DependencyInjection.KeyedService.AnyKey)) return probe ? this : (object)(new global::IPolicy[] { S1(), S2() });
+			if (type == typeof(global::IPolicy) && object.Equals(key, "strict"))
+				return probe ? this : (object)(S2());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>) && object.Equals(key, "strict"))
+				return probe ? this : (object)(new global::IPolicy[] { S1(), S2() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IPolicy>) && object.Equals(key, global::Microsoft.Extensions.DependencyInjection.KeyedService.AnyKey))
+				return probe ? this : (object)(new global::IPolicy[] { S1(), S2() });
 			return null;
 		}
 
@@ -130,10 +230,25 @@ partial class PolicyProvider : global::System.IServiceProvider, global::Microsof
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

@@ -7,29 +7,70 @@
 
 #nullable enable
 
-partial class ValidationProvider : global::System.IServiceProvider, global::System.IDisposable, ValidationProvider.IResolver<global::IValidator>, ValidationProvider.IResolver<global::IValidationRunner>, ValidationProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidator>>, ValidationProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidationRunner>>, ValidationProvider.IResolver<global::System.IServiceProvider>
+partial class ValidationProvider : 
+	global::System.IServiceProvider,
+	global::System.IDisposable,
+	ValidationProvider.IResolver<global::IValidator>,
+	ValidationProvider.IResolver<global::IValidationRunner>,
+	ValidationProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidator>>,
+	ValidationProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidationRunner>>,
+	ValidationProvider.IResolver<global::System.IServiceProvider>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IValidator? _S0;
-	private global::IValidator S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::NameValidator()); }
+	private global::IValidator S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::NameValidator());
+	}
 	private volatile global::IValidator? _S1;
-	private global::IValidator S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::EmailValidator()); }
+	private global::IValidator S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::EmailValidator());
+	}
 	private volatile global::IValidator? _S2;
-	private global::IValidator S2() { var service = _S2; if (service is not null) return service; lock (_lock) return (_S2 ??= new global::AgeValidator()); }
+	private global::IValidator S2()
+	{
+		var service = _S2;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S2 ??= new global::AgeValidator());
+	}
 	private volatile global::IValidationRunner? _S3;
-	private global::IValidationRunner S3() { var service = _S3; if (service is not null) return service; lock (_lock) return (_S3 ??= new global::ValidationRunner(new global::IValidator[] { S0(), S1(), S2() })); }
+	private global::IValidationRunner S3()
+	{
+		var service = _S3;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S3 ??= new global::ValidationRunner(new global::IValidator[] { S0(), S1(), S2() }));
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IValidator)) return probe ? this : (object)(S2());
-			if (type == typeof(global::IValidationRunner)) return probe ? this : (object)(S3());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IValidator>)) return probe ? this : (object)(new global::IValidator[] { S0(), S1(), S2() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IValidationRunner>)) return probe ? this : (object)(new global::IValidationRunner[] { S3() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+			if (type == typeof(global::IValidator))
+				return probe ? this : (object)(S2());
+			if (type == typeof(global::IValidationRunner))
+				return probe ? this : (object)(S3());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IValidator>))
+				return probe ? this : (object)(new global::IValidator[] { S0(), S1(), S2() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IValidationRunner>))
+				return probe ? this : (object)(new global::IValidationRunner[] { S3() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
 			return null;
 		}
 		return null;
@@ -54,14 +95,37 @@ partial class ValidationProvider : global::System.IServiceProvider, global::Syst
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::System.IDisposable, ValidationProvider.IResolver<global::IValidator>, ValidationProvider.IResolver<global::IValidationRunner>, ValidationProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidator>>, ValidationProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidationRunner>>, ValidationProvider.IResolver<global::System.IServiceProvider>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::System.IDisposable,
+		ValidationProvider.IResolver<global::IValidator>,
+		ValidationProvider.IResolver<global::IValidationRunner>,
+		ValidationProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidator>>,
+		ValidationProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidationRunner>>,
+		ValidationProvider.IResolver<global::System.IServiceProvider>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -78,11 +142,16 @@ partial class ValidationProvider : global::System.IServiceProvider, global::Syst
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IValidator)) return probe ? this : (object)(S2());
-				if (type == typeof(global::IValidationRunner)) return probe ? this : (object)(S3());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IValidator>)) return probe ? this : (object)(new global::IValidator[] { S0(), S1(), S2() });
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IValidationRunner>)) return probe ? this : (object)(new global::IValidationRunner[] { S3() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
+				if (type == typeof(global::IValidator))
+					return probe ? this : (object)(S2());
+				if (type == typeof(global::IValidationRunner))
+					return probe ? this : (object)(S3());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IValidator>))
+					return probe ? this : (object)(new global::IValidator[] { S0(), S1(), S2() });
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IValidationRunner>))
+					return probe ? this : (object)(new global::IValidationRunner[] { S3() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
 				return null;
 			}
 			return null;
@@ -106,10 +175,25 @@ partial class ValidationProvider : global::System.IServiceProvider, global::Syst
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }

@@ -7,38 +7,92 @@
 
 #nullable enable
 
-partial class HandlerProvider : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, HandlerProvider.IResolver<global::IHandler>, HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler>>, HandlerProvider.IResolver<global::System.IServiceProvider>, HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+partial class HandlerProvider : 
+	global::System.IServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+	global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+	global::System.IDisposable,
+	HandlerProvider.IResolver<global::IHandler>,
+	HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler>>,
+	HandlerProvider.IResolver<global::System.IServiceProvider>,
+	HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+	HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+	HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+	HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+
 {
 	private readonly object _lock = new object();
 	private global::System.Collections.Generic.List<object>? _disposables;
 
 	private volatile global::IHandler? _S0;
-	private global::IHandler S0() { var service = _S0; if (service is not null) return service; lock (_lock) return (_S0 ??= new global::DefaultHandler()); }
+	private global::IHandler S0()
+	{
+		var service = _S0;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S0 ??= new global::DefaultHandler());
+	}
 	private volatile global::IHandler? _S1;
-	private global::IHandler S1() { var service = _S1; if (service is not null) return service; lock (_lock) return (_S1 ??= new global::EmailHandler()); }
+	private global::IHandler S1()
+	{
+		var service = _S1;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S1 ??= new global::EmailHandler());
+	}
 	private volatile global::IHandler? _S2;
-	private global::IHandler S2() { var service = _S2; if (service is not null) return service; lock (_lock) return (_S2 ??= new global::SmsHandler()); }
+	private global::IHandler S2()
+	{
+		var service = _S2;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S2 ??= new global::SmsHandler());
+	}
 	private volatile global::IHandler? _S3;
-	private global::IHandler S3() { var service = _S3; if (service is not null) return service; lock (_lock) return (_S3 ??= new global::PushHandler()); }
+	private global::IHandler S3()
+	{
+		var service = _S3;
+		if (service is not null)
+			return service;
+		lock (_lock)
+			return (_S3 ??= new global::PushHandler());
+	}
 
 	private object? Resolve(global::System.Type type, object? key, bool probe)
 	{
 		if (key is null)
 		{
-			if (type == typeof(global::IHandler)) return probe ? this : (object)(S0());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>)) return probe ? this : (object)(new global::IHandler[] { S0() });
-			if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+			if (type == typeof(global::IHandler))
+				return probe ? this : (object)(S0());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>))
+				return probe ? this : (object)(new global::IHandler[] { S0() });
+			if (type == typeof(global::System.IServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+				return probe ? this : (object)(this);
+			if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+				return probe ? this : (object)(this);
 			return null;
 		}
-		if (type == typeof(global::IHandler) && object.Equals(key, "email")) return probe ? this : (object)(S3());
-		if (type == typeof(global::IHandler) && object.Equals(key, "sms")) return probe ? this : (object)(S2());
-		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, "email")) return probe ? this : (object)(new global::IHandler[] { S1(), S3() });
-		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, "sms")) return probe ? this : (object)(new global::IHandler[] { S2() });
-		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, global::Microsoft.Extensions.DependencyInjection.KeyedService.AnyKey)) return probe ? this : (object)(new global::IHandler[] { S1(), S2(), S3() });
+		if (type == typeof(global::IHandler) && object.Equals(key, "email"))
+			return probe ? this : (object)(S3());
+		if (type == typeof(global::IHandler) && object.Equals(key, "sms"))
+			return probe ? this : (object)(S2());
+		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, "email"))
+			return probe ? this : (object)(new global::IHandler[] { S1(), S3() });
+		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, "sms"))
+			return probe ? this : (object)(new global::IHandler[] { S2() });
+		if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, global::Microsoft.Extensions.DependencyInjection.KeyedService.AnyKey))
+			return probe ? this : (object)(new global::IHandler[] { S1(), S2(), S3() });
 		return null;
 	}
 
@@ -64,14 +118,44 @@ partial class HandlerProvider : global::System.IServiceProvider, global::Microso
 	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 	private T Track<T>(T service)
 	{
-		if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+		if (service is global::System.IDisposable)
+			lock (_lock)
+				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
-	private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-	public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+	private object[] Drain()
+	{
+		lock (_lock)
+		{
+			var items = _disposables?.ToArray() ?? new object[0];
+			_disposables = null;
+			global::System.Array.Reverse(items);
+			return items;
+		}
+	}
+	public void Dispose()
+	{
+		foreach (var item in Drain())
+			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	public sealed class Scope : global::System.IServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService, global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider, global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService, global::System.IDisposable, global::Microsoft.Extensions.DependencyInjection.IServiceScope, HandlerProvider.IResolver<global::IHandler>, HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler>>, HandlerProvider.IResolver<global::System.IServiceProvider>, HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>, HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>, HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>, HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	public sealed class Scope : 
+		global::System.IServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService,
+		global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider,
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService,
+		global::System.IDisposable,
+		global::Microsoft.Extensions.DependencyInjection.IServiceScope,
+		HandlerProvider.IResolver<global::IHandler>,
+		HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler>>,
+		HandlerProvider.IResolver<global::System.IServiceProvider>,
+		HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>,
+		HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>,
+		HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>,
+		HandlerProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>
+	
 	{
 		private readonly object _lock = new object();
 		private global::System.Collections.Generic.List<object>? _disposables;
@@ -88,20 +172,32 @@ partial class HandlerProvider : global::System.IServiceProvider, global::Microso
 		{
 			if (key is null)
 			{
-				if (type == typeof(global::IHandler)) return probe ? this : (object)(S0());
-				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>)) return probe ? this : (object)(new global::IHandler[] { S0() });
-				if (type == typeof(global::System.IServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)) return probe ? this : (object)(this);
-				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) return probe ? this : (object)(this);
+				if (type == typeof(global::IHandler))
+					return probe ? this : (object)(S0());
+				if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>))
+					return probe ? this : (object)(new global::IHandler[] { S0() });
+				if (type == typeof(global::System.IServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider))
+					return probe ? this : (object)(this);
+				if (type == typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService))
+					return probe ? this : (object)(this);
 				return null;
 			}
-			if (type == typeof(global::IHandler) && object.Equals(key, "email")) return probe ? this : (object)(S3());
-			if (type == typeof(global::IHandler) && object.Equals(key, "sms")) return probe ? this : (object)(S2());
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, "email")) return probe ? this : (object)(new global::IHandler[] { S1(), S3() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, "sms")) return probe ? this : (object)(new global::IHandler[] { S2() });
-			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, global::Microsoft.Extensions.DependencyInjection.KeyedService.AnyKey)) return probe ? this : (object)(new global::IHandler[] { S1(), S2(), S3() });
+			if (type == typeof(global::IHandler) && object.Equals(key, "email"))
+				return probe ? this : (object)(S3());
+			if (type == typeof(global::IHandler) && object.Equals(key, "sms"))
+				return probe ? this : (object)(S2());
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, "email"))
+				return probe ? this : (object)(new global::IHandler[] { S1(), S3() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, "sms"))
+				return probe ? this : (object)(new global::IHandler[] { S2() });
+			if (type == typeof(global::System.Collections.Generic.IEnumerable<global::IHandler>) && object.Equals(key, global::Microsoft.Extensions.DependencyInjection.KeyedService.AnyKey))
+				return probe ? this : (object)(new global::IHandler[] { S1(), S2(), S3() });
 			return null;
 		}
 
@@ -126,10 +222,25 @@ partial class HandlerProvider : global::System.IServiceProvider, global::Microso
 		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
 		private T Track<T>(T service)
 		{
-			if (service is global::System.IDisposable) lock (_lock) (_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
+			if (service is global::System.IDisposable)
+				lock (_lock)
+					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
-		private object[] Drain() { lock (_lock) { var items = _disposables?.ToArray() ?? new object[0]; _disposables = null; global::System.Array.Reverse(items); return items; } }
-		public void Dispose() { foreach (var item in Drain()) (item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose(); }
+		private object[] Drain()
+		{
+			lock (_lock)
+			{
+				var items = _disposables?.ToArray() ?? new object[0];
+				_disposables = null;
+				global::System.Array.Reverse(items);
+				return items;
+			}
+		}
+		public void Dispose()
+		{
+			foreach (var item in Drain())
+				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		}
 	}
 }
