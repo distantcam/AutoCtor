@@ -37,3 +37,23 @@ public partial class AService
 -    }
 }
 ```
+
+# Service Providers
+
+AutoCtor can also build the container. Register services with attributes on a partial class, and the whole object graph is resolved during compilation and emitted as plain C#.
+
+```c#
+[ServiceProvider]
+[Singleton<IClock, SystemClock>]
+[Scoped<IUnitOfWork, UnitOfWork>]
+[Transient<IReportBuilder, ReportBuilder>]
+public partial class Container;
+```
+
+You get a real `IServiceProvider` with scopes, and disposal in reverse construction order. There is no reflection, no container and no registration API at run time -- every construction site is a literal `new`, so there is nothing for trimming or AOT to preserve.
+
+Because the graph is decided when the compiler runs, the problems Microsoft's container finds when someone resolves a service are build errors instead: a dependency nothing is registered for, a circular dependency, a scoped service captured by a singleton.
+
+Singletons, scoped services, transients, keyed services, open generics, `IEnumerable<T>` injection, factory members and `IAsyncDisposable` are all supported. AutoCtor adds no package dependency of its own: where `Microsoft.Extensions.DependencyInjection.Abstractions` is referenced the generated types implement the interfaces from it that fit, and where it is not, those interfaces are left off and every member behind them stands on its own. A provider can also fall back to another `IServiceProvider` for anything it does not register, which is how it sits under a host.
+
+See the [full readme](https://github.com/distantcam/AutoCtor#service-provider) for details.

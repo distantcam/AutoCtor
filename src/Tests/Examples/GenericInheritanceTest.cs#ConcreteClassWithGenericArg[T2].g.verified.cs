@@ -7,10 +7,7 @@
 
 partial class ConcreteClassWithGenericArg<T2>
 {
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public ConcreteClassWithGenericArg(T2 t) : base(t)
 	{
 	}

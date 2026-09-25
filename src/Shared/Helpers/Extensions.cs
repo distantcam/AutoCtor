@@ -46,9 +46,9 @@ internal static class Extensions
         "MicrosoftCodeAnalysisCorrectness",
         "RS1035:Do not use APIs banned for analyzers",
         Justification = "Old generator still maintained")]
-    public static void ReportDiagnostic(this EmitterContext context, IHaveDiagnostics item, DiagnosticDescriptor diagnostic)
+    public static void ReportDiagnostic(this EmitterContext context, IHaveDiagnostics item, DiagnosticDescriptor diagnostic, params object?[] messageArgs)
     {
         foreach (var loc in item.Locations)
-            context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, item.ErrorName));
+            context.ReportDiagnostic(Diagnostic.Create(diagnostic, loc, messageArgs.Length == 0 ? [item.ErrorName] : messageArgs));
     }
 }

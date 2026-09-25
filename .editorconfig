@@ -109,12 +109,13 @@ dotnet_naming_symbols.static_fields.required_modifiers = static
 dotnet_naming_style.static_field_style.capitalization = camel_case
 dotnet_naming_style.static_field_style.required_prefix = s_
 
-# Instance fields are camelCase and start with _
-dotnet_naming_rule.instance_fields_should_be_camel_case.severity = suggestion
-dotnet_naming_rule.instance_fields_should_be_camel_case.symbols = instance_fields
-dotnet_naming_rule.instance_fields_should_be_camel_case.style = instance_field_style
+# Non-public instance fields are camelCase and start with _
+dotnet_naming_rule.non_public_instance_fields_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.non_public_instance_fields_should_be_camel_case.symbols = non_public_instance_fields
+dotnet_naming_rule.non_public_instance_fields_should_be_camel_case.style = instance_field_style
 
-dotnet_naming_symbols.instance_fields.applicable_kinds = field
+dotnet_naming_symbols.non_public_instance_fields.applicable_kinds = field
+dotnet_naming_symbols.non_public_instance_fields.applicable_accessibilities = protected, internal, protected_internal, private_protected, private
 
 dotnet_naming_style.instance_field_style.capitalization = camel_case
 dotnet_naming_style.instance_field_style.required_prefix = _
@@ -226,10 +227,18 @@ csharp_preserve_single_line_statements = true
 # Custom bits
 ##########################################
 
-# Always have accessibility keyword
+# IDE0007: Use var instead of explicit type
+dotnet_diagnostic.IDE0007.severity = warning
+csharp_style_var_for_built_in_types = true:warning
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_elsewhere = true:warning
+
+# IDE0040: Add accessibility modifiers
+dotnet_diagnostic.IDE0040.severity = warning
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
 
-# Use file scoped namespaces
+# IDE0161: Use file-scoped namespace
+dotnet_diagnostic.IDE0161.severity = warning
 csharp_style_namespace_declarations = file_scoped:warning
 
 # CA1019: Define accessors for attribute arguments
@@ -237,6 +246,7 @@ dotnet_diagnostic.CA1019.severity = none
 
 # IDE0305: Simplify collection initialization
 dotnet_diagnostic.IDE0305.severity = none
+dotnet_style_prefer_collection_expression = false
 
 # Verify settings
 [*.{received,verified}.{cs,txt}]

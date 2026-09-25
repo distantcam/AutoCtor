@@ -6,7 +6,7 @@
 
 internal partial class CodeBuilder
 {
-    public IDisposable StartPartialType(IPartialTypeModel typeModel)
+    public IDisposable StartPartialType(IPartialTypeModel typeModel, string? baseList = null)
     {
         if (!string.IsNullOrEmpty(typeModel.Namespace))
         {
@@ -17,7 +17,9 @@ internal partial class CodeBuilder
 
         for (var i = 0; i < typeModel.TypeDeclarations.Count; i++)
         {
-            AppendLine(typeModel.TypeDeclarations[i]);
+            AppendLine(baseList is not null && i == typeModel.TypeDeclarations.Count - 1
+                ? $"{typeModel.TypeDeclarations[i]} : {baseList}"
+                : typeModel.TypeDeclarations[i]);
             AppendLine("{");
             IncreaseIndent();
         }

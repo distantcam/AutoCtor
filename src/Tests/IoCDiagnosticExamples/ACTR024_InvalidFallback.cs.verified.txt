@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[Singleton<IService, Service>]
+public partial class ParameterisedFallbackProvider
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+{
+*/
+ : (6,21)-(6,50),
+      Message: The fallback 'GetHost' cannot be used by 'ParameterisedFallbackProvider'; it must name an accessible, non-generic field, property or parameterless method declared on the service provider that returns a value,
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR024,
+        Title: Service provider fallback member is not valid,
+        MessageFormat: The fallback '{0}' cannot be used by '{1}'; it must name an accessible, non-generic field, property or parameterless method declared on the service provider that returns a value,
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

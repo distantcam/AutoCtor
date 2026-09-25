@@ -7,10 +7,7 @@
 
 partial class PostCtorWithRefReadonlyArgumentTest
 {
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public PostCtorWithRefReadonlyArgumentTest(
 		global::IServiceA serviceA,
 		global::IServiceB serviceB,

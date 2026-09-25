@@ -10,6 +10,9 @@ internal sealed record CodeFileTheoryData
     public bool LangPreview { get; set; }
     public string[] IgnoredCompileDiagnostics { get; set; } = [];
 
+    // For examples that deliberately report a diagnostic, so generate nothing to compile against.
+    public bool SnapshotOnly { get; set; }
+
     [SetsRequiredMembers]
     public CodeFileTheoryData(string file, params string[] codes)
     {

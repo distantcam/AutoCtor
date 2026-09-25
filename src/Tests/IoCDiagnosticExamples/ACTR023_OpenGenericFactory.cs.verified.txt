@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Singleton(typeof(IRepository<>), typeof(Repository<>), Factory = nameof(CreateRepository))]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public partial class OpenGenericFactoryProvider
+*/
+ : (4,1)-(4,91),
+      Message: The open generic service 'IRepository<T>' cannot use the factory 'CreateRepository'; a factory builds one type, and an open registration is closed on demand,
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR023,
+        Title: Open generic registration cannot use a factory,
+        MessageFormat: The open generic service '{0}' cannot use the factory '{1}'; a factory builds one type, and an open registration is closed on demand,
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

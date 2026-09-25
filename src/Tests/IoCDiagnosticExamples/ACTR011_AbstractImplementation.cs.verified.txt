@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Singleton(typeof(IAbstractService), typeof(AbstractService))]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public partial class AbstractImplProvider;
+*/
+ : (3,1)-(3,61),
+      Message: The implementation type 'AbstractService' cannot be instantiated; it must be a non-abstract, non-generic class,
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR011,
+        Title: Service implementation cannot be instantiated,
+        MessageFormat: The implementation type '{0}' cannot be instantiated; it must be a non-abstract, non-generic class,
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

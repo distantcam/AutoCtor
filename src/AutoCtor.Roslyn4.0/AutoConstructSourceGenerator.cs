@@ -16,7 +16,7 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
 
         var types = context.SyntaxProvider.CreateSyntaxProvider(
             GeneratorUtilities.IsTypeDeclarationWithAttributes,
-            GeneratorUtilities.GetSymbol<INamedTypeSymbol>)
+            GeneratorUtilities.GetPrimarySymbol<INamedTypeSymbol>)
         .Where(static x => Utilities.HasAttribute(x, AttributeNames.AutoConstruct))
         .Select(static (x, _) => TypeModel.Create(x!))
         .Collect();
@@ -28,8 +28,18 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         .Select(static (x, _) => PostCtorModel.Create(x!))
         .Collect();
 
+        var serviceProviders = context.SyntaxProvider.CreateSyntaxProvider(
+            GeneratorUtilities.IsTypeDeclarationWithAttributes,
+            GeneratorUtilities.GetPrimarySymbol<INamedTypeSymbol>)
+        .Where(static x => Utilities.HasAttribute(x, AttributeNames.ServiceProvider))
+        .Select(static (x, _) => ServiceProviderModel.Create(x!))
+        .Collect();
+
+        var duckTypes = context.CompilationProvider.Select(static (c, ct) => DuckTypes.Create(c));
+
         context.RegisterSourceOutput(
-            types.Combine(postCtorMethods).Combine(properties),
+            types.Combine(postCtorMethods).Combine(properties).Combine(serviceProviders).Combine(duckTypes)
+                .Select(static (x, _) => (x.Left.Left.Left.Left, x.Left.Left.Left.Right, x.Left.Left.Right, x.Left.Right, x.Right)),
             Emitter.GenerateSource);
     }
 }

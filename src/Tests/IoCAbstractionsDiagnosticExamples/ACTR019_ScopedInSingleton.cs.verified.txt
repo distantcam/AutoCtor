@@ -1,0 +1,42 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[Scoped<ITenantContext, TenantContext>]
+[Singleton<ICacheDirect, CacheDirect>]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Transient<IQuery, Query>]
+*/
+ : (7,1)-(7,37),
+      Message: The service 'TenantContext' requires a scope and cannot be injected into the singleton 'CacheDirect',
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR019,
+        Title: Scoped service cannot be resolved outside a scope,
+        MessageFormat: The service '{0}' requires a scope and cannot be injected into the singleton '{1}',
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+[Transient<IQuery, Query>]
+[Singleton<ICacheIndirect, CacheIndirect>]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public partial class ScopedCaptureProvider;
+*/
+ : (9,1)-(9,41),
+      Message: The service 'Query' requires a scope and cannot be injected into the singleton 'CacheIndirect',
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR019,
+        Title: Scoped service cannot be resolved outside a scope,
+        MessageFormat: The service '{0}' requires a scope and cannot be injected into the singleton '{1}',
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

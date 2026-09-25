@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[Singleton<IStore, PrimaryStore>(Key = "primary")]
+[Singleton<IStoreClient, StoreClient>]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public partial class StoreProvider;
+*/
+ : (5,1)-(5,37),
+      Message: No registration with key "secondary" was found for the dependency 'IStore' of 'StoreClient',
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR014,
+        Title: Keyed service dependency is not registered,
+        MessageFormat: No registration with key {2} was found for the dependency '{0}' of '{1}',
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

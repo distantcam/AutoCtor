@@ -17,7 +17,7 @@ public partial class AttributeSourceGenerator
             source.AppendLine("#if AUTOCTOR_EMBED_ATTRIBUTES");
             using (source.StartBlock("namespace AutoCtor"))
             {
-                source.AddGeneratedAttributes(AttributeTargets.Enum);
+                source.AddGeneratedCodeAttribute();
                 using (source.StartBlock("internal enum GuardSetting"))
                 {
                     source.AppendLine("Default,");
@@ -25,37 +25,121 @@ public partial class AttributeSourceGenerator
                     source.AppendLine("Enabled");
                 }
 
-                source.AddGeneratedAttributes(AttributeTargets.Class);
-                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Class | global::System.AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]");
-                source.AppendLine("internal sealed class AutoConstructAttribute : global::System.Attribute");
-                using (source.StartBlock())
+                source.AddGeneratedCodeAttribute();
+                EmitAttributeUsage(source, "Class", "Struct");
+                using (StartAttribute(source, "AutoConstructAttribute"))
                 {
-                    source.AppendLine("public AutoConstructAttribute(GuardSetting guard = GuardSetting.Default)");
-                    source.StartBlock().Dispose();
+                    source.AppendLine("public AutoConstructAttribute(GuardSetting guard = GuardSetting.Default) { }");
                 }
 
-                source.AddGeneratedAttributes(AttributeTargets.Class);
-                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]");
-                source.AppendLine("internal sealed class AutoPostConstructAttribute : global::System.Attribute");
-                source.StartBlock().Dispose();
+                source.AddGeneratedCodeAttribute();
+                EmitAttributeUsage(source, "Method");
+                StartAttribute(source, "AutoPostConstructAttribute").Dispose();
 
-                source.AddGeneratedAttributes(AttributeTargets.Class);
-                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]");
-                source.AppendLine("internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute");
-                source.StartBlock().Dispose();
+                source.AddGeneratedCodeAttribute();
+                EmitAttributeUsage(source, "Field", "Property");
+                StartAttribute(source, "AutoConstructIgnoreAttribute").Dispose();
 
-                source.AddGeneratedAttributes(AttributeTargets.Class);
-                source.AppendLine("[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property | global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]");
-                source.AppendLine("internal sealed class AutoKeyedServiceAttribute : global::System.Attribute");
-                using (source.StartBlock())
+                source.AddGeneratedCodeAttribute();
+                EmitAttributeUsage(source, "Field", "Property", "Parameter");
+                using (StartAttribute(source, "AutoKeyedServiceAttribute"))
                 {
                     source.AppendLine("public object Key { get; }");
                     source.AppendLine("public AutoKeyedServiceAttribute(object key) => Key = key;");
                 }
+
+                source.AddGeneratedCodeAttribute();
+                EmitAttributeUsage(source, "Class");
+                using (StartAttribute(source, "ServiceProviderAttribute"))
+                {
+                    source.AppendLine("public string Fallback { get; set; }");
+                }
+
+                source.AddGeneratedCodeAttribute();
+                using (source.StartBlock("internal abstract class ServiceAttribute : global::System.Attribute"))
+                {
+                    source.AppendLine("public object Key { get; set; }");
+                    source.AppendLine("public string Factory { get; set; }");
+                }
+
+                string[] lifetimes = ["Singleton", "Transient", "Scoped"];
+
+                foreach (var lifetime in lifetimes)
+                {
+                    source.AddGeneratedCodeAttribute();
+                    EmitAttributeUsage(source, true, false, "Class");
+                    using (StartAttribute(source, lifetime + "Attribute", "ServiceAttribute"))
+                    {
+                        source.AppendLine($"public {lifetime}Attribute(global::System.Type service, global::System.Type implementation = null) {{ }}");
+                    }
+                }
+
+                source.AddGeneratedCodeAttribute();
+                EmitAttributeUsage(source, true, false, "Class");
+                using (StartAttribute(source, "ImportAttribute"))
+                {
+                    source.AppendLine("public ImportAttribute(global::System.Type module) { }");
+                }
+
+                source.AddGeneratedCodeAttribute();
+                source.AppendLine("[global::System.Flags]");
+                using (source.StartBlock("internal enum ScanAs"))
+                {
+                    source.AppendLine("Service = 1,");
+                    source.AppendLine("Self = 2,");
+                    source.AppendLine("ImplementedInterfaces = 4");
+                }
+
+                using (source.StartBlock("internal abstract class ScanAttribute : global::System.Attribute"))
+                {
+                    source.AppendLine("public ScanAs As { get; set; }");
+                    source.AppendLine("public global::System.Type[] FromAssembliesOf { get; set; }");
+                }
+
+                foreach (var lifetime in lifetimes)
+                {
+                    source.AddGeneratedCodeAttribute();
+                    EmitAttributeUsage(source, true, false, "Class");
+                    using (StartAttribute(source, $"Scan{lifetime}Attribute", "ScanAttribute"))
+                    {
+                        source.AppendLine($"public Scan{lifetime}Attribute(global::System.Type service) {{ }}");
+                    }
+                }
+
+                source.AppendLine("#if AUTOCTOR_EMBED_GENERIC_ATTRIBUTES");
+                foreach (var lifetime in lifetimes)
+                {
+                    source.AddGeneratedCodeAttribute();
+                    EmitAttributeUsage(source, true, false, "Class");
+                    source.AppendLine($"internal sealed class {lifetime}Attribute<TService> : ServiceAttribute {{ }}");
+                    source.AddGeneratedCodeAttribute();
+                    EmitAttributeUsage(source, true, false, "Class");
+                    source.AppendLine($"internal sealed class {lifetime}Attribute<TService, TImplementation> : ServiceAttribute {{ }}");
+                }
+                source.AddGeneratedCodeAttribute();
+                EmitAttributeUsage(source, true, false, "Class");
+                source.AppendLine("internal sealed class ImportAttribute<TModule> : global::System.Attribute { }");
+                source.AppendLine("#endif");
             }
             source.AppendLine("#endif");
 
             return source;
+        }
+
+        private static void EmitAttributeUsage(CodeBuilder source, params string[] targets)
+            => EmitAttributeUsage(source, false, false, targets);
+
+        private static void EmitAttributeUsage(CodeBuilder source, bool allowMultiple, bool inherited, params string[] targets)
+        {
+            var targetString = string.Join(" | ", targets.Select(t => $"global::System.AttributeTargets.{t}"));
+
+            source.AppendLine($"[global::System.AttributeUsage({targetString}, AllowMultiple = {allowMultiple}, Inherited = {inherited})]");
+        }
+
+        private static IDisposable StartAttribute(CodeBuilder source, string typeName, string baseType = "global::System.Attribute")
+        {
+            source.AppendLine($"internal sealed class {typeName} : {baseType}");
+            return source.StartBlock();
         }
     }
 }

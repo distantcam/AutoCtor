@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 
 internal readonly record struct TypeModel(
     int Depth,
@@ -120,19 +121,33 @@ internal readonly record struct TypeModel(
         return type.ToDisplayString(FullyQualifiedFormat);
     }
 
-    private static EquatableList<MemberModel> GetFields(IEnumerable<ISymbol> members)
+    // Types can have hundreds of members, so filter the symbols first and allocate the
+    // model array exactly once rather than growing a LINQ buffer.
+    private static EquatableList<MemberModel> GetFields(ImmutableArray<ISymbol> members)
     {
-        return new(members
-            .OfType<IFieldSymbol>()
-            .Where(Utilities.IsValidField)
-            .Select(MemberModel.Create));
+        var fields = new List<IFieldSymbol>();
+        foreach (var member in members)
+        {
+            if (member is IFieldSymbol field && Utilities.IsValidField(field))
+                fields.Add(field);
+        }
+        var builder = ImmutableArray.CreateBuilder<MemberModel>(fields.Count);
+        foreach (var field in fields)
+            builder.Add(MemberModel.Create(field));
+        return new(builder.MoveToImmutable());
     }
 
-    private static EquatableList<MemberModel> GetProperties(IEnumerable<ISymbol> members)
+    private static EquatableList<MemberModel> GetProperties(ImmutableArray<ISymbol> members)
     {
-        return new(members
-            .OfType<IPropertySymbol>()
-            .Where(Utilities.IsValidProperty)
-            .Select(MemberModel.Create));
+        var properties = new List<IPropertySymbol>();
+        foreach (var member in members)
+        {
+            if (member is IPropertySymbol property && Utilities.IsValidProperty(property))
+                properties.Add(property);
+        }
+        var builder = ImmutableArray.CreateBuilder<MemberModel>(properties.Count);
+        foreach (var property in properties)
+            builder.Add(MemberModel.Create(property));
+        return new(builder.MoveToImmutable());
     }
 }

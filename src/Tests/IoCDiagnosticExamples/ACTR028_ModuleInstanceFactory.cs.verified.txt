@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+
+[Singleton<IThing>(Factory = nameof(Build))]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public class InstanceFactoryModule
+*/
+ : (7,1)-(7,43),
+      Message: The factory 'Build' on the module 'InstanceFactoryModule' must be static; a module is never instantiated,
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR028,
+        Title: Module factory must be static,
+        MessageFormat: The factory '{0}' on the module '{1}' must be static; a module is never instantiated,
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

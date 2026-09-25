@@ -1,0 +1,24 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[Transient(typeof(IFactory<>), typeof(Factory<>))]
+[Singleton<IBuilder, Builder>]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public partial class FactoryProvider;
+*/
+ : (5,1)-(5,29),
+      Message: The transient service 'Factory<T>' is captured by the singleton 'Builder' and will not be recreated for each resolve,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: ACTR018,
+        Title: Transient service is captured by a singleton,
+        MessageFormat: The transient service '{0}' is captured by the singleton '{1}' and will not be recreated for each resolve,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
