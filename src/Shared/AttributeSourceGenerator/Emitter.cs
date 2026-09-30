@@ -94,6 +94,7 @@ public partial class AttributeSourceGenerator
                 {
                     source.AppendLine("public ScanAs As { get; set; }");
                     source.AppendLine("public global::System.Type[] FromAssembliesOf { get; set; }");
+                    source.AppendLine("public string TypeNameFilter { get; set; }");
                 }
 
                 foreach (var lifetime in lifetimes)
@@ -102,7 +103,7 @@ public partial class AttributeSourceGenerator
                     EmitAttributeUsage(source, true, false, "Class");
                     using (StartAttribute(source, $"Scan{lifetime}Attribute", "ScanAttribute"))
                     {
-                        source.AppendLine($"public Scan{lifetime}Attribute(global::System.Type service) {{ }}");
+                        source.AppendLine($"public Scan{lifetime}Attribute(global::System.Type service = null) {{ }}");
                     }
                 }
 

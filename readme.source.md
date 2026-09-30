@@ -209,6 +209,7 @@ The scan attributes `[ScanSingleton]`, `[ScanTransient]`, and `[ScanScoped]` hav
 
 - `As` determines what to register the service as: `ScanAs.Service`, the service being scanned for (default); `ScanAs.Self`, the type itself; `ScanAs.ImplementedInterfaces`, all the interfaces the type has.
 - `FromAssembliesOf` can be used to scan other assemblies instead of the one the provider is in; add the provider too to keep it in the list of assemblies to scan.
+- `TypeNameFilter` only includes types whose name matches, where `*` matches anything and `?` any one character, e.g. `"*Repository"`. The service can be left out to select by name alone.
 
 ### Keyed Services
 

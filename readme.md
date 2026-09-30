@@ -1180,6 +1180,7 @@ The scan attributes `[ScanSingleton]`, `[ScanTransient]`, and `[ScanScoped]` hav
 
 - `As` determines what to register the service as: `ScanAs.Service`, the service being scanned for (default); `ScanAs.Self`, the type itself; `ScanAs.ImplementedInterfaces`, all the interfaces the type has.
 - `FromAssembliesOf` can be used to scan other assemblies instead of the one the provider is in; add the provider too to keep it in the list of assemblies to scan.
+- `TypeNameFilter` only includes types whose name matches, where `*` matches anything and `?` any one character, e.g. `"*Repository"`. The service can be left out to select by name alone.
 
 ### Keyed Services
 
@@ -2609,24 +2610,25 @@ namespace AutoCtor
 	{
 		public ScanAs As { get; set; }
 		public global::System.Type[] FromAssembliesOf { get; set; }
+		public string TypeNameFilter { get; set; }
 	}
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 	internal sealed class ScanSingletonAttribute : ScanAttribute
 	{
-		public ScanSingletonAttribute(global::System.Type service) { }
+		public ScanSingletonAttribute(global::System.Type service = null) { }
 	}
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 	internal sealed class ScanTransientAttribute : ScanAttribute
 	{
-		public ScanTransientAttribute(global::System.Type service) { }
+		public ScanTransientAttribute(global::System.Type service = null) { }
 	}
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 	internal sealed class ScanScopedAttribute : ScanAttribute
 	{
-		public ScanScopedAttribute(global::System.Type service) { }
+		public ScanScopedAttribute(global::System.Type service = null) { }
 	}
 	#if AUTOCTOR_EMBED_GENERIC_ATTRIBUTES
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
@@ -2654,7 +2656,7 @@ namespace AutoCtor
 }
 #endif
 ```
-<sup><a href='/src/Tests/GeneratedAttributeTests.cs%23AutoConstructAttribute.g.verified.cs#L1-L132' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Tests/GeneratedAttributeTests.cs%23AutoConstructAttribute.g.verified.cs#L1-L133' title='Snippet source file'>snippet source</a> | <a href='#snippet-GeneratedAttributeTests.cs#AutoConstructAttribute.g.verified.cs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 </details>

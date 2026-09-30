@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using static AutoCtor.Diagnostics;
@@ -121,14 +122,23 @@ internal readonly record struct ServiceProviderModel(
             }
             else if (name.StartsWith("Scan", StringComparison.Ordinal))
             {
-                if (ctorArgs[0].Value is not INamedTypeSymbol filter)
+                // A scan needs a service or a name filter; one with neither would register every class.
+                var filter = ctorArgs.Length > 0 ? ctorArgs[0].Value as INamedTypeSymbol : null;
+                if (filter is null && ctorArgs.Length > 0 && !ctorArgs[0].IsNull)
                     continue;
+                if (filter is null && !attribute.NamedArguments.Any(n => n.Key == "TypeNameFilter" && n.Value.Value is string))
+                {
+                    Report(diagnostics, ACTR030_ScanHasNoFilter, locations, name.Substring(0, name.Length - "Attribute".Length));
+                    continue;
+                }
 
                 foreach (var (service, implementation) in Scan(provider, source, attribute, filter))
                     Add(provider, source, lifetime, service, implementation, null, null, locations, registrations, diagnostics);
 
                 if (registrations.Count == before)
-                    Report(diagnostics, ACTR026_ScanFoundNoTypes, locations, DisplayName(filter));
+                    Report(diagnostics, ACTR026_ScanFoundNoTypes, locations, filter is null
+                        ? attribute.NamedArguments.FirstOrDefault(n => n.Key == "TypeNameFilter").Value.Value as string ?? "*"
+                        : DisplayName(filter));
             }
             else if (name is "SingletonAttribute" or "TransientAttribute" or "ScopedAttribute")
             {
@@ -263,9 +273,10 @@ internal readonly record struct ServiceProviderModel(
 
     // ponytail: walks every type in the scanned assemblies on each run; index by interface if it shows up.
     private static IEnumerable<(ITypeSymbol, INamedTypeSymbol)> Scan(
-        INamedTypeSymbol provider, INamedTypeSymbol source, AttributeData attribute, INamedTypeSymbol filter)
+        INamedTypeSymbol provider, INamedTypeSymbol source, AttributeData attribute, INamedTypeSymbol? filter)
     {
         var scanAs = 1;
+        Regex? typeName = null;
         var assemblies = new List<IAssemblySymbol>();
         foreach (var named in attribute.NamedArguments)
         {
@@ -273,27 +284,32 @@ internal readonly record struct ServiceProviderModel(
                 scanAs = flags;
             else if (named.Key == "FromAssembliesOf" && !named.Value.IsNull)
                 assemblies.AddRange(named.Value.Values.Select(v => (v.Value as ITypeSymbol)?.ContainingAssembly).OfType<IAssemblySymbol>());
+            else if (named.Key == "TypeNameFilter" && named.Value.Value is string pattern)
+                typeName = new Regex("^" + Regex.Escape(pattern).Replace(@"\*", ".*").Replace(@"\?", ".") + "$");
         }
         if (assemblies.Count == 0)
             assemblies.Add(source.ContainingAssembly);
 
-        var isOpen = filter.IsUnboundGenericType;
-        var target = isOpen ? filter.OriginalDefinition : filter;
+        var isOpen = filter?.IsUnboundGenericType == true;
+        var target = isOpen ? filter!.OriginalDefinition : filter;
 
         var candidates = assemblies
             .Distinct<IAssemblySymbol>(SymbolEqualityComparer.Default)
             .SelectMany(a => VisibleTypes(a.GlobalNamespace,
                 SymbolEqualityComparer.Default.Equals(a, provider.ContainingAssembly) || a.GivesAccessTo(provider.ContainingAssembly)))
             .Where(t => t is { TypeKind: TypeKind.Class, IsAbstract: false, IsStatic: false, IsGenericType: false }
-                && !SymbolEqualityComparer.Default.Equals(t, provider))
+                && !SymbolEqualityComparer.Default.Equals(t, provider)
+                && typeName?.IsMatch(t.Name) != false)
             // Neither source nor metadata promise an order, and order decides which registration wins.
             .OrderBy(t => t.ToDisplayString(FullyQualifiedFormat), StringComparer.Ordinal);
 
         foreach (var type in candidates)
         {
-            var matches = type.AllInterfaces.Concat(BaseTypes(type)).Prepend(type)
-                .Where(t => SymbolEqualityComparer.Default.Equals(isOpen ? t.OriginalDefinition : t, target))
-                .ToList<ITypeSymbol>();
+            var matches = target is null
+                ? [type]
+                : type.AllInterfaces.Concat(BaseTypes(type)).Prepend(type)
+                    .Where(t => SymbolEqualityComparer.Default.Equals(isOpen ? t.OriginalDefinition : t, target))
+                    .ToList<ITypeSymbol>();
             if (matches.Count == 0)
                 continue;
 

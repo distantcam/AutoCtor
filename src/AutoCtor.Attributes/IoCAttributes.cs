@@ -104,25 +104,31 @@ public enum ScanAs
 }
 
 /// <summary>
-/// Registers every accessible, concrete, non-generic class assignable to <see cref="Service"/>.
+/// Registers every accessible, concrete, non-generic class assignable to <see cref="Service"/>,
+/// and matching <see cref="TypeNameFilter"/>. At least one of the two is required.
 /// </summary>
-public abstract class ScanAttribute(Type service) : Attribute
+public abstract class ScanAttribute(Type? service) : Attribute
 {
-    /// <summary>An open generic such as <c>typeof(IHandler&lt;&gt;)</c> matches every construction of it.</summary>
-    public Type Service { get; } = service;
+    /// <summary>
+    /// An open generic such as <c>typeof(IHandler&lt;&gt;)</c> matches every construction of it.
+    /// Without one, <see cref="ScanAs.Service"/> registers each type as itself.
+    /// </summary>
+    public Type? Service { get; } = service;
     public ScanAs As { get; set; } = ScanAs.Service;
     /// <summary>Scans the assemblies of these types instead of the provider's own.</summary>
     public Type[]? FromAssembliesOf { get; set; }
+    /// <summary>Only types whose name matches, where <c>*</c> matches anything and <c>?</c> any one character, such as <c>"*Repository"</c>.</summary>
+    public string? TypeNameFilter { get; set; }
 }
 
 [AttributeUsage(Class, AllowMultiple = true, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
-public sealed class ScanSingletonAttribute(Type service) : ScanAttribute(service);
+public sealed class ScanSingletonAttribute(Type? service = null) : ScanAttribute(service);
 
 [AttributeUsage(Class, AllowMultiple = true, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
-public sealed class ScanTransientAttribute(Type service) : ScanAttribute(service);
+public sealed class ScanTransientAttribute(Type? service = null) : ScanAttribute(service);
 
 [AttributeUsage(Class, AllowMultiple = true, Inherited = false)]
 [Conditional("AUTOCTOR_USAGES")]
-public sealed class ScanScopedAttribute(Type service) : ScanAttribute(service);
+public sealed class ScanScopedAttribute(Type? service = null) : ScanAttribute(service);

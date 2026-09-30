@@ -352,4 +352,16 @@ internal static class Diagnostics
         category: "AutoCtor",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
+
+    /// <summary>
+    /// Id: ACTR030<br />
+    /// Title: Service scan has no filter
+    /// </summary>
+    public static readonly DiagnosticDescriptor ACTR030_ScanHasNoFilter = new DiagnosticDescriptor(
+        id: "ACTR030",
+        title: "Service scan has no filter",
+        messageFormat: "'{0}' needs a service or a TypeNameFilter",
+        category: "AutoCtor",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 }

@@ -25,3 +25,4 @@ ACTR026 | AutoCtor | Warning | ScanFoundNoTypes
 ACTR027 | AutoCtor | Warning | ImportedModuleHasNoRegistrations
 ACTR028 | AutoCtor | Error | ModuleFactoryMustBeStatic
 ACTR029 | AutoCtor | Error | ServiceProviderMustBeSealed
+ACTR030 | AutoCtor | Error | ScanHasNoFilter
