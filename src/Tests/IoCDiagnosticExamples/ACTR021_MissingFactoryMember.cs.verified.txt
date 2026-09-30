@@ -5,7 +5,7 @@
 [ServiceProvider]
 [Singleton(typeof(IThing), typeof(Thing), Factory = "BuildThing")]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class MissingFactoryProvider;
+public sealed partial class MissingFactoryProvider;
 */
  : (5,1)-(5,65),
       Message: The factory 'BuildThing' cannot be used for the service 'IThing'; it must name an accessible, non-generic method, property or field declared on the service provider that returns a value,

@@ -3,11 +3,11 @@
     {
       Location: /*
 [Singleton<IInvalidService, InvalidService>]
-public partial class GenericProvider<T>
-                     ^^^^^^^^^^^^^^^
+public sealed partial class GenericProvider<T>
+                            ^^^^^^^^^^^^^^^
 {
 */
- : (4,21)-(4,36),
+ : (4,28)-(4,43),
       Message: The type 'GenericProvider<T>' cannot be a service provider; it must not be generic, and must not be marked with [AutoConstruct],
       Severity: Error,
       Descriptor: {

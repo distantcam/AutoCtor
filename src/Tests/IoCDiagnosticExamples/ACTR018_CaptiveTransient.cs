@@ -10,7 +10,7 @@ using AutoCtor;
 [Singleton<ICaptiveHolder, CaptiveHolder>]
 [Transient<ICaptiveWorker, CaptiveWorker>]
 [Singleton<ICaptiveSettings, CaptiveSettings>]
-public partial class CaptiveTransientProvider;
+public sealed partial class CaptiveTransientProvider;
 
 public interface ICaptiveSettings;
 public class CaptiveSettings : ICaptiveSettings;

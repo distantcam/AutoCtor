@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<IAcDependency, AcDependency>]
 [Singleton<IAcService, AcService>]
-public partial class AutoConstructImplProvider;
+public sealed partial class AutoConstructImplProvider;
 
 public interface IAcDependency;
 public class AcDependency : IAcDependency;

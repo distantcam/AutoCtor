@@ -6,7 +6,7 @@ using AutoCtor;
 [ServiceProvider]
 [Scoped<ISession, Session>]
 [Scoped<IUnitOfWork>(Factory = nameof(CreateUnitOfWork))]
-public partial class UnitOfWorkProvider
+public sealed partial class UnitOfWorkProvider
 {
     private IUnitOfWork CreateUnitOfWork(ISession session) => new UnitOfWork(session);
 }

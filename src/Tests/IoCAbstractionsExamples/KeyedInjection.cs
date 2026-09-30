@@ -6,7 +6,7 @@ using AutoCtor;
 [Singleton<IQueue, PrimaryQueue>(Key = "primary")]
 [Singleton<IQueue, BackupQueue>(Key = "backup")]
 [Singleton<IWorker, Worker>]
-public partial class QueueProvider;
+public sealed partial class QueueProvider;
 
 public interface IQueue;
 public class PrimaryQueue : IQueue;

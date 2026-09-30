@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton(typeof(IRef<>), typeof(RefImpl<>))]
 [Singleton<IRefConsumer, RefConsumer>]
-public partial class RefProvider;
+public sealed partial class RefProvider;
 
 public interface IRef<T>;
 public class RefImpl<T> : IRef<T> where T : class;

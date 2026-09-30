@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Import<GreetingModule>]
 [Singleton<IGreetingClock, GreetingClock>]
-public partial class ModuleFactoryProvider;
+public sealed partial class ModuleFactoryProvider;
 
 [Transient<IGreeting>(Factory = nameof(Create))]
 public class GreetingModule

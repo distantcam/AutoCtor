@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 [Singleton<ILogSink, LogSink>]
 [Singleton<IServiceScopeFactory, CustomScopeFactory>]
 [Scoped<IRequestState, RequestState>]
-public partial class ScopeFactoryProvider;
+public sealed partial class ScopeFactoryProvider;
 
 public interface ILogSink;
 public class LogSink : ILogSink;

@@ -11,7 +11,7 @@ public class Customer;
 [Singleton<ISession, Session>]
 [Singleton(typeof(IRepository<>), typeof(Repository<>))]
 [Singleton<ICustomerReport, CustomerReport>]
-public partial class ReportContainer;
+public sealed partial class ReportContainer;
 
 public interface IRepository<T>;
 

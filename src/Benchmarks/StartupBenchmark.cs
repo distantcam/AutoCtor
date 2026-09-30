@@ -36,13 +36,13 @@ public partial class StartupBenchmark
     [Singleton(typeof(ISingleton1), typeof(Singleton1))]
     [Singleton(typeof(ISingleton2), typeof(Singleton2))]
     [Singleton(typeof(ISingleton3), typeof(Singleton3))]
-    private partial class JabStartupSingleton;
+    private sealed partial class JabStartupSingleton;
 
     [AutoCtor.ServiceProvider]
     [AutoCtor.Singleton(typeof(ISingleton1), typeof(Singleton1))]
     [AutoCtor.Singleton(typeof(ISingleton2), typeof(Singleton2))]
     [AutoCtor.Singleton(typeof(ISingleton3), typeof(Singleton3))]
-    private partial class AutoCtorStartupSingleton;
+    private sealed partial class AutoCtorStartupSingleton;
 
     // ------------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ public partial class StartupBenchmark
     [AutoCtor.Scoped(typeof(IScoped1), typeof(Scoped1))]
     [AutoCtor.Scoped(typeof(IScoped2), typeof(Scoped2))]
     [AutoCtor.Scoped(typeof(IScoped3), typeof(Scoped3))]
-    private partial class AutoCtorStartupScoped;
+    private sealed partial class AutoCtorStartupScoped;
 
     // ------------------------------------------------------------------------
 
@@ -108,7 +108,7 @@ public partial class StartupBenchmark
     [AutoCtor.Transient(typeof(ITransient1), typeof(Transient1))]
     [AutoCtor.Transient(typeof(ITransient2), typeof(Transient2))]
     [AutoCtor.Transient(typeof(ITransient3), typeof(Transient3))]
-    private partial class AutoCtorStartupTransient;
+    private sealed partial class AutoCtorStartupTransient;
 
     // ------------------------------------------------------------------------
 
@@ -159,7 +159,7 @@ public partial class StartupBenchmark
     [AutoCtor.Singleton(typeof(ISingleton1), typeof(Singleton1))]
     [AutoCtor.Singleton(typeof(ISingleton2), typeof(Singleton2))]
     [AutoCtor.Singleton(typeof(ISingleton3), typeof(Singleton3))]
-    private partial class AutoCtorStartupMixed;
+    private sealed partial class AutoCtorStartupMixed;
 
     // ------------------------------------------------------------------------
 
@@ -228,5 +228,5 @@ public partial class StartupBenchmark
     [AutoCtor.Singleton(typeof(ISingleton1), typeof(Singleton1))]
     [AutoCtor.Singleton(typeof(ISingleton2), typeof(Singleton2))]
     [AutoCtor.Singleton(typeof(ISingleton3), typeof(Singleton3))]
-    private partial class AutoCtorStartupComplex;
+    private sealed partial class AutoCtorStartupComplex;
 }

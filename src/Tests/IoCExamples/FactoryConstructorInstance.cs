@@ -6,7 +6,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<IClock>(Factory = nameof(_clock))]
 [Singleton<IReport, Report>]
-public partial class ReportProvider
+public sealed partial class ReportProvider
 {
     private readonly IClock _clock;
 

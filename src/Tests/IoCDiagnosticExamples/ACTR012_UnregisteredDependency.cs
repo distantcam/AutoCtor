@@ -2,7 +2,7 @@ using AutoCtor;
 
 [ServiceProvider]
 [Singleton<INeedsMissing, NeedsMissing>]
-public partial class UnregisteredDependencyProvider;
+public sealed partial class UnregisteredDependencyProvider;
 
 public interface IMissingService;
 public interface INeedsMissing;

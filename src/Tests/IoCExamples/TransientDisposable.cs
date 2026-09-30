@@ -8,7 +8,7 @@ using System;
 [Singleton<IClock, Clock>]
 [Transient<IConnection, Connection>]
 [Transient<IFormatter, Formatter>]
-public partial class ConnectionProvider;
+public sealed partial class ConnectionProvider;
 
 public interface IClock;
 public class Clock : IClock;

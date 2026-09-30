@@ -7,7 +7,7 @@
 [Singleton(typeof(Stamp), typeof(Stamp))]
 [Singleton(typeof(IMarker), typeof(MarkerStruct))]
 [Singleton<IPrinter, Printer>]
-public partial class ValueTypeProvider;
+public sealed partial class ValueTypeProvider;
 
 public struct Stamp;
 

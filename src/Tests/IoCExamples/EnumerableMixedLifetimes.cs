@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<IStep, CachedStep>]
 [Transient<IStep, FreshStep>]
-public partial class MixedLifetimeProvider;
+public sealed partial class MixedLifetimeProvider;
 
 public interface IStep;
 public class CachedStep : IStep;

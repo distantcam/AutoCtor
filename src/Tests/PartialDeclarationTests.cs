@@ -14,19 +14,19 @@ internal sealed class PartialDeclarationTests
             """
             public partial class Service;
             [AutoCtor.ServiceProvider]
-            public partial class Container;
+            public sealed partial class Container;
             """,
             """
             [AutoCtor.AutoConstruct]
             public partial class Service { private readonly IClock _clock; }
             [AutoCtor.Singleton(typeof(IClock), typeof(Clock))]
-            public partial class Container;
+            public sealed partial class Container;
             """,
             """
             [System.Serializable]
             public partial class Service;
             [AutoCtor.Singleton(typeof(Service))]
-            public partial class Container;
+            public sealed partial class Container;
             public interface IClock;
             public class Clock : IClock;
             """);

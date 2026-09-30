@@ -7,7 +7,7 @@
 [ServiceProvider]
 [Singleton<IClock, Clock>]
 [Transient<IJob, Job>]
-public partial class ScopelessProvider;
+public sealed partial class ScopelessProvider;
 
 public interface IClock;
 public class Clock : IClock;

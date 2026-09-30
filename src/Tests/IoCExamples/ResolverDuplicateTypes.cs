@@ -15,7 +15,7 @@ using System.Collections.Generic;
 [Singleton<IPlugin, SecondPlugin>]
 [Singleton<IEnumerable<IPlugin>, PluginList>]
 [Singleton<IServiceProvider, AmbientProvider>]
-public partial class DuplicateResolverProvider;
+public sealed partial class DuplicateResolverProvider;
 
 public interface IPlugin;
 public class FirstPlugin : IPlugin;

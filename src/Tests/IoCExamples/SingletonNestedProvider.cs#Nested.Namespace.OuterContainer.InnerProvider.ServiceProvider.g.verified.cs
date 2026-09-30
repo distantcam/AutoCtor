@@ -48,20 +48,43 @@ namespace Nested.Namespace
 			}
 
 			private global::System.IServiceProvider? Fallback => null;
-			public object? GetService(global::System.Type serviceType) => GetKeyedService(serviceType, null);
-			public object? GetKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, false) ?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
-			public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey) => GetKeyedService(serviceType, serviceKey) ?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
-			public T? GetService<T>() => this is InnerProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
-			public T GetRequiredService<T>() => this is InnerProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
-			global::Nested.Namespace.INestedService InnerProvider.IResolver<global::Nested.Namespace.INestedService>.Get() => S0();
-			global::System.Collections.Generic.IEnumerable<global::Nested.Namespace.INestedService> InnerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::Nested.Namespace.INestedService>>.Get() => new global::Nested.Namespace.INestedService[] { S0() };
-			global::System.IServiceProvider InnerProvider.IResolver<global::System.IServiceProvider>.Get() => this;
+
+			public object? GetService(global::System.Type serviceType)
+				=> GetKeyedService(serviceType, null);
+
+			public object? GetKeyedService(global::System.Type serviceType, object? serviceKey)
+				=> Resolve(serviceType, serviceKey, false)
+				?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
+
+			public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)
+				=> GetKeyedService(serviceType, serviceKey)
+				?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
+
+			public T? GetService<T>()
+				=> this is InnerProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
+
+			public T GetRequiredService<T>()
+				=> this is InnerProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
+
 			private interface IResolver<T> { T Get(); }
-			public bool IsService(global::System.Type serviceType) => IsKeyedService(serviceType, null);
-			public bool IsKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, true) != null;
+			global::Nested.Namespace.INestedService InnerProvider.IResolver<global::Nested.Namespace.INestedService>.Get()
+				=> S0();
+			global::System.Collections.Generic.IEnumerable<global::Nested.Namespace.INestedService> InnerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::Nested.Namespace.INestedService>>.Get()
+				=> new global::Nested.Namespace.INestedService[] { S0() };
+			global::System.IServiceProvider InnerProvider.IResolver<global::System.IServiceProvider>.Get()
+				=> this;
+
+			public bool IsService(global::System.Type serviceType)
+				=> IsKeyedService(serviceType, null);
+
+			public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
+				=> Resolve(serviceType, serviceKey, true) != null;
+
 			public Scope CreateScope() => new Scope(this);
 
-			private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+			private static T Required<T>(object? service)
+				=> service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+
 			private T Track<T>(T service)
 			{
 				if (service is global::System.IDisposable)
@@ -69,6 +92,7 @@ namespace Nested.Namespace
 						(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 				return service;
 			}
+
 			private object[] Drain()
 			{
 				lock (_lock)
@@ -79,10 +103,16 @@ namespace Nested.Namespace
 					return items;
 				}
 			}
+
 			public void Dispose()
 			{
 				foreach (var item in Drain())
-					(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+				{
+					if (item is global::System.IDisposable disposable)
+					{
+						disposable.Dispose();
+					}
+				}
 			}
 
 			[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
@@ -118,19 +148,42 @@ namespace Nested.Namespace
 				}
 
 				private global::System.IServiceProvider? Fallback => null;
-				public object? GetService(global::System.Type serviceType) => GetKeyedService(serviceType, null);
-				public object? GetKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, false) ?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
-				public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey) => GetKeyedService(serviceType, serviceKey) ?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
-				public T? GetService<T>() => this is InnerProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
-				public T GetRequiredService<T>() => this is InnerProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
-				global::Nested.Namespace.INestedService InnerProvider.IResolver<global::Nested.Namespace.INestedService>.Get() => S0();
-				global::System.Collections.Generic.IEnumerable<global::Nested.Namespace.INestedService> InnerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::Nested.Namespace.INestedService>>.Get() => new global::Nested.Namespace.INestedService[] { S0() };
-				global::System.IServiceProvider InnerProvider.IResolver<global::System.IServiceProvider>.Get() => this;
-				public bool IsService(global::System.Type serviceType) => IsKeyedService(serviceType, null);
-				public bool IsKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, true) != null;
+
+				public object? GetService(global::System.Type serviceType)
+					=> GetKeyedService(serviceType, null);
+
+				public object? GetKeyedService(global::System.Type serviceType, object? serviceKey)
+					=> Resolve(serviceType, serviceKey, false)
+					?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
+
+				public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)
+					=> GetKeyedService(serviceType, serviceKey)
+					?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
+
+				public T? GetService<T>()
+					=> this is InnerProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
+
+				public T GetRequiredService<T>()
+					=> this is InnerProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
+
+				global::Nested.Namespace.INestedService InnerProvider.IResolver<global::Nested.Namespace.INestedService>.Get()
+					=> S0();
+				global::System.Collections.Generic.IEnumerable<global::Nested.Namespace.INestedService> InnerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::Nested.Namespace.INestedService>>.Get()
+					=> new global::Nested.Namespace.INestedService[] { S0() };
+				global::System.IServiceProvider InnerProvider.IResolver<global::System.IServiceProvider>.Get()
+					=> this;
+
+				public bool IsService(global::System.Type serviceType)
+					=> IsKeyedService(serviceType, null);
+
+				public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
+					=> Resolve(serviceType, serviceKey, true) != null;
+
 				public Scope CreateScope() => new Scope(_root);
 
-				private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+				private static T Required<T>(object? service)
+					=> service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+
 				private T Track<T>(T service)
 				{
 					if (service is global::System.IDisposable)
@@ -138,6 +191,7 @@ namespace Nested.Namespace
 							(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 					return service;
 				}
+
 				private object[] Drain()
 				{
 					lock (_lock)
@@ -148,10 +202,16 @@ namespace Nested.Namespace
 						return items;
 					}
 				}
+
 				public void Dispose()
 				{
 					foreach (var item in Drain())
-						(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+					{
+						if (item is global::System.IDisposable disposable)
+						{
+							disposable.Dispose();
+						}
+					}
 				}
 			}
 		}

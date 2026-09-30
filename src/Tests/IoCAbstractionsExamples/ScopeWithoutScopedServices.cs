@@ -8,7 +8,7 @@
 [ServiceProvider]
 [Singleton<IIndex, SearchIndex>]
 [Transient<ILease, Lease>]
-public partial class IndexProvider;
+public sealed partial class IndexProvider;
 
 public interface IIndex;
 public class SearchIndex : IIndex;

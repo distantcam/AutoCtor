@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Import<EmptyModule>]
 [Singleton<IThing, Thing>]
-public partial class EmptyModuleProvider;
+public sealed partial class EmptyModuleProvider;
 
 public class EmptyModule;
 

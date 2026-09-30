@@ -3,7 +3,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<ICycleA, CycleA>]
 [Singleton<ICycleB, CycleB>]
-public partial class CircularDependencyProvider;
+public sealed partial class CircularDependencyProvider;
 
 public interface ICycleA;
 public interface ICycleB;

@@ -5,7 +5,7 @@
 [ServiceProvider]
 [Singleton(typeof(IThing), typeof(Thing), Factory = nameof(CreateNumber))]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class WrongReturnProvider
+public sealed partial class WrongReturnProvider
 */
  : (4,1)-(4,73),
       Message: The factory 'CreateNumber' returns 'int', which is not assignable to the service type 'IThing',

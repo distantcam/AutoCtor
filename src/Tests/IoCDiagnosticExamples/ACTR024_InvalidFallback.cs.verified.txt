@@ -3,11 +3,11 @@
     {
       Location: /*
 [Singleton<IService, Service>]
-public partial class ParameterisedFallbackProvider
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public sealed partial class ParameterisedFallbackProvider
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 {
 */
- : (6,21)-(6,50),
+ : (6,28)-(6,57),
       Message: The fallback 'GetHost' cannot be used by 'ParameterisedFallbackProvider'; it must name an accessible, non-generic field, property or parameterless method declared on the service provider that returns a value,
       Severity: Error,
       Descriptor: {

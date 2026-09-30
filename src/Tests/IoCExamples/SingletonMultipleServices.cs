@@ -4,7 +4,7 @@ using AutoCtor;
 [Singleton<IServiceOne, ServiceOne>]
 [Singleton<IServiceTwo, ServiceTwo>]
 [Singleton<IServiceThree, ServiceThree>]
-public partial class MultipleServicesProvider;
+public sealed partial class MultipleServicesProvider;
 
 public interface IServiceOne;
 public interface IServiceTwo;

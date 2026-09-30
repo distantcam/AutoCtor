@@ -3,7 +3,7 @@ using AutoCtor;
 // A static factory has no receiver to choose, so it is called through the provider type.
 [ServiceProvider]
 [Transient<IGreeting>(Factory = nameof(Create))]
-public partial class GreetingProvider
+public sealed partial class GreetingProvider
 {
     private static IGreeting Create() => new Greeting("hello");
 }

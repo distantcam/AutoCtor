@@ -6,7 +6,7 @@ using AutoCtor;
 [Import<ClockModule>]
 [Import(typeof(GreeterModule))]
 [Singleton<IClock, TestClock>]
-public partial class ModuleImportProvider;
+public sealed partial class ModuleImportProvider;
 
 [Singleton<IClock, SystemClock>]
 public class ClockModule;

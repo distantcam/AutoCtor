@@ -25,7 +25,7 @@ internal sealed class ScanReferencedAssemblyTests
         [AutoCtor.ServiceProvider]
         [AutoCtor.ScanSingleton(typeof(IPlugin),
             FromAssembliesOf = new[] { typeof(Container), typeof(PluginMarker), typeof(FriendMarker) })]
-        public partial class Container;
+        public sealed partial class Container;
         public class LocalPlugin : IPlugin;
         """;
 

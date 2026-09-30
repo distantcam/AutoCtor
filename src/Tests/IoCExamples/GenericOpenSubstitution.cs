@@ -6,7 +6,7 @@ using AutoCtor;
 [Singleton(typeof(ISubValidator<>), typeof(SubValidator<>))]
 [Singleton(typeof(ISubHandler<>), typeof(SubHandler<>))]
 [Singleton<ISubPipeline, SubPipeline>]
-public partial class SubstitutionProvider;
+public sealed partial class SubstitutionProvider;
 
 public class Invoice;
 

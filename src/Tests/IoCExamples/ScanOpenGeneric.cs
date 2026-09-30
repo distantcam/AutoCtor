@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [ScanTransient(typeof(IHandler<>))]
 [Transient<IDispatcher, Dispatcher>]
-public partial class HandlerProvider;
+public sealed partial class HandlerProvider;
 
 public interface IHandler<TMessage>;
 

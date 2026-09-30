@@ -5,7 +5,7 @@ using AutoCtor;
 // constructor of your own is the other, which FactoryConstructorInstance shows.
 [ServiceProvider]
 [Singleton<IBanner>(Factory = nameof(_banner))]
-public partial class BannerProvider
+public sealed partial class BannerProvider
 {
     private readonly IBanner _banner = new Banner("AutoCtor");
 }

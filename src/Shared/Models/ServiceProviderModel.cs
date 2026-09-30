@@ -50,6 +50,9 @@ internal readonly record struct ServiceProviderModel(
         if (type.IsGenericType || Utilities.HasAttribute(type, AttributeNames.AutoConstruct))
             Report(diagnostics, ACTR017_InvalidServiceProviderType, type.Locations, DisplayName(type));
 
+        if (!type.IsSealed)
+            Report(diagnostics, ACTR029_ServiceProviderMustBeSealed, type.Locations, DisplayName(type));
+
         var fallback = type.GetAttributes()
             .First(a => a.AttributeClass?.ToDisplayString() == AttributeNames.ServiceProvider)
             .NamedArguments.FirstOrDefault(n => n.Key == "Fallback").Value.Value as string;
@@ -106,7 +109,8 @@ internal readonly record struct ServiceProviderModel(
             if (name == "ImportAttribute")
             {
                 // Visited once, so cycles end and a module imported twice isn't doubled up.
-                if ((typeArgs.Length > 0 ? typeArgs[0] : ctorArgs[0].Value) is INamedTypeSymbol module && visited.Add(module))
+                if ((typeArgs.Length > 0 ? typeArgs[0] : ctorArgs[0].Value) is INamedTypeSymbol module
+                    && visited.Add(module))
                 {
                     var diagnosticsBefore = diagnostics.Count;
                     AddRegistrations(provider, module, visited, locations, registrations, diagnostics);
@@ -119,17 +123,28 @@ internal readonly record struct ServiceProviderModel(
             {
                 if (ctorArgs[0].Value is not INamedTypeSymbol filter)
                     continue;
+
                 foreach (var (service, implementation) in Scan(provider, source, attribute, filter))
                     Add(provider, source, lifetime, service, implementation, null, null, locations, registrations, diagnostics);
+
                 if (registrations.Count == before)
                     Report(diagnostics, ACTR026_ScanFoundNoTypes, locations, DisplayName(filter));
             }
             else if (name is "SingletonAttribute" or "TransientAttribute" or "ScopedAttribute")
             {
                 var service = typeArgs.Length > 0 ? typeArgs[0] : ctorArgs[0].Value as ITypeSymbol;
-                var implementation = (typeArgs.Length > 1 ? typeArgs[1] : ctorArgs.Length > 1 ? ctorArgs[1].Value as ITypeSymbol : null) ?? service;
-                var key = attribute.NamedArguments.Where(n => n.Key == "Key" && !n.Value.IsNull).Select(n => n.Value.ToCSharpString()).FirstOrDefault();
-                var factory = attribute.NamedArguments.FirstOrDefault(n => n.Key == "Factory").Value.Value as string;
+                var implementation = (typeArgs.Length > 1
+                    ? typeArgs[1]
+                    : ctorArgs.Length > 1
+                        ? ctorArgs[1].Value as ITypeSymbol
+                        : null)
+                    ?? service;
+                var key = attribute.NamedArguments
+                    .Where(n => n.Key == "Key" && !n.Value.IsNull)
+                    .Select(n => n.Value.ToCSharpString())
+                    .FirstOrDefault();
+                var factory = attribute.NamedArguments
+                    .FirstOrDefault(n => n.Key == "Factory").Value.Value as string;
                 Add(provider, source, lifetime, service, implementation, key, factory, locations, registrations, diagnostics);
             }
         }
@@ -157,7 +172,9 @@ internal readonly record struct ServiceProviderModel(
             impl = impl.OriginalDefinition;
         }
 
-        var ctors = impl.InstanceConstructors.Where(c => c.DeclaredAccessibility == Accessibility.Public).ToList();
+        var ctors = impl.InstanceConstructors
+            .Where(c => c.DeclaredAccessibility == Accessibility.Public)
+            .ToList();
         var parameters = ctors.Count == 1 ? ctors[0].Parameters : ImmutableArray<IParameterSymbol>.Empty;
 
         ISymbol? member = null;

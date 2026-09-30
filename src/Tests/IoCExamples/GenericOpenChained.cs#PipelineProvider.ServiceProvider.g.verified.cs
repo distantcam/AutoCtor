@@ -74,24 +74,51 @@ partial class PipelineProvider :
 	}
 
 	private global::System.IServiceProvider? Fallback => null;
-	public object? GetService(global::System.Type serviceType) => GetKeyedService(serviceType, null);
-	public object? GetKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, false) ?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
-	public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey) => GetKeyedService(serviceType, serviceKey) ?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
-	public T? GetService<T>() => this is PipelineProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
-	public T GetRequiredService<T>() => this is PipelineProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
-	global::IPipeline PipelineProvider.IResolver<global::IPipeline>.Get() => S0();
-	global::IHandler<global::Command> PipelineProvider.IResolver<global::IHandler<global::Command>>.Get() => S1();
-	global::IValidator<global::Command> PipelineProvider.IResolver<global::IValidator<global::Command>>.Get() => S2();
-	global::System.Collections.Generic.IEnumerable<global::IPipeline> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPipeline>>.Get() => new global::IPipeline[] { S0() };
-	global::System.Collections.Generic.IEnumerable<global::IHandler<global::Command>> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::Command>>>.Get() => new global::IHandler<global::Command>[] { S1() };
-	global::System.Collections.Generic.IEnumerable<global::IValidator<global::Command>> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidator<global::Command>>>.Get() => new global::IValidator<global::Command>[] { S2() };
-	global::System.IServiceProvider PipelineProvider.IResolver<global::System.IServiceProvider>.Get() => this;
+
+	public object? GetService(global::System.Type serviceType)
+		=> GetKeyedService(serviceType, null);
+
+	public object? GetKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> Resolve(serviceType, serviceKey, false)
+		?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
+
+	public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> GetKeyedService(serviceType, serviceKey)
+		?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
+
+	public T? GetService<T>()
+		=> this is PipelineProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
+
+	public T GetRequiredService<T>()
+		=> this is PipelineProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
+
 	private interface IResolver<T> { T Get(); }
-	public bool IsService(global::System.Type serviceType) => IsKeyedService(serviceType, null);
-	public bool IsKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, true) != null;
+	global::IPipeline PipelineProvider.IResolver<global::IPipeline>.Get()
+		=> S0();
+	global::IHandler<global::Command> PipelineProvider.IResolver<global::IHandler<global::Command>>.Get()
+		=> S1();
+	global::IValidator<global::Command> PipelineProvider.IResolver<global::IValidator<global::Command>>.Get()
+		=> S2();
+	global::System.Collections.Generic.IEnumerable<global::IPipeline> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPipeline>>.Get()
+		=> new global::IPipeline[] { S0() };
+	global::System.Collections.Generic.IEnumerable<global::IHandler<global::Command>> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::Command>>>.Get()
+		=> new global::IHandler<global::Command>[] { S1() };
+	global::System.Collections.Generic.IEnumerable<global::IValidator<global::Command>> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidator<global::Command>>>.Get()
+		=> new global::IValidator<global::Command>[] { S2() };
+	global::System.IServiceProvider PipelineProvider.IResolver<global::System.IServiceProvider>.Get()
+		=> this;
+
+	public bool IsService(global::System.Type serviceType)
+		=> IsKeyedService(serviceType, null);
+
+	public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> Resolve(serviceType, serviceKey, true) != null;
+
 	public Scope CreateScope() => new Scope(this);
 
-	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+	private static T Required<T>(object? service)
+		=> service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+
 	private T Track<T>(T service)
 	{
 		if (service is global::System.IDisposable)
@@ -99,6 +126,7 @@ partial class PipelineProvider :
 				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
+
 	private object[] Drain()
 	{
 		lock (_lock)
@@ -109,10 +137,16 @@ partial class PipelineProvider :
 			return items;
 		}
 	}
+
 	public void Dispose()
 	{
 		foreach (var item in Drain())
-			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		{
+			if (item is global::System.IDisposable disposable)
+			{
+				disposable.Dispose();
+			}
+		}
 	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
@@ -162,23 +196,50 @@ partial class PipelineProvider :
 		}
 
 		private global::System.IServiceProvider? Fallback => null;
-		public object? GetService(global::System.Type serviceType) => GetKeyedService(serviceType, null);
-		public object? GetKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, false) ?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
-		public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey) => GetKeyedService(serviceType, serviceKey) ?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
-		public T? GetService<T>() => this is PipelineProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
-		public T GetRequiredService<T>() => this is PipelineProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
-		global::IPipeline PipelineProvider.IResolver<global::IPipeline>.Get() => S0();
-		global::IHandler<global::Command> PipelineProvider.IResolver<global::IHandler<global::Command>>.Get() => S1();
-		global::IValidator<global::Command> PipelineProvider.IResolver<global::IValidator<global::Command>>.Get() => S2();
-		global::System.Collections.Generic.IEnumerable<global::IPipeline> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPipeline>>.Get() => new global::IPipeline[] { S0() };
-		global::System.Collections.Generic.IEnumerable<global::IHandler<global::Command>> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::Command>>>.Get() => new global::IHandler<global::Command>[] { S1() };
-		global::System.Collections.Generic.IEnumerable<global::IValidator<global::Command>> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidator<global::Command>>>.Get() => new global::IValidator<global::Command>[] { S2() };
-		global::System.IServiceProvider PipelineProvider.IResolver<global::System.IServiceProvider>.Get() => this;
-		public bool IsService(global::System.Type serviceType) => IsKeyedService(serviceType, null);
-		public bool IsKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, true) != null;
+
+		public object? GetService(global::System.Type serviceType)
+			=> GetKeyedService(serviceType, null);
+
+		public object? GetKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> Resolve(serviceType, serviceKey, false)
+			?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
+
+		public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> GetKeyedService(serviceType, serviceKey)
+			?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
+
+		public T? GetService<T>()
+			=> this is PipelineProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
+
+		public T GetRequiredService<T>()
+			=> this is PipelineProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
+
+		global::IPipeline PipelineProvider.IResolver<global::IPipeline>.Get()
+			=> S0();
+		global::IHandler<global::Command> PipelineProvider.IResolver<global::IHandler<global::Command>>.Get()
+			=> S1();
+		global::IValidator<global::Command> PipelineProvider.IResolver<global::IValidator<global::Command>>.Get()
+			=> S2();
+		global::System.Collections.Generic.IEnumerable<global::IPipeline> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPipeline>>.Get()
+			=> new global::IPipeline[] { S0() };
+		global::System.Collections.Generic.IEnumerable<global::IHandler<global::Command>> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::Command>>>.Get()
+			=> new global::IHandler<global::Command>[] { S1() };
+		global::System.Collections.Generic.IEnumerable<global::IValidator<global::Command>> PipelineProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IValidator<global::Command>>>.Get()
+			=> new global::IValidator<global::Command>[] { S2() };
+		global::System.IServiceProvider PipelineProvider.IResolver<global::System.IServiceProvider>.Get()
+			=> this;
+
+		public bool IsService(global::System.Type serviceType)
+			=> IsKeyedService(serviceType, null);
+
+		public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> Resolve(serviceType, serviceKey, true) != null;
+
 		public Scope CreateScope() => new Scope(_root);
 
-		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+		private static T Required<T>(object? service)
+			=> service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+
 		private T Track<T>(T service)
 		{
 			if (service is global::System.IDisposable)
@@ -186,6 +247,7 @@ partial class PipelineProvider :
 					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
+
 		private object[] Drain()
 		{
 			lock (_lock)
@@ -196,10 +258,16 @@ partial class PipelineProvider :
 				return items;
 			}
 		}
+
 		public void Dispose()
 		{
 			foreach (var item in Drain())
-				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+			{
+				if (item is global::System.IDisposable disposable)
+				{
+					disposable.Dispose();
+				}
+			}
 		}
 	}
 }

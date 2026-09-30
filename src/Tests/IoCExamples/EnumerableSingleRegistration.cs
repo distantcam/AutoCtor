@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [ServiceProvider]
 [Singleton<ISoleHandler, SoleHandler>]
 [Singleton<ISoleConsumer, SoleConsumer>]
-public partial class SingleRegistrationProvider;
+public sealed partial class SingleRegistrationProvider;
 
 public interface ISoleHandler;
 public class SoleHandler : ISoleHandler;

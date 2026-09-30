@@ -7,7 +7,7 @@ using System.Collections.Generic;
 [Singleton<IListener, GlobalListener>]
 [Scoped<IListener, RequestListener>]
 [Scoped<IDispatcher, Dispatcher>]
-public partial class DispatcherProvider;
+public sealed partial class DispatcherProvider;
 
 public interface IListener;
 public class GlobalListener : IListener;

@@ -1,4 +1,4 @@
-; Unshipped analyzer release
+﻿; Unshipped analyzer release
 ; https://github.com/dotnet/roslyn/blob/main/src/RoslynAnalyzers/Microsoft.CodeAnalysis.Analyzers/ReleaseTrackingAnalyzers.Help.md
 
 ### New Rules
@@ -24,3 +24,4 @@ ACTR025 | AutoCtor | Error | ProviderFallbackNotAServiceProvider
 ACTR026 | AutoCtor | Warning | ScanFoundNoTypes
 ACTR027 | AutoCtor | Warning | ImportedModuleHasNoRegistrations
 ACTR028 | AutoCtor | Error | ModuleFactoryMustBeStatic
+ACTR029 | AutoCtor | Error | ServiceProviderMustBeSealed

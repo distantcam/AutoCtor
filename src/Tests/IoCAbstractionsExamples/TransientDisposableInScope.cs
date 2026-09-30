@@ -10,7 +10,7 @@ using System;
 [Scoped<IRequest, Request>]
 [Transient<IRequestLog, RequestLog>]
 [Transient<IAudit, Audit>]
-public partial class RequestProvider;
+public sealed partial class RequestProvider;
 
 public interface IClock;
 public class Clock : IClock;

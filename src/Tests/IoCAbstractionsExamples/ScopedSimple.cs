@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<IAppConfig, AppConfig>]
 [Scoped<IUnitOfWork, UnitOfWork>]
-public partial class ScopedSimpleProvider;
+public sealed partial class ScopedSimpleProvider;
 
 public interface IAppConfig;
 public class AppConfig : IAppConfig;

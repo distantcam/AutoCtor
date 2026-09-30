@@ -99,27 +99,56 @@ partial class PolicyProvider :
 	}
 
 	private global::System.IServiceProvider? Fallback => null;
-	public object? GetService(global::System.Type serviceType) => GetKeyedService(serviceType, null);
-	public object? GetKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, false) ?? (serviceKey == null ? Fallback?.GetService(serviceType) : (Fallback as global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)?.GetKeyedService(serviceType, serviceKey));
-	public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey) => GetKeyedService(serviceType, serviceKey) ?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
-	public T? GetService<T>() => this is PolicyProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
-	public T GetRequiredService<T>() => this is PolicyProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
-	global::IPolicy PolicyProvider.IResolver<global::IPolicy>.Get() => S0();
-	global::IPolicyHost PolicyProvider.IResolver<global::IPolicyHost>.Get() => S3();
-	global::System.Collections.Generic.IEnumerable<global::IPolicy> PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicy>>.Get() => new global::IPolicy[] { S0() };
-	global::System.Collections.Generic.IEnumerable<global::IPolicyHost> PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicyHost>>.Get() => new global::IPolicyHost[] { S3() };
-	global::System.IServiceProvider PolicyProvider.IResolver<global::System.IServiceProvider>.Get() => this;
-	global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>.Get() => this;
-	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>.Get() => this;
-	global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>.Get() => this;
-	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>.Get() => this;
+
+	public object? GetService(global::System.Type serviceType)
+		=> GetKeyedService(serviceType, null);
+
+	public object? GetKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> Resolve(serviceType, serviceKey, false)
+		?? (serviceKey == null ? Fallback?.GetService(serviceType) : (Fallback as global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)?.GetKeyedService(serviceType, serviceKey));
+
+	public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> GetKeyedService(serviceType, serviceKey)
+		?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
+
+	public T? GetService<T>()
+		=> this is PolicyProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
+
+	public T GetRequiredService<T>()
+		=> this is PolicyProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
+
 	private interface IResolver<T> { T Get(); }
-	public bool IsService(global::System.Type serviceType) => IsKeyedService(serviceType, null);
-	public bool IsKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, true) != null || (serviceKey == null ? Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService s && s.IsService(serviceType) : Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService k && k.IsKeyedService(serviceType, serviceKey));
+	global::IPolicy PolicyProvider.IResolver<global::IPolicy>.Get()
+		=> S0();
+	global::IPolicyHost PolicyProvider.IResolver<global::IPolicyHost>.Get()
+		=> S3();
+	global::System.Collections.Generic.IEnumerable<global::IPolicy> PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicy>>.Get()
+		=> new global::IPolicy[] { S0() };
+	global::System.Collections.Generic.IEnumerable<global::IPolicyHost> PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicyHost>>.Get()
+		=> new global::IPolicyHost[] { S3() };
+	global::System.IServiceProvider PolicyProvider.IResolver<global::System.IServiceProvider>.Get()
+		=> this;
+	global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>.Get()
+		=> this;
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>.Get()
+		=> this;
+	global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>.Get()
+		=> this;
+	global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>.Get()
+		=> this;
+
+	public bool IsService(global::System.Type serviceType)
+		=> IsKeyedService(serviceType, null);
+
+	public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> Resolve(serviceType, serviceKey, true) != null || (serviceKey == null ? Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService s && s.IsService(serviceType) : Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService k && k.IsKeyedService(serviceType, serviceKey));
+
 	public Scope CreateScope() => new Scope(this);
 	global::Microsoft.Extensions.DependencyInjection.IServiceScope global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory.CreateScope() => CreateScope();
 
-	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+	private static T Required<T>(object? service)
+		=> service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+
 	private T Track<T>(T service)
 	{
 		if (service is global::System.IDisposable)
@@ -127,6 +156,7 @@ partial class PolicyProvider :
 				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
+
 	private object[] Drain()
 	{
 		lock (_lock)
@@ -137,10 +167,16 @@ partial class PolicyProvider :
 			return items;
 		}
 	}
+
 	public void Dispose()
 	{
 		foreach (var item in Drain())
-			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		{
+			if (item is global::System.IDisposable disposable)
+			{
+				disposable.Dispose();
+			}
+		}
 	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
@@ -208,26 +244,55 @@ partial class PolicyProvider :
 		}
 
 		private global::System.IServiceProvider? Fallback => null;
-		public object? GetService(global::System.Type serviceType) => GetKeyedService(serviceType, null);
-		public object? GetKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, false) ?? (serviceKey == null ? Fallback?.GetService(serviceType) : (Fallback as global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)?.GetKeyedService(serviceType, serviceKey));
-		public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey) => GetKeyedService(serviceType, serviceKey) ?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
-		public T? GetService<T>() => this is PolicyProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
-		public T GetRequiredService<T>() => this is PolicyProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
-		global::IPolicy PolicyProvider.IResolver<global::IPolicy>.Get() => S0();
-		global::IPolicyHost PolicyProvider.IResolver<global::IPolicyHost>.Get() => S3();
-		global::System.Collections.Generic.IEnumerable<global::IPolicy> PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicy>>.Get() => new global::IPolicy[] { S0() };
-		global::System.Collections.Generic.IEnumerable<global::IPolicyHost> PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicyHost>>.Get() => new global::IPolicyHost[] { S3() };
-		global::System.IServiceProvider PolicyProvider.IResolver<global::System.IServiceProvider>.Get() => this;
-		global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>.Get() => this;
-		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>.Get() => this;
-		global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>.Get() => this;
-		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>.Get() => this;
-		public bool IsService(global::System.Type serviceType) => IsKeyedService(serviceType, null);
-		public bool IsKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, true) != null || (serviceKey == null ? Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService s && s.IsService(serviceType) : Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService k && k.IsKeyedService(serviceType, serviceKey));
+
+		public object? GetService(global::System.Type serviceType)
+			=> GetKeyedService(serviceType, null);
+
+		public object? GetKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> Resolve(serviceType, serviceKey, false)
+			?? (serviceKey == null ? Fallback?.GetService(serviceType) : (Fallback as global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider)?.GetKeyedService(serviceType, serviceKey));
+
+		public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> GetKeyedService(serviceType, serviceKey)
+			?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
+
+		public T? GetService<T>()
+			=> this is PolicyProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
+
+		public T GetRequiredService<T>()
+			=> this is PolicyProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
+
+		global::IPolicy PolicyProvider.IResolver<global::IPolicy>.Get()
+			=> S0();
+		global::IPolicyHost PolicyProvider.IResolver<global::IPolicyHost>.Get()
+			=> S3();
+		global::System.Collections.Generic.IEnumerable<global::IPolicy> PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicy>>.Get()
+			=> new global::IPolicy[] { S0() };
+		global::System.Collections.Generic.IEnumerable<global::IPolicyHost> PolicyProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IPolicyHost>>.Get()
+			=> new global::IPolicyHost[] { S3() };
+		global::System.IServiceProvider PolicyProvider.IResolver<global::System.IServiceProvider>.Get()
+			=> this;
+		global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory>.Get()
+			=> this;
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>.Get()
+			=> this;
+		global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IKeyedServiceProvider>.Get()
+			=> this;
+		global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService PolicyProvider.IResolver<global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService>.Get()
+			=> this;
+
+		public bool IsService(global::System.Type serviceType)
+			=> IsKeyedService(serviceType, null);
+
+		public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> Resolve(serviceType, serviceKey, true) != null || (serviceKey == null ? Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService s && s.IsService(serviceType) : Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService k && k.IsKeyedService(serviceType, serviceKey));
+
 		public Scope CreateScope() => new Scope(_root);
 		global::Microsoft.Extensions.DependencyInjection.IServiceScope global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory.CreateScope() => CreateScope();
 
-		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+		private static T Required<T>(object? service)
+			=> service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+
 		private T Track<T>(T service)
 		{
 			if (service is global::System.IDisposable)
@@ -235,6 +300,7 @@ partial class PolicyProvider :
 					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
+
 		private object[] Drain()
 		{
 			lock (_lock)
@@ -245,10 +311,16 @@ partial class PolicyProvider :
 				return items;
 			}
 		}
+
 		public void Dispose()
 		{
 			foreach (var item in Drain())
-				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+			{
+				if (item is global::System.IDisposable disposable)
+				{
+					disposable.Dispose();
+				}
+			}
 		}
 	}
 }

@@ -6,7 +6,7 @@ using AutoCtor;
 [Singleton<IPostDepOne, PostDepOne>]
 [Singleton<IPostDepTwo, PostDepTwo>]
 [Singleton<IPostService, PostService>]
-public partial class PostConstructProvider;
+public sealed partial class PostConstructProvider;
 
 public interface IPostDepOne;
 public interface IPostDepTwo;

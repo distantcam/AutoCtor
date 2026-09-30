@@ -6,7 +6,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<IRegistry>(Factory = nameof(CreateRegistry))]
 [Scoped<IAudit>(Factory = nameof(CreateAudit))]
-public partial class AuditProvider
+public sealed partial class AuditProvider
 {
     private IRegistry CreateRegistry(System.IServiceProvider services) => new Registry(services);
 

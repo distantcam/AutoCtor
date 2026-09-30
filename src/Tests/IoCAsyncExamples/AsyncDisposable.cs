@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 [Singleton<ICache, Cache>]
 [Singleton<IPump, Pump>]
 [Transient<IChannel, Channel>]
-public partial class MediaProvider;
+public sealed partial class MediaProvider;
 
 public interface ICache;
 public class Cache : ICache, IDisposable, IAsyncDisposable

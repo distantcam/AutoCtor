@@ -10,7 +10,7 @@ public class Clock : IClock;
 [ServiceProvider]
 [Singleton<IClock, Clock>]
 [Singleton<IGreeter, Greeter>]
-public partial class Container;
+public sealed partial class Container;
 
 [AutoConstruct]
 public partial class Greeter : IGreeter

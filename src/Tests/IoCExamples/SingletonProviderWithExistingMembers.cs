@@ -3,7 +3,7 @@ using AutoCtor;
 
 [ServiceProvider]
 [Singleton<IExistingService, ExistingService>]
-public partial class ExistingMembersProvider : IServiceProvider
+public sealed partial class ExistingMembersProvider : IServiceProvider
 {
     public string Name => "provider";
 }

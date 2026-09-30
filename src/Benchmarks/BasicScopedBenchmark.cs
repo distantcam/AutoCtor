@@ -72,11 +72,11 @@ public partial class BasicScopedBenchmark
     [Scoped(typeof(IScoped1), typeof(Scoped1))]
     [Scoped(typeof(IScoped2), typeof(Scoped2))]
     [Scoped(typeof(IScoped3), typeof(Scoped3))]
-    internal partial class JabScopedProvider;
+    internal sealed partial class JabScopedProvider;
 
     [AutoCtor.ServiceProvider]
     [AutoCtor.Scoped(typeof(IScoped1), typeof(Scoped1))]
     [AutoCtor.Scoped(typeof(IScoped2), typeof(Scoped2))]
     [AutoCtor.Scoped(typeof(IScoped3), typeof(Scoped3))]
-    internal partial class AutoCtorProvider;
+    internal sealed partial class AutoCtorProvider;
 }

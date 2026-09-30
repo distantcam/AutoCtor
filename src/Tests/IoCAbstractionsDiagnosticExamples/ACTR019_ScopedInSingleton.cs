@@ -8,7 +8,7 @@ using AutoCtor;
 [Singleton<ICacheDirect, CacheDirect>]
 [Transient<IQuery, Query>]
 [Singleton<ICacheIndirect, CacheIndirect>]
-public partial class ScopedCaptureProvider;
+public sealed partial class ScopedCaptureProvider;
 
 public interface ITenantContext;
 public class TenantContext : ITenantContext;

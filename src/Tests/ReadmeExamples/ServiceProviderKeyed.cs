@@ -11,7 +11,7 @@ public class SandboxClient : IClient;
 [Singleton<IClient, LiveClient>(Key = "live")]
 [Singleton<IClient, SandboxClient>(Key = "sandbox")]
 [Singleton<IPaymentGateway, PaymentGateway>]
-public partial class PaymentContainer;
+public sealed partial class PaymentContainer;
 
 public interface IPaymentGateway;
 

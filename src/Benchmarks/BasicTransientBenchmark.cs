@@ -66,11 +66,11 @@ public partial class BasicTransientBenchmark
     [Transient(typeof(ITransient1), typeof(Transient1))]
     [Transient(typeof(ITransient2), typeof(Transient2))]
     [Transient(typeof(ITransient3), typeof(Transient3))]
-    private partial class JabTransientProvider;
+    private sealed partial class JabTransientProvider;
 
     [AutoCtor.ServiceProvider]
     [AutoCtor.Transient(typeof(ITransient1), typeof(Transient1))]
     [AutoCtor.Transient(typeof(ITransient2), typeof(Transient2))]
     [AutoCtor.Transient(typeof(ITransient3), typeof(Transient3))]
-    private partial class AutoCtorProvider;
+    private sealed partial class AutoCtorProvider;
 }

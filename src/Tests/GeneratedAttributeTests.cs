@@ -97,7 +97,7 @@ internal sealed class GeneratedAttributeTests
                 [AutoCtor.Singleton(typeof(IClock), typeof(Clock), Key = "utc")]
                 [AutoCtor.Transient(typeof(IStamp), Factory = nameof(CreateStamp))]
                 [AutoCtor.ScanScoped(typeof(IPlugin), As = AutoCtor.ScanAs.Service | AutoCtor.ScanAs.Self, FromAssembliesOf = new[] { typeof(Container) })]
-                public partial class Container
+                public sealed partial class Container
                 {
                     private readonly System.IServiceProvider _host;
                     public Container(System.IServiceProvider host) => _host = host;

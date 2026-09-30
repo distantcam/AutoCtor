@@ -4,7 +4,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<IStore, PrimaryStore>(Key = "primary")]
 [Singleton<IStoreClient, StoreClient>]
-public partial class StoreProvider;
+public sealed partial class StoreProvider;
 
 public interface IStore;
 public class PrimaryStore : IStore;

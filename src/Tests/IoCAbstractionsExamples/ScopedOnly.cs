@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Scoped<IScopedOnlyOne, ScopedOnlyOne>]
 [Scoped<IScopedOnlyTwo, ScopedOnlyTwo>]
-public partial class ScopedOnlyProvider;
+public sealed partial class ScopedOnlyProvider;
 
 public interface IScopedOnlyOne;
 public interface IScopedOnlyTwo;

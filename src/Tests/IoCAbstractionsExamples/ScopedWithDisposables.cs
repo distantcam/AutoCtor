@@ -8,7 +8,7 @@ using System;
 [Singleton<IPoolOwner, PoolOwner>]
 [Scoped<ISession, Session>]
 [Scoped<ITracker, Tracker>]
-public partial class DisposableProvider;
+public sealed partial class DisposableProvider;
 
 public interface IPoolOwner;
 public class PoolOwner : IPoolOwner, IDisposable

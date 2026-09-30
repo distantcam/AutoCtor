@@ -24,7 +24,7 @@
 [Transient<IQuery, Query>]
 [Singleton<ICacheIndirect, CacheIndirect>]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class ScopedCaptureProvider;
+public sealed partial class ScopedCaptureProvider;
 */
  : (9,1)-(9,41),
       Message: The service 'Query' requires a scope and cannot be injected into the singleton 'CacheIndirect',

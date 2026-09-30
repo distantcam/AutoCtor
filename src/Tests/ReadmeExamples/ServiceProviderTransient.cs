@@ -10,7 +10,7 @@ public class Connection : IConnection;
 [ServiceProvider]
 [Singleton<IConnection, Connection>]
 [Transient<ICommand, Command>]
-public partial class CommandContainer;
+public sealed partial class CommandContainer;
 
 [AutoConstruct]
 public partial class Command : ICommand

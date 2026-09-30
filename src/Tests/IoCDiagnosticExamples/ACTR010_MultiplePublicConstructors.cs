@@ -2,7 +2,7 @@ using AutoCtor;
 
 [ServiceProvider]
 [Singleton<IMultiCtorService, MultiCtorService>]
-public partial class MultiCtorProvider;
+public sealed partial class MultiCtorProvider;
 
 public interface IMultiCtorService;
 

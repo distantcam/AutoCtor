@@ -4,7 +4,7 @@ using AutoCtor;
 [ServiceProvider]
 [Transient(typeof(IFactory<>), typeof(Factory<>))]
 [Singleton<IBuilder, Builder>]
-public partial class FactoryProvider;
+public sealed partial class FactoryProvider;
 
 public class Part;
 

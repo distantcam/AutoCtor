@@ -5,7 +5,7 @@
 [ServiceProvider]
 [Singleton<IMultiCtorService, MultiCtorService>]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class MultiCtorProvider;
+public sealed partial class MultiCtorProvider;
 */
  : (3,1)-(3,47),
       Message: The implementation type 'MultiCtorService' must have exactly one public constructor to be used as a service,

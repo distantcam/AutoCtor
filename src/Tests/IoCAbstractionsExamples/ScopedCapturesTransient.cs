@@ -7,7 +7,7 @@
 [ServiceProvider]
 [Scoped<IScopedHolder, ScopedHolder>]
 [Transient<IScopedWorker, ScopedWorker>]
-public partial class ScopedCaptureTransientProvider;
+public sealed partial class ScopedCaptureTransientProvider;
 
 public interface IScopedWorker;
 public class ScopedWorker : IScopedWorker;

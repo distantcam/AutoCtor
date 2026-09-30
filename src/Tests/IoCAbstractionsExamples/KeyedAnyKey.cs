@@ -10,7 +10,7 @@ using AutoCtor;
 [Singleton<IHandler, EmailHandler>(Key = "email")]
 [Singleton<IHandler, SmsHandler>(Key = "sms")]
 [Singleton<IHandler, PushHandler>(Key = "email")]
-public partial class HandlerProvider;
+public sealed partial class HandlerProvider;
 
 public interface IHandler;
 public class DefaultHandler : IHandler;

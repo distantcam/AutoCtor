@@ -5,7 +5,7 @@ using AutoCtor;
 [Singleton<IChainA, ChainA>]
 [Singleton<IChainB, ChainB>]
 [Singleton<IChainC, ChainC>]
-public partial class DependencyChainProvider;
+public sealed partial class DependencyChainProvider;
 
 public interface IChainA;
 public interface IChainB;

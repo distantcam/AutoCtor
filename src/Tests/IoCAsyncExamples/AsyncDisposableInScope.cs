@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 [Singleton<IClock, Clock>]
 [Scoped<ISession, Session>]
 [Transient<ILease, Lease>]
-public partial class SessionProvider;
+public sealed partial class SessionProvider;
 
 public interface IClock;
 public class Clock : IClock;

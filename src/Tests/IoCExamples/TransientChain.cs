@@ -6,7 +6,7 @@ using AutoCtor;
 [Transient<IChainOuter, ChainOuter>]
 [Transient<IChainMiddle, ChainMiddle>]
 [Transient<IChainInner, ChainInner>]
-public partial class TransientChainProvider;
+public sealed partial class TransientChainProvider;
 
 public interface IChainOuter;
 public interface IChainMiddle;

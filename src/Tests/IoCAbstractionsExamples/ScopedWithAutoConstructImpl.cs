@@ -4,7 +4,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<IScAcDependency, ScAcDependency>]
 [Scoped<IScAcService, ScAcService>]
-public partial class ScopedAutoConstructProvider;
+public sealed partial class ScopedAutoConstructProvider;
 
 public interface IScAcDependency;
 public class ScAcDependency : IScAcDependency;

@@ -5,7 +5,7 @@
 [ServiceProvider]
 [ScanSingleton(typeof(IMissing))]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class EmptyScanProvider;
+public sealed partial class EmptyScanProvider;
 */
  : (3,1)-(3,32),
       Message: The scan for 'IMissing' found no accessible, concrete, non-generic class to register,

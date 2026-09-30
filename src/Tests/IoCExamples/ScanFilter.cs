@@ -7,7 +7,7 @@ using System.Collections.Generic;
 [ServiceProvider]
 [ScanSingleton(typeof(IPlugin))]
 [Singleton<IPluginHost, PluginHost>]
-public partial class PluginProvider
+public sealed partial class PluginProvider
 {
     private class HiddenPlugin : IPlugin;
 }

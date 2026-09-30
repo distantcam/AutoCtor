@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 [ServiceProvider(Fallback = nameof(Host))]
 [Singleton<IHandler, PrimaryHandler>(Key = "primary")]
 [Scoped<IUnitOfWork, UnitOfWork>]
-public partial class DispatchProvider
+public sealed partial class DispatchProvider
 {
     public IServiceProvider Host { get; }
 

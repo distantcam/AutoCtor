@@ -6,7 +6,7 @@ using AutoCtor;
 [Singleton(typeof(IValidator<>), typeof(Validator<>))]
 [Singleton(typeof(IHandler<>), typeof(Handler<>))]
 [Singleton<IPipeline, Pipeline>]
-public partial class PipelineProvider;
+public sealed partial class PipelineProvider;
 
 public class Command;
 

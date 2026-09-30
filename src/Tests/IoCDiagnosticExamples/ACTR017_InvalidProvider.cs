@@ -2,7 +2,7 @@ using AutoCtor;
 
 [ServiceProvider]
 [Singleton<IInvalidService, InvalidService>]
-public partial class GenericProvider<T>
+public sealed partial class GenericProvider<T>
 {
 }
 

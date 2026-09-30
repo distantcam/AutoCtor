@@ -340,4 +340,16 @@ internal static class Diagnostics
         category: "AutoCtor",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
+
+    /// <summary>
+    /// Id: ACTR029<br />
+    /// Title: Service provider type must be sealed
+    /// </summary>
+    public static readonly DiagnosticDescriptor ACTR029_ServiceProviderMustBeSealed = new DiagnosticDescriptor(
+        id: "ACTR029",
+        title: "Service provider type must be sealed",
+        messageFormat: "The type '{0}' must be sealed to be a service provider",
+        category: "AutoCtor",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 }

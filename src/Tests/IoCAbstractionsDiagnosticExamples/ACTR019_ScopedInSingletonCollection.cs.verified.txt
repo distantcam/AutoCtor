@@ -5,7 +5,7 @@
 [Scoped<IHook, RequestHook>]
 [Singleton<IHookRegistry, HookRegistry>]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class HookRegistryProvider;
+public sealed partial class HookRegistryProvider;
 */
  : (8,1)-(8,39),
       Message: The service 'RequestHook' requires a scope and cannot be injected into the singleton 'HookRegistry',

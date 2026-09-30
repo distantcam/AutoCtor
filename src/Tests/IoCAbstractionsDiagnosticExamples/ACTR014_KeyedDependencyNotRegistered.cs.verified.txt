@@ -5,7 +5,7 @@
 [Singleton<IStore, PrimaryStore>(Key = "primary")]
 [Singleton<IStoreClient, StoreClient>]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class StoreProvider;
+public sealed partial class StoreProvider;
 */
  : (5,1)-(5,37),
       Message: No registration with key "secondary" was found for the dependency 'IStore' of 'StoreClient',

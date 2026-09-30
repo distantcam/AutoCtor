@@ -4,7 +4,7 @@ using AutoCtor;
 // implicit parameterless constructor survives and the emitter must fall back to it.
 [ServiceProvider]
 [Singleton<IEmptyService, EmptyService>]
-public partial class AutoConstructNoMembersProvider;
+public sealed partial class AutoConstructNoMembersProvider;
 
 public interface IEmptyService;
 

@@ -21,6 +21,6 @@ public class PaymentsModule
 [ServiceProvider]
 [Import<PaymentsModule>]
 [Singleton<IPaymentGateway, FakeGateway>]
-public partial class TestContainer;
+public sealed partial class TestContainer;
 
 #endregion

@@ -8,7 +8,7 @@ using AutoCtor;
 [Scoped<IPlacementContext, PlacementContext>]
 [Transient<IRootSafeCommand, RootSafeCommand>]
 [Transient<IScopeBoundCommand, ScopeBoundCommand>]
-public partial class PlacementProvider;
+public sealed partial class PlacementProvider;
 
 public interface IPlacementConfig;
 public class PlacementConfig : IPlacementConfig;

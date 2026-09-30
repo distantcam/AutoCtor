@@ -23,7 +23,7 @@ public class Banner(string text) : IBanner
 [Singleton<IClock>(Factory = nameof(CreateClock))]
 [Singleton<IBanner>(Factory = nameof(_banner))]
 [Scoped<IAuditLog>(Factory = nameof(CreateAuditLog))]
-public partial class HostContainer
+public sealed partial class HostContainer
 {
     private readonly IBanner _banner = new Banner("AutoCtor");
 

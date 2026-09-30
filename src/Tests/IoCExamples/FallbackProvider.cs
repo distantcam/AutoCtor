@@ -16,7 +16,7 @@ using AutoCtor;
 [ServiceProvider(Fallback = nameof(_host))]
 [Singleton<IClock, Clock>]
 [Singleton<ILedger, Ledger>]
-public partial class HostedProvider
+public sealed partial class HostedProvider
 {
     private readonly IServiceProvider _host;
 

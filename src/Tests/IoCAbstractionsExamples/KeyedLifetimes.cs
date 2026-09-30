@@ -5,7 +5,7 @@ using AutoCtor;
 [Singleton<IChannel, CachedChannel>(Key = "cached")]
 [Transient<IChannel, FreshChannel>(Key = "fresh")]
 [Scoped<IChannel, ScopedChannel>(Key = "scoped")]
-public partial class ChannelProvider;
+public sealed partial class ChannelProvider;
 
 public interface IChannel;
 public class CachedChannel : IChannel;

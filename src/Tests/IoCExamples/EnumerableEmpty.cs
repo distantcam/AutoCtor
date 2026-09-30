@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // the same as Microsoft's container.
 [ServiceProvider]
 [Singleton<IPluginHost, PluginHost>]
-public partial class EmptyCollectionProvider;
+public sealed partial class EmptyCollectionProvider;
 
 public interface IPlugin;
 

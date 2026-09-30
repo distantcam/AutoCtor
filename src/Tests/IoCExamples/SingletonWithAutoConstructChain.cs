@@ -4,7 +4,7 @@ using AutoCtor;
 [Singleton<IChainDepOne, ChainDepOne>]
 [Singleton<IChainDepTwo, ChainDepTwo>]
 [Singleton<IDerivedService, DerivedService>]
-public partial class AutoConstructChainProvider;
+public sealed partial class AutoConstructChainProvider;
 
 public interface IChainDepOne;
 public interface IChainDepTwo;

@@ -84,7 +84,7 @@ public partial class BasicMixedBenchmark
     [Singleton(typeof(ISingleton1), typeof(Singleton1))]
     [Singleton(typeof(ISingleton2), typeof(Singleton2))]
     [Singleton(typeof(ISingleton3), typeof(Singleton3))]
-    private partial class JabMixProvider;
+    private sealed partial class JabMixProvider;
 
     [AutoCtor.ServiceProvider]
     [AutoCtor.Transient(typeof(IMix1), typeof(Mix1))]
@@ -96,5 +96,5 @@ public partial class BasicMixedBenchmark
     [AutoCtor.Singleton(typeof(ISingleton1), typeof(Singleton1))]
     [AutoCtor.Singleton(typeof(ISingleton2), typeof(Singleton2))]
     [AutoCtor.Singleton(typeof(ISingleton3), typeof(Singleton3))]
-    private partial class AutoCtorProvider;
+    private sealed partial class AutoCtorProvider;
 }

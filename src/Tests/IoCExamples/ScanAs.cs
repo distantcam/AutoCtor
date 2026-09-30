@@ -6,7 +6,7 @@ using AutoCtor;
 [ServiceProvider]
 [ScanSingleton(typeof(INotifier), As = ScanAs.Self | ScanAs.ImplementedInterfaces)]
 [Singleton<IAuditable, AuditLog>]
-public partial class NotifierProvider;
+public sealed partial class NotifierProvider;
 
 public interface INotifier;
 public interface IAuditable;

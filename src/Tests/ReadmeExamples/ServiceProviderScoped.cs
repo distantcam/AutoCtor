@@ -11,7 +11,7 @@ public class AppSettings : IAppSettings;
 [ServiceProvider]
 [Singleton<IAppSettings, AppSettings>]
 [Scoped<IDbContext, DbContext>]
-public partial class RequestContainer;
+public sealed partial class RequestContainer;
 
 public class DbContext : IDbContext, IDisposable
 {

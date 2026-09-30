@@ -25,7 +25,7 @@ internal sealed class ModuleReferencedAssemblyTests
     private const string App = """
         [AutoCtor.ServiceProvider]
         [AutoCtor.Import(typeof(LibraryModule))]
-        public partial class Container;
+        public sealed partial class Container;
         """;
 
     [Test]
@@ -97,7 +97,7 @@ internal sealed class ModuleReferencedAssemblyTests
         const string provider = """
             [AutoCtor.ServiceProvider]
             [AutoCtor.Import(typeof(LocalModule))]
-            public partial class Container;
+            public sealed partial class Container;
             """;
         const string module = """
             [AutoCtor.Singleton(typeof(LocalService))]

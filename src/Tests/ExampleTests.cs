@@ -1,7 +1,8 @@
 ﻿using AutoCtor;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Testing;
 using static ExampleTestsHelper;
+using Microsoft.CodeAnalysis.Testing;
+
 
 #if ROSLYN_4_4
 using Microsoft.CodeAnalysis.CSharp;
@@ -148,7 +149,7 @@ internal sealed class ExampleTests
         Justification = "Instantiated in generated code.")]
     internal sealed class AsyncCompilationBuilderFactory : CompilationBuilderFactory<AutoConstructAttribute>
     {
-        protected override ReferenceAssemblies BaseReferenceAssemblies => ReferenceAssemblies.Net.Net90;
+        protected override ReferenceAssemblies BaseReferenceAssemblies => ReferenceAssemblies.Net.Net100;
         protected override IEnumerable<string> GetNuGetIds() => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
     }
 

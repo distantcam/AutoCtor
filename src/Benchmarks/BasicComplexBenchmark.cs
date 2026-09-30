@@ -96,7 +96,7 @@ public partial class BasicComplexBenchmark
     [Singleton(typeof(ISingleton1), typeof(Singleton1))]
     [Singleton(typeof(ISingleton2), typeof(Singleton2))]
     [Singleton(typeof(ISingleton3), typeof(Singleton3))]
-    private partial class JabComplexProvider;
+    private sealed partial class JabComplexProvider;
 
     [AutoCtor.ServiceProvider]
     [AutoCtor.Scoped(typeof(IComplex1), typeof(Complex1))]
@@ -114,5 +114,5 @@ public partial class BasicComplexBenchmark
     [AutoCtor.Singleton(typeof(ISingleton1), typeof(Singleton1))]
     [AutoCtor.Singleton(typeof(ISingleton2), typeof(Singleton2))]
     [AutoCtor.Singleton(typeof(ISingleton3), typeof(Singleton3))]
-    private partial class AutoCtorProvider;
+    private sealed partial class AutoCtorProvider;
 }

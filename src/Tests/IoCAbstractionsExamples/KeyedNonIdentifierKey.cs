@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<IEndpoint, PublicEndpoint>(Key = "api/v1")]
 [Singleton<IEndpoint, AdminEndpoint>(Key = 7)]
-public partial class EndpointProvider;
+public sealed partial class EndpointProvider;
 
 public interface IEndpoint;
 public class PublicEndpoint : IEndpoint;

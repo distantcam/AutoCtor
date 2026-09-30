@@ -8,7 +8,7 @@ using System.Collections.Generic;
 [Singleton<IPolicy, StrictPolicy>(Key = "strict")]
 [Singleton<IPolicy, LoosePolicy>(Key = "strict")]
 [Singleton<IPolicyHost, PolicyHost>]
-public partial class PolicyProvider;
+public sealed partial class PolicyProvider;
 
 public interface IPolicy;
 public class DefaultPolicy : IPolicy;

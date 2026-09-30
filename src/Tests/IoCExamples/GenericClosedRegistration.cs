@@ -3,7 +3,7 @@ using AutoCtor;
 // A fully closed generic is an ordinary registration -- no open generic machinery involved.
 [ServiceProvider]
 [Singleton<IBox<Widget>, Box<Widget>>]
-public partial class ClosedGenericProvider;
+public sealed partial class ClosedGenericProvider;
 
 public class Widget;
 public interface IBox<T>;

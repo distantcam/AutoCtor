@@ -12,7 +12,7 @@ public class SmsNotifier : INotifier;
 [Singleton<INotifier, EmailNotifier>]
 [Singleton<INotifier, SmsNotifier>]
 [Singleton<IAlertService, AlertService>]
-public partial class AlertContainer;
+public sealed partial class AlertContainer;
 
 public interface IAlertService;
 

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 [Singleton<IValidator, EmailValidator>]
 [Singleton<IValidator, AgeValidator>]
 [Singleton<IValidationRunner, ValidationRunner>]
-public partial class ValidationProvider;
+public sealed partial class ValidationProvider;
 
 public interface IValidator;
 public class NameValidator : IValidator;

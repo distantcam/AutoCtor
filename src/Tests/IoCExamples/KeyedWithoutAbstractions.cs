@@ -7,7 +7,7 @@
 [ServiceProvider]
 [Singleton<IStore, LocalStore>]
 [Singleton<IStore, RemoteStore>(Key = "remote")]
-public partial class StoreProvider;
+public sealed partial class StoreProvider;
 
 public interface IStore;
 public class LocalStore : IStore;

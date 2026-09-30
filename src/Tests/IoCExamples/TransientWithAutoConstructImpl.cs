@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<ITrAcDependency, TrAcDependency>]
 [Transient<ITrAcService, TrAcService>]
-public partial class TransientAutoConstructProvider;
+public sealed partial class TransientAutoConstructProvider;
 
 public interface ITrAcDependency;
 public class TrAcDependency : ITrAcDependency;

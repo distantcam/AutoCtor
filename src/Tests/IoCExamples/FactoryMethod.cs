@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<Settings>]
 [Singleton<IClock>(Factory = nameof(CreateClock))]
-public partial class ClockProvider
+public sealed partial class ClockProvider
 {
     private IClock CreateClock(Settings settings) => new UtcClock(settings.Offset);
 }

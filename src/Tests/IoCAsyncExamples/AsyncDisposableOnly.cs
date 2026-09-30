@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 // than a Dispose that exists only to throw.
 [ServiceProvider]
 [Singleton<IStream, Stream>]
-public partial class StreamProvider;
+public sealed partial class StreamProvider;
 
 public interface IStream;
 public class Stream : IStream, IAsyncDisposable

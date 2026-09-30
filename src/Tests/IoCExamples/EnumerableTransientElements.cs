@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [Transient<IRule, RuleOne>]
 [Transient<IRule, RuleTwo>]
 [Transient<IRuleSet, RuleSet>]
-public partial class RuleSetProvider;
+public sealed partial class RuleSetProvider;
 
 public interface IRule;
 public class RuleOne : IRule;

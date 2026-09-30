@@ -7,7 +7,7 @@ public class CancelOrder;
 
 [ServiceProvider]
 [ScanTransient(typeof(IHandler<>))]
-public partial class OrderContainer;
+public sealed partial class OrderContainer;
 
 public interface IHandler<TMessage>;
 

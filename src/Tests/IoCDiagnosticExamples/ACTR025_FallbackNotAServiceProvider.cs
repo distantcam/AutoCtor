@@ -2,7 +2,7 @@ using AutoCtor;
 
 [ServiceProvider(Fallback = nameof(_host))]
 [Singleton<IService, Service>]
-public partial class WrongFallbackProvider
+public sealed partial class WrongFallbackProvider
 {
     private readonly string _host = "";
 }

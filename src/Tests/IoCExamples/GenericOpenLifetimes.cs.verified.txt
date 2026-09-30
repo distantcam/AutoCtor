@@ -5,7 +5,7 @@
 [Transient(typeof(IFactory<>), typeof(Factory<>))]
 [Singleton<IBuilder, Builder>]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class FactoryProvider;
+public sealed partial class FactoryProvider;
 */
  : (5,1)-(5,29),
       Message: The transient service 'Factory<T>' is captured by the singleton 'Builder' and will not be recreated for each resolve,

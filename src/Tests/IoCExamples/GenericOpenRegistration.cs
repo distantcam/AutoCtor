@@ -6,7 +6,7 @@ using AutoCtor;
 [Singleton<IDbSession, DbSession>]
 [Singleton(typeof(IRepository<>), typeof(Repository<>))]
 [Singleton<IUserReport, UserReport>]
-public partial class RepositoryProvider;
+public sealed partial class RepositoryProvider;
 
 public class User;
 public class Order;

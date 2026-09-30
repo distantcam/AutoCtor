@@ -50,24 +50,51 @@ partial class HandlerProvider :
 	}
 
 	private global::System.IServiceProvider? Fallback => null;
-	public object? GetService(global::System.Type serviceType) => GetKeyedService(serviceType, null);
-	public object? GetKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, false) ?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
-	public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey) => GetKeyedService(serviceType, serviceKey) ?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
-	public T? GetService<T>() => this is HandlerProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
-	public T GetRequiredService<T>() => this is HandlerProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
-	global::IHandler<global::CancelOrder> HandlerProvider.IResolver<global::IHandler<global::CancelOrder>>.Get() => S0();
-	global::IHandler<global::CreateOrder> HandlerProvider.IResolver<global::IHandler<global::CreateOrder>>.Get() => S1();
-	global::IDispatcher HandlerProvider.IResolver<global::IDispatcher>.Get() => S2();
-	global::System.Collections.Generic.IEnumerable<global::IHandler<global::CancelOrder>> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::CancelOrder>>>.Get() => new global::IHandler<global::CancelOrder>[] { S0() };
-	global::System.Collections.Generic.IEnumerable<global::IHandler<global::CreateOrder>> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::CreateOrder>>>.Get() => new global::IHandler<global::CreateOrder>[] { S1() };
-	global::System.Collections.Generic.IEnumerable<global::IDispatcher> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IDispatcher>>.Get() => new global::IDispatcher[] { S2() };
-	global::System.IServiceProvider HandlerProvider.IResolver<global::System.IServiceProvider>.Get() => this;
+
+	public object? GetService(global::System.Type serviceType)
+		=> GetKeyedService(serviceType, null);
+
+	public object? GetKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> Resolve(serviceType, serviceKey, false)
+		?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
+
+	public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> GetKeyedService(serviceType, serviceKey)
+		?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
+
+	public T? GetService<T>()
+		=> this is HandlerProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
+
+	public T GetRequiredService<T>()
+		=> this is HandlerProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
+
 	private interface IResolver<T> { T Get(); }
-	public bool IsService(global::System.Type serviceType) => IsKeyedService(serviceType, null);
-	public bool IsKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, true) != null;
+	global::IHandler<global::CancelOrder> HandlerProvider.IResolver<global::IHandler<global::CancelOrder>>.Get()
+		=> S0();
+	global::IHandler<global::CreateOrder> HandlerProvider.IResolver<global::IHandler<global::CreateOrder>>.Get()
+		=> S1();
+	global::IDispatcher HandlerProvider.IResolver<global::IDispatcher>.Get()
+		=> S2();
+	global::System.Collections.Generic.IEnumerable<global::IHandler<global::CancelOrder>> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::CancelOrder>>>.Get()
+		=> new global::IHandler<global::CancelOrder>[] { S0() };
+	global::System.Collections.Generic.IEnumerable<global::IHandler<global::CreateOrder>> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::CreateOrder>>>.Get()
+		=> new global::IHandler<global::CreateOrder>[] { S1() };
+	global::System.Collections.Generic.IEnumerable<global::IDispatcher> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IDispatcher>>.Get()
+		=> new global::IDispatcher[] { S2() };
+	global::System.IServiceProvider HandlerProvider.IResolver<global::System.IServiceProvider>.Get()
+		=> this;
+
+	public bool IsService(global::System.Type serviceType)
+		=> IsKeyedService(serviceType, null);
+
+	public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
+		=> Resolve(serviceType, serviceKey, true) != null;
+
 	public Scope CreateScope() => new Scope(this);
 
-	private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+	private static T Required<T>(object? service)
+		=> service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+
 	private T Track<T>(T service)
 	{
 		if (service is global::System.IDisposable)
@@ -75,6 +102,7 @@ partial class HandlerProvider :
 				(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 		return service;
 	}
+
 	private object[] Drain()
 	{
 		lock (_lock)
@@ -85,10 +113,16 @@ partial class HandlerProvider :
 			return items;
 		}
 	}
+
 	public void Dispose()
 	{
 		foreach (var item in Drain())
-			(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+		{
+			if (item is global::System.IDisposable disposable)
+			{
+				disposable.Dispose();
+			}
+		}
 	}
 
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
@@ -138,23 +172,50 @@ partial class HandlerProvider :
 		}
 
 		private global::System.IServiceProvider? Fallback => null;
-		public object? GetService(global::System.Type serviceType) => GetKeyedService(serviceType, null);
-		public object? GetKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, false) ?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
-		public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey) => GetKeyedService(serviceType, serviceKey) ?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
-		public T? GetService<T>() => this is HandlerProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
-		public T GetRequiredService<T>() => this is HandlerProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
-		global::IHandler<global::CancelOrder> HandlerProvider.IResolver<global::IHandler<global::CancelOrder>>.Get() => S0();
-		global::IHandler<global::CreateOrder> HandlerProvider.IResolver<global::IHandler<global::CreateOrder>>.Get() => S1();
-		global::IDispatcher HandlerProvider.IResolver<global::IDispatcher>.Get() => S2();
-		global::System.Collections.Generic.IEnumerable<global::IHandler<global::CancelOrder>> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::CancelOrder>>>.Get() => new global::IHandler<global::CancelOrder>[] { S0() };
-		global::System.Collections.Generic.IEnumerable<global::IHandler<global::CreateOrder>> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::CreateOrder>>>.Get() => new global::IHandler<global::CreateOrder>[] { S1() };
-		global::System.Collections.Generic.IEnumerable<global::IDispatcher> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IDispatcher>>.Get() => new global::IDispatcher[] { S2() };
-		global::System.IServiceProvider HandlerProvider.IResolver<global::System.IServiceProvider>.Get() => this;
-		public bool IsService(global::System.Type serviceType) => IsKeyedService(serviceType, null);
-		public bool IsKeyedService(global::System.Type serviceType, object? serviceKey) => Resolve(serviceType, serviceKey, true) != null;
+
+		public object? GetService(global::System.Type serviceType)
+			=> GetKeyedService(serviceType, null);
+
+		public object? GetKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> Resolve(serviceType, serviceKey, false)
+			?? (serviceKey == null ? Fallback?.GetService(serviceType) : null);
+
+		public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> GetKeyedService(serviceType, serviceKey)
+			?? throw new global::System.InvalidOperationException("No service for type '" + serviceType + "' has been registered.");
+
+		public T? GetService<T>()
+			=> this is HandlerProvider.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;
+
+		public T GetRequiredService<T>()
+			=> this is HandlerProvider.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);
+
+		global::IHandler<global::CancelOrder> HandlerProvider.IResolver<global::IHandler<global::CancelOrder>>.Get()
+			=> S0();
+		global::IHandler<global::CreateOrder> HandlerProvider.IResolver<global::IHandler<global::CreateOrder>>.Get()
+			=> S1();
+		global::IDispatcher HandlerProvider.IResolver<global::IDispatcher>.Get()
+			=> S2();
+		global::System.Collections.Generic.IEnumerable<global::IHandler<global::CancelOrder>> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::CancelOrder>>>.Get()
+			=> new global::IHandler<global::CancelOrder>[] { S0() };
+		global::System.Collections.Generic.IEnumerable<global::IHandler<global::CreateOrder>> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IHandler<global::CreateOrder>>>.Get()
+			=> new global::IHandler<global::CreateOrder>[] { S1() };
+		global::System.Collections.Generic.IEnumerable<global::IDispatcher> HandlerProvider.IResolver<global::System.Collections.Generic.IEnumerable<global::IDispatcher>>.Get()
+			=> new global::IDispatcher[] { S2() };
+		global::System.IServiceProvider HandlerProvider.IResolver<global::System.IServiceProvider>.Get()
+			=> this;
+
+		public bool IsService(global::System.Type serviceType)
+			=> IsKeyedService(serviceType, null);
+
+		public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
+			=> Resolve(serviceType, serviceKey, true) != null;
+
 		public Scope CreateScope() => new Scope(_root);
 
-		private static T Required<T>(object? service) => service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+		private static T Required<T>(object? service)
+			=> service is T t ? t : throw new global::System.InvalidOperationException("No service for type '" + typeof(T) + "' has been registered.");
+
 		private T Track<T>(T service)
 		{
 			if (service is global::System.IDisposable)
@@ -162,6 +223,7 @@ partial class HandlerProvider :
 					(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);
 			return service;
 		}
+
 		private object[] Drain()
 		{
 			lock (_lock)
@@ -172,10 +234,16 @@ partial class HandlerProvider :
 				return items;
 			}
 		}
+
 		public void Dispose()
 		{
 			foreach (var item in Drain())
-				(item as global::System.IDisposable ?? throw new global::System.InvalidOperationException("'" + item.GetType() + "' only implements IAsyncDisposable, use DisposeAsync.")).Dispose();
+			{
+				if (item is global::System.IDisposable disposable)
+				{
+					disposable.Dispose();
+				}
+			}
 		}
 	}
 }

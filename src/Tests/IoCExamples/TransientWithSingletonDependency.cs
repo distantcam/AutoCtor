@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Singleton<ISharedConfig, SharedConfig>]
 [Transient<IRequestHandler, RequestHandler>]
-public partial class TransientDependencyProvider;
+public sealed partial class TransientDependencyProvider;
 
 public interface ISharedConfig;
 public class SharedConfig : ISharedConfig;

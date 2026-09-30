@@ -6,7 +6,7 @@ using AutoCtor;
 [Singleton(typeof(IStore<>), typeof(Store<>))]
 [Singleton<IStore<Special>, SpecialStore>]
 [Singleton<IStoreHost, StoreHost>]
-public partial class StoreProvider;
+public sealed partial class StoreProvider;
 
 public class Special;
 public class Ordinary;

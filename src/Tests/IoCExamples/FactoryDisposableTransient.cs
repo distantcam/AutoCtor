@@ -4,7 +4,7 @@ using AutoCtor;
 // for what comes back. The provider still owns what it hands out.
 [ServiceProvider]
 [Transient<IWorkItem, WorkItem>(Factory = nameof(CreateWorkItem))]
-public partial class WorkItemProvider
+public sealed partial class WorkItemProvider
 {
     private WorkItem CreateWorkItem() => new WorkItem();
 }

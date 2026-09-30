@@ -7,7 +7,7 @@ using System;
 // an unused async would cost.
 [ServiceProvider]
 [Singleton<ILedger, Ledger>]
-public partial class LedgerProvider;
+public sealed partial class LedgerProvider;
 
 public interface ILedger;
 

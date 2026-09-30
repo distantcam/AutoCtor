@@ -9,6 +9,11 @@ using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
 
 internal static class Extensions
 {
+    public static EquatableList<T> ToEquatableList<T>(this IEnumerable<T> source)
+    {
+        return new(source);
+    }
+
     public static T? OnlyOrDefault<T>(this IEnumerable<T> source)
     {
         if (source is IList<T> list)

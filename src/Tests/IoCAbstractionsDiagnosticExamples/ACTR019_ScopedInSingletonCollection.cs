@@ -7,7 +7,7 @@ using System.Collections.Generic;
 [Singleton<IHook, StaticHook>]
 [Scoped<IHook, RequestHook>]
 [Singleton<IHookRegistry, HookRegistry>]
-public partial class HookRegistryProvider;
+public sealed partial class HookRegistryProvider;
 
 public interface IHook;
 public class StaticHook : IHook;

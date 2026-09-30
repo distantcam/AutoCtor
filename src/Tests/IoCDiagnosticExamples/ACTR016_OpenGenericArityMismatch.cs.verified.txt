@@ -5,7 +5,7 @@
 [ServiceProvider]
 [Singleton(typeof(IPair<,>), typeof(PairImpl<>))]
  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-public partial class PairProvider;
+public sealed partial class PairProvider;
 */
  : (5,1)-(5,48),
       Message: The open generic service 'IPair<TFirst, TSecond>' cannot be registered with 'PairImpl<T>'; the implementation must be an open generic type with the same number of type parameters,

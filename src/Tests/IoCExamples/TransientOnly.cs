@@ -5,7 +5,7 @@ using AutoCtor;
 [ServiceProvider]
 [Transient<ITransientOnlyOne, TransientOnlyOne>]
 [Transient<ITransientOnlyTwo, TransientOnlyTwo>]
-public partial class TransientOnlyProvider;
+public sealed partial class TransientOnlyProvider;
 
 public interface ITransientOnlyOne;
 public interface ITransientOnlyTwo;

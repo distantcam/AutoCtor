@@ -15,11 +15,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 var app = builder.Build();
 
 var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", (TodoService todoProvider) => todoProvider.GetTodos())
+todosApi.MapGet("/", (TodoService todoService) => todoService.GetTodos())
         .WithName("GetTodos");
 
-todosApi.MapGet("/{id}", Results<Ok<Todo>, NotFound> (int id, TodoService todoProvider) =>
-    todoProvider.GetTodos().FirstOrDefault(a => a.Id == id) is { } todo
+todosApi.MapGet("/{id}", Results<Ok<Todo>, NotFound> (int id, TodoService todoService) =>
+    todoService.GetTodos().FirstOrDefault(a => a.Id == id) is { } todo
         ? TypedResults.Ok(todo)
         : TypedResults.NotFound())
     .WithName("GetTodoById");
@@ -37,7 +37,7 @@ internal partial class AppJsonSerializerContext : JsonSerializerContext;
 
 [ServiceProvider(Fallback = nameof(_fallback))]
 [Singleton<TodoService>]
-internal partial class ExampleServiceProvider(IServiceProvider fallback)
+internal sealed partial class ExampleServiceProvider(IServiceProvider fallback)
 {
     private readonly IServiceProvider _fallback = fallback;
 }

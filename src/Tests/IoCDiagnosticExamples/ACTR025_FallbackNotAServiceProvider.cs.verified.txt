@@ -3,11 +3,11 @@
     {
       Location: /*
 [Singleton<IService, Service>]
-public partial class WrongFallbackProvider
-                     ^^^^^^^^^^^^^^^^^^^^^
+public sealed partial class WrongFallbackProvider
+                            ^^^^^^^^^^^^^^^^^^^^^
 {
 */
- : (4,21)-(4,42),
+ : (4,28)-(4,49),
       Message: The fallback '_host' returns 'string', which is not assignable to System.IServiceProvider,
       Severity: Error,
       Descriptor: {

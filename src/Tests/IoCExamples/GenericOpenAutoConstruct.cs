@@ -6,7 +6,7 @@ using AutoCtor;
 [Singleton<IClock, SystemClock>]
 [Singleton(typeof(ICache<>), typeof(Cache<>))]
 [Singleton<IReportService, ReportService>]
-public partial class CacheProvider;
+public sealed partial class CacheProvider;
 
 public class Report;
 

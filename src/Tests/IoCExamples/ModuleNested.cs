@@ -4,7 +4,7 @@ using AutoCtor;
 // looks in the module's assembly.
 [ServiceProvider]
 [Import<OuterModule>]
-public partial class NestedModuleProvider;
+public sealed partial class NestedModuleProvider;
 
 [Singleton<IPluginHost, PluginHost>]
 [Import<InnerModule>]

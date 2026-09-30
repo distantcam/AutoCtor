@@ -6,7 +6,7 @@ using AutoCtor;
 [Singleton<ICache, DefaultCache>]
 [Singleton<ICache, RedisCache>(Key = "redis")]
 [Singleton<ICache, MemoryCache>(Key = "memory")]
-public partial class CacheProvider;
+public sealed partial class CacheProvider;
 
 public interface ICache;
 public class DefaultCache : ICache;
