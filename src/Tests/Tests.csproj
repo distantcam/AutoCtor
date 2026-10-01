@@ -57,7 +57,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="TUnit" />
-    <PackageReference Include="Verify.DiffPlex" />
     <PackageReference Include="Verify.SourceGenerators" />
     <PackageReference Include="Verify.TUnit" />
   </ItemGroup>
