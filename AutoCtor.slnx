@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
     <File Path="global.json" />
     <File Path="mdsnippets.json" />
     <File Path="readme.nuget.md" />
@@ -30,7 +31,9 @@
   <Project Path="src/AutoCtor.Roslyn3.11/AutoCtor.Roslyn3.11.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.0/AutoCtor.Roslyn4.0.csproj" />
   <Project Path="src/AutoCtor.Roslyn4.4/AutoCtor.Roslyn4.4.csproj" />
-  <Project Path="src/Benchmarks/AutoCtor.Benchmarks.csproj" />
+  <Project Path="src/Benchmarks/Benchmarks.csproj" />
+  <Project Path="src/CompileBenchmarks/CompileBenchmarks.csproj" Id="7517ad45-4734-4722-9fd1-05d68a6b1949" />
   <Project Path="src/Shared/Shared.csproj" />
   <Project Path="src/Tests/Tests.csproj" />
+  <Project Path="src/WebApiExample/WebApiExample.csproj" Id="1e16ec8d-af29-44f2-85c8-f17cc7c4a0ba" />
 </Solution>

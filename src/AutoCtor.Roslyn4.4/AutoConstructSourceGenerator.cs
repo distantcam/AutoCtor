@@ -29,8 +29,18 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         .WithTrackingName(TrackingNames.PostCtorMethods)
         .Collect();
 
+        var serviceProviders = context.SyntaxProvider.ForAttributeWithMetadataName(
+            AttributeNames.ServiceProvider,
+            GeneratorUtilities.IsTypeDeclarationWithAttributes,
+            static (c, ct) => ServiceProviderModel.Create((INamedTypeSymbol)c.TargetSymbol))
+        .WithTrackingName(TrackingNames.ServiceProviders)
+        .Collect();
+
+        var duckTypes = context.CompilationProvider.Select(static (c, ct) => DuckTypes.Create(c));
+
         context.RegisterSourceOutput(
-            types.Combine(postCtorMethods).Combine(properties),
+            types.Combine(postCtorMethods).Combine(properties).Combine(serviceProviders).Combine(duckTypes)
+                .Select(static (x, _) => (x.Left.Left.Left.Left, x.Left.Left.Left.Right, x.Left.Left.Right, x.Left.Right, x.Right)),
             Emitter.GenerateSource);
     }
 }

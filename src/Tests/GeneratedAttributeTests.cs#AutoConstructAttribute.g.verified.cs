@@ -8,7 +8,6 @@
 #if AUTOCTOR_EMBED_ATTRIBUTES
 namespace AutoCtor
 {
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
 	internal enum GuardSetting
 	{
@@ -16,42 +15,119 @@ namespace AutoCtor
 		Disabled,
 		Enabled
 	}
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Class | global::System.AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoConstructAttribute : global::System.Attribute
 	{
-		public AutoConstructAttribute(GuardSetting guard = GuardSetting.Default)
-		{
-		}
+		public AutoConstructAttribute(GuardSetting guard = GuardSetting.Default) { }
 	}
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoPostConstructAttribute : global::System.Attribute
 	{
 	}
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoConstructIgnoreAttribute : global::System.Attribute
 	{
 	}
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	[global::System.AttributeUsage(global::System.AttributeTargets.Field | global::System.AttributeTargets.Property | global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
 	internal sealed class AutoKeyedServiceAttribute : global::System.Attribute
 	{
 		public object Key { get; }
 		public AutoKeyedServiceAttribute(object key) => Key = key;
 	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	internal sealed class ServiceProviderAttribute : global::System.Attribute
+	{
+		public string Fallback { get; set; }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	internal abstract class ServiceAttribute : global::System.Attribute
+	{
+		public object Key { get; set; }
+		public string Factory { get; set; }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class SingletonAttribute : ServiceAttribute
+	{
+		public SingletonAttribute(global::System.Type service, global::System.Type implementation = null) { }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class TransientAttribute : ServiceAttribute
+	{
+		public TransientAttribute(global::System.Type service, global::System.Type implementation = null) { }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class ScopedAttribute : ServiceAttribute
+	{
+		public ScopedAttribute(global::System.Type service, global::System.Type implementation = null) { }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class ImportAttribute : global::System.Attribute
+	{
+		public ImportAttribute(global::System.Type module) { }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.Flags]
+	internal enum ScanAs
+	{
+		Service = 1,
+		Self = 2,
+		ImplementedInterfaces = 4
+	}
+	internal abstract class ScanAttribute : global::System.Attribute
+	{
+		public ScanAs As { get; set; }
+		public global::System.Type[] FromAssembliesOf { get; set; }
+		public string TypeNameFilter { get; set; }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class ScanSingletonAttribute : ScanAttribute
+	{
+		public ScanSingletonAttribute(global::System.Type service = null) { }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class ScanTransientAttribute : ScanAttribute
+	{
+		public ScanTransientAttribute(global::System.Type service = null) { }
+	}
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class ScanScopedAttribute : ScanAttribute
+	{
+		public ScanScopedAttribute(global::System.Type service = null) { }
+	}
+	#if AUTOCTOR_EMBED_GENERIC_ATTRIBUTES
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class SingletonAttribute<TService> : ServiceAttribute { }
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class SingletonAttribute<TService, TImplementation> : ServiceAttribute { }
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class TransientAttribute<TService> : ServiceAttribute { }
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class TransientAttribute<TService, TImplementation> : ServiceAttribute { }
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class ScopedAttribute<TService> : ServiceAttribute { }
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class ScopedAttribute<TService, TImplementation> : ServiceAttribute { }
+	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
+	[global::System.AttributeUsage(global::System.AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+	internal sealed class ImportAttribute<TModule> : global::System.Attribute { }
+	#endif
 }
 #endif

@@ -18,13 +18,26 @@ public partial class AutoConstructSourceGenerator
     {
         public static void GenerateSource(
             EmitterContext context,
-            ((ImmutableArray<TypeModel> Types, ImmutableArray<PostCtorModel> PostCtorMethods) Models,
-            bool Guards) input)
+            (ImmutableArray<TypeModel> Types,
+            ImmutableArray<PostCtorModel> PostCtorMethods,
+            bool Guards,
+            ImmutableArray<ServiceProviderModel> Providers,
+            DuckTypes DuckTypes) input)
         {
-            if (input.Models.Types.IsDefaultOrEmpty) return;
+            if (input.Types.IsDefaultOrEmpty && input.Providers.IsDefaultOrEmpty) return;
 
             var ctorMaps = new Dictionary<string, ParameterList>();
-            var orderedTypes = input.Models.Types.OrderBy(static t => t.Depth);
+            var orderedTypes = input.Types.OrderBy(static t => t.Depth);
+
+            // Indexed once rather than scanned per type: a marked method on every
+            // [AutoConstruct] type in a large solution makes that scan quadratic.
+            var postCtorsByType = new Dictionary<string, List<PostCtorModel>>();
+            foreach (var method in input.PostCtorMethods)
+            {
+                if (!postCtorsByType.TryGetValue(method.TypeKey, out var marked))
+                    postCtorsByType.Add(method.TypeKey, marked = []);
+                marked.Add(method);
+            }
 
             foreach (var type in orderedTypes)
             {
@@ -67,9 +80,7 @@ public partial class AutoConstructSourceGenerator
                     }
                 }
 
-                var postCtorMethods = input.Models.PostCtorMethods
-                    .Where(m => m.TypeKey == type.TypeKey)
-                    .ToImmutableArray();
+                postCtorsByType.TryGetValue(type.TypeKey, out var postCtorMethods);
 
                 var (source, parameters) = GenerateSource(context, type, postCtorMethods, baseParameters, input.Guards);
 
@@ -80,12 +91,16 @@ public partial class AutoConstructSourceGenerator
 
                 context.AddSource($"{type.HintName}.g.cs", source);
             }
+
+            // After the loop above, as ctorMaps holds the constructors AutoCtor generates.
+            foreach (var provider in input.Providers)
+                IoCEmitter.Generate(context, provider, ctorMaps, input.DuckTypes);
         }
 
         private static (SourceText?, ParameterList?) GenerateSource(
             EmitterContext context,
             TypeModel type,
-            ImmutableArray<PostCtorModel> markedPostCtorMethods,
+            List<PostCtorModel>? markedPostCtorMethods,
             IEnumerable<ParameterModel>? baseParameters,
             bool guards)
         {
@@ -118,14 +133,13 @@ public partial class AutoConstructSourceGenerator
 
             using (source.StartPartialType(type))
             {
-                source
-                    .AddGeneratedAttributes(AttributeTargets.Method);
+                source.AddGeneratedCodeAttribute();
 
                 source.AppendIndent()
-                    .Append($"public {type.Name}({parameters.CtorParameterDeclarations:commaindent})")
-                    .Append(parameters.HasBaseParameters,
-                        $" : base({parameters.BaseParameters:commaindent})")
-                    .AppendLine();
+                    .Append($"public {type.Name}({parameters.CtorParameterDeclarations:commaindent})");
+                if (parameters.HasBaseParameters)
+                    source.Append($" : base({parameters.BaseParameters:commaindent})");
+                source.AppendLine();
 
                 using (source.StartBlock())
                 {
@@ -142,10 +156,10 @@ public partial class AutoConstructSourceGenerator
                             && !item.IsNullableAnnotated;
 
                         source.AppendIndent()
-                            .Append($"{item.IdentifierName} = {parameter}")
-                            .Append(addGuard,
-                                $" ?? throw new global::System.ArgumentNullException(\"{parameter}\")")
-                            .Append(";")
+                            .Append($"{item.IdentifierName} = {parameter}");
+                        if (addGuard)
+                            source.Append($" ?? throw new global::System.ArgumentNullException(\"{parameter}\")");
+                        source.Append(";")
                             .AppendLine();
                     }
                     if (postCtorMethod.HasValue)
@@ -176,7 +190,7 @@ public partial class AutoConstructSourceGenerator
             return type;
         }
 
-        private static ITypeSymbol SetGenerics(
+        internal static ITypeSymbol SetGenerics(
             ITypeSymbol type,
             EquatableList<EquatableTypeSymbol> parameters,
             EquatableList<EquatableTypeSymbol> arguments)
@@ -204,10 +218,13 @@ public partial class AutoConstructSourceGenerator
         private static PostCtorModel? GetPostCtorMethod(
             EmitterContext context,
             TypeModel type,
-            ImmutableArray<PostCtorModel> markedPostCtorMethods)
+            List<PostCtorModel>? markedPostCtorMethods)
         {
+            if (markedPostCtorMethods is null)
+                return null;
+
             // ACTR001
-            if (markedPostCtorMethods.Length > 1)
+            if (markedPostCtorMethods.Count > 1)
             {
                 foreach (var m in markedPostCtorMethods)
                 {
@@ -216,7 +233,7 @@ public partial class AutoConstructSourceGenerator
                 return null;
             }
 
-            if (markedPostCtorMethods.Length != 1)
+            if (markedPostCtorMethods.Count != 1)
                 return null;
 
             var method = markedPostCtorMethods[0];

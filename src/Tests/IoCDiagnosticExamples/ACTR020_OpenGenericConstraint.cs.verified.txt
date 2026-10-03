@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Singleton(typeof(IRef<>), typeof(RefImpl<>))]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Singleton<IRefConsumer, RefConsumer>]
+*/
+ : (5,1)-(5,45),
+      Message: 'IRef<int>' is needed by 'numbers', but its type arguments do not satisfy the constraints of 'RefImpl<T>',
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR020,
+        Title: Type arguments do not satisfy the open generic implementation,
+        MessageFormat: '{0}' is needed by '{1}', but its type arguments do not satisfy the constraints of '{2}',
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

@@ -7,10 +7,7 @@
 
 partial class BaseClass
 {
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public BaseClass(
 		[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices("base")] global::IService service
 	)

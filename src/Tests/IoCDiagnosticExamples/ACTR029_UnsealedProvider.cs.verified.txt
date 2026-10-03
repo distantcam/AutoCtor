@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[Singleton<IUnsealedService, UnsealedService>]
+public partial class UnsealedProvider
+                     ^^^^^^^^^^^^^^^^
+{
+*/
+ : (4,21)-(4,37),
+      Message: The type 'UnsealedProvider' must be sealed to be a service provider,
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR029,
+        Title: Service provider type must be sealed,
+        MessageFormat: The type '{0}' must be sealed to be a service provider,
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

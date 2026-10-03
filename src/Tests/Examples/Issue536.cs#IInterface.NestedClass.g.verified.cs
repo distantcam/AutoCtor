@@ -9,10 +9,7 @@ partial interface IInterface
 {
 	partial class NestedClass
 	{
-		[global::System.Runtime.CompilerServices.CompilerGenerated]
 		[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-		[global::System.Diagnostics.DebuggerNonUserCode]
-		[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 		public NestedClass(global::IInterface item)
 		{
 			this.Item = item;
