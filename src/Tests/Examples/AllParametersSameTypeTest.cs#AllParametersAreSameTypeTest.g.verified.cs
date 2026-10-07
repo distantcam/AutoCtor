@@ -7,10 +7,7 @@
 
 partial class AllParametersAreSameTypeTest
 {
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public AllParametersAreSameTypeTest(global::IService baseService, global::IService service) : base(baseService)
 	{
 		this._service = service;

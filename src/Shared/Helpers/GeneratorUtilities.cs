@@ -71,4 +71,15 @@ internal static class GeneratorUtilities
 
     public static TSymbol? GetSymbol<TSymbol>(GeneratorSyntaxContext context, CancellationToken cancellationToken) where TSymbol : class, ISymbol
         => context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken) as TSymbol;
+
+    // Roslyn 3.11 and 4.0 visit every declaration of a partial type that has attributes, so
+    // only answer for the first of those.
+    public static TSymbol? GetPrimarySymbol<TSymbol>(GeneratorSyntaxContext context, CancellationToken cancellationToken) where TSymbol : class, ISymbol
+    {
+        var symbol = GetSymbol<TSymbol>(context, cancellationToken);
+        var primary = symbol?.DeclaringSyntaxReferences
+            .Select(r => r.GetSyntax(cancellationToken))
+            .FirstOrDefault(n => IsTypeDeclarationWithAttributes(n, cancellationToken));
+        return primary is null || (primary.SyntaxTree == context.Node.SyntaxTree && primary.Span == context.Node.Span) ? symbol : null;
+    }
 }

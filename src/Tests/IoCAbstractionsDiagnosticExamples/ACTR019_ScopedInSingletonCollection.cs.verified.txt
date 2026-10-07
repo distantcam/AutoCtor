@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[Scoped<IHook, RequestHook>]
+[Singleton<IHookRegistry, HookRegistry>]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public sealed partial class HookRegistryProvider;
+*/
+ : (8,1)-(8,39),
+      Message: The service 'RequestHook' requires a scope and cannot be injected into the singleton 'HookRegistry',
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR019,
+        Title: Scoped service cannot be resolved outside a scope,
+        MessageFormat: The service '{0}' requires a scope and cannot be injected into the singleton '{1}',
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

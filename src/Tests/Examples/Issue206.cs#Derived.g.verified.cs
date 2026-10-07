@@ -7,10 +7,7 @@
 
 partial class Derived
 {
-	[global::System.Runtime.CompilerServices.CompilerGenerated]
 	[global::System.CodeDom.Compiler.GeneratedCode("AutoCtor", "0.0.0.0")]
-	[global::System.Diagnostics.DebuggerNonUserCode]
-	[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
 	public Derived(global::ILogger<global::Base<int>> logger) : base(logger)
 	{
 	}

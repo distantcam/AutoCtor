@@ -1,0 +1,24 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Import<EmptyModule>]
+ ^^^^^^^^^^^^^^^^^^^
+[Singleton<IThing, Thing>]
+*/
+ : (5,1)-(5,20),
+      Message: The module 'EmptyModule' has no registrations; a module in another assembly needs that assembly to define AUTOCTOR_USAGES,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: ACTR027,
+        Title: Imported module has no registrations,
+        MessageFormat: The module '{0}' has no registrations; a module in another assembly needs that assembly to define AUTOCTOR_USAGES,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

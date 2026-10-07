@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Singleton(typeof(IThing), typeof(Thing), Factory = nameof(CreateNumber))]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public sealed partial class WrongReturnProvider
+*/
+ : (4,1)-(4,73),
+      Message: The factory 'CreateNumber' returns 'int', which is not assignable to the service type 'IThing',
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR022,
+        Title: Service factory does not return the service type,
+        MessageFormat: The factory '{0}' returns '{1}', which is not assignable to the service type '{2}',
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

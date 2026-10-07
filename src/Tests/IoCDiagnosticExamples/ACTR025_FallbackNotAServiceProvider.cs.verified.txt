@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[Singleton<IService, Service>]
+public sealed partial class WrongFallbackProvider
+                            ^^^^^^^^^^^^^^^^^^^^^
+{
+*/
+ : (4,28)-(4,49),
+      Message: The fallback '_host' returns 'string', which is not assignable to System.IServiceProvider,
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR025,
+        Title: Service provider fallback is not a service provider,
+        MessageFormat: The fallback '{0}' returns '{1}', which is not assignable to System.IServiceProvider,
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

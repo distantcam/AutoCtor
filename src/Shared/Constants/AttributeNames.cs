@@ -4,4 +4,5 @@
     public const string AutoPostConstruct = "AutoCtor.AutoPostConstructAttribute";
     public const string AutoConstructIgnore = "AutoCtor.AutoConstructIgnoreAttribute";
     public const string AutoKeyedService = "AutoCtor.AutoKeyedServiceAttribute";
+    public const string ServiceProvider = "AutoCtor.ServiceProviderAttribute";
 }

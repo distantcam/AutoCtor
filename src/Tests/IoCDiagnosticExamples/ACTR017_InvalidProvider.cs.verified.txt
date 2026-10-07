@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[Singleton<IInvalidService, InvalidService>]
+public sealed partial class GenericProvider<T>
+                            ^^^^^^^^^^^^^^^
+{
+*/
+ : (4,28)-(4,43),
+      Message: The type 'GenericProvider<T>' cannot be a service provider; it must not be generic, and must not be marked with [AutoConstruct],
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR017,
+        Title: Service provider type is not valid,
+        MessageFormat: The type '{0}' cannot be a service provider; it must not be generic, and must not be marked with [AutoConstruct],
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

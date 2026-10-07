@@ -55,7 +55,7 @@ internal static class ExampleTestsHelper
                 .WithPreprocessorSymbols(PreprocessorSymbols);
 
             Builder = await Builder
-                .AddReference(ReferenceAssemblies.NetStandard.NetStandard20)
+                .AddReference(BaseReferenceAssemblies)
                 .ConfigureAwait(false);
             foreach (var id in GetNuGetIds())
             {
@@ -80,6 +80,8 @@ public sealed class CompilerFeatureRequiredAttribute(string featureName) : Attri
 }
 ");
         }
+
+        protected virtual ReferenceAssemblies BaseReferenceAssemblies => ReferenceAssemblies.NetStandard.NetStandard20;
 
         protected virtual IEnumerable<string> GetNuGetIds() => [];
 

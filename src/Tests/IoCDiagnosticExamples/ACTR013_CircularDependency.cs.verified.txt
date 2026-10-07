@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Singleton<ICycleA, CycleA>]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Singleton<ICycleB, CycleB>]
+*/
+ : (3,1)-(3,27),
+      Message: A circular dependency was detected involving 'CycleA',
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR013,
+        Title: Circular dependency between registered services,
+        MessageFormat: A circular dependency was detected involving '{0}',
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

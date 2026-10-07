@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Singleton(typeof(IPair<,>), typeof(PairImpl<>))]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public sealed partial class PairProvider;
+*/
+ : (5,1)-(5,48),
+      Message: The open generic service 'IPair<TFirst, TSecond>' cannot be registered with 'PairImpl<T>'; the implementation must be an open generic type with the same number of type parameters,
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR016,
+        Title: Open generic registration is not valid,
+        MessageFormat: The open generic service '{0}' cannot be registered with '{1}'; the implementation must be an open generic type with the same number of type parameters,
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Singleton(typeof(IThing), typeof(Thing), Factory = "BuildThing")]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+public sealed partial class MissingFactoryProvider;
+*/
+ : (5,1)-(5,65),
+      Message: The factory 'BuildThing' cannot be used for the service 'IThing'; it must name an accessible, non-generic method, property or field declared on the service provider that returns a value,
+      Severity: Error,
+      Descriptor: {
+        Id: ACTR021,
+        Title: Service factory member is not valid,
+        MessageFormat: The factory '{0}' cannot be used for the service '{1}'; it must name an accessible, non-generic method, property or field declared on the service provider that returns a value,
+        Category: AutoCtor,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

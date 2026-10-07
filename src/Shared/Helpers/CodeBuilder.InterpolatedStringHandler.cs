@@ -9,36 +9,24 @@ internal partial class CodeBuilder
         [InterpolatedStringHandlerArgument("")]
         ref CodeBuilderInterpolatedStringHandler builder) => this;
 
-    public CodeBuilder Append(bool enabled,
-        [InterpolatedStringHandlerArgument("", nameof(enabled))]
-        ref CodeBuilderInterpolatedStringHandler builder) => this;
-
     public CodeBuilder AppendLineRaw(
         [InterpolatedStringHandlerArgument("")]
         ref CodeBuilderInterpolatedStringHandler builder) => AppendLine();
-
-    public CodeBuilder AppendLineRaw(bool enabled,
-        [InterpolatedStringHandlerArgument("", nameof(enabled))]
-        ref CodeBuilderInterpolatedStringHandler builder) => enabled ? AppendLine() : this;
 
     public CodeBuilder AppendLine(
         [InterpolatedStringHandlerArgument("")]
         IndentedCodeBuilderInterpolatedStringHandler builder) => AppendLine();
 
-    public CodeBuilder AppendLine(bool enabled,
-        [InterpolatedStringHandlerArgument("", nameof(enabled))]
-        IndentedCodeBuilderInterpolatedStringHandler builder) => enabled ? AppendLine() : this;
-
     private void AppendFormatted(IEnumerable<string> items, string? format)
     {
         if (format == "comma")
-            AppendCommaSeparated(items.ToList());
+            AppendCommaSeparated(items as IReadOnlyList<string> ?? items.ToList());
 
         else if (format == "commaindent")
-            AppendCommaIndented(items.ToList());
+            AppendCommaIndented(items as IReadOnlyList<string> ?? items.ToList());
     }
 
-    private void AppendCommaSeparated(List<string> items)
+    private void AppendCommaSeparated(IReadOnlyList<string> items)
     {
         var comma = false;
         foreach (var item in items)
@@ -50,7 +38,7 @@ internal partial class CodeBuilder
         }
     }
 
-    private void AppendCommaIndented(List<string> items)
+    private void AppendCommaIndented(IReadOnlyList<string> items)
     {
         var length = items.Sum(s => s.Length);
         if (length < 60)
@@ -76,19 +64,18 @@ internal partial class CodeBuilder
 
     [InterpolatedStringHandler]
     internal readonly struct CodeBuilderInterpolatedStringHandler(
-        int literalLength, int formattedCount, CodeBuilder codeBuilder, bool enabled = true)
+        int literalLength, int formattedCount, CodeBuilder codeBuilder)
     {
-        public readonly bool AppendLiteral(string s)
-        { if (enabled) codeBuilder.Append(s); return enabled; }
-        public readonly bool AppendFormatted(string s)
-        { if (enabled) codeBuilder.Append(s); return enabled; }
-        public readonly bool AppendFormatted(IEnumerable<string> items, string? format)
-        { if (enabled) codeBuilder.AppendFormatted(items, format); return enabled; }
+        public readonly void AppendLiteral(string s) => codeBuilder.Append(s);
+        public readonly void AppendFormatted(bool s) => codeBuilder.Append(s);
+        public readonly void AppendFormatted(string s) => codeBuilder.Append(s);
+        public readonly void AppendFormatted(IEnumerable<string> items, string? format)
+            => codeBuilder.AppendFormatted(items, format);
     }
 
     [InterpolatedStringHandler]
     internal sealed class IndentedCodeBuilderInterpolatedStringHandler(
-        int literalLength, int formattedCount, CodeBuilder codeBuilder, bool enabled = true)
+        int literalLength, int formattedCount, CodeBuilder codeBuilder)
     {
         private bool _hasIndented;
 
@@ -102,11 +89,10 @@ internal partial class CodeBuilder
             return codeBuilder;
         }
 
-        public bool AppendLiteral(string s)
-        { if (enabled) EnsureIndent().Append(s); return enabled; }
-        public bool AppendFormatted(string s)
-        { if (enabled) EnsureIndent().Append(s); return enabled; }
-        public bool AppendFormatted(IEnumerable<string> items, string? format)
-        { if (enabled) EnsureIndent().AppendFormatted(items, format); return enabled; }
+        public void AppendLiteral(string s) => EnsureIndent().Append(s);
+        public void AppendFormatted(bool s) => EnsureIndent().Append(s);
+        public void AppendFormatted(string s) => EnsureIndent().Append(s);
+        public void AppendFormatted(IEnumerable<string> items, string? format)
+            => EnsureIndent().AppendFormatted(items, format);
     }
 }

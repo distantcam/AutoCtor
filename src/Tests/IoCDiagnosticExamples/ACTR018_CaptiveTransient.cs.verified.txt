@@ -1,0 +1,24 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+[ServiceProvider]
+[Singleton<ICaptiveHolder, CaptiveHolder>]
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[Transient<ICaptiveWorker, CaptiveWorker>]
+*/
+ : (9,1)-(9,41),
+      Message: The transient service 'CaptiveWorker' is captured by the singleton 'CaptiveHolder' and will not be recreated for each resolve,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: ACTR018,
+        Title: Transient service is captured by a singleton,
+        MessageFormat: The transient service '{0}' is captured by the singleton '{1}' and will not be recreated for each resolve,
+        Category: AutoCtor,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
