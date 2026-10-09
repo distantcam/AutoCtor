@@ -10,8 +10,8 @@ namespace AutoCtor.CodeFixes;
 [ExportCodeFixProvider(LanguageNames.CSharp), Shared]
 public sealed class UseAutoConstructCodeFixer : CodeFixProvider
 {
-    public override ImmutableArray<string> FixableDiagnosticIds =>
-        ImmutableArray.Create(Diagnostics.ACTR007_UseAutoConstruct.Id);
+    public override ImmutableArray<string> FixableDiagnosticIds
+        => ImmutableArray.Create(Diagnostics.ACTR007_UseAutoConstruct.Id);
 
     public override FixAllProvider? GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

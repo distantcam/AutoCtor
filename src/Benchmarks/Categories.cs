@@ -1,6 +1,6 @@
 ﻿namespace Benchmarks;
 
-internal class Categories
+internal static class Categories
 {
     public const string Singleton = "Singleton";
     public const string Transient = "Transient";

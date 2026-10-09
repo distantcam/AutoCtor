@@ -153,8 +153,8 @@ internal sealed class ExampleTests
         protected override IEnumerable<string> GetNuGetIds() => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
     }
 
-    private static IEnumerable<Func<CodeFileTheoryData>> GetIoCExamples(string examples, string diagnosticExamples) =>
-        GetExamplesFiles(examples).Select<string, Func<CodeFileTheoryData>>(example => () => new CodeFileTheoryData(example))
+    private static IEnumerable<Func<CodeFileTheoryData>> GetIoCExamples(string examples, string diagnosticExamples)
+        => GetExamplesFiles(examples).Select<string, Func<CodeFileTheoryData>>(example => () => new CodeFileTheoryData(example))
         .Concat(GetExamplesFiles(diagnosticExamples).Select<string, Func<CodeFileTheoryData>>(example => () => new CodeFileTheoryData(example) { SnapshotOnly = true }));
 
     public static IEnumerable<Func<CodeFileTheoryData>> GetIoCExamples() => GetIoCExamples("IoCExamples", "IoCDiagnosticExamples");

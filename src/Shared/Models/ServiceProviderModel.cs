@@ -330,8 +330,8 @@ internal readonly record struct ServiceProviderModel(
     }
 
     // Every type in a namespace, and nested in those types, that the provider's assembly can name.
-    private static IEnumerable<INamedTypeSymbol> VisibleTypes(INamespaceOrTypeSymbol container, bool internals) =>
-        (container is INamespaceSymbol ns ? ns.GetNamespaceMembers().SelectMany(n => VisibleTypes(n, internals)) : [])
+    private static IEnumerable<INamedTypeSymbol> VisibleTypes(INamespaceOrTypeSymbol container, bool internals)
+        => (container is INamespaceSymbol ns ? ns.GetNamespaceMembers().SelectMany(n => VisibleTypes(n, internals)) : [])
         .Concat(container.GetTypeMembers()
             .Where(t => t.DeclaredAccessibility == Accessibility.Public
                 || internals && t.DeclaredAccessibility is Accessibility.Internal or Accessibility.ProtectedOrInternal)

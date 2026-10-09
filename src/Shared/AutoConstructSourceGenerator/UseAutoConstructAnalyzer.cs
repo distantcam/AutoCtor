@@ -9,8 +9,8 @@ namespace AutoCtor;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class UseAutoConstructAnalyzer : DiagnosticAnalyzer
 {
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(Diagnostics.ACTR007_UseAutoConstruct);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
+        => ImmutableArray.Create(Diagnostics.ACTR007_UseAutoConstruct);
 
     public override void Initialize(AnalysisContext context)
     {

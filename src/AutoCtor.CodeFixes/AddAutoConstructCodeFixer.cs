@@ -1,17 +1,17 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using System.Composition;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Immutable;
-using System.Composition;
 
 namespace AutoCtor.CodeFixes;
 
 [ExportCodeFixProvider(LanguageNames.CSharp), Shared]
 public sealed class AddAutoConstructCodeFixer : CodeFixProvider
 {
-    public override ImmutableArray<string> FixableDiagnosticIds =>
-        ImmutableArray.Create(Diagnostics.ACTR008_AddAutoConstruct.Id);
+    public override ImmutableArray<string> FixableDiagnosticIds
+        => ImmutableArray.Create(Diagnostics.ACTR008_AddAutoConstruct.Id);
 
     public override FixAllProvider? GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

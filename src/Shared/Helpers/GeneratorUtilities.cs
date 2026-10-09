@@ -26,11 +26,11 @@ internal static class GeneratorUtilities
         };
     }
 
-    public static string EscapeKeywordIdentifier(this string identifier) =>
-        SyntaxFacts.IsKeywordKind(SyntaxFacts.GetKeywordKind(identifier)) ? "@" + identifier : identifier;
+    public static string EscapeKeywordIdentifier(this string identifier)
+        => SyntaxFacts.IsKeywordKind(SyntaxFacts.GetKeywordKind(identifier)) ? "@" + identifier : identifier;
 
-    public static string? GetNamespace(ITypeSymbol type) =>
-        type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToString();
+    public static string? GetNamespace(ITypeSymbol type)
+        => type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToString();
 
     public static EquatableList<string> GetTypeDeclarations(ITypeSymbol type)
     {

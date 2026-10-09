@@ -8,8 +8,8 @@ using TUnit.Assertions.Core;
 
 internal static class TestHelper
 {
-    public static CancellationToken CancellationToken =>
-        TestContext.Current?.Execution?.CancellationToken ?? CancellationToken.None;
+    public static CancellationToken CancellationToken
+        => TestContext.Current?.Execution?.CancellationToken ?? CancellationToken.None;
 
     public static ISourceGenerator AsSourceGenerator(this ISourceGenerator generator) => generator;
 

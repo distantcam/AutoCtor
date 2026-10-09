@@ -151,8 +151,8 @@ internal sealed class ParameterList(
     public IEnumerable<string> BaseParameters => baseParameters;
     public IEnumerable<string> PostCtorParameters => postCtorParameters;
 
-    public string? GetParameter(MemberModel m) =>
-        parameterMap.TryGetValue(m.IdentifierName, out var result) ? result : null;
+    public string? GetParameter(MemberModel m)
+        => parameterMap.TryGetValue(m.IdentifierName, out var result) ? result : null;
 
     public IEnumerator<ParameterModel> GetEnumerator() => parameterModels.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
