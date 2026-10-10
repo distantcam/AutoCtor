@@ -21,7 +21,7 @@
     <PackageVersion Include="Verify.TUnit" Version="33.3.2" />
   </ItemGroup>
   <ItemGroup>
-    <GlobalPackageReference Include="Roslynator.Analyzers" Version="5.0.0" />
+    <GlobalPackageReference Include="Roslynator.Analyzers" Version="5.0.1" />
     <GlobalPackageReference Include="Roslynator.Formatting.Analyzers" Version="5.0.0" />
   </ItemGroup>
 </Project>
