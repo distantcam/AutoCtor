@@ -443,9 +443,10 @@ public partial class AutoConstructSourceGenerator
             }
 
             var keyedFallback = duck.Keyed ? $"(Fallback as {DI}IKeyedServiceProvider)?.GetKeyedService(serviceType, serviceKey)" : "null";
+            // MS DI's ServiceProvider doesn't implement the IsService interfaces itself, it registers them as services.
             var fallbackProbe = !duck.DI ? ""
-                : $" || (serviceKey == null ? Fallback is {DI}IServiceProviderIsService s && s.IsService(serviceType) : "
-                    + (duck.Keyed ? $"Fallback is {DI}IServiceProviderIsKeyedService k && k.IsKeyedService(serviceType, serviceKey))" : "false)");
+                : $" || (serviceKey == null ? (Fallback as {DI}IServiceProviderIsService ?? Fallback?.GetService(typeof({DI}IServiceProviderIsService)) as {DI}IServiceProviderIsService)?.IsService(serviceType) == true : "
+                    + (duck.Keyed ? $"(Fallback as {DI}IServiceProviderIsKeyedService ?? Fallback?.GetService(typeof({DI}IServiceProviderIsKeyedService)) as {DI}IServiceProviderIsKeyedService)?.IsKeyedService(serviceType, serviceKey) == true)" : "false)");
 
             source.AppendLine()
                 .AppendLine("public object? GetService(global::System.Type serviceType)")

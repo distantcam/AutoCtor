@@ -129,7 +129,7 @@ partial class MediaProvider :
 		=> IsKeyedService(serviceType, null);
 
 	public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
-		=> Resolve(serviceType, serviceKey, true) != null || (serviceKey == null ? Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService s && s.IsService(serviceType) : Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService k && k.IsKeyedService(serviceType, serviceKey));
+		=> Resolve(serviceType, serviceKey, true) != null || (serviceKey == null ? (Fallback as global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService ?? Fallback?.GetService(typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) as global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)?.IsService(serviceType) == true : (Fallback as global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService ?? Fallback?.GetService(typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) as global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)?.IsKeyedService(serviceType, serviceKey) == true);
 
 	public Scope CreateScope() => new Scope(this);
 	global::Microsoft.Extensions.DependencyInjection.IServiceScope global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory.CreateScope() => CreateScope();
@@ -288,7 +288,7 @@ partial class MediaProvider :
 			=> IsKeyedService(serviceType, null);
 
 		public bool IsKeyedService(global::System.Type serviceType, object? serviceKey)
-			=> Resolve(serviceType, serviceKey, true) != null || (serviceKey == null ? Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService s && s.IsService(serviceType) : Fallback is global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService k && k.IsKeyedService(serviceType, serviceKey));
+			=> Resolve(serviceType, serviceKey, true) != null || (serviceKey == null ? (Fallback as global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService ?? Fallback?.GetService(typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)) as global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsService)?.IsService(serviceType) == true : (Fallback as global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService ?? Fallback?.GetService(typeof(global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)) as global::Microsoft.Extensions.DependencyInjection.IServiceProviderIsKeyedService)?.IsKeyedService(serviceType, serviceKey) == true);
 
 		public Scope CreateScope() => new Scope(_root);
 		global::Microsoft.Extensions.DependencyInjection.IServiceScope global::Microsoft.Extensions.DependencyInjection.IServiceScopeFactory.CreateScope() => CreateScope();
