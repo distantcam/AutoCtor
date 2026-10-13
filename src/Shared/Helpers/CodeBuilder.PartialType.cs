@@ -8,7 +8,8 @@ internal partial class CodeBuilder
 {
     public IDisposable StartPartialType(IPartialTypeModel typeModel, IEnumerable<string>? baseList = null)
     {
-        if (!string.IsNullOrEmpty(typeModel.Namespace))
+        var hasNamespace = !string.IsNullOrEmpty(typeModel.Namespace);
+        if (hasNamespace)
         {
             AppendLine($"namespace {typeModel.Namespace!}");
             AppendLine("{");
@@ -25,7 +26,7 @@ internal partial class CodeBuilder
             IncreaseIndent();
         }
 
-        return new CloseBlockDisposable(this, typeModel.TypeDeclarations.Count + (typeModel.Namespace != null ? 1 : 0));
+        return new CloseBlockDisposable(this, typeModel.TypeDeclarations.Count + (hasNamespace ? 1 : 0));
     }
 
     private readonly struct CloseBlockDisposable(CodeBuilder codeBuilder, int count) : IDisposable
