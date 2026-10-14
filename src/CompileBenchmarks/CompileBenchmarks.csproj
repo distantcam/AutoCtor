@@ -5,6 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <AnalysisMode>default</AnalysisMode>
+    <NoWarn>NU1902;NU1903</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
