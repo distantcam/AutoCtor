@@ -39,7 +39,7 @@ public sealed class AddAutoConstructAnalyzer : DiagnosticAnalyzer
         if (context.SemanticModel.GetDeclaredSymbol(typeSyntax, context.CancellationToken) is not INamedTypeSymbol type)
             return;
 
-        if (Utilities.HasAttribute(type, AttributeNames.AutoConstruct))
+        if (GeneratorUtilities.HasAttribute(type, AttributeNames.AutoConstruct))
             return;
 
         // no constructors

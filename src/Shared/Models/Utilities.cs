@@ -142,13 +142,6 @@ internal static class Utilities
         }
     }
 
-
-    public static bool HasAttribute(ISymbol? symbol, string attributeName)
-    {
-        return symbol != null && symbol.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName);
-    }
-
-
     public static bool IsAutoConstructInCompilation(Compilation compilation)
     {
         return compilation.GetTypeByMetadataName(AttributeNames.AutoConstruct) is not null;

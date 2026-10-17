@@ -19,10 +19,10 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 
                 && (type = GeneratorUtilities.GetPrimarySymbol<INamedTypeSymbol>(context, cancellationToken)) != null)
             {
-                if (Utilities.HasAttribute(type, AttributeNames.AutoConstruct))
+                if (GeneratorUtilities.HasAttribute(type, AttributeNames.AutoConstruct))
                     (TypeModels ??= []).Add(TypeModel.Create(type));
 
-                if (Utilities.HasAttribute(type, AttributeNames.ServiceProvider))
+                if (GeneratorUtilities.HasAttribute(type, AttributeNames.ServiceProvider))
                     (ServiceProviders ??= []).Add(ServiceProviderModel.Create(type));
             }
 
@@ -30,7 +30,7 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 
                 && (method = GeneratorUtilities.GetSymbol<IMethodSymbol>(context, cancellationToken)) != null
 
-                && Utilities.HasAttribute(method, AttributeNames.AutoPostConstruct))
+                && GeneratorUtilities.HasAttribute(method, AttributeNames.AutoPostConstruct))
             {
                 (MarkedMethods ??= []).Add(PostCtorModel.Create(method));
             }

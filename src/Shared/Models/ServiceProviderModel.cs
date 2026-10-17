@@ -48,7 +48,7 @@ internal readonly record struct ServiceProviderModel(
         var diagnostics = new List<ModelDiagnostic>();
         AddRegistrations(type, type, new(SymbolEqualityComparer.Default) { type }, [], registrations, diagnostics);
 
-        if (type.IsGenericType || Utilities.HasAttribute(type, AttributeNames.AutoConstruct))
+        if (type.IsGenericType || GeneratorUtilities.HasAttribute(type, AttributeNames.AutoConstruct))
             Report(diagnostics, ACTR017_InvalidServiceProviderType, type.Locations, DisplayName(type));
 
         if (!type.IsSealed)
@@ -219,7 +219,7 @@ internal readonly record struct ServiceProviderModel(
             Factory: factoryAccess,
             FactoryIsMethod: member is IMethodSymbol,
             IsOpenGeneric: isOpen,
-            IsAutoConstruct: Utilities.HasAttribute(impl, AttributeNames.AutoConstruct),
+            IsAutoConstruct: GeneratorUtilities.HasAttribute(impl, AttributeNames.AutoConstruct),
             ServiceIsReferenceType: service.IsReferenceType,
             // A factory can hand back anything.
             ImplementationIsDisposable: factory is not null || impl.AllInterfaces.Any(i => i.ToDisplayString() is "System.IDisposable" or "System.IAsyncDisposable"),

@@ -82,4 +82,9 @@ internal static class GeneratorUtilities
             .FirstOrDefault(n => IsTypeDeclarationWithAttributes(n, cancellationToken));
         return primary is null || (primary.SyntaxTree == context.Node.SyntaxTree && primary.Span == context.Node.Span) ? symbol : null;
     }
+
+    public static bool HasAttribute(ISymbol? symbol, string attributeName)
+    {
+        return symbol?.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName) == true;
+    }
 }
