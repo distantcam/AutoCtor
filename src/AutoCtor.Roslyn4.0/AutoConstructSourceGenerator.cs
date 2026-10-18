@@ -7,7 +7,7 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var properties = context.AnalyzerConfigOptionsProvider
-        .Select(static (p, ct) =>
+        .Select(static (p, _) =>
         {
             return p.GlobalOptions.TryGetValue("build_property.AutoCtorGuards", out var value)
                 && (value.Equals("true", StringComparison.OrdinalIgnoreCase)
@@ -17,21 +17,21 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         var types = context.SyntaxProvider.CreateSyntaxProvider(
             GeneratorUtilities.IsTypeDeclarationWithAttributes,
             GeneratorUtilities.GetPrimarySymbol<INamedTypeSymbol>)
-        .Where(static x => GeneratorUtilities.HasAttribute(x, AttributeNames.AutoConstruct))
+        .Where(static x => Utilities.HasAttribute(x, AttributeNames.AutoConstructName))
         .Select(static (x, _) => TypeModel.Create(x!))
         .Collect();
 
         var postCtorMethods = context.SyntaxProvider.CreateSyntaxProvider(
             GeneratorUtilities.IsMethodDeclarationWithAttributes,
             GeneratorUtilities.GetSymbol<IMethodSymbol>)
-        .Where(static x => GeneratorUtilities.HasAttribute(x, AttributeNames.AutoPostConstruct))
+        .Where(static x => Utilities.HasAttribute(x, AttributeNames.AutoPostConstructName))
         .Select(static (x, _) => PostCtorModel.Create(x!))
         .Collect();
 
         var serviceProviders = context.SyntaxProvider.CreateSyntaxProvider(
             GeneratorUtilities.IsTypeDeclarationWithAttributes,
             GeneratorUtilities.GetPrimarySymbol<INamedTypeSymbol>)
-        .Where(static x => GeneratorUtilities.HasAttribute(x, AttributeNames.ServiceProvider))
+        .Where(static x => Utilities.HasAttribute(x, AttributeNames.ServiceProviderName))
         .Select(static (x, _) => ServiceProviderModel.Create(x!))
         .Collect();
 

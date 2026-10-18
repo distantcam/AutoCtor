@@ -7,7 +7,7 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var properties = context.AnalyzerConfigOptionsProvider
-        .Select(static (p, ct) =>
+        .Select(static (p, _) =>
         {
             return p.GlobalOptions.TryGetValue("build_property.AutoCtorGuards", out var value)
                 && (value.Equals("true", StringComparison.OrdinalIgnoreCase)
@@ -18,25 +18,25 @@ public sealed partial class AutoConstructSourceGenerator : IIncrementalGenerator
         var types = context.SyntaxProvider.ForAttributeWithMetadataName(
             AttributeNames.AutoConstruct,
             GeneratorUtilities.IsTypeDeclarationWithAttributes,
-            static (c, ct) => TypeModel.Create((INamedTypeSymbol)c.TargetSymbol))
+            static (c, _) => TypeModel.Create((INamedTypeSymbol)c.TargetSymbol))
         .WithTrackingName(TrackingNames.TypeModels)
         .Collect();
 
         var postCtorMethods = context.SyntaxProvider.ForAttributeWithMetadataName(
             AttributeNames.AutoPostConstruct,
             GeneratorUtilities.IsMethodDeclarationWithAttributes,
-            static (c, ct) => PostCtorModel.Create((IMethodSymbol)c.TargetSymbol))
+            static (c, _) => PostCtorModel.Create((IMethodSymbol)c.TargetSymbol))
         .WithTrackingName(TrackingNames.PostCtorMethods)
         .Collect();
 
         var serviceProviders = context.SyntaxProvider.ForAttributeWithMetadataName(
             AttributeNames.ServiceProvider,
             GeneratorUtilities.IsTypeDeclarationWithAttributes,
-            static (c, ct) => ServiceProviderModel.Create((INamedTypeSymbol)c.TargetSymbol))
+            static (c, _) => ServiceProviderModel.Create((INamedTypeSymbol)c.TargetSymbol))
         .WithTrackingName(TrackingNames.ServiceProviders)
         .Collect();
 
-        var duckTypes = context.CompilationProvider.Select(static (c, ct) => DuckTypes.Create(c));
+        var duckTypes = context.CompilationProvider.Select(static (c, _) => DuckTypes.Create(c));
 
         context.RegisterSourceOutput(
             types.Combine(postCtorMethods).Combine(properties).Combine(serviceProviders).Combine(duckTypes)

@@ -68,6 +68,7 @@ internal partial class CodeBuilder
     {
         public readonly void AppendLiteral(string s) => codeBuilder.Append(s);
         public readonly void AppendFormatted(bool s) => codeBuilder.Append(s);
+        public readonly void AppendFormatted(char s) => codeBuilder.Append(s);
         public readonly void AppendFormatted(string s) => codeBuilder.Append(s);
         public readonly void AppendFormatted(IEnumerable<string> items, string? format)
             => codeBuilder.AppendFormatted(items, format);
@@ -91,6 +92,7 @@ internal partial class CodeBuilder
 
         public void AppendLiteral(string s) => EnsureIndent().Append(s);
         public void AppendFormatted(bool s) => EnsureIndent().Append(s);
+        public void AppendFormatted(char s) => EnsureIndent().Append(s);
         public void AppendFormatted(string s) => EnsureIndent().Append(s);
         public void AppendFormatted(IEnumerable<string> items, string? format)
             => EnsureIndent().AppendFormatted(items, format);

@@ -48,14 +48,13 @@ internal readonly record struct ServiceProviderModel(
         var diagnostics = new List<ModelDiagnostic>();
         AddRegistrations(type, type, new(SymbolEqualityComparer.Default) { type }, [], registrations, diagnostics);
 
-        if (type.IsGenericType || GeneratorUtilities.HasAttribute(type, AttributeNames.AutoConstruct))
+        if (type.IsGenericType || Utilities.HasAttribute(type, AttributeNames.AutoConstructName))
             Report(diagnostics, ACTR017_InvalidServiceProviderType, type.Locations, DisplayName(type));
 
         if (!type.IsSealed)
             Report(diagnostics, ACTR029_ServiceProviderMustBeSealed, type.Locations, DisplayName(type));
 
-        var fallback = type.GetAttributes()
-            .First(a => a.AttributeClass?.ToDisplayString() == AttributeNames.ServiceProvider)
+        var fallback = Utilities.FindAttribute(type, AttributeNames.ServiceProviderName)!
             .NamedArguments.FirstOrDefault(n => n.Key == "Fallback").Value.Value as string;
         string? fallbackAccess = null;
         if (fallback is not null)
@@ -64,7 +63,7 @@ internal readonly record struct ServiceProviderModel(
             var fallbackType = MemberType(type, member, allowParameters: false);
             if (fallbackType is null)
                 Report(diagnostics, ACTR024_InvalidProviderFallback, type.Locations, fallback, DisplayName(type));
-            else if (!fallbackType.AllInterfaces.Prepend(fallbackType).Any(i => i.ToDisplayString() == "System.IServiceProvider"))
+            else if (!fallbackType.AllInterfaces.Prepend(fallbackType).Any(static i => GeneratorUtilities.IsType(i, "System", "IServiceProvider")))
                 Report(diagnostics, ACTR025_ProviderFallbackNotAServiceProvider, type.Locations, fallback, DisplayName(fallbackType));
         }
 
@@ -219,10 +218,11 @@ internal readonly record struct ServiceProviderModel(
             Factory: factoryAccess,
             FactoryIsMethod: member is IMethodSymbol,
             IsOpenGeneric: isOpen,
-            IsAutoConstruct: GeneratorUtilities.HasAttribute(impl, AttributeNames.AutoConstruct),
+            IsAutoConstruct: Utilities.HasAttribute(impl, AttributeNames.AutoConstructName),
             ServiceIsReferenceType: service.IsReferenceType,
             // A factory can hand back anything.
-            ImplementationIsDisposable: factory is not null || impl.AllInterfaces.Any(i => i.ToDisplayString() is "System.IDisposable" or "System.IAsyncDisposable"),
+            ImplementationIsDisposable: factory is not null || impl.AllInterfaces.Any(static i => i.SpecialType == SpecialType.System_IDisposable
+                || GeneratorUtilities.IsType(i, "System", "IAsyncDisposable")),
             PublicConstructorCount: ctors.Count,
             Parameters: new(parameters.Select(ParameterModel.Create)),
             ErrorName: impl.ToDisplayString(MinimallyQualifiedFormat),

@@ -11,8 +11,11 @@ using Microsoft.CodeAnalysis.Testing;
 namespace CompileBenchmarks;
 
 [Config(typeof(Config))]
+[MemoryDiagnoser]
 public class LocalCompare
 {
+    private const string NugetVersion = "4.0.1";
+
     [Params(100, 1000)]
     public int ServiceCount { get; set; }
 
@@ -23,12 +26,12 @@ public class LocalCompare
     {
         public Config()
         {
-            AddJob(Job.ShortRun
+            AddJob(Job.MediumRun
                 .WithMsBuildArguments("/p:AutoCtorVersion=local")
                 .WithId("local"));
-            AddJob(Job.ShortRun
-                .WithMsBuildArguments("/p:AutoCtorVersion=3.1.1")
-                .WithId("3.1.1")
+            AddJob(Job.MediumRun
+                .WithMsBuildArguments($"/p:AutoCtorVersion={NugetVersion}")
+                .WithId(NugetVersion)
                 .AsBaseline());
 
             HideColumns(Column.Arguments);
@@ -65,7 +68,7 @@ public class LocalCompare
         var sb = new StringBuilder();
 
         sb.AppendLine("[AutoCtor.AutoConstruct]");
-        sb.AppendLine($"public class Target{i:D4}");
+        sb.AppendLine($"public partial class Target{i:D4}");
         sb.AppendLine("{");
 
         var count = rng.Next(ServiceCount);

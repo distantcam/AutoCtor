@@ -8,13 +8,34 @@ internal static class Utilities
     // These run once per member of every [AutoConstruct] type, so they loop directly over
     // the ImmutableArrays: LINQ here boxed the array and allocated iterators per member.
 
+    // Comparing `AttributeClass.ToDisplayString()` formats and allocates a string for every
+    // attribute examined, so match the name and namespace in place instead.
+    public static bool IsAutoCtorAttribute(INamedTypeSymbol? attributeClass, string name)
+        => attributeClass is { ContainingType: null, ContainingNamespace.ContainingNamespace.IsGlobalNamespace: true }
+        && attributeClass.Name == name
+        && attributeClass.ContainingNamespace.Name == AttributeNames.AutoCtorNamespace;
+
+    public static bool HasAttribute(ISymbol? symbol, string name)
+        => symbol is not null && FindAttribute(symbol, name) is not null;
+
+    public static AttributeData? FindAttribute(ISymbol symbol, string name)
+    {
+        foreach (var attribute in symbol.GetAttributes())
+        {
+            if (IsAutoCtorAttribute(attribute.AttributeClass, name))
+                return attribute;
+        }
+        return null;
+    }
+
     public static string? GetServiceKey(ISymbol symbol)
     {
         foreach (var attribute in symbol.GetAttributes())
         {
-            var name = attribute.AttributeClass?.ToDisplayString();
-            if (name == AttributeNames.AutoKeyedService
-                || name == "Microsoft.Extensions.DependencyInjection.FromKeyedServicesAttribute")
+            var attributeClass = attribute.AttributeClass;
+            if (IsAutoCtorAttribute(attributeClass, AttributeNames.AutoKeyedServiceName)
+                || (attributeClass?.Name == "FromKeyedServicesAttribute"
+                    && attributeClass.ContainingNamespace.ToDisplayString() == "Microsoft.Extensions.DependencyInjection"))
                 return attribute.ConstructorArguments[0].ToCSharpString();
         }
 
@@ -25,7 +46,7 @@ internal static class Utilities
     {
         foreach (var attribute in attributes)
         {
-            if (attribute.AttributeClass?.ToDisplayString() == AttributeNames.AutoConstructIgnore)
+            if (IsAutoCtorAttribute(attribute.AttributeClass, AttributeNames.AutoConstructIgnoreName))
                 return true;
         }
         return false;

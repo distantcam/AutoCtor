@@ -66,6 +66,9 @@ internal static class GeneratorUtilities
     public static bool IsTypeDeclarationWithAttributes(SyntaxNode node, CancellationToken cancellationToken)
         => node is TypeDeclarationSyntax { AttributeLists.Count: > 0 };
 
+    public static bool IsRecordDeclaration(SyntaxNode node, CancellationToken cancellationToken)
+        => node is RecordDeclarationSyntax;
+
     public static bool IsMethodDeclarationWithAttributes(SyntaxNode node, CancellationToken cancellationToken)
         => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 };
 
@@ -83,8 +86,8 @@ internal static class GeneratorUtilities
         return primary is null || (primary.SyntaxTree == context.Node.SyntaxTree && primary.Span == context.Node.Span) ? symbol : null;
     }
 
-    public static bool HasAttribute(ISymbol? symbol, string attributeName)
-    {
-        return symbol?.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == attributeName) == true;
-    }
+    public static bool IsType(ITypeSymbol? type, string ns, string name)
+        => type is { ContainingType: null, ContainingNamespace.ContainingNamespace.IsGlobalNamespace: true }
+        && type.ContainingNamespace.Name == ns
+        && type.Name == name;
 }

@@ -26,9 +26,7 @@ internal readonly record struct TypeModel(
 {
     public static TypeModel Create(INamedTypeSymbol type)
     {
-        var attribute = type.GetAttributes()
-            .First(static a => a.AttributeClass?.ToDisplayString()
-            == AttributeNames.AutoConstruct);
+        var attribute = Utilities.FindAttribute(type, AttributeNames.AutoConstructName);
 
         var guard = ((int?)attribute?.ConstructorArguments[0].Value) switch
         {
@@ -86,7 +84,7 @@ internal readonly record struct TypeModel(
             return false;
 
         if (ctor.GetAttributes()
-            .Any(static a => a.AttributeClass?.ToDisplayString(FullyQualifiedFormat) == "global::System.ObsoleteAttribute"))
+            .Any(static a => GeneratorUtilities.IsType(a.AttributeClass, "System", "ObsoleteAttribute")))
             return false;
 
         // Don't use the record clone ctor

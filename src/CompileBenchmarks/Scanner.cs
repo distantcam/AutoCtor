@@ -1,16 +1,39 @@
 ﻿using AutoCtor;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Jobs;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
 
 namespace CompileBenchmarks;
 
-[ShortRunJob]
+[Config(typeof(Config))]
+[MemoryDiagnoser]
 public class Scanner
 {
+    private const string NugetVersion = "4.0.1";
+
     [Params(500, 1000, 5000)]
     public int PluginCount { get; set; }
+
+    private class Config : ManualConfig
+    {
+        public Config()
+        {
+            AddJob(Job.MediumRun
+                .WithMsBuildArguments("/p:AutoCtorVersion=local")
+                .WithId("local"));
+            AddJob(Job.MediumRun
+                .WithMsBuildArguments($"/p:AutoCtorVersion={NugetVersion}")
+                .WithId(NugetVersion)
+                .AsBaseline());
+
+            HideColumns(Column.Arguments);
+            AddLogicalGroupRules(BenchmarkLogicalGroupRule.ByParams);
+        }
+    }
 
     private CSharpCompilation _compilation = null!;
     private GeneratorDriver _driver = null!;
@@ -22,7 +45,7 @@ public class Scanner
             .ResolveAsync(CSharpParseOptions.Default.Language, CancellationToken.None)
             .ConfigureAwait(false);
 
-        _compilation = CSharpCompilation.Create(nameof(LocalCompare))
+        _compilation = CSharpCompilation.Create(nameof(Scanner))
             .WithOptions(new(OutputKind.DynamicallyLinkedLibrary))
             .AddReferences(frameworkReferences)
             .AddReferences(MetadataReference
