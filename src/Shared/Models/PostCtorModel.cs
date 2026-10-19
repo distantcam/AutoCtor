@@ -1,7 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
 internal readonly record struct PostCtorModel(
-    string TypeKey,
     string Name,
     string ErrorName,
     bool ReturnsVoid,
@@ -14,7 +13,6 @@ internal readonly record struct PostCtorModel(
     public static PostCtorModel Create(IMethodSymbol method)
     {
         return new(
-            TypeKey: TypeModel.CreateKey(method.ContainingType),
             Name: method.Name,
             ErrorName: method.Name,
             ReturnsVoid: method.ReturnsVoid,

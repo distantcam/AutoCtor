@@ -24,7 +24,7 @@ internal sealed class AutoCtorRewriter(
 
         // Add using AutoCtor;
         if (!node.Usings.Any(u => u.Name is IdentifierNameSyntax { Identifier.Text: "AutoCtor" }
-            || u.Name is AliasQualifiedNameSyntax { Name.Identifier.Text: "AutoCtor" }))
+            or AliasQualifiedNameSyntax { Name.Identifier.Text: "AutoCtor" }))
         {
             var usingName = IdentifierName("AutoCtor");
             var usingDirective = UsingDirective(usingName);

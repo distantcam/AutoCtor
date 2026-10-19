@@ -41,6 +41,8 @@ public class LocalCompare
 
     private CSharpCompilation _compilation = null!;
     private GeneratorDriver _driver = null!;
+    private GeneratorDriver _warmDriver = null!;
+    private CSharpCompilation _editedCompilation = null!;
 
     [GlobalSetup]
     public async Task GlobalSetup()
@@ -59,6 +61,11 @@ public class LocalCompare
             .AddSyntaxTrees(Enumerable.Range(1, TargetsCount).Select(TargetClassGenerator));
 
         _driver = CSharpGeneratorDriver.Create(new AutoConstructSourceGenerator());
+
+        _warmDriver = _driver.RunGenerators(_compilation);
+        var edited = _compilation.SyntaxTrees.Single(t => t.ToString().Contains("class Target0001", StringComparison.Ordinal));
+        _editedCompilation = _compilation.ReplaceSyntaxTree(edited, CSharpSyntaxTree.ParseText(
+            edited.ToString().Replace("{", "{ private readonly IService0001 _edited;", StringComparison.Ordinal)));
     }
 
     private SyntaxTree TargetClassGenerator(int i)
@@ -85,4 +92,7 @@ public class LocalCompare
 
     [Benchmark]
     public GeneratorDriver Standard() => _driver.RunGenerators(_compilation);
+
+    [Benchmark]
+    public GeneratorDriver IncrementalEdit() => _warmDriver.RunGenerators(_editedCompilation);
 }

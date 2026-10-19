@@ -39,8 +39,7 @@ internal readonly record struct ParameterModel(
             KeyedService: Utilities.GetServiceKey(parameter),
             HasExplicitDefaultValue: parameter.HasExplicitDefaultValue,
             ExplicitDefaultValue: defaultValue,
-            IsOutOrRef: parameter.RefKind == RefKind.Ref
-                || parameter.RefKind == RefKind.Out,
+            IsOutOrRef: parameter is { RefKind: RefKind.Ref or RefKind.Out },
             Locations: new(parameter.Locations),
             Type: new(parameter.Type)
         );

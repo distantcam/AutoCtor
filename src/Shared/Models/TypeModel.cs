@@ -2,9 +2,6 @@
 using Microsoft.CodeAnalysis;
 
 internal readonly record struct TypeModel(
-    int Depth,
-
-    string BaseTypeKey,
     string TypeKey,
 
     string? Namespace,
@@ -21,7 +18,9 @@ internal readonly record struct TypeModel(
     EquatableList<MemberModel> Properties,
     EquatableList<ParameterModel>? BaseCtorParameters,
     EquatableList<EquatableTypeSymbol>? BaseTypeArguments,
-    EquatableList<EquatableTypeSymbol>? BaseTypeParameters
+    EquatableList<EquatableTypeSymbol>? BaseTypeParameters,
+    EquatableList<PostCtorModel> PostCtorMethods,
+    EquatableList<TypeModel> AutoConstructBase
 ) : IPartialTypeModel
 {
     public static TypeModel Create(INamedTypeSymbol type)
@@ -40,10 +39,14 @@ internal readonly record struct TypeModel(
 
         var members = type.GetMembers();
 
-        return new(
-            Depth: CalculateInheritanceDepth(type),
+        var autoConstructBase = baseCtorParameters == null
+            && type.BaseType?.OriginalDefinition is { } baseType
+            && SymbolEqualityComparer.Default.Equals(baseType.ContainingAssembly, type.ContainingAssembly)
+            && Utilities.HasAttribute(baseType, AttributeNames.AutoConstructName)
+            ? new EquatableList<TypeModel>(ImmutableArray.Create(Create(baseType)))
+            : new EquatableList<TypeModel>(ImmutableArray<TypeModel>.Empty);
 
-            BaseTypeKey: CreateKey(type.BaseType),
+        return new(
             TypeKey: CreateKey(type),
 
             Namespace: GeneratorUtilities.GetNamespace(type),
@@ -69,7 +72,10 @@ internal readonly record struct TypeModel(
                 : null,
             BaseTypeParameters: genericBaseType
                 ? new(type.BaseType!.TypeParameters.Select(Create))
-                : null
+                : null,
+
+            PostCtorMethods: GetPostCtorMethods(members),
+            AutoConstructBase: autoConstructBase
         );
     }
 
@@ -91,21 +97,11 @@ internal readonly record struct TypeModel(
         if (ctor.ContainingType.IsRecord &&
             ctor is { DeclaredAccessibility: Accessibility.Protected, Parameters.Length: 1 } &&
             SymbolEqualityComparer.Default.Equals(ctor.Parameters[0].Type, ctor.ContainingType))
+        {
             return false;
+        }
 
         return true;
-    }
-
-    private static int CalculateInheritanceDepth(ITypeSymbol type)
-    {
-        var depth = 0;
-        var b = type.BaseType;
-        while (b != null)
-        {
-            depth++;
-            b = b.BaseType;
-        }
-        return depth;
     }
 
     public static string CreateKey(INamedTypeSymbol? type)
@@ -119,8 +115,6 @@ internal readonly record struct TypeModel(
         return type.ToDisplayString(FullyQualifiedFormat);
     }
 
-    // Types can have hundreds of members, so filter the symbols first and allocate the
-    // model array exactly once rather than growing a LINQ buffer.
     private static EquatableList<MemberModel> GetFields(ImmutableArray<ISymbol> members)
     {
         var fields = new List<IFieldSymbol>();
@@ -133,6 +127,17 @@ internal readonly record struct TypeModel(
         foreach (var field in fields)
             builder.Add(MemberModel.Create(field));
         return new(builder.MoveToImmutable());
+    }
+
+    private static EquatableList<PostCtorModel> GetPostCtorMethods(ImmutableArray<ISymbol> members)
+    {
+        var builder = ImmutableArray.CreateBuilder<PostCtorModel>();
+        foreach (var member in members)
+        {
+            if (member is IMethodSymbol method && Utilities.HasAttribute(method, AttributeNames.AutoPostConstructName))
+                builder.Add(PostCtorModel.Create(method));
+        }
+        return new(builder.ToImmutable());
     }
 
     private static EquatableList<MemberModel> GetProperties(ImmutableArray<ISymbol> members)

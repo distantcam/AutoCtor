@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using static AutoCtor.Diagnostics;
 
 #if ROSLYN_3
@@ -29,7 +30,27 @@ public partial class AutoConstructSourceGenerator
             public int VisitState { get; set; }
         }
 
-        public static void Generate(
+        public static void GenerateProviders(
+            EmitterContext context,
+            (ImmutableArray<ServiceProviderModel> Providers,
+            ImmutableArray<TypeModel> Types,
+            DuckTypes DuckTypes) input)
+        {
+            if (input.Providers.IsDefaultOrEmpty) return;
+
+            var ctorMaps = new Dictionary<string, ParameterList>();
+            foreach (var type in input.Types)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                if (Emitter.GetParameters(null, type, out _) is { } parameters)
+                    ctorMaps[type.TypeKey] = parameters;
+            }
+
+            foreach (var provider in input.Providers)
+                Generate(context, provider, ctorMaps, input.DuckTypes);
+        }
+
+        private static void Generate(
             EmitterContext context,
             ServiceProviderModel provider,
             Dictionary<string, ParameterList> ctorMaps,

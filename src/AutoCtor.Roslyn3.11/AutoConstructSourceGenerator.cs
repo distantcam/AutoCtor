@@ -8,13 +8,11 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
     private sealed class SyntaxContextReceiver(CancellationToken cancellationToken) : ISyntaxContextReceiver
     {
         public List<TypeModel>? TypeModels { get; private set; }
-        public List<PostCtorModel>? MarkedMethods { get; private set; }
         public List<ServiceProviderModel>? ServiceProviders { get; private set; }
 
         public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
         {
             INamedTypeSymbol? type;
-            IMethodSymbol? method;
             if (GeneratorUtilities.IsTypeDeclarationWithAttributes(context.Node, cancellationToken)
 
                 && (type = GeneratorUtilities.GetPrimarySymbol<INamedTypeSymbol>(context, cancellationToken)) != null)
@@ -24,15 +22,6 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
 
                 if (Utilities.HasAttribute(type, AttributeNames.ServiceProviderName))
                     (ServiceProviders ??= []).Add(ServiceProviderModel.Create(type));
-            }
-
-            else if (GeneratorUtilities.IsMethodDeclarationWithAttributes(context.Node, cancellationToken)
-
-                && (method = GeneratorUtilities.GetSymbol<IMethodSymbol>(context, cancellationToken)) != null
-
-                && Utilities.HasAttribute(method, AttributeNames.AutoPostConstructName))
-            {
-                (MarkedMethods ??= []).Add(PostCtorModel.Create(method));
             }
         }
     }
@@ -47,7 +36,9 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
     {
         if (context.SyntaxContextReceiver is not SyntaxContextReceiver receiver
             || (receiver.TypeModels == null && receiver.ServiceProviders == null))
+        {
             return;
+        }
 
         var enableGuards = false;
         if (context.AnalyzerConfigOptions.GlobalOptions
@@ -58,11 +49,13 @@ public sealed partial class AutoConstructSourceGenerator : ISourceGenerator
                 projectGuardSetting.Equals("enable", StringComparison.OrdinalIgnoreCase);
         }
 
-        Emitter.GenerateSource(context, (
-            receiver.TypeModels?.ToImmutableArray() ?? ImmutableArray<TypeModel>.Empty,
-            receiver.MarkedMethods?.ToImmutableArray() ?? ImmutableArray<PostCtorModel>.Empty,
-            enableGuards,
+        var types = receiver.TypeModels?.ToImmutableArray() ?? ImmutableArray<TypeModel>.Empty;
+        foreach (var type in types)
+            Emitter.GenerateSource(context, (type, enableGuards));
+
+        IoCEmitter.GenerateProviders(context, (
             receiver.ServiceProviders?.ToImmutableArray() ?? ImmutableArray<ServiceProviderModel>.Empty,
+            types,
             DuckTypes.Create(context.Compilation)));
     }
 }

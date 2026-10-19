@@ -1,12 +1,6 @@
 ﻿using System.Collections;
 using Microsoft.CodeAnalysis;
 
-#if ROSLYN_3
-using EmitterContext = Microsoft.CodeAnalysis.GeneratorExecutionContext;
-#elif ROSLYN_4
-using EmitterContext = Microsoft.CodeAnalysis.SourceProductionContext;
-#endif
-
 internal sealed class ParameterListBuilder(IReadOnlyList<MemberModel> fields, IReadOnlyList<MemberModel> properties)
 {
     private IEnumerable<ParameterModel> _baseParameters = [];
@@ -18,7 +12,7 @@ internal sealed class ParameterListBuilder(IReadOnlyList<MemberModel> fields, IR
     public void SetPostCtorParameters(IEnumerable<ParameterModel> postCtorParameters)
         => _postCtorParameters = postCtorParameters;
 
-    public ParameterList Build(EmitterContext context)
+    public ParameterList Build()
     {
         // Keyed by large structs: letting these regrow for a type with hundreds of members
         // pushes their entry arrays onto the large object heap.

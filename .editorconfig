@@ -119,6 +119,10 @@ csharp_prefer_braces = true:silent
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
 
+# Use pattern matching
+csharp_style_prefer_pattern_matching = true:warning
+csharp_style_pattern_matching_over_as_with_null_check = true:warning
+
 
 
 ##########################################
@@ -233,6 +237,9 @@ dotnet_style_prefer_collection_expression = false
 # CA1019: Define accessors for attribute arguments
 dotnet_diagnostic.CA1019.severity = none
 
+# CA1508: Avoid dead conditional code
+dotnet_diagnostic.CA1508.severity = none
+
 # RCS0020: Format accessor's braces on a single line
 dotnet_diagnostic.RCS0020.severity = warning
 roslynator_accessor_braces_style = single_line_when_expression_is_on_single_line
@@ -245,8 +252,17 @@ roslynator_conditional_operator_new_line = before
 dotnet_diagnostic.RCS0032.severity = warning
 roslynator_arrow_token_new_line = before
 
+# RCS1001: Add braces (when expression spans over multiple lines)
+dotnet_diagnostic.RCS1001.severity = none
+
+# RCS1003: Add braces to if-else (when expression spans over multiple lines)
+dotnet_diagnostic.RCS1003.severity = none
+
 # RCS1081: Split variable declaration
 dotnet_diagnostic.RCS1081.severity = warning
+
+# RCS1123: Add parentheses when necessary
+dotnet_diagnostic.RCS1123.severity = none
 
 # RCS1162: Avoid chain of assignments
 dotnet_diagnostic.RCS1162.severity = warning

@@ -10,14 +10,11 @@ internal readonly record struct RegistrationModel(
     Lifetime Lifetime,
     EquatableTypeSymbol Service,
     EquatableTypeSymbol Implementation,
-    // Both as C# source, the key comparable with ParameterModel.KeyedService.
     string? Key,
-    // "{root}" is replaced by the container the factory is called from.
     string? Factory,
     bool FactoryIsMethod,
     bool IsOpenGeneric,
     bool IsAutoConstruct,
-    // Decide the cheapest way to cache and to dispose it.
     bool ServiceIsReferenceType,
     bool ImplementationIsDisposable,
     int PublicConstructorCount,
@@ -26,7 +23,6 @@ internal readonly record struct RegistrationModel(
     EquatableList<Location> Locations
 ) : IHaveDiagnostics;
 
-// Found while reading the attributes, where the symbols are at hand.
 internal readonly record struct ModelDiagnostic(DiagnosticDescriptor Descriptor, EquatableList<string> Args, EquatableList<Location> Locations) : IHaveDiagnostics
 {
     public string ErrorName => Args[0];
@@ -77,8 +73,6 @@ internal readonly record struct ServiceProviderModel(
             Diagnostics: new(diagnostics));
     }
 
-    // Walks the attributes in order, expanding scans and imports in place, so a later
-    // registration replaces an earlier one wherever it came from.
     private static void AddRegistrations(
         INamedTypeSymbol provider,
         INamedTypeSymbol source,
@@ -87,7 +81,6 @@ internal readonly record struct ServiceProviderModel(
         List<RegistrationModel> registrations,
         List<ModelDiagnostic> diagnostics)
     {
-        // Syntax from another assembly can't be reported against, so use the import instead.
         var ownSyntax = SymbolEqualityComparer.Default.Equals(source.ContainingAssembly, provider.ContainingAssembly);
 
         foreach (var attribute in source.GetAttributes())
@@ -108,20 +101,17 @@ internal readonly record struct ServiceProviderModel(
 
             if (name == "ImportAttribute")
             {
-                // Visited once, so cycles end and a module imported twice isn't doubled up.
                 if ((typeArgs.Length > 0 ? typeArgs[0] : ctorArgs[0].Value) is INamedTypeSymbol module
                     && visited.Add(module))
                 {
                     var diagnosticsBefore = diagnostics.Count;
                     AddRegistrations(provider, module, visited, locations, registrations, diagnostics);
-                    // An empty scan or a bad registration inside already says why.
                     if (registrations.Count == before && diagnostics.Count == diagnosticsBefore)
                         Report(diagnostics, ACTR027_ImportedModuleHasNoRegistrations, locations, DisplayName(module));
                 }
             }
             else if (name.StartsWith("Scan", StringComparison.Ordinal))
             {
-                // A scan needs a service or a name filter; one with neither would register every class.
                 var filter = ctorArgs.Length > 0 ? ctorArgs[0].Value as INamedTypeSymbol : null;
                 if (filter is null && ctorArgs.Length > 0 && !ctorArgs[0].IsNull)
                     continue;
@@ -174,7 +164,7 @@ internal readonly record struct ServiceProviderModel(
         if (service is null or IErrorTypeSymbol || implementation is not INamedTypeSymbol impl || impl is IErrorTypeSymbol)
             return;
 
-        var isOpen = (service as INamedTypeSymbol)?.IsUnboundGenericType == true;
+        var isOpen = service is INamedTypeSymbol { IsUnboundGenericType: true };
         if (isOpen)
         {
             service = service.OriginalDefinition;
@@ -220,7 +210,6 @@ internal readonly record struct ServiceProviderModel(
             IsOpenGeneric: isOpen,
             IsAutoConstruct: Utilities.HasAttribute(impl, AttributeNames.AutoConstructName),
             ServiceIsReferenceType: service.IsReferenceType,
-            // A factory can hand back anything.
             ImplementationIsDisposable: factory is not null || impl.AllInterfaces.Any(static i => i.SpecialType == SpecialType.System_IDisposable
                 || GeneratorUtilities.IsType(i, "System", "IAsyncDisposable")),
             PublicConstructorCount: ctors.Count,
@@ -234,14 +223,11 @@ internal readonly record struct ServiceProviderModel(
     private static void Report(List<ModelDiagnostic> diagnostics, DiagnosticDescriptor descriptor, IEnumerable<Location> locations, params string[] args)
         => diagnostics.Add(new(descriptor, new(args), new(locations)));
 
-    // The type, an interface it implements, or a base class. An open registration compares definitions.
     internal static bool IsAssignable(ITypeSymbol type, ITypeSymbol target, bool byDefinition = false)
         => target.SpecialType == SpecialType.System_Object
         || type.AllInterfaces.Concat(type is INamedTypeSymbol named ? BaseTypes(named) : []).Prepend<ITypeSymbol>(type)
             .Any(t => SymbolEqualityComparer.Default.Equals(byDefinition ? t.OriginalDefinition : t, byDefinition ? target.OriginalDefinition : target));
 
-    // What a named member produces, or null when generated code can't use it: not a value,
-    // generic, or out of reach from the provider.
     private static ITypeSymbol? MemberType(INamedTypeSymbol provider, ISymbol? member, bool allowParameters)
     {
         if (member is null || member.DeclaredAccessibility is Accessibility.Private or Accessibility.Protected or Accessibility.ProtectedAndInternal
@@ -259,7 +245,6 @@ internal readonly record struct ServiceProviderModel(
         return type is IErrorTypeSymbol ? null : type;
     }
 
-    // Static members are called through their type, instance members through the provider.
     private static string MemberAccess(INamedTypeSymbol owner, string name, out ISymbol? member)
     {
         member = null;
@@ -271,7 +256,6 @@ internal readonly record struct ServiceProviderModel(
             : $"{{root}}.{name}";
     }
 
-    // ponytail: walks every type in the scanned assemblies on each run; index by interface if it shows up.
     private static IEnumerable<(ITypeSymbol, INamedTypeSymbol)> Scan(
         INamedTypeSymbol provider, INamedTypeSymbol source, AttributeData attribute, INamedTypeSymbol? filter)
     {
@@ -300,18 +284,16 @@ internal readonly record struct ServiceProviderModel(
             .Where(t => t is { TypeKind: TypeKind.Class, IsAbstract: false, IsStatic: false, IsGenericType: false }
                 && !SymbolEqualityComparer.Default.Equals(t, provider)
                 && typeName?.IsMatch(t.Name) != false)
-            // Neither source nor metadata promise an order, and order decides which registration wins.
-            .OrderBy(t => t.ToDisplayString(FullyQualifiedFormat), StringComparer.Ordinal);
+            .Select(t => (Type: t, Matches: target is null
+                ? [t]
+                : t.AllInterfaces.Concat(BaseTypes(t)).Prepend(t)
+                    .Where(i => SymbolEqualityComparer.Default.Equals(isOpen ? i.OriginalDefinition : i, target))
+                    .ToList<ITypeSymbol>()))
+            .Where(c => c.Matches.Count > 0)
+            .OrderBy(c => c.Type.ToDisplayString(FullyQualifiedFormat), StringComparer.Ordinal);
 
-        foreach (var type in candidates)
+        foreach (var (type, matches) in candidates)
         {
-            var matches = target is null
-                ? [type]
-                : type.AllInterfaces.Concat(BaseTypes(type)).Prepend(type)
-                    .Where(t => SymbolEqualityComparer.Default.Equals(isOpen ? t.OriginalDefinition : t, target))
-                    .ToList<ITypeSymbol>();
-            if (matches.Count == 0)
-                continue;
 
             var services = new List<ITypeSymbol>();
             if ((scanAs & 1) != 0) services.AddRange(matches);
@@ -329,7 +311,6 @@ internal readonly record struct ServiceProviderModel(
             yield return b;
     }
 
-    // Every type in a namespace, and nested in those types, that the provider's assembly can name.
     private static IEnumerable<INamedTypeSymbol> VisibleTypes(INamespaceOrTypeSymbol container, bool internals)
         => (container is INamespaceSymbol ns ? ns.GetNamespaceMembers().SelectMany(n => VisibleTypes(n, internals)) : [])
         .Concat(container.GetTypeMembers()
