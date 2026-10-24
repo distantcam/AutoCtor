@@ -1,43 +1,21 @@
 ﻿using System.Text;
 using AutoCtor;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Columns;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Jobs;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Testing;
 
 namespace CompileBenchmarks;
 
-[Config(typeof(Config))]
+[Config(typeof(DefaultConfig))]
 [MemoryDiagnoser]
-public class LocalCompare
+public class Constructor
 {
-    private const string NugetVersion = "4.0.1";
-
-    [Params(100, 1000)]
+    [Params(100, 500)]
     public int ServiceCount { get; set; }
 
-    [Params(100, 1000)]
+    [Params(100, 500)]
     public int TargetsCount { get; set; }
-
-    private class Config : ManualConfig
-    {
-        public Config()
-        {
-            AddJob(Job.MediumRun
-                .WithMsBuildArguments("/p:AutoCtorVersion=local")
-                .WithId("local"));
-            AddJob(Job.MediumRun
-                .WithMsBuildArguments($"/p:AutoCtorVersion={NugetVersion}")
-                .WithId(NugetVersion)
-                .AsBaseline());
-
-            HideColumns(Column.Arguments);
-            AddLogicalGroupRules(BenchmarkLogicalGroupRule.ByParams);
-        }
-    }
 
     private CSharpCompilation _compilation = null!;
     private GeneratorDriver _driver = null!;
@@ -51,7 +29,7 @@ public class LocalCompare
             .ResolveAsync(CSharpParseOptions.Default.Language, CancellationToken.None)
             .ConfigureAwait(false);
 
-        _compilation = CSharpCompilation.Create(nameof(LocalCompare))
+        _compilation = CSharpCompilation.Create(nameof(Constructor))
             .WithOptions(new(OutputKind.DynamicallyLinkedLibrary))
             .AddReferences(frameworkReferences)
             .AddReferences(MetadataReference
@@ -64,8 +42,9 @@ public class LocalCompare
 
         _warmDriver = _driver.RunGenerators(_compilation);
         var edited = _compilation.SyntaxTrees.Single(t => t.ToString().Contains("class Target0001", StringComparison.Ordinal));
-        _editedCompilation = _compilation.ReplaceSyntaxTree(edited, CSharpSyntaxTree.ParseText(
-            edited.ToString().Replace("{", "{ private readonly IService0001 _edited;", StringComparison.Ordinal)));
+        _editedCompilation = _compilation.ReplaceSyntaxTree(edited,
+            CSharpSyntaxTree.ParseText(edited.ToString()
+            .Replace("{", "{ private readonly IService0001 _edited;", StringComparison.Ordinal)));
     }
 
     private SyntaxTree TargetClassGenerator(int i)
@@ -91,7 +70,7 @@ public class LocalCompare
     }
 
     [Benchmark]
-    public GeneratorDriver Standard() => _driver.RunGenerators(_compilation);
+    public GeneratorDriver Construct() => _driver.RunGenerators(_compilation);
 
     [Benchmark]
     public GeneratorDriver IncrementalEdit() => _warmDriver.RunGenerators(_editedCompilation);
