@@ -18,7 +18,8 @@ internal sealed class ACTR007_CodeFixTests
         var workspaceBuilder = new WorkspaceBuilder()
             .WithName(nameof(ACTR007_CodeFixTests))
             .WithReferences(compilation.References);
-        var documentId = workspaceBuilder.AddDocument(theoryData.ToString(), string.Join(Environment.NewLine, theoryData.Codes));
+        var documentId = workspaceBuilder.AddDocument(
+            theoryData.ToString(), string.Join(Environment.NewLine, theoryData.Codes));
 
         using var workspace = workspaceBuilder.Build();
 

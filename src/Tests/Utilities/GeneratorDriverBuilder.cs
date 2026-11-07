@@ -74,7 +74,8 @@ internal sealed class GeneratorDriverBuilder
         ImmutableDictionary<string, string> analyzerConfigOptions
     ) : AnalyzerConfigOptionsProvider
     {
-        public override AnalyzerConfigOptions GlobalOptions { get; } = new TestAnalyzerConfigOptions(analyzerConfigOptions);
+        public override AnalyzerConfigOptions GlobalOptions { get; } =
+            new TestAnalyzerConfigOptions(analyzerConfigOptions);
         public override AnalyzerConfigOptions GetOptions(SyntaxTree tree) => GlobalOptions;
         public override AnalyzerConfigOptions GetOptions(AdditionalText textFile) => GlobalOptions;
     }

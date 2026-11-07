@@ -21,7 +21,7 @@ internal sealed class ACTR008_CodeAnalyzerTests
             .ConfigureAwait(false);
 
         await Verify(diagnostics
-                .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)))
+            .Where(d => !theoryData.IgnoredCompileDiagnostics.Contains(d.Id)))
             .UseDirectory(theoryData.VerifiedDirectory)
             .UseTypeName(theoryData.Name)
             .UseMethodName("cs")

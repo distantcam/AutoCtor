@@ -23,7 +23,11 @@ internal readonly record struct RegistrationModel(
     EquatableList<Location> Locations
 ) : IHaveDiagnostics;
 
-internal readonly record struct ModelDiagnostic(DiagnosticDescriptor Descriptor, EquatableList<string> Args, EquatableList<Location> Locations) : IHaveDiagnostics
+internal readonly record struct ModelDiagnostic(
+    DiagnosticDescriptor Descriptor,
+    EquatableList<string> Args,
+    EquatableList<Location> Locations
+) : IHaveDiagnostics
 {
     public string ErrorName => Args[0];
 }
@@ -59,8 +63,16 @@ internal readonly record struct ServiceProviderModel(
             var fallbackType = MemberType(type, member, allowParameters: false);
             if (fallbackType is null)
                 Report(diagnostics, ACTR024_InvalidProviderFallback, type.Locations, fallback, DisplayName(type));
-            else if (!fallbackType.AllInterfaces.Prepend(fallbackType).Any(static i => GeneratorUtilities.IsType(i, "System", "IServiceProvider")))
-                Report(diagnostics, ACTR025_ProviderFallbackNotAServiceProvider, type.Locations, fallback, DisplayName(fallbackType));
+            else if (!fallbackType.AllInterfaces.Prepend(fallbackType)
+                .Any(static i => GeneratorUtilities.IsType(i, "System", "IServiceProvider")))
+            {
+                Report(
+                    diagnostics,
+                    ACTR025_ProviderFallbackNotAServiceProvider,
+                    type.Locations,
+                    fallback,
+                    DisplayName(fallbackType));
+            }
         }
 
         return new(
@@ -115,18 +127,24 @@ internal readonly record struct ServiceProviderModel(
                 var filter = ctorArgs.Length > 0 ? ctorArgs[0].Value as INamedTypeSymbol : null;
                 if (filter is null && ctorArgs.Length > 0 && !ctorArgs[0].IsNull)
                     continue;
-                if (filter is null && !attribute.NamedArguments.Any(n => n.Key == "TypeNameFilter" && n.Value.Value is string))
+                if (filter is null
+                    && !attribute.NamedArguments.Any(n => n.Key == "TypeNameFilter" && n.Value.Value is string))
                 {
-                    Report(diagnostics, ACTR030_ScanHasNoFilter, locations, name.Substring(0, name.Length - "Attribute".Length));
+                    var scanName = name.Substring(0, name.Length - "Attribute".Length);
+                    Report(diagnostics, ACTR030_ScanHasNoFilter, locations, scanName);
                     continue;
                 }
 
                 foreach (var (service, implementation) in Scan(provider, source, attribute, filter))
-                    Add(provider, source, lifetime, service, implementation, null, null, locations, registrations, diagnostics);
+                {
+                    Add(provider, source, lifetime, service, implementation, null, null,
+                        locations, registrations, diagnostics);
+                }
 
                 if (registrations.Count == before)
                     Report(diagnostics, ACTR026_ScanFoundNoTypes, locations, filter is null
-                        ? attribute.NamedArguments.FirstOrDefault(n => n.Key == "TypeNameFilter").Value.Value as string ?? "*"
+                        ? attribute.NamedArguments
+                            .FirstOrDefault(n => n.Key == "TypeNameFilter").Value.Value as string ?? "*"
                         : DisplayName(filter));
             }
             else if (name is "SingletonAttribute" or "TransientAttribute" or "ScopedAttribute")
@@ -144,7 +162,8 @@ internal readonly record struct ServiceProviderModel(
                     .FirstOrDefault();
                 var factory = attribute.NamedArguments
                     .FirstOrDefault(n => n.Key == "Factory").Value.Value as string;
-                Add(provider, source, lifetime, service, implementation, key, factory, locations, registrations, diagnostics);
+                Add(provider, source, lifetime, service, implementation, key, factory,
+                    locations, registrations, diagnostics);
             }
         }
     }
@@ -161,7 +180,9 @@ internal readonly record struct ServiceProviderModel(
         List<RegistrationModel> registrations,
         List<ModelDiagnostic> diagnostics)
     {
-        if (service is null or IErrorTypeSymbol || implementation is not INamedTypeSymbol impl || impl is IErrorTypeSymbol)
+        if (service is null or IErrorTypeSymbol
+            || implementation is not INamedTypeSymbol impl
+            || impl is IErrorTypeSymbol)
             return;
 
         var isOpen = service is INamedTypeSymbol { IsUnboundGenericType: true };
@@ -185,14 +206,20 @@ internal readonly record struct ServiceProviderModel(
         var factoryType = MemberType(provider, member, allowParameters: true);
         (DiagnosticDescriptor, string[])? error =
             isOpen && factory is not null ? (ACTR023_OpenGenericServiceFactory, [serviceName, factory])
-            : isOpen && impl.Arity != ((INamedTypeSymbol)service).Arity ? (ACTR016_InvalidOpenGenericRegistration, [serviceName, implName])
-            : !IsAssignable(impl, service, isOpen) ? (ACTR015_ImplementationNotAssignableToService, [implName, serviceName])
-            : factory is null && (impl.IsAbstract || impl.IsStatic || impl.TypeKind is not (TypeKind.Class or TypeKind.Struct)
-                || !isOpen && impl.TypeArguments.Any(t => t is ITypeParameterSymbol)) ? (ACTR011_ServiceImplementationCannotBeInstantiated, [implName])
+            : isOpen && impl.Arity != ((INamedTypeSymbol)service).Arity
+                ? (ACTR016_InvalidOpenGenericRegistration, [serviceName, implName])
+            : !IsAssignable(impl, service, isOpen)
+                ? (ACTR015_ImplementationNotAssignableToService, [implName, serviceName])
+            : factory is null
+                && (impl.IsAbstract || impl.IsStatic || impl.TypeKind is not (TypeKind.Class or TypeKind.Struct)
+                || !isOpen && impl.TypeArguments.Any(t => t is ITypeParameterSymbol))
+                ? (ACTR011_ServiceImplementationCannotBeInstantiated, [implName])
             : factory is null ? null
             : factoryType is null ? (ACTR021_InvalidServiceFactory, [factory, serviceName])
-            : !IsAssignable(factoryType, service) ? (ACTR022_ServiceFactoryReturnTypeNotAssignable, [factory, DisplayName(factoryType), serviceName])
-            : member is { IsStatic: false } && !SymbolEqualityComparer.Default.Equals(source, provider) ? (ACTR028_ModuleFactoryMustBeStatic, [factory, DisplayName(source)])
+            : !IsAssignable(factoryType, service)
+                ? (ACTR022_ServiceFactoryReturnTypeNotAssignable, [factory, DisplayName(factoryType), serviceName])
+            : member is { IsStatic: false } && !SymbolEqualityComparer.Default.Equals(source, provider)
+                ? (ACTR028_ModuleFactoryMustBeStatic, [factory, DisplayName(source)])
             : null;
         if (error is var (descriptor, args))
         {
@@ -210,8 +237,9 @@ internal readonly record struct ServiceProviderModel(
             IsOpenGeneric: isOpen,
             IsAutoConstruct: Utilities.HasAttribute(impl, AttributeNames.AutoConstructName),
             ServiceIsReferenceType: service.IsReferenceType,
-            ImplementationIsDisposable: factory is not null || impl.AllInterfaces.Any(static i => i.SpecialType == SpecialType.System_IDisposable
-                || GeneratorUtilities.IsType(i, "System", "IAsyncDisposable")),
+            ImplementationIsDisposable: factory is not null
+                || impl.AllInterfaces.Any(static i => i.SpecialType == SpecialType.System_IDisposable
+                    || GeneratorUtilities.IsType(i, "System", "IAsyncDisposable")),
             PublicConstructorCount: ctors.Count,
             Parameters: new(parameters.Select(ParameterModel.Create)),
             ErrorName: impl.ToDisplayString(MinimallyQualifiedFormat),
@@ -220,24 +248,38 @@ internal readonly record struct ServiceProviderModel(
 
     private static string DisplayName(ITypeSymbol type) => type.ToDisplayString(MinimallyQualifiedFormat);
 
-    private static void Report(List<ModelDiagnostic> diagnostics, DiagnosticDescriptor descriptor, IEnumerable<Location> locations, params string[] args)
+    private static void Report(
+        List<ModelDiagnostic> diagnostics,
+        DiagnosticDescriptor descriptor,
+        IEnumerable<Location> locations,
+        params string[] args)
         => diagnostics.Add(new(descriptor, new(args), new(locations)));
 
     internal static bool IsAssignable(ITypeSymbol type, ITypeSymbol target, bool byDefinition = false)
         => target.SpecialType == SpecialType.System_Object
         || type.AllInterfaces.Concat(type is INamedTypeSymbol named ? BaseTypes(named) : []).Prepend<ITypeSymbol>(type)
-            .Any(t => SymbolEqualityComparer.Default.Equals(byDefinition ? t.OriginalDefinition : t, byDefinition ? target.OriginalDefinition : target));
+            .Any(t => SymbolEqualityComparer.Default.Equals(
+                byDefinition ? t.OriginalDefinition : t,
+                byDefinition ? target.OriginalDefinition : target));
 
     private static ITypeSymbol? MemberType(INamedTypeSymbol provider, ISymbol? member, bool allowParameters)
     {
-        if (member is null || member.DeclaredAccessibility is Accessibility.Private or Accessibility.Protected or Accessibility.ProtectedAndInternal
+        if (member is null
+            || member.DeclaredAccessibility
+                is Accessibility.Private or Accessibility.Protected or Accessibility.ProtectedAndInternal
             && !SymbolEqualityComparer.Default.Equals(member.ContainingType, provider))
             return null;
 
         var type = member switch
         {
-            IMethodSymbol { MethodKind: MethodKind.Ordinary, IsGenericMethod: false, ReturnsVoid: false, RefKind: RefKind.None } m
-                when (allowParameters ? m.Parameters.All(p => p.RefKind == RefKind.None) : m.Parameters.Length == 0) => m.ReturnType,
+            IMethodSymbol
+            {
+                MethodKind: MethodKind.Ordinary, IsGenericMethod: false, ReturnsVoid: false, RefKind: RefKind.None,
+            } m
+                when (allowParameters
+                    ? m.Parameters.All(p => p.RefKind == RefKind.None)
+                    : m.Parameters.Length == 0)
+                => m.ReturnType,
             IPropertySymbol { IsIndexer: false, GetMethod: not null } p => p.Type,
             IFieldSymbol f => f.Type,
             _ => null,
@@ -267,7 +309,9 @@ internal readonly record struct ServiceProviderModel(
             if (named.Key == "As" && named.Value.Value is int flags)
                 scanAs = flags;
             else if (named.Key == "FromAssembliesOf" && !named.Value.IsNull)
-                assemblies.AddRange(named.Value.Values.Select(v => (v.Value as ITypeSymbol)?.ContainingAssembly).OfType<IAssemblySymbol>());
+                assemblies.AddRange(named.Value.Values
+                    .Select(v => (v.Value as ITypeSymbol)?.ContainingAssembly)
+                    .OfType<IAssemblySymbol>());
             else if (named.Key == "TypeNameFilter" && named.Value.Value is string pattern)
                 typeName = new Regex("^" + Regex.Escape(pattern).Replace(@"\*", ".*").Replace(@"\?", ".") + "$");
         }
@@ -280,7 +324,8 @@ internal readonly record struct ServiceProviderModel(
         var candidates = assemblies
             .Distinct<IAssemblySymbol>(SymbolEqualityComparer.Default)
             .SelectMany(a => VisibleTypes(a.GlobalNamespace,
-                SymbolEqualityComparer.Default.Equals(a, provider.ContainingAssembly) || a.GivesAccessTo(provider.ContainingAssembly)))
+                SymbolEqualityComparer.Default.Equals(a, provider.ContainingAssembly)
+                || a.GivesAccessTo(provider.ContainingAssembly)))
             .Where(t => t is { TypeKind: TypeKind.Class, IsAbstract: false, IsStatic: false, IsGenericType: false }
                 && !SymbolEqualityComparer.Default.Equals(t, provider)
                 && typeName?.IsMatch(t.Name) != false)
@@ -312,9 +357,11 @@ internal readonly record struct ServiceProviderModel(
     }
 
     private static IEnumerable<INamedTypeSymbol> VisibleTypes(INamespaceOrTypeSymbol container, bool internals)
-        => (container is INamespaceSymbol ns ? ns.GetNamespaceMembers().SelectMany(n => VisibleTypes(n, internals)) : [])
-        .Concat(container.GetTypeMembers()
-            .Where(t => t.DeclaredAccessibility == Accessibility.Public
-                || internals && t.DeclaredAccessibility is Accessibility.Internal or Accessibility.ProtectedOrInternal)
-            .SelectMany(t => VisibleTypes(t, internals).Prepend(t)));
+        => (container is INamespaceSymbol ns ? ns.GetNamespaceMembers()
+            .SelectMany(n => VisibleTypes(n, internals)) : [])
+            .Concat(container.GetTypeMembers()
+                .Where(t => t.DeclaredAccessibility == Accessibility.Public
+                    || internals
+                    && t.DeclaredAccessibility is Accessibility.Internal or Accessibility.ProtectedOrInternal)
+                .SelectMany(t => VisibleTypes(t, internals).Prepend(t)));
 }

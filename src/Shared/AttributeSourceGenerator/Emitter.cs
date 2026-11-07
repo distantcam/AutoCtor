@@ -70,7 +70,9 @@ public partial class AttributeSourceGenerator
                     EmitAttributeUsage(source, true, false, "Class");
                     using (StartAttribute(source, lifetime + "Attribute", "ServiceAttribute"))
                     {
-                        source.AppendLine($"public {lifetime}Attribute(global::System.Type service, global::System.Type implementation = null) {{ }}");
+                        source.AppendLine(
+                            $"public {lifetime}Attribute(global::System.Type service, "
+                            + "global::System.Type implementation = null) { }");
                     }
                 }
 
@@ -115,7 +117,8 @@ public partial class AttributeSourceGenerator
                     source.AppendLine($"internal sealed class {lifetime}Attribute<TService> : ServiceAttribute {{ }}");
                     source.AddGeneratedCodeAttribute();
                     EmitAttributeUsage(source, true, false, "Class");
-                    source.AppendLine($"internal sealed class {lifetime}Attribute<TService, TImplementation> : ServiceAttribute {{ }}");
+                    source.AppendLine(
+                        $"internal sealed class {lifetime}Attribute<TService, TImplementation> : ServiceAttribute {{ }}");
                 }
                 source.AddGeneratedCodeAttribute();
                 EmitAttributeUsage(source, true, false, "Class");
@@ -130,14 +133,17 @@ public partial class AttributeSourceGenerator
         private static void EmitAttributeUsage(CodeBuilder source, params string[] targets)
             => EmitAttributeUsage(source, false, false, targets);
 
-        private static void EmitAttributeUsage(CodeBuilder source, bool allowMultiple, bool inherited, params string[] targets)
+        private static void EmitAttributeUsage(
+            CodeBuilder source, bool allowMultiple, bool inherited, params string[] targets)
         {
             var targetString = string.Join(" | ", targets.Select(t => $"global::System.AttributeTargets.{t}"));
 
-            source.AppendLine($"[global::System.AttributeUsage({targetString}, AllowMultiple = {allowMultiple}, Inherited = {inherited})]");
+            source.AppendLine(
+                $"[global::System.AttributeUsage({targetString}, AllowMultiple = {allowMultiple}, Inherited = {inherited})]");
         }
 
-        private static IDisposable StartAttribute(CodeBuilder source, string typeName, string baseType = "global::System.Attribute")
+        private static IDisposable StartAttribute(
+            CodeBuilder source, string typeName, string baseType = "global::System.Attribute")
         {
             source.AppendLine($"internal sealed class {typeName} : {baseType}");
             return source.StartBlock();

@@ -41,10 +41,11 @@ public class Constructor
         _driver = CSharpGeneratorDriver.Create(new AutoConstructSourceGenerator());
 
         _warmDriver = _driver.RunGenerators(_compilation);
-        var edited = _compilation.SyntaxTrees.Single(t => t.ToString().Contains("class Target0001", StringComparison.Ordinal));
+        var edited = _compilation.SyntaxTrees
+            .Single(t => t.ToString().Contains("class Target0001", StringComparison.Ordinal));
         _editedCompilation = _compilation.ReplaceSyntaxTree(edited,
             CSharpSyntaxTree.ParseText(edited.ToString()
-            .Replace("{", "{ private readonly IService0001 _edited;", StringComparison.Ordinal)));
+                .Replace("{", "{ private readonly IService0001 _edited;", StringComparison.Ordinal)));
     }
 
     private SyntaxTree TargetClassGenerator(int i)

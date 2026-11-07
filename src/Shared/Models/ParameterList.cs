@@ -110,12 +110,17 @@ internal sealed class ParameterListBuilder(IReadOnlyList<MemberModel> fields, IR
             : string.Empty;
 
         if (u.Key.KeyedService != null)
-            return $"[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices({u.Key.KeyedService})] {u.Key.Type} {u.Value}{defaultValue}";
+            return $"[global::Microsoft.Extensions.DependencyInjection.FromKeyedServices({u.Key.KeyedService})] "
+                + $"{u.Key.Type} {u.Value}{defaultValue}";
 
         return $"{u.Key.Type} {u.Value}{defaultValue}";
     }
 
-    private static bool GetUniqueName(ParameterModel p, HashSet<string> nameHash, Dictionary<ParameterModel, string> uniqueNames, out string name)
+    private static bool GetUniqueName(
+        ParameterModel p,
+        HashSet<string> nameHash,
+        Dictionary<ParameterModel, string> uniqueNames,
+        out string name)
     {
         if (uniqueNames.TryGetValue(p, out name))
             return true;

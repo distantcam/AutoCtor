@@ -44,7 +44,9 @@ internal sealed class PartialDeclarationTests
             .Where(d => d.Severity == DiagnosticSeverity.Error))
             .IsEmpty()
             .ConfigureAwait(false);
-        await Assert.That(outputCompilation.SyntaxTrees.Count(t => t.FilePath.EndsWith("Container.ServiceProvider.g.cs", StringComparison.Ordinal)))
+        var providerFiles = outputCompilation.SyntaxTrees
+            .Count(t => t.FilePath.EndsWith("Container.ServiceProvider.g.cs", StringComparison.Ordinal));
+        await Assert.That(providerFiles)
             .IsEqualTo(1)
             .ConfigureAwait(false);
     }

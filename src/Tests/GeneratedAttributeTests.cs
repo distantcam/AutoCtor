@@ -168,7 +168,8 @@ internal sealed class GeneratedAttributeTests
 
         var projectA = compileBuilder.Build("ProjectA");
 
-        genDriver = genDriver.RunGeneratorsAndUpdateCompilation(projectA, out var genProjectA, out _, TestHelper.CancellationToken);
+        genDriver = genDriver.RunGeneratorsAndUpdateCompilation(
+            projectA, out var genProjectA, out _, TestHelper.CancellationToken);
 
         var projectB = compileBuilder
             .AddCompilationReference(genProjectA)

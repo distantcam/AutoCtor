@@ -1,4 +1,4 @@
-#if ROSLYN_4_4
+﻿#if ROSLYN_4_4
 using AutoCtor;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -12,7 +12,8 @@ internal sealed class IncrementalOutputTests
     {
         var builder = builderFactory.Builder;
         const string Other = "[AutoCtor.AutoConstruct] public partial class Other { private readonly int _o; }";
-        const string Derived = "[AutoCtor.AutoConstruct] public partial class Derived : Base { private readonly int _d; }";
+        const string Derived =
+            "[AutoCtor.AutoConstruct] public partial class Derived : Base { private readonly int _d; }";
         var app = builder.AddCodes(
             "[AutoCtor.AutoConstruct] public partial class Base { private readonly int _b; }", Other, Derived);
 
@@ -23,12 +24,14 @@ internal sealed class IncrementalOutputTests
             .RunGenerators(compilation, TestHelper.CancellationToken);
 
         // Replace only the edited tree, as the IDE does, so the other files keep their trees.
-        var baseTree = compilation.SyntaxTrees.Single(t => t.ToString().Contains("class Base", StringComparison.Ordinal));
+        var baseTree = compilation.SyntaxTrees
+            .Single(t => t.ToString().Contains("class Base", StringComparison.Ordinal));
         var edited = compilation.ReplaceSyntaxTree(baseTree, CSharpSyntaxTree.ParseText(
             "[AutoCtor.AutoConstruct] public partial class Base { private readonly int _b, _added; }",
             (CSharpParseOptions)baseTree.Options, cancellationToken: TestHelper.CancellationToken));
         var result = driver.RunGenerators(edited, TestHelper.CancellationToken)
-            .GetRunResult().Results[0];
+            .GetRunResult()
+            .Results[0];
 
         var reasons = result.TrackedOutputSteps["SourceOutput"]
             .SelectMany(s => s.Outputs)
@@ -39,7 +42,9 @@ internal sealed class IncrementalOutputTests
 
         // The derived type picks up its base's new parameter.
         await Assert.That(result.GeneratedSources
-            .Single(s => s.HintName == "Derived.g.cs").SourceText.ToString())
+            .Single(s => s.HintName == "Derived.g.cs")
+            .SourceText
+            .ToString())
             .Contains("added")
             .ConfigureAwait(false);
     }

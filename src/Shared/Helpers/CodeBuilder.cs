@@ -8,7 +8,8 @@ internal partial class CodeBuilder
 
     public char IndentChar = '\t';
     // Every emitted line asks for this, so the common tab indents are shared, not rebuilt.
-    private static readonly string[] s_tabIndents = [.. Enumerable.Range(0, 16).Select(static i => new string('\t', i))];
+    private static readonly string[] s_tabIndents =
+        [.. Enumerable.Range(0, 16).Select(static i => new string('\t', i))];
     public string Indent => _indent < s_tabIndents.Length
         ? s_tabIndents[_indent]
         : new(IndentChar, _indent);

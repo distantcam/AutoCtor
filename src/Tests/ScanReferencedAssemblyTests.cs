@@ -1,4 +1,4 @@
-using AutoCtor;
+﻿using AutoCtor;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using static ExampleTests;
@@ -36,7 +36,8 @@ internal sealed class ScanReferencedAssemblyTests
         var builder = builderFactory.Builder;
         var pluginLibrary = builder.AddCodes(PluginLibrary).Build("PluginLibrary");
         var friendLibrary = builder.AddCompilationReference(pluginLibrary)
-            .AddCodes(FriendLibrary).Build("FriendLibrary");
+            .AddCodes(FriendLibrary)
+            .Build("FriendLibrary");
         var app = builder.AddCompilationReference(pluginLibrary)
             .AddCompilationReference(friendLibrary)
             .AddCodes(App);
@@ -69,7 +70,8 @@ internal sealed class ScanReferencedAssemblyTests
         var builder = builderFactory.Builder;
         var pluginLibrary = builder.AddCodes(PluginLibrary).Build("PluginLibrary");
         var friendLibrary = builder.AddCompilationReference(pluginLibrary)
-            .AddCodes(FriendLibrary).Build("FriendLibrary");
+            .AddCodes(FriendLibrary)
+            .Build("FriendLibrary");
         var app = builder.AddCompilationReference(pluginLibrary)
             .AddCompilationReference(friendLibrary)
             .AddCodes(App);

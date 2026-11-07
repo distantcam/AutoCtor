@@ -226,9 +226,16 @@ csharp_style_var_elsewhere = true:warning
 dotnet_diagnostic.IDE0040.severity = warning
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
 
+# IDE0090: Simplify new expression
+dotnet_diagnostic.IDE0090.severity = warning
+csharp_style_implicit_object_creation_when_type_is_apparent = true
+
 # IDE0161: Use file-scoped namespace
 dotnet_diagnostic.IDE0161.severity = warning
 csharp_style_namespace_declarations = file_scoped:warning
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = warning
 
 # IDE0305: Simplify collection initialization
 dotnet_diagnostic.IDE0305.severity = none
@@ -239,6 +246,14 @@ dotnet_diagnostic.CA1019.severity = none
 
 # CA1508: Avoid dead conditional code
 dotnet_diagnostic.CA1508.severity = none
+
+# CA1812: Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1812.severity = none
+
+# CA5394: Do not use insecure randomness (game randomness is never security)
+dotnet_diagnostic.CA5394.severity = none
+
+# https://josefpihrt.github.io/docs/roslynator
 
 # RCS0020: Format accessor's braces on a single line
 dotnet_diagnostic.RCS0020.severity = warning
@@ -251,6 +266,13 @@ roslynator_conditional_operator_new_line = before
 # RCS0032: Place new line before arrow token
 dotnet_diagnostic.RCS0032.severity = warning
 roslynator_arrow_token_new_line = before
+
+# RCS0054: Fix formatting of a call chain
+dotnet_diagnostic.RCS0054.severity = warning
+
+# RCS0056: A line is too long
+dotnet_diagnostic.RCS0056.severity = warning
+roslynator_max_line_length = 120
 
 # RCS1001: Add braces (when expression spans over multiple lines)
 dotnet_diagnostic.RCS1001.severity = none

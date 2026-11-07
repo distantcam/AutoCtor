@@ -1,4 +1,4 @@
-using AutoCtor;
+﻿using AutoCtor;
 using static ExampleTestsHelper;
 
 internal sealed class DuplicateMemberNames
@@ -33,7 +33,8 @@ public partial class DuplicateMembers
             .Build(builder.ParseOptions)
             .RunGenerators(compilation, TestHelper.CancellationToken)
             .GetRunResult()
-            .Results.Single();
+            .Results
+            .Single();
 
         await Assert.That(result.Exception).IsNull()
             .ConfigureAwait(false);

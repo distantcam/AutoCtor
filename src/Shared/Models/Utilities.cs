@@ -35,7 +35,8 @@ internal static class Utilities
             var attributeClass = attribute.AttributeClass;
             if (IsAutoCtorAttribute(attributeClass, AttributeNames.AutoKeyedServiceName)
                 || (attributeClass?.Name == "FromKeyedServicesAttribute"
-                    && attributeClass.ContainingNamespace.ToDisplayString() == "Microsoft.Extensions.DependencyInjection"))
+                    && attributeClass.ContainingNamespace.ToDisplayString()
+                    == "Microsoft.Extensions.DependencyInjection"))
                 return attribute.ConstructorArguments[0].ToCSharpString();
         }
 
@@ -119,7 +120,7 @@ internal static class Utilities
 #endif
             // init
             && propertySyntax.AccessorList?.Accessors
-            .Any(static a => a.IsKind(SyntaxKind.InitAccessorDeclaration)) != true)
+                .Any(static a => a.IsKind(SyntaxKind.InitAccessorDeclaration)) != true)
             return false;
 
         return true;

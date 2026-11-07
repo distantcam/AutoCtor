@@ -14,14 +14,16 @@ internal sealed class ExampleTests
     [CombinedDataSources]
     public Task ExamplesGeneratedCode(
         [MethodDataSource(nameof(GetExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)] CompilationBuilderFactory builderFactory)
+        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+        CompilationBuilderFactory builderFactory)
         => VerifyGeneratedCode(theoryData, builderFactory);
 
     [Test]
     [CombinedDataSources]
     public Task CodeCompilesProperly(
         [MethodDataSource(nameof(GetExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)] CompilationBuilderFactory builderFactory)
+        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+        CompilationBuilderFactory builderFactory)
         => AssertCompiles(theoryData, builderFactory);
 
     // Without Microsoft.Extensions.DependencyInjection.Abstractions.
@@ -29,14 +31,16 @@ internal sealed class ExampleTests
     [CombinedDataSources]
     public Task IoCGeneratedCode(
         [MethodDataSource(nameof(GetIoCExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<BareCompilationBuilderFactory>(Shared = SharedType.PerTestSession)] BareCompilationBuilderFactory builderFactory)
+        [ClassDataSource<BareCompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+        BareCompilationBuilderFactory builderFactory)
         => VerifyGeneratedCode(theoryData, builderFactory);
 
     [Test]
     [CombinedDataSources]
     public Task IoCCodeCompilesProperly(
         [MethodDataSource(nameof(GetIoCExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<BareCompilationBuilderFactory>(Shared = SharedType.PerTestSession)] BareCompilationBuilderFactory builderFactory)
+        [ClassDataSource<BareCompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+        BareCompilationBuilderFactory builderFactory)
         => AssertCompiles(theoryData, builderFactory);
 
     // IAsyncDisposable isn't in netstandard2.0.
@@ -44,17 +48,20 @@ internal sealed class ExampleTests
     [CombinedDataSources]
     public Task AsyncGeneratedCode(
         [MethodDataSource(nameof(GetAsyncExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<AsyncCompilationBuilderFactory>(Shared = SharedType.PerTestSession)] AsyncCompilationBuilderFactory builderFactory)
+        [ClassDataSource<AsyncCompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+        AsyncCompilationBuilderFactory builderFactory)
         => VerifyGeneratedCode(theoryData, builderFactory);
 
     [Test]
     [CombinedDataSources]
     public Task AsyncCodeCompilesProperly(
         [MethodDataSource(nameof(GetAsyncExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<AsyncCompilationBuilderFactory>(Shared = SharedType.PerTestSession)] AsyncCompilationBuilderFactory builderFactory)
+        [ClassDataSource<AsyncCompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+        AsyncCompilationBuilderFactory builderFactory)
         => AssertCompiles(theoryData, builderFactory);
 
-    private static async Task VerifyGeneratedCode(CodeFileTheoryData theoryData, ExampleTestsHelper.CompilationBuilderFactory builderFactory)
+    private static async Task VerifyGeneratedCode(
+        CodeFileTheoryData theoryData, ExampleTestsHelper.CompilationBuilderFactory builderFactory)
     {
         var builder = builderFactory.Create(theoryData);
         var compilation = builder.Build(nameof(ExampleTests));
@@ -72,7 +79,8 @@ internal sealed class ExampleTests
             .ConfigureAwait(false);
     }
 
-    private static async Task AssertCompiles(CodeFileTheoryData theoryData, ExampleTestsHelper.CompilationBuilderFactory builderFactory)
+    private static async Task AssertCompiles(
+        CodeFileTheoryData theoryData, ExampleTestsHelper.CompilationBuilderFactory builderFactory)
     {
         if (theoryData.SnapshotOnly)
             return;
@@ -100,7 +108,8 @@ internal sealed class ExampleTests
     [CombinedDataSources]
     public async Task EnsureRunsAreCachedCorrectly(
         [MethodDataSource(nameof(GetExamples))] CodeFileTheoryData theoryData,
-        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)] CompilationBuilderFactory builderFactory)
+        [ClassDataSource<CompilationBuilderFactory>(Shared = SharedType.PerTestSession)]
+        CompilationBuilderFactory builderFactory)
     {
         var builder = builderFactory.Create(theoryData);
         var compilation = builder.Build(nameof(ExampleTests));
@@ -136,7 +145,8 @@ internal sealed class ExampleTests
         Justification = "Instantiated in generated code.")]
     internal sealed class CompilationBuilderFactory : CompilationBuilderFactory<AutoConstructAttribute>
     {
-        protected override IEnumerable<string> GetNuGetIds() => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
+        protected override IEnumerable<string> GetNuGetIds()
+            => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -150,16 +160,22 @@ internal sealed class ExampleTests
     internal sealed class AsyncCompilationBuilderFactory : CompilationBuilderFactory<AutoConstructAttribute>
     {
         protected override ReferenceAssemblies BaseReferenceAssemblies => ReferenceAssemblies.Net.Net100;
-        protected override IEnumerable<string> GetNuGetIds() => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
+        protected override IEnumerable<string> GetNuGetIds()
+            => ["Microsoft.Extensions.DependencyInjection.Abstractions"];
     }
 
     private static IEnumerable<Func<CodeFileTheoryData>> GetIoCExamples(string examples, string diagnosticExamples)
-        => GetExamplesFiles(examples).Select<string, Func<CodeFileTheoryData>>(example => () => new CodeFileTheoryData(example))
-        .Concat(GetExamplesFiles(diagnosticExamples).Select<string, Func<CodeFileTheoryData>>(example => () => new CodeFileTheoryData(example) { SnapshotOnly = true }));
+        => GetExamplesFiles(examples)
+            .Select<string, Func<CodeFileTheoryData>>(example => () => new CodeFileTheoryData(example))
+            .Concat(GetExamplesFiles(diagnosticExamples)
+                .Select<string, Func<CodeFileTheoryData>>(example
+                    => () => new CodeFileTheoryData(example) { SnapshotOnly = true }));
 
-    public static IEnumerable<Func<CodeFileTheoryData>> GetIoCExamples() => GetIoCExamples("IoCExamples", "IoCDiagnosticExamples");
+    public static IEnumerable<Func<CodeFileTheoryData>> GetIoCExamples()
+        => GetIoCExamples("IoCExamples", "IoCDiagnosticExamples");
 
-    public static IEnumerable<Func<CodeFileTheoryData>> GetAsyncExamples() => GetIoCExamples("IoCAsyncExamples", "IoCAsyncDiagnosticExamples");
+    public static IEnumerable<Func<CodeFileTheoryData>> GetAsyncExamples()
+        => GetIoCExamples("IoCAsyncExamples", "IoCAsyncDiagnosticExamples");
 
     public static IEnumerable<Func<CodeFileTheoryData>> GetExamples()
     {

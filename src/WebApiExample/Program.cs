@@ -16,7 +16,7 @@ var app = builder.Build();
 
 var todosApi = app.MapGroup("/todos");
 todosApi.MapGet("/", (TodoService todoService) => todoService.GetTodos())
-        .WithName("GetTodos");
+    .WithName("GetTodos");
 
 todosApi.MapGet("/{id}", Results<Ok<Todo>, NotFound> (int id, TodoService todoService) =>
     todoService.GetTodos().FirstOrDefault(a => a.Id == id) is { } todo

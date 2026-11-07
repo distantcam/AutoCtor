@@ -1,4 +1,4 @@
-using AutoCtor;
+﻿using AutoCtor;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using static ExampleTests;
@@ -36,7 +36,9 @@ internal sealed class ModuleReferencedAssemblyTests
         // Without the symbol the registration attributes are not compiled into the library.
         var library = await EmitReference(builder
             .WithPreprocessorSymbols([.. PreprocessorSymbols, "AUTOCTOR_USAGES"])
-            .AddCodes(Library).Build("Library")).ConfigureAwait(false);
+            .AddCodes(Library)
+            .Build("Library"))
+            .ConfigureAwait(false);
         var app = builder.AddReferences(library).AddCodes(App);
 
         var driver = new GeneratorDriverBuilder()
@@ -114,12 +116,14 @@ internal sealed class ModuleReferencedAssemblyTests
             .RunGenerators(compilation, TestHelper.CancellationToken);
 
         // Only the module's file changes; the provider's syntax tree is the same one.
-        var moduleTree = compilation.SyntaxTrees.Single(t => t.ToString().Contains("class LocalModule", StringComparison.Ordinal));
+        var moduleTree = compilation.SyntaxTrees
+            .Single(t => t.ToString().Contains("class LocalModule", StringComparison.Ordinal));
         var editedTree = CSharpSyntaxTree.ParseText(
             "[AutoCtor.Singleton(typeof(AddedService))]\n" + module + "\npublic class AddedService;",
             app.ParseOptions,
             cancellationToken: TestHelper.CancellationToken);
-        driver = driver.RunGenerators(compilation.ReplaceSyntaxTree(moduleTree, editedTree), TestHelper.CancellationToken);
+        driver = driver.RunGenerators(
+            compilation.ReplaceSyntaxTree(moduleTree, editedTree), TestHelper.CancellationToken);
 
         await Assert.That(driver.GetRunResult().GeneratedTrees
             .Any(t => t.ToString().Contains("global::AddedService", StringComparison.Ordinal)))

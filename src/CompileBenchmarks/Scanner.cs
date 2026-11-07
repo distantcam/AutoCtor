@@ -43,10 +43,11 @@ public partial class Container;
 
         _warmDriver = _driver.RunGenerators(_compilation);
 
-        var edited = _compilation.SyntaxTrees.Single(t => t.ToString().Contains("class Plugin0001", StringComparison.Ordinal));
+        var edited = _compilation.SyntaxTrees
+            .Single(t => t.ToString().Contains("class Plugin0001", StringComparison.Ordinal));
         _editedCompilation = _compilation.ReplaceSyntaxTree(edited,
             CSharpSyntaxTree.ParseText(edited.ToString()
-            .Replace("{", "{ private bool _edited;", StringComparison.Ordinal)));
+                .Replace("{", "{ private bool _edited;", StringComparison.Ordinal)));
     }
 
     [Benchmark]

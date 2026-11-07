@@ -16,7 +16,8 @@ public partial class AutoConstructSourceGenerator
     {
         private const string DI = "global::Microsoft.Extensions.DependencyInjection.";
 
-        private sealed class Node(int id, int order, RegistrationModel registration, ITypeSymbol service, INamedTypeSymbol implementation)
+        private sealed class Node(
+            int id, int order, RegistrationModel registration, ITypeSymbol service, INamedTypeSymbol implementation)
         {
             public string Name { get; } = $"S{id}";
             // Registration order, which decides the winner of a single resolve.
@@ -91,8 +92,11 @@ public partial class AutoConstructSourceGenerator
                 var ordered = group.OrderBy(n => n.Order).ToList();
                 var last = ordered[ordered.Count - 1];
                 singles.Add((group.Key.Service, group.Key.Key ?? "null", $"{last.Name}()", last.Scoped));
-                collections.Add(($"global::System.Collections.Generic.IEnumerable<{group.Key.Service}>", group.Key.Key ?? "null",
-                    NewArray(group.Key.Service, ordered), ordered.Any(n => n.Scoped)));
+                collections.Add((
+                    $"global::System.Collections.Generic.IEnumerable<{group.Key.Service}>",
+                    group.Key.Key ?? "null",
+                    NewArray(group.Key.Service, ordered),
+                    ordered.Any(n => n.Scoped)));
             }
 
             if (duck.Keyed)
@@ -101,8 +105,11 @@ public partial class AutoConstructSourceGenerator
                 foreach (var group in nodes.Where(n => n.R.Key is not null).GroupBy(n => n.Service))
                 {
                     var ordered = group.OrderBy(n => n.Order).ToList();
-                    collections.Add(($"global::System.Collections.Generic.IEnumerable<{group.Key}>", DI + "KeyedService.AnyKey",
-                        NewArray(group.Key, ordered), ordered.Any(n => n.Scoped)));
+                    collections.Add((
+                        $"global::System.Collections.Generic.IEnumerable<{group.Key}>",
+                        DI + "KeyedService.AnyKey",
+                        NewArray(group.Key, ordered),
+                        ordered.Any(n => n.Scoped)));
                 }
             }
 
@@ -152,7 +159,8 @@ public partial class AutoConstructSourceGenerator
         }
 
         // The first registration of each unkeyed type wins, the same as in Resolve.
-        private static IEnumerable<string> Resolvers(List<(string Type, string Key, string Value, bool Scoped)> entries, bool inScope)
+        private static IEnumerable<string> Resolvers(
+            List<(string Type, string Key, string Value, bool Scoped)> entries, bool inScope)
             => entries.Where(e => e.Key == "null" && (inScope || !e.Scoped)).Select(e => e.Type).Distinct();
 
         // Every registration of a service, closing any open generic rule that matches it.
@@ -291,11 +299,15 @@ public partial class AutoConstructSourceGenerator
             }
             if (unsatisfied is { } rule)
             {
-                context.ReportDiagnostic(rule, ACTR020_OpenGenericConstraintNotSatisfied, typeName, parameterName, rule.ErrorName);
+                context.ReportDiagnostic(
+                    rule, ACTR020_OpenGenericConstraintNotSatisfied, typeName, parameterName, rule.ErrorName);
                 return null;
             }
 
-            if (type is INamedTypeSymbol { ConstructedFrom.SpecialType: SpecialType.System_Collections_Generic_IEnumerable_T } enumerable)
+            if (type is INamedTypeSymbol
+                {
+                    ConstructedFrom.SpecialType: SpecialType.System_Collections_Generic_IEnumerable_T,
+                } enumerable)
             {
                 var elements = Find(provider, nodes, enumerable.TypeArguments[0], key, out _);
                 node.Dependencies.AddRange(elements);
@@ -311,7 +323,8 @@ public partial class AutoConstructSourceGenerator
             if (key is null)
                 context.ReportDiagnostic(node.R, ACTR012_ServiceDependencyNotRegistered, typeName, node.R.ErrorName);
             else
-                context.ReportDiagnostic(node.R, ACTR014_KeyedServiceDependencyNotRegistered, typeName, node.R.ErrorName, key);
+                context.ReportDiagnostic(
+                    node.R, ACTR014_KeyedServiceDependencyNotRegistered, typeName, node.R.ErrorName, key);
             return null;
         }
 
@@ -337,12 +350,14 @@ public partial class AutoConstructSourceGenerator
 
                 if (dependency.Scoped)
                 {
-                    context.ReportDiagnostic(node.R, ACTR019_ScopedServiceCapturedBySingleton, dependency.R.ErrorName, node.R.ErrorName);
+                    context.ReportDiagnostic(
+                        node.R, ACTR019_ScopedServiceCapturedBySingleton, dependency.R.ErrorName, node.R.ErrorName);
                     ok = false;
                 }
                 else if (dependency.R.Lifetime == Lifetime.Transient)
                 {
-                    context.ReportDiagnostic(node.R, ACTR018_TransientServiceCaptured, dependency.R.ErrorName, node.R.ErrorName);
+                    context.ReportDiagnostic(
+                        node.R, ACTR018_TransientServiceCaptured, dependency.R.ErrorName, node.R.ErrorName);
                 }
             }
             node.VisitState = 2;
@@ -363,8 +378,11 @@ public partial class AutoConstructSourceGenerator
                 && (!p.HasValueTypeConstraint || a.IsValueType)
                 && (!p.HasUnmanagedTypeConstraint || a.IsUnmanagedType)
                 && (!p.HasConstructorConstraint || a.IsValueType
-                    || a is INamedTypeSymbol { IsAbstract: false } named && named.InstanceConstructors.Any(c => c.Parameters.Length == 0 && c.DeclaredAccessibility == Accessibility.Public))
-                && p.ConstraintTypes.All(c => ServiceProviderModel.IsAssignable(a, Emitter.SetGenerics(c, typeParameters, typeArguments))))
+                    || a is INamedTypeSymbol { IsAbstract: false } named
+                        && named.InstanceConstructors.Any(c => c.Parameters.Length == 0
+                            && c.DeclaredAccessibility == Accessibility.Public))
+                && p.ConstraintTypes.All(c => ServiceProviderModel.IsAssignable(
+                    a, Emitter.SetGenerics(c, typeParameters, typeArguments))))
                 .All(ok => ok);
         }
 
@@ -456,18 +474,31 @@ public partial class AutoConstructSourceGenerator
             if (inScope && duck.DI && provider.Fallback is not null)
             {
                 source.AppendLine("private global::System.IServiceProvider? _fallback;");
-                source.AppendLine($"private global::System.IServiceProvider? Fallback {{ get {{ lock (_lock) return _fallback ??= {fallback} is {DI}IServiceScopeFactory f ? Track(f.CreateScope()).ServiceProvider : {fallback}; }} }}");
+                source.AppendLine(
+                    "private global::System.IServiceProvider? Fallback { get { lock (_lock) return _fallback ??= "
+                    + $"{fallback} is {DI}IServiceScopeFactory f"
+                    + $" ? Track(f.CreateScope()).ServiceProvider : {fallback}; }} }}");
             }
             else
             {
                 source.AppendLine($"private global::System.IServiceProvider? Fallback => {fallback};");
             }
 
-            var keyedFallback = duck.Keyed ? $"(Fallback as {DI}IKeyedServiceProvider)?.GetKeyedService(serviceType, serviceKey)" : "null";
+            var keyedFallback = duck.Keyed
+                ? $"(Fallback as {DI}IKeyedServiceProvider)?.GetKeyedService(serviceType, serviceKey)"
+                : "null";
             // MS DI's ServiceProvider doesn't implement the IsService interfaces itself, it registers them as services.
             var fallbackProbe = !duck.DI ? ""
-                : $" || (serviceKey == null ? (Fallback as {DI}IServiceProviderIsService ?? Fallback?.GetService(typeof({DI}IServiceProviderIsService)) as {DI}IServiceProviderIsService)?.IsService(serviceType) == true : "
-                    + (duck.Keyed ? $"(Fallback as {DI}IServiceProviderIsKeyedService ?? Fallback?.GetService(typeof({DI}IServiceProviderIsKeyedService)) as {DI}IServiceProviderIsKeyedService)?.IsKeyedService(serviceType, serviceKey) == true)" : "false)");
+                : $" || (serviceKey == null ? (Fallback as {DI}IServiceProviderIsService"
+                    + $" ?? Fallback?.GetService(typeof({DI}IServiceProviderIsService))"
+                    + $" as {DI}IServiceProviderIsService)"
+                    + "?.IsService(serviceType) == true : "
+                    + (duck.Keyed
+                        ? $"(Fallback as {DI}IServiceProviderIsKeyedService"
+                            + $" ?? Fallback?.GetService(typeof({DI}IServiceProviderIsKeyedService))"
+                            + $" as {DI}IServiceProviderIsKeyedService)"
+                            + "?.IsKeyedService(serviceType, serviceKey) == true)"
+                        : "false)");
 
             source.AppendLine()
                 .AppendLine("public object? GetService(global::System.Type serviceType)")
@@ -479,18 +510,22 @@ public partial class AutoConstructSourceGenerator
                 .AppendLine($"\t?? (serviceKey == null ? Fallback?.GetService(serviceType) : {keyedFallback});");
 
             source.AppendLine()
-                .AppendLine("public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)")
+                .AppendLine(
+                    "public object GetRequiredKeyedService(global::System.Type serviceType, object? serviceKey)")
                 .AppendLine("\t=> GetKeyedService(serviceType, serviceKey)")
-                .AppendLine("\t?? throw new global::System.InvalidOperationException(\"No service for type '\" + serviceType + \"' has been registered.\");");
+                .AppendLine("\t?? throw new global::System.InvalidOperationException("
+                    + "\"No service for type '\" + serviceType + \"' has been registered.\");");
 
             // Typed lookups: an interface check instead of a chain of type comparisons.
             source.AppendLine()
                 .AppendLine("public T? GetService<T>()")
-                .AppendLine($"\t=> this is {provider.Name}.IResolver<T> resolver ? resolver.Get() : GetService(typeof(T)) is T service ? service : default;");
+                .AppendLine($"\t=> this is {provider.Name}.IResolver<T> resolver ? resolver.Get()"
+                    + " : GetService(typeof(T)) is T service ? service : default;");
 
             source.AppendLine()
                 .AppendLine("public T GetRequiredService<T>()")
-                .AppendLine($"\t=> this is {provider.Name}.IResolver<T> resolver ? resolver.Get() : (T)GetRequiredKeyedService(typeof(T), null);");
+                .AppendLine($"\t=> this is {provider.Name}.IResolver<T> resolver ? resolver.Get()"
+                    + " : (T)GetRequiredKeyedService(typeof(T), null);");
 
             source.AppendLine();
             if (!inScope)
@@ -515,14 +550,17 @@ public partial class AutoConstructSourceGenerator
 
             source.AppendLine()
                 .AppendLine("private static T Required<T>(object? service)")
-                .AppendLine("\t=> service is T t ? t : throw new global::System.InvalidOperationException(\"No service for type '\" + typeof(T) + \"' has been registered.\");");
+                .AppendLine("\t=> service is T t ? t : throw new global::System.InvalidOperationException("
+                    + "\"No service for type '\" + typeof(T) + \"' has been registered.\");");
 
             source.AppendLine();
             using (source.StartBlock("private T Track<T>(T service)"))
             {
-                source.AppendLine($"if (service is global::System.IDisposable{(duck.Async ? " || service is global::System.IAsyncDisposable" : "")})");
+                var asyncCheck = duck.Async ? " || service is global::System.IAsyncDisposable" : "";
+                source.AppendLine($"if (service is global::System.IDisposable{asyncCheck})");
                 source.AppendLine("\tlock (_lock)");
-                source.AppendLine("\t\t(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);");
+                source.AppendLine(
+                    "\t\t(_disposables ??= new global::System.Collections.Generic.List<object>()).Add(service);");
                 source.AppendLine("return service;");
             }
 

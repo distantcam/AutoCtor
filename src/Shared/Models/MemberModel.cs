@@ -43,7 +43,8 @@ internal readonly record struct MemberModel(
 
     public static MemberModel Create(IPropertySymbol property)
     {
-        var friendlyName = new string([char.ToLowerInvariant(property.Name[0]), .. property.Name.Substring(1)]).EscapeKeywordIdentifier();
+        var friendlyName = new string([char.ToLowerInvariant(property.Name[0]), .. property.Name.Substring(1)])
+            .EscapeKeywordIdentifier();
 
         return new MemberModel(
             Type: new(property.Type),
