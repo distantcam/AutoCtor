@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net10.0;net11.0;net462;netstandard2.0</TargetFrameworks>
     <RootNamespace>AutoCtor</RootNamespace>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
@@ -42,7 +42,7 @@
           Pack="true" PackagePath="build" Visible="false" />
 
     <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.targets"
-          Pack="true" PackagePath="buildTransitive\net8.0" Visible="false" />
+          Pack="true" PackagePath="buildTransitive\net10.0" Visible="false" />
     <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.targets"
           Pack="true" PackagePath="buildTransitive\net462" Visible="false" />
     <None Include="$(ProjectDir)..\..\src\nugetfiles\AutoCtor.targets"
