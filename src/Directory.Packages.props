@@ -17,7 +17,7 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100" />
     <PackageVersion Include="TUnit" Version="1.84.0" />
     <PackageVersion Include="Verify.SourceGenerators" Version="2.5.0" />
-    <PackageVersion Include="Verify.TUnit" Version="33.3.4" />
+    <PackageVersion Include="Verify.TUnit" Version="33.4.0" />
   </ItemGroup>
   <ItemGroup>
     <GlobalPackageReference Include="Roslynator.Analyzers" Version="5.0.1" />
